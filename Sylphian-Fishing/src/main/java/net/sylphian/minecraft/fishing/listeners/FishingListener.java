@@ -1,5 +1,6 @@
 package net.sylphian.minecraft.fishing.listeners;
 
+import net.sylphian.minecraft.fishing.SylphianFishing;
 import net.sylphian.minecraft.fishing.db.api.IFishEncyclopaediaRepository;
 import net.sylphian.minecraft.fishing.fish.CatchResult;
 import net.sylphian.minecraft.fishing.loot.LootManager;
@@ -11,17 +12,20 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class FishingListener implements Listener {
 
     private final LootManager lootManager;
     private final FishMutationService mutationService;
     private final IFishEncyclopaediaRepository encyclopaediaRepository;
+    private final JavaPlugin plugin;
 
-    public FishingListener(LootManager lootManager, FishMutationService mutationService, IFishEncyclopaediaRepository encyclopaediaRepository) {
+    public FishingListener(LootManager lootManager, FishMutationService mutationService, IFishEncyclopaediaRepository encyclopaediaRepository, JavaPlugin plugin) {
         this.lootManager = lootManager;
         this.mutationService = mutationService;
         this.encyclopaediaRepository = encyclopaediaRepository;
+        this.plugin = plugin;
     }
 
     @EventHandler
@@ -44,6 +48,9 @@ public class FishingListener implements Listener {
                 event.getPlayer().getUniqueId(),
                 result.fishId(),
                 result.weight()
-        );
+        ).exceptionally(ex -> {
+            plugin.getLogger().severe("Failed to record catch for " + event.getPlayer().getName() + ": " + ex.getMessage());
+            return null;
+        });
     }
 }

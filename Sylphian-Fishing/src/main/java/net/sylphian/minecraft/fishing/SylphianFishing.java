@@ -56,7 +56,7 @@ public class SylphianFishing extends JavaPlugin {
                 DatabaseService.getExecutor()
         );
 
-        getServer().getPluginManager().registerEvents(new FishingListener(lootManager, mutationService, encyclopaediaRepository), this);
+        getServer().getPluginManager().registerEvents(new FishingListener(lootManager, mutationService, encyclopaediaRepository, this), this);
         getServer().getPluginManager().registerEvents(new EncyclopaediaListener(), this);
         getServer().getPluginManager().registerEvents(new SuperFishEnchantmentListener(configLoader), this);
 
