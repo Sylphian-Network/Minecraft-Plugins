@@ -1,7 +1,7 @@
 package net.sylphian.minecraft.fishing.listeners;
 
 import net.sylphian.minecraft.fishing.db.api.IFishEncyclopaediaRepository;
-import net.sylphian.minecraft.fishing.loot.CatchResult;
+import net.sylphian.minecraft.fishing.fish.CatchResult;
 import net.sylphian.minecraft.fishing.loot.LootManager;
 import net.sylphian.minecraft.fishing.mutation.FishContext;
 import net.sylphian.minecraft.fishing.mutation.FishMutationService;

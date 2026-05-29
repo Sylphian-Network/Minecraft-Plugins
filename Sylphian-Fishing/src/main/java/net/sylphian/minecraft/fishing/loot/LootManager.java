@@ -1,4 +1,5 @@
 package net.sylphian.minecraft.fishing.loot;
+import net.sylphian.minecraft.fishing.fish.CatchResult;
 import net.sylphian.minecraft.fishing.fish.FishEntry;
 import net.sylphian.minecraft.fishing.fish.Rarity;
 import net.sylphian.minecraft.fishing.util.ItemBuilder;
