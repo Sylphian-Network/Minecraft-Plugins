@@ -1,0 +1,109 @@
+# Sylphian Fishing - Fish Configuration
+#
+# This file defines all the fish that can be caught.
+#
+# Fields:
+# - material:     The Bukkit Material name for the item.
+# - display-name: The MiniMessage formatted name of the fish.
+# - description:  The MiniMessage formatted lore. Use \n for new lines.
+# - rarity:       Must match a key defined in config.yml (e.g., COMMON, RARE, EPIC, LEGENDARY).
+# - weight:       Relative weight within its rarity pool. Higher values increase the
+#                 chance of this fish being picked compared to others of the same rarity.
+# - min-weight:   Minimum weight (in kg) for a caught instance.
+# - max-weight:   Maximum weight (in kg) for a caught instance.
+# - biomes:       A list of biomes where this fish can be caught, or "ALL" for everywhere.
+#                 Biome names must match Minecraft internal names (e.g., OCEAN, JUNGLE).
+
+fish:
+  common_cod:
+    material: COD
+    display-name: "<white>Common Cod"
+    description: "<gray>A reliable catch, found in most waters."
+    rarity: COMMON
+    weight: 40
+    min-weight: 0.3
+    max-weight: 2.0
+    biomes: ALL
+
+  river_salmon:
+    material: SALMON
+    display-name: "<white>River Salmon"
+    description: "<gray>Fights hard against the current."
+    rarity: COMMON
+    weight: 35
+    min-weight: 1.0
+    max-weight: 4.5
+    biomes: ALL
+
+  electric_puffer:
+    material: PUFFERFISH
+    display-name: "<yellow>⚡ Electric Puffer"
+    description: "<gray>Crackles with a strange energy.\n<yellow>Handle with care."
+    rarity: RARE
+    weight: 15
+    min-weight: 0.5
+    max-weight: 1.5
+    biomes: ALL
+
+  heart_of_the_deep:
+    material: HEART_OF_THE_SEA
+    display-name: "<gradient:dark_purple:light_purple>❤ Heart of the Deep</gradient>"
+    description: "<gray>Pulled from the darkest trench.\nFew have ever seen one."
+    rarity: LEGENDARY
+    weight: 3
+    min-weight: 0.1
+    max-weight: 0.3
+    biomes:
+      - DEEP_OCEAN
+      - DEEP_COLD_OCEAN
+      - DEEP_FROZEN_OCEAN
+
+  sunscale_koi:
+    material: TROPICAL_FISH
+    display-name: "<gold>☀ Sunscale Koi"
+    description: "<gray>Its scales shimmer like a summer sunrise."
+    rarity: UNCOMMON
+    weight: 24
+    min-weight: 1.0
+    max-weight: 3.2
+    biomes:
+      - RIVER
+      - BAMBOO_JUNGLE
+      - JUNGLE
+
+  mangrove_snapper:
+    material: COD
+    display-name: "<green>Mangrove Snapper"
+    description: "<gray>Thrives among tangled roots and muddy waters."
+    rarity: COMMON
+    weight: 32
+    min-weight: 0.8
+    max-weight: 2.8
+    biomes:
+      - MANGROVE_SWAMP
+      - SWAMP
+
+  bog_lurker:
+    material: PUFFERFISH
+    display-name: "<dark_green>Bog Lurker"
+    description: "<gray>Its glowing eyes peer through swamp fog."
+    rarity: RARE
+    weight: 10
+    min-weight: 1.5
+    max-weight: 5.0
+    biomes:
+      - SWAMP
+      - MANGROVE_SWAMP
+
+  crystal_carp:
+    material: TROPICAL_FISH
+    display-name: "<aqua>❄ Crystal Carp"
+    description: "<gray>Cold to the touch and clear as ice."
+    rarity: UNCOMMON
+    weight: 18
+    min-weight: 1.2
+    max-weight: 4.0
+    biomes:
+      - FROZEN_RIVER
+      - ICE_SPIKES
+      - SNOWY_TAIGA

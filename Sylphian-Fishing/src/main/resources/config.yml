@@ -1,0 +1,51 @@
+# Sylphian Fishing - Main Configuration
+
+# Configuration for different rarity tiers
+#
+# Fields:
+# - chance: The probability of this rarity being selected (0.0 to 1.0).
+#           Selection is checked from highest rarity to lowest.
+# - color:  The MiniMessage color tag used for the rarity display.
+# - mutation-multiplier: Multiplier applied to mutation chances for this rarity.
+rarities:
+  COMMON:
+    chance: 1.0
+    color: "<white>"
+    mutation-multiplier: 0.5
+  UNCOMMON:
+    chance: 0.50
+    color: "<green>"
+    mutation-multiplier: 0.8
+  RARE:
+    chance: 0.20
+    color: "<aqua>"
+    mutation-multiplier: 1.0
+  EPIC:
+    chance: 0.08
+    color: "<dark_purple>"
+    mutation-multiplier: 1.5
+  LEGENDARY:
+    chance: 0.03
+    color: "<gold>"
+    mutation-multiplier: 2.0
+  MYTHIC:
+    chance: 0.01
+    color: "<light_purple>"
+    mutation-multiplier: 3.0
+
+# Configuration for fish mutations
+mutations:
+  super_fish:
+    enabled: true
+    base-chance: 0.05
+    # Effects applied when a Super Fish is consumed
+    effects:
+      - effect: REGENERATION
+        duration: 100
+        amplifier: 1
+      - effect: ABSORPTION
+        duration: 2400
+        amplifier: 0
+      - effect: SATURATION
+        duration: 20
+        amplifier: 1

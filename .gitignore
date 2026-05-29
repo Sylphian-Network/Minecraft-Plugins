@@ -1,0 +1,41 @@
+# Gradle
+.gradle/
+build/
+**/build/
+out/
+**/out/
+
+# Gradle wrapper (keep gradlew scripts, ignore the jar)
+gradle/wrapper/gradle-wrapper.jar
+**/gradle/wrapper/gradle-wrapper.jar
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+hs_err_pid*
+replay_pid*
+
+# OS
+## Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Sensitive / Local Config
+**/local.config.yml
+**/secrets.yml
+.env
+.env.*
+
+# Logs
+*.log
+logs/

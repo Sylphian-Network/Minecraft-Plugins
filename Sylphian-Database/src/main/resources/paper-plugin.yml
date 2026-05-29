@@ -1,0 +1,10 @@
+name: Sylphian-Database
+prefix: Sylphian-Database
+version: '${version}'
+
+main: net.sylphian.minecraft.database.SylphianDatabase
+api-version: '26.1.2'
+load: POSTWORLD
+
+authors: [QuackieMackie]
+website: https://sylphian.net

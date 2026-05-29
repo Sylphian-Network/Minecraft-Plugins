@@ -1,0 +1,14 @@
+# Database driver class
+# MariaDB/MySQL: org.mariadb.jdbc.Driver
+# PostgreSQL:    org.postgresql.Driver
+driver_class: "org.mariadb.jdbc.Driver"
+
+# JDBC connection URL
+jdbc_url: "jdbc:mariadb://localhost:3306/sylphian"
+
+# Database credentials
+username: "database_username"
+password: "database_password"
+
+# Connection pool size
+pool_size: 10
