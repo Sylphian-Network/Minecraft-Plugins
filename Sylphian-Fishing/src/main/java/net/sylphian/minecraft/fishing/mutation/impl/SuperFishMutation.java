@@ -1,11 +1,20 @@
 package net.sylphian.minecraft.fishing.mutation.impl;
 
 import io.papermc.paper.registry.RegistryKey;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.fishing.mutation.FishContext;
 import net.sylphian.minecraft.fishing.mutation.FishMutation;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import static io.papermc.paper.registry.RegistryAccess.registryAccess;
 import static net.sylphian.minecraft.fishing.SylphianFishingBootstrap.SUPER_FISH_KEY;
@@ -42,8 +51,22 @@ public class SuperFishMutation implements FishMutation {
                 .getRegistry(RegistryKey.ENCHANTMENT)
                 .get(SUPER_FISH_KEY);
 
-        if (superFish != null) {
-            item.addUnsafeEnchantment(superFish, 1);
-        }
+        if (superFish == null) return;
+
+        item.addUnsafeEnchantment(superFish, 1);
+
+        ItemMeta meta = item.getItemMeta();
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+
+        List<Component> currentLore = meta.lore() != null
+                ? new ArrayList<>(Objects.requireNonNull(meta.lore()))
+                : new ArrayList<>();
+
+        currentLore.add(MiniMessage.miniMessage().deserialize(
+                "<gray>Mutation: <aqua>Super Fish"
+        ).decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE));
+
+        meta.lore(currentLore);
+        item.setItemMeta(meta);
     }
 }
