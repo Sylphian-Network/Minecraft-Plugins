@@ -12,16 +12,35 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
+/**
+ * Implementation of IFishEncyclopaediaRepository using JDBI.
+ * Handles database operations asynchronously using a dedicated executor service
+ * to prevent blocking the main Minecraft server thread.
+ */
 public class FishEncyclopaediaRepository implements IFishEncyclopaediaRepository {
 
     private final Jdbi jdbi;
     private final ExecutorService executor;
 
+    /**
+     * Constructs a new FishEncyclopaediaRepository.
+     *
+     * @param jdbi     the JDBI instance for database access
+     * @param executor the executor service for async operations
+     */
     public FishEncyclopaediaRepository(Jdbi jdbi, ExecutorService executor) {
         this.jdbi = jdbi;
         this.executor = executor;
     }
 
+    /**
+     * Finds a fish entry for a player.
+     * Executes asynchronously on the database executor.
+     *
+     * @param uuid   the player's UUID
+     * @param fishId the ID of the fish
+     * @return a CompletableFuture with the Optional result
+     */
     @Override
     public CompletableFuture<Optional<FishEncyclopaediaModel>> findEntry(UUID uuid, String fishId) {
         return CompletableFuture.supplyAsync(() ->
@@ -30,6 +49,13 @@ public class FishEncyclopaediaRepository implements IFishEncyclopaediaRepository
                 ), executor);
     }
 
+    /**
+     * Retrieves all caught fish entries for a player.
+     * Executes asynchronously on the database executor.
+     *
+     * @param uuid the player's UUID
+     * @return a CompletableFuture with the list of entries
+     */
     @Override
     public CompletableFuture<List<FishEncyclopaediaModel>> findAllForPlayer(UUID uuid) {
         return CompletableFuture.supplyAsync(() ->
@@ -40,6 +66,15 @@ public class FishEncyclopaediaRepository implements IFishEncyclopaediaRepository
                 ), executor);
     }
 
+    /**
+     * Records or updates a fish catch record.
+     * This is a fire-and-forget async operation that handles checking for existing records.
+     *
+     * @param uuid   the player's UUID
+     * @param fishId the ID of the fish
+     * @param weight the weight of the catch
+     * @return a CompletableFuture that completes when the record is saved
+     */
     @Override
     public CompletableFuture<Void> recordCatch(UUID uuid, String fishId, double weight) {
         long now = Instant.now().getEpochSecond();
@@ -56,6 +91,12 @@ public class FishEncyclopaediaRepository implements IFishEncyclopaediaRepository
                 }), executor);
     }
 
+    /**
+     * Maps a database row record to the domain model.
+     *
+     * @param row the database row
+     * @return the mapped FishEncyclopaediaModel
+     */
     private FishEncyclopaediaModel toModel(FishEncyclopaediaDao.FishEncyclopaediaRow row) {
         return new FishEncyclopaediaModel(
                 UUID.fromString(row.uuid()),

@@ -25,16 +25,26 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.util.List;
 
+/**
+ * Main plugin class for Sylphian-Fishing.
+ * Responsible for initializing core services (loot, mutations, database),
+ * registering listeners and commands, and managing the plugin lifecycle.
+ */
 public class SylphianFishing extends JavaPlugin {
 
     private LootManager lootManager;
     private FishMutationService mutationService;
 
+    /**
+     * Initializes the plugin, including configuration loading, database migrations,
+     * service registration, and command/event setup.
+     */
     @Override
     public void onEnable() {
         saveDefaultConfig();
         saveResource("fish.yml", false);
 
+        // Register database migrations for the fishing encyclopaedia
         DatabaseService.registerMigrations(List.of(
                 new Migration001CreateFishEncyclopaedia()
         ));
@@ -45,6 +55,7 @@ public class SylphianFishing extends JavaPlugin {
         this.mutationService = new FishMutationService(configLoader);
         this.mutationService.registerMutation("super_fish", new SuperFishMutation());
 
+        // Load fish from fish.yml
         File fishFile = new File(getDataFolder(), "fish.yml");
         FileConfiguration fishConfig = YamlConfiguration.loadConfiguration(fishFile);
         FishConfigLoader loader = new FishConfigLoader(fishConfig);
@@ -52,6 +63,7 @@ public class SylphianFishing extends JavaPlugin {
 
         this.lootManager = new LootManager(fish, configLoader);
 
+        // Initialize repository with JDBI and async executor from Sylphian-Database
         FishEncyclopaediaRepository encyclopaediaRepository = new FishEncyclopaediaRepository(
                 DatabaseService.getJdbi(),
                 DatabaseService.getExecutor()
@@ -73,6 +85,9 @@ public class SylphianFishing extends JavaPlugin {
         getLogger().info("Sylphian Fishing enabled!");
     }
 
+    /**
+     * Cleans up resources when the plugin is disabled.
+     */
     @Override
     public void onDisable() {
         Rarity.clear();

@@ -22,3 +22,29 @@ subprojects {
         options.encoding = "UTF-8"
     }
 }
+
+tasks.register<Javadoc>("combineJavadoc") {
+    description = "Generates combined Javadoc for all subprojects."
+    group = "documentation"
+
+    destinationDir = file("$rootDir/docs")
+
+    val javaSubprojects = subprojects.filter {
+        it.plugins.hasPlugin("java") || it.plugins.hasPlugin("java-library")
+    }
+
+    dependsOn(javaSubprojects.map { it.tasks.named("compileJava") })
+
+    source(javaSubprojects.map { it.sourceSets["main"].allJava })
+    classpath = files(javaSubprojects.map { it.sourceSets["main"].compileClasspath })
+
+    (options as StandardJavadocDocletOptions).apply {
+        encoding = "UTF-8"
+        charSet = "UTF-8"
+        isAuthor = true
+        isVersion = true
+        windowTitle = "Sylphian Network - Plugin API Documentation"
+        docTitle = "Sylphian Network Plugin Documentation"
+        addBooleanOption("Xdoclint:none", true)
+    }
+}

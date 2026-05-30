@@ -5,11 +5,24 @@ import java.time.Instant;
 import java.util.*;
 import java.util.logging.Logger;
 
+/**
+ * Handles the execution and tracking of database migrations.
+ * Ensures that migrations are applied in the correct order and that
+ * each migration is only applied once per plugin.
+ */
 public class MigrationRunner {
     private final Jdbi jdbi;
     private final List<Migration> migrations;
     private final String pluginName;
 
+    /**
+     * Constructs a new MigrationRunner.
+     * Sorts the provided migrations by their version number to ensure sequential execution.
+     *
+     * @param jdbi        the JDBI instance to use
+     * @param migrations  the list of migrations to consider
+     * @param pluginName  the name of the plugin these migrations belong to
+     */
     public MigrationRunner(Jdbi jdbi, List<Migration> migrations, String pluginName) {
         this.jdbi = jdbi;
         this.migrations = new ArrayList<>(migrations);
@@ -17,8 +30,16 @@ public class MigrationRunner {
         this.pluginName = pluginName;
     }
 
+    /**
+     * Executes all pending migrations.
+     * Creates the tracking table if it doesn't exist, checks which migrations
+     * have already been applied, and executes new ones within a transaction.
+     *
+     * @param logger the logger to use for reporting progress
+     */
     public void run(Logger logger) {
         jdbi.useHandle(handle -> {
+            // Ensure the migration tracking table exists before proceeding
             handle.execute("""
                 CREATE TABLE IF NOT EXISTS schema_migrations (
                     version INT,
@@ -31,6 +52,7 @@ public class MigrationRunner {
                 )
             """);
 
+            // Fetch already applied versions for this specific plugin
             Set<Integer> applied = new HashSet<>(
                 handle.createQuery("SELECT version FROM schema_migrations WHERE plugin = :plugin")
                       .bind("plugin", pluginName)
@@ -40,13 +62,16 @@ public class MigrationRunner {
 
             int newlyApplied = 0;
             for (Migration migration : migrations) {
+                // Only apply migrations that haven't been recorded yet
                 if (!applied.contains(migration.version())) {
                     logger.info("[" + pluginName + "] Applying V" + migration.version() + " (" + migration.name() + ") — " + migration.description());
                     
                     long start = System.currentTimeMillis();
                     try {
+                        // Execute the 'up' logic for the migration
                         migration.up(handle);
                     } catch (Exception e) {
+                        // Attempt a rollback using the migration's 'down' logic if 'up' fails
                         try {
                             migration.down(handle);
                             logger.info("[" + pluginName + "] V" + migration.version() + " rolled back after failure.");
@@ -57,6 +82,7 @@ public class MigrationRunner {
                     }
                     long executionMs = System.currentTimeMillis() - start;
 
+                    // Record the successful migration in the tracking table
                     handle.execute(
                         "INSERT INTO schema_migrations (version, name, plugin, description, applied_at, execution_ms) VALUES (?, ?, ?, ?, ?, ?)",
                         migration.version(),
@@ -78,8 +104,16 @@ public class MigrationRunner {
         });
     }
 
+    /**
+     * Rolls back database schema to a specific target version.
+     * Useful for debugging or reverting updates.
+     *
+     * @param targetVersion the version to roll back to (exclusive, migrations > targetVersion are reverted)
+     * @param logger        the logger for reporting progress
+     */
     public void rollbackTo(int targetVersion, Logger logger) {
         jdbi.useHandle(handle -> {
+            // Identify currently applied migrations
             Set<Integer> applied = new HashSet<>(
                 handle.createQuery("SELECT version FROM schema_migrations WHERE plugin = :plugin")
                       .bind("plugin", pluginName)
@@ -87,6 +121,7 @@ public class MigrationRunner {
                       .list()
             );
 
+            // Filter migrations that need to be rolled back and sort them in reverse order (newest first)
             List<Migration> toRollback = migrations.stream()
                 .filter(m -> m.version() > targetVersion && applied.contains(m.version()))
                 .sorted(Comparator.comparingInt(Migration::version).reversed())
@@ -95,7 +130,9 @@ public class MigrationRunner {
             for (Migration migration : toRollback) {
                 logger.info("[" + pluginName + "] Rolling back V" + migration.version() + " (" + migration.name() + ")");
                 try {
+                    // Execute the rollback logic
                     migration.down(handle);
+                    // Remove the record from the tracking table
                     handle.execute(
                         "DELETE FROM schema_migrations WHERE plugin = ? AND version = ?",
                         pluginName,

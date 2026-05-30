@@ -3,6 +3,10 @@ package net.sylphian.minecraft.profile.db.migrations;
 import net.sylphian.minecraft.database.migrations.Migration;
 import org.jdbi.v3.core.Handle;
 
+/**
+ * Migration V1: Creates the mc_players table.
+ * This table stores persistent player data, including XenForo link info and total playtime.
+ */
 public class Migration001CreatePlayers implements Migration {
     @Override
     public int version() { return 1; }
@@ -17,6 +21,7 @@ public class Migration001CreatePlayers implements Migration {
 
     @Override
     public void up(Handle handle) {
+        // Create the primary players table with UUID as the primary key
         handle.execute("""
             CREATE TABLE mc_players (
                 uuid VARCHAR(36) PRIMARY KEY,
@@ -33,6 +38,7 @@ public class Migration001CreatePlayers implements Migration {
 
     @Override
     public void down(Handle handle) {
+        // Drop the table to revert the migration
         handle.execute("DROP TABLE IF EXISTS mc_players");
     }
 }

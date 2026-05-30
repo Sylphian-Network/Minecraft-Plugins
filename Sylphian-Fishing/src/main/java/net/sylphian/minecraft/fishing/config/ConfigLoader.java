@@ -14,6 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Loads and manages plugin configuration.
+ * Handles rarity definitions, mutation settings, and weather-based catch modifiers.
+ */
 public class ConfigLoader {
 
     private final Map<String, Double> mutationChances = new HashMap<>();
@@ -21,12 +25,22 @@ public class ConfigLoader {
     private final Map<String, List<PotionEffect>> mutationEffects = new HashMap<>();
     private final Map<WeatherCondition, Map<String, Double>> weatherModifiers = new HashMap<>();
 
+    /**
+     * Constructs a new ConfigLoader and loads all configuration sections.
+     *
+     * @param config the file configuration to load from
+     */
     public ConfigLoader(FileConfiguration config) {
         loadRarities(config.getConfigurationSection("rarities"));
         loadMutations(config.getConfigurationSection("mutations"));
         loadWeatherModifiers(config.getConfigurationSection("weather-modifiers"));
     }
 
+    /**
+     * Loads rarity definitions from the config.
+     *
+     * @param section the configuration section containing rarities
+     */
     private void loadRarities(ConfigurationSection section) {
         Rarity.clear();
         if (section == null) return;
@@ -39,6 +53,11 @@ public class ConfigLoader {
         }
     }
 
+    /**
+     * Loads mutation settings from the config.
+     *
+     * @param section the configuration section containing mutations
+     */
     private void loadMutations(ConfigurationSection section) {
         if (section == null) return;
         for (String key : section.getKeys(false)) {
@@ -50,6 +69,11 @@ public class ConfigLoader {
         }
     }
 
+    /**
+     * Loads weather multipliers for each rarity.
+     *
+     * @param section the configuration section containing weather modifiers
+     */
     private void loadWeatherModifiers(ConfigurationSection section) {
         if (section == null) return;
 
@@ -66,6 +90,12 @@ public class ConfigLoader {
         }
     }
 
+    /**
+     * Parses a list of potion effects from the config.
+     *
+     * @param list the raw list from the configuration
+     * @return a list of parsed PotionEffect objects
+     */
     private List<PotionEffect> loadEffects(List<?> list) {
         List<PotionEffect> effects = new ArrayList<>();
         if (list == null) return effects;
@@ -88,20 +118,45 @@ public class ConfigLoader {
         return effects;
     }
 
+    /**
+     * Retrieves the weather-based multiplier for a specific rarity.
+     *
+     * @param weather the current weather condition
+     * @param rarity  the fish rarity
+     * @return the multiplier to apply to the rarity chance
+     */
     public double getWeatherMultiplier(WeatherCondition weather, Rarity rarity) {
         return weatherModifiers
                 .getOrDefault(weather, Map.of())
                 .getOrDefault(rarity.getId(), 1.0);
     }
 
+    /**
+     * Checks if a specific mutation is enabled.
+     *
+     * @param id the mutation ID
+     * @return true if enabled, false otherwise
+     */
     public boolean isMutationEnabled(String id) {
         return mutationEnabled.getOrDefault(id, false);
     }
 
+    /**
+     * Gets the base chance for a mutation to occur.
+     *
+     * @param id the mutation ID
+     * @return the base chance (0.0 to 1.0)
+     */
     public double getMutationBaseChance(String id) {
         return mutationChances.getOrDefault(id, 0.0);
     }
 
+    /**
+     * Gets the list of potion effects associated with a mutation.
+     *
+     * @param id the mutation ID
+     * @return the list of potion effects
+     */
     public List<PotionEffect> getMutationEffects(String id) {
         return mutationEffects.getOrDefault(id, List.of());
     }

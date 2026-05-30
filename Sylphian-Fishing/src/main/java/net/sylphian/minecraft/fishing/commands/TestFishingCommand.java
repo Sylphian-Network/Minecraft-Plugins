@@ -22,7 +22,7 @@ import java.util.*;
 /**
  * Administrative command to run fishing catch simulations.
  * Allows testing of loot distribution and mutation rates under different biomes and weather conditions.
- * Usage: /test_fishing <count> [biome] [weather]
+ * Usage: /test_fishing [count] [biome] [weather]
  */
 public class TestFishingCommand implements BasicCommand {
 
@@ -47,7 +47,7 @@ public class TestFishingCommand implements BasicCommand {
      * Runs the specified number of catch rolls and displays statistics to the sender.
      *
      * @param stack the command source stack
-     * @param args  command arguments: <count> [biome] [weather]
+     * @param args  command arguments: [count] [biome] [weather]
      */
     @Override
     public void execute(@NotNull CommandSourceStack stack, @NotNull String[] args) {
