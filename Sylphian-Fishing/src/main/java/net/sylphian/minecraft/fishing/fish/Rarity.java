@@ -81,7 +81,7 @@ public class Rarity {
      */
     public static List<Rarity> byDescendingRarity() {
         return REGISTRY.values().stream()
-                .sorted(Comparator.comparingDouble(Rarity::getChance).reversed())
+                .sorted(Comparator.comparingDouble(Rarity::getChance))
                 .toList();
     }
 
