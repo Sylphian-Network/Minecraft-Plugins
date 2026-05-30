@@ -4,7 +4,7 @@ import net.sylphian.minecraft.fishing.config.ConfigLoader;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -16,7 +16,7 @@ import java.util.Random;
 public class FishMutationService {
 
     private final ConfigLoader config;
-    private final Map<String, FishMutation> mutations = new HashMap<>();
+    private final Map<String, FishMutation> mutations = new LinkedHashMap<>();
     private final Random random = new Random();
 
     /**
