@@ -15,6 +15,11 @@ import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * Listener for player fishing events.
+ * Intercepts successful catches to determine the fish type, apply mutations,
+ * and record the catch in the player's encyclopaedia.
+ */
 public class FishingListener implements Listener {
 
     private final LootManager lootManager;
@@ -22,6 +27,14 @@ public class FishingListener implements Listener {
     private final IFishEncyclopaediaRepository encyclopaediaRepository;
     private final JavaPlugin plugin;
 
+    /**
+     * Constructs a new FishingListener.
+     *
+     * @param lootManager             the manager for rolling catches
+     * @param mutationService         the service for applying mutations
+     * @param encyclopaediaRepository the repository for recording catches
+     * @param plugin                  the plugin instance
+     */
     public FishingListener(LootManager lootManager, FishMutationService mutationService, IFishEncyclopaediaRepository encyclopaediaRepository, JavaPlugin plugin) {
         this.lootManager = lootManager;
         this.mutationService = mutationService;
@@ -29,23 +42,35 @@ public class FishingListener implements Listener {
         this.plugin = plugin;
     }
 
+    /**
+     * Handles the PlayerFishEvent.
+     * If a fish is caught, it rolls for a specific fish based on the environment,
+     * applies mutations, updates the caught item, and records the catch in the database.
+     *
+     * @param event the fishing event
+     */
     @EventHandler
     public void onFish(PlayerFishEvent event) {
         if (event.getState() != PlayerFishEvent.State.CAUGHT_FISH) return;
         if (!(event.getCaught() instanceof Item caughtItem)) return;
 
         World world = event.getHook().getLocation().getWorld();
+        // Get the biome where the fishing hook actually landed
         Biome biome = world.getBiome(event.getHook().getLocation());
         WeatherCondition weather = WeatherCondition.from(world);
 
+        // Roll for a fish based on rarity, biome, and weather
         CatchResult result = lootManager.rollCatch(biome, weather);
         ItemStack itemStack = result.itemStack();
 
+        // Prepare context and attempt to apply mutations to the caught fish
         FishContext context = new FishContext(result.rarity(), biome, event.getPlayer());
         mutationService.applyMutations(event.getPlayer(), itemStack, context);
 
+        // Update the physical item being reeled in
         caughtItem.setItemStack(itemStack);
 
+        // Record the catch in the database asynchronously
         encyclopaediaRepository.recordCatch(
                 event.getPlayer().getUniqueId(),
                 result.fishId(),

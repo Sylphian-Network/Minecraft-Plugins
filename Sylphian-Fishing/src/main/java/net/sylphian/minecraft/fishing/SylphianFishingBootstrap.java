@@ -12,10 +12,22 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.EquipmentSlotGroup;
 
+/**
+ * Bootstrapper for the Sylphian-Fishing plugin.
+ * Handles early lifecycle events, such as registering custom registry entries
+ * (e.g. Enchantments) before the plugin is fully enabled.
+ */
 public class SylphianFishingBootstrap implements PluginBootstrap {
 
+    /** Key used to identify the Super Fish enchantment in the registry. */
     public static final Key SUPER_FISH_KEY = Key.key("sylphian:super_fish");
 
+    /**
+     * Bootstraps the plugin by registering early lifecycle event handlers.
+     * Specifically, it registers the custom Super Fish enchantment into the Paper registry.
+     *
+     * @param context the bootstrap context provided by the server
+     */
     @Override
     public void bootstrap(BootstrapContext context) {
         LifecycleEventManager<BootstrapContext> lifecycle = context.getLifecycleManager();
