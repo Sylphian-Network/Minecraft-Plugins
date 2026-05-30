@@ -2,6 +2,7 @@ package net.sylphian.minecraft.fishing.gui;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.jspecify.annotations.Nullable;
 
 public class EncyclopaediaHolder implements InventoryHolder {
 
@@ -22,7 +23,8 @@ public class EncyclopaediaHolder implements InventoryHolder {
     }
 
     @Override
-    public Inventory getInventory() {
+    @SuppressWarnings("NullableProblems")
+    public @Nullable Inventory getInventory() {
         return null;
     }
 }
