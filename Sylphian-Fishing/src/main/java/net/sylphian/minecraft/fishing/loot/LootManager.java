@@ -10,7 +10,6 @@ import org.bukkit.block.Biome;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -22,7 +21,6 @@ public class LootManager {
 
     private final Map<Rarity, List<FishEntry>> poolsByRarity;
     private final ConfigLoader config;
-    private final Logger logger;
     private final Random random = new Random();
 
     /**
@@ -31,11 +29,10 @@ public class LootManager {
      * @param allFish the list of all available fish entries
      * @param config  the configuration loader for retrieving multipliers
      */
-    public LootManager(List<FishEntry> allFish, ConfigLoader config, Logger logger) {
+    public LootManager(List<FishEntry> allFish, ConfigLoader config) {
         this.poolsByRarity = allFish.stream()
                 .collect(Collectors.groupingBy(FishEntry::getRarity));
         this.config = config;
-        this.logger = logger;
     }
 
     /**
@@ -48,23 +45,44 @@ public class LootManager {
      * @return a CatchResult containing the fish ID, rarity, weight, and built ItemStack
      */
     public CatchResult rollCatch(Biome biome, WeatherCondition weather) {
-        return rollCatch(biome, weather, 0);
-    }
 
-    private CatchResult rollCatch(Biome biome, WeatherCondition weather, int attempt) {
-        if (attempt >= 10) {
+        // Collect every fish eligible for this biome
+        List<FishEntry> eligiblePool = poolsByRarity.values().stream()
+                .flatMap(List::stream)
+                .filter(f -> f.appliesToBiome(biome))
+                .toList();
+
+        if (eligiblePool.isEmpty()) {
             throw new IllegalStateException(
-                    "Failed to roll a valid catch after 10 attempts for biome: "
-                            + biome.getKey().value() + " — check fish.yml has fish for this biome."
+                    "No fish configured for biome: " + biome.getKey().value()
+                            + " — check fish.yml has fish covering this biome."
             );
         }
 
-        if (attempt > 0) {
-            // Log retries so misconfigured / problem biomes are visible in logs
-            logger.warning("Re-rolling catch attempt " + attempt
-                    + " for biome: " + biome.getKey().value());
+        // Roll a rarity, using weather multipliers
+        Rarity rolledRarity = rollRarity(weather);
+
+        // Filter eligible pool to the rolled rarity
+        List<FishEntry> rarityPool = eligiblePool.stream()
+                .filter(f -> f.getRarity().equals(rolledRarity))
+                .toList();
+
+        // If no fish of that rarity exist in this biome,
+        // fall back to any fish in the eligible pool weighted by rarity chance
+        if (rarityPool.isEmpty()) {
+            return buildCatchResult(weightedPickByRarity(eligiblePool, weather));
         }
 
+        return buildCatchResult(weightedPick(rarityPool));
+    }
+
+    /**
+     * Rolls a rarity based on chance and weather multipliers.
+     *
+     * @param weather the current weather condition
+     * @return the rolled rarity
+     */
+    private Rarity rollRarity(WeatherCondition weather) {
         double roll = random.nextDouble();
 
         for (Rarity rarity : Rarity.byDescendingRarity()) {
@@ -72,30 +90,44 @@ public class LootManager {
             double multiplier = config.getWeatherMultiplier(weather, rarity);
             double finalChance = Math.min(1.0, baseChance * multiplier);
 
-            if (roll > finalChance) continue;
-
-            List<FishEntry> pool = getPool(rarity, biome);
-            if (pool.isEmpty()) continue;
-
-            return buildCatchResult(weightedPick(pool));
+            if (roll <= finalChance) return rarity;
         }
 
-        return rollCatch(biome, weather, attempt + 1);
+        // Guaranteed fallback to most common rarity
+        return Rarity.values().stream()
+                .max(Comparator.comparingDouble(Rarity::getChance))
+                .orElseThrow();
     }
 
     /**
-     * Returns the filtered fish pool for a given rarity and biome.
+     * Picks a fish from the eligible pool weighted by rarity chance.
+     * Used when the rolled rarity has no fish in the current biome.
      *
-     * @param rarity the rarity to get the pool for
-     * @param biome  the biome to filter by
-     * @return the filtered list of fish entries
+     * @param pool    the eligible fish pool
+     * @param weather the current weather condition
+     * @return the selected fish entry
      */
-    private List<FishEntry> getPool(Rarity rarity, Biome biome) {
-        return poolsByRarity
-                .getOrDefault(rarity, List.of())
-                .stream()
-                .filter(f -> f.appliesToBiome(biome))
-                .toList();
+    private FishEntry weightedPickByRarity(List<FishEntry> pool, WeatherCondition weather) {
+        // Weight each fish by its rarity's effective chance
+        double totalWeight = pool.stream()
+                .mapToDouble(f -> {
+                    double chance = f.getRarity().getChance();
+                    double multiplier = config.getWeatherMultiplier(weather, f.getRarity());
+                    return Math.min(1.0, chance * multiplier);
+                })
+                .sum();
+
+        double roll = random.nextDouble() * totalWeight;
+        double cursor = 0;
+
+        for (FishEntry fish : pool) {
+            double chance = fish.getRarity().getChance();
+            double multiplier = config.getWeatherMultiplier(weather, fish.getRarity());
+            cursor += Math.min(1.0, chance * multiplier);
+            if (roll <= cursor) return fish;
+        }
+
+        return pool.getLast();
     }
 
     /**
