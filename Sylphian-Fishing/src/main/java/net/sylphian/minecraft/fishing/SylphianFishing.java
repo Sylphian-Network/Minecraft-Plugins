@@ -4,6 +4,7 @@ import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.sylphian.minecraft.database.DatabaseService;
 import net.sylphian.minecraft.fishing.commands.EncyclopaediaCommand;
+import net.sylphian.minecraft.fishing.commands.TestFishingCommand;
 import net.sylphian.minecraft.fishing.config.FishConfigLoader;
 import net.sylphian.minecraft.fishing.config.ConfigLoader;
 import net.sylphian.minecraft.fishing.db.migrations.Migration001CreateFishEncyclopaedia;
@@ -66,6 +67,7 @@ public class SylphianFishing extends JavaPlugin {
             Commands commands = event.registrar();
 
             commands.register("encyclopaedia", new EncyclopaediaCommand(menu));
+            commands.register("test_fishing", new TestFishingCommand(lootManager, configLoader));
         });
 
         getLogger().info("Sylphian Fishing enabled!");

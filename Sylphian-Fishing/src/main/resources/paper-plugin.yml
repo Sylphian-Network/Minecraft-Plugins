@@ -20,3 +20,6 @@ commands:
   encyclopaedia:
     description: Track your fishing discoveries and collection progress.
     usage: /encyclopaedia
+  test_fishing:
+    description: Run simulations under different configurable conditions.
+    usage: /test_fishing
