@@ -1,6 +1,7 @@
 package net.sylphian.minecraft.fishing.config;
 
 import net.sylphian.minecraft.fishing.fish.Rarity;
+import net.sylphian.minecraft.fishing.weather.WeatherCondition;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.configuration.ConfigurationSection;
@@ -18,10 +19,12 @@ public class ConfigLoader {
     private final Map<String, Double> mutationChances = new HashMap<>();
     private final Map<String, Boolean> mutationEnabled = new HashMap<>();
     private final Map<String, List<PotionEffect>> mutationEffects = new HashMap<>();
+    private final Map<WeatherCondition, Map<String, Double>> weatherModifiers = new HashMap<>();
 
     public ConfigLoader(FileConfiguration config) {
         loadRarities(config.getConfigurationSection("rarities"));
         loadMutations(config.getConfigurationSection("mutations"));
+        loadWeatherModifiers(config.getConfigurationSection("weather-modifiers"));
     }
 
     private void loadRarities(ConfigurationSection section) {
@@ -47,6 +50,22 @@ public class ConfigLoader {
         }
     }
 
+    private void loadWeatherModifiers(ConfigurationSection section) {
+        if (section == null) return;
+
+        for (WeatherCondition weather : WeatherCondition.values()) {
+            ConfigurationSection weatherSection = section.getConfigurationSection(weather.name());
+            if (weatherSection == null) continue;
+
+            Map<String, Double> rarityMultipliers = new HashMap<>();
+            for (String rarityKey : weatherSection.getKeys(false)) {
+                rarityMultipliers.put(rarityKey, weatherSection.getDouble(rarityKey, 1.0));
+            }
+
+            weatherModifiers.put(weather, rarityMultipliers);
+        }
+    }
+
     private List<PotionEffect> loadEffects(List<?> list) {
         List<PotionEffect> effects = new ArrayList<>();
         if (list == null) return effects;
@@ -67,6 +86,12 @@ public class ConfigLoader {
             }
         }
         return effects;
+    }
+
+    public double getWeatherMultiplier(WeatherCondition weather, Rarity rarity) {
+        return weatherModifiers
+                .getOrDefault(weather, Map.of())
+                .getOrDefault(rarity.getId(), 1.0);
     }
 
     public boolean isMutationEnabled(String id) {

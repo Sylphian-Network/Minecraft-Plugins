@@ -49,7 +49,7 @@ public class SylphianFishing extends JavaPlugin {
         FishConfigLoader loader = new FishConfigLoader(fishConfig);
         List<FishEntry> fish = loader.loadFish();
 
-        this.lootManager = new LootManager(fish);
+        this.lootManager = new LootManager(fish, configLoader);
 
         FishEncyclopaediaRepository encyclopaediaRepository = new FishEncyclopaediaRepository(
                 DatabaseService.getJdbi(),

@@ -1,8 +1,11 @@
 package net.sylphian.minecraft.fishing.loot;
+
+import net.sylphian.minecraft.fishing.config.ConfigLoader;
 import net.sylphian.minecraft.fishing.fish.CatchResult;
 import net.sylphian.minecraft.fishing.fish.FishEntry;
 import net.sylphian.minecraft.fishing.fish.Rarity;
 import net.sylphian.minecraft.fishing.util.ItemBuilder;
+import net.sylphian.minecraft.fishing.weather.WeatherCondition;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
 import org.bukkit.inventory.ItemStack;
@@ -13,18 +16,24 @@ import java.util.stream.Collectors;
 public class LootManager {
 
     private final Map<Rarity, List<FishEntry>> poolsByRarity;
+    private final ConfigLoader config;
     private final Random random = new Random();
 
-    public LootManager(List<FishEntry> allFish) {
+    public LootManager(List<FishEntry> allFish, ConfigLoader config) {
         this.poolsByRarity = allFish.stream()
                 .collect(Collectors.groupingBy(FishEntry::getRarity));
+        this.config = config;
     }
 
-    public CatchResult rollCatch(Biome biome) {
+    public CatchResult rollCatch(Biome biome, WeatherCondition weather) {
         double roll = random.nextDouble();
 
         for (Rarity rarity : Rarity.byDescendingRarity()) {
-            if (roll > rarity.getChance()) continue;
+            double baseChance = rarity.getChance();
+            double multiplier = config.getWeatherMultiplier(weather, rarity);
+            double finalChance = Math.min(1.0, baseChance * multiplier);
+
+            if (roll > finalChance) continue;
 
             List<FishEntry> pool = poolsByRarity
                     .getOrDefault(rarity, List.of())

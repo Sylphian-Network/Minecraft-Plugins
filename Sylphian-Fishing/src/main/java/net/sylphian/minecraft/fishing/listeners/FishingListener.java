@@ -1,11 +1,12 @@
 package net.sylphian.minecraft.fishing.listeners;
 
-import net.sylphian.minecraft.fishing.SylphianFishing;
 import net.sylphian.minecraft.fishing.db.api.IFishEncyclopaediaRepository;
 import net.sylphian.minecraft.fishing.fish.CatchResult;
 import net.sylphian.minecraft.fishing.loot.LootManager;
 import net.sylphian.minecraft.fishing.mutation.FishContext;
 import net.sylphian.minecraft.fishing.mutation.FishMutationService;
+import net.sylphian.minecraft.fishing.weather.WeatherCondition;
+import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
@@ -33,10 +34,11 @@ public class FishingListener implements Listener {
         if (event.getState() != PlayerFishEvent.State.CAUGHT_FISH) return;
         if (!(event.getCaught() instanceof Item caughtItem)) return;
 
-        Biome biome = event.getHook().getLocation().getWorld()
-                .getBiome(event.getHook().getLocation());
+        World world = event.getHook().getLocation().getWorld();
+        Biome biome = world.getBiome(event.getHook().getLocation());
+        WeatherCondition weather = WeatherCondition.from(world);
 
-        CatchResult result = lootManager.rollCatch(biome);
+        CatchResult result = lootManager.rollCatch(biome, weather);
         ItemStack itemStack = result.itemStack();
 
         FishContext context = new FishContext(result.rarity(), biome, event.getPlayer());

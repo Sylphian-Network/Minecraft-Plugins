@@ -49,3 +49,20 @@ mutations:
       - effect: SATURATION
         duration: 20
         amplifier: 1
+
+weather-modifiers:
+  CLEAR:
+    COMMON: 1.0
+    RARE: 1.0
+    EPIC: 1.0
+    LEGENDARY: 1.0
+  RAIN:
+    COMMON: 0.8
+    RARE: 1.2
+    EPIC: 1.3
+    LEGENDARY: 1.5
+  THUNDERSTORM:
+    COMMON: 0.6
+    RARE: 1.5
+    EPIC: 2.0
+    LEGENDARY: 3.0
