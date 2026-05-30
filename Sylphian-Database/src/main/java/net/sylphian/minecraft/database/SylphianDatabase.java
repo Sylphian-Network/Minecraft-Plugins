@@ -6,8 +6,20 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
+/**
+ * Main plugin class for Sylphian-Database.
+ * Responsible for initializing the global database connection pool and managing
+ * the lifecycle of the DatabaseService. It handles driver loading, configuration,
+ * and deferred execution of migrations to allow other plugins to register their
+ * schema changes during their own onEnable.
+ */
 public final class SylphianDatabase extends JavaPlugin {
 
+    /**
+     * Called when the plugin is enabled.
+     * Loads configuration, initializes the database connection pool via DatabaseService,
+     * and schedules a deferred task to run all registered migrations.
+     */
     @Override
     public void onEnable() {
         saveDefaultConfig();
@@ -15,6 +27,7 @@ public final class SylphianDatabase extends JavaPlugin {
 
         String driverClass = config.getString("driver_class", "org.mariadb.jdbc.Driver");
 
+        // Attempt to load the database driver class to ensure it's available in the classpath
         try {
             Class.forName(driverClass);
         } catch (ClassNotFoundException e) {
@@ -24,6 +37,7 @@ public final class SylphianDatabase extends JavaPlugin {
         }
 
         try {
+            // Initialize the shared database connection pool and JDBI instance
             DatabaseService.init(
                 config.getString("jdbc_url"),
                 config.getString("username"),
@@ -32,11 +46,13 @@ public final class SylphianDatabase extends JavaPlugin {
                 driverClass
             );
 
-            // Register core migrations
+            // Register core migrations for the Sylphian-Database plugin itself
             DatabaseService.registerMigrations(List.of(
             ));
 
-            // Defer migration run by one tick so other plugins can register theirs first
+            // Defer migration run by one tick so other plugins can register theirs first.
+            // This pattern ensures that all plugins have had a chance to call registerMigrations()
+            // before the MigrationRunner actually executes them against the database.
             Bukkit.getScheduler().runTask(this, () -> {
                 try {
                     DatabaseService.runMigrations("Sylphian-Database", getLogger());
@@ -54,6 +70,10 @@ public final class SylphianDatabase extends JavaPlugin {
         }
     }
 
+    /**
+     * Called when the plugin is disabled.
+     * Gracefully shuts down the connection pool and executor service.
+     */
     @Override
     public void onDisable() {
         DatabaseService.shutdown();
