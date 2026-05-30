@@ -63,9 +63,10 @@ public class FishingListener implements Listener {
         // Get the biome where the fishing hook actually landed
         Biome biome = world.getBiome(event.getHook().getLocation());
         WeatherCondition weather = WeatherCondition.from(world);
+        double hookY = event.getHook().getLocation().getY();
 
         // Roll for a fish based on rarity, biome, and weather
-        CatchResult result = lootManager.rollCatch(biome, weather);
+        CatchResult result = lootManager.rollCatch(biome, weather, hookY);
         ItemStack itemStack = result.itemStack();
 
         // Prepare context and attempt to apply mutations to the caught fish

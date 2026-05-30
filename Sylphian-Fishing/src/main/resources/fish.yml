@@ -1,18 +1,40 @@
+# =============================================================
 # Sylphian Fishing - Fish Configuration
+# =============================================================
 #
-# This file defines all the fish that can be caught.
+# This file defines every fish that can be caught on the server.
+# Fish are selected by first filtering eligible fish for the
+# player's biome and Y coordinate, then rolling a rarity, and
+# finally picking a fish by weight within that rarity pool.
 #
 # Fields:
-# - material:     The Bukkit Material name for the item.
-# - display-name: The MiniMessage formatted name of the fish.
-# - description:  The MiniMessage formatted lore. Use \n for new lines.
-# - rarity:       Must match a key defined in config.yml (e.g., COMMON, RARE, EPIC, LEGENDARY).
-# - weight:       Relative weight within its rarity pool. Higher values increase the
-#                 chance of this fish being picked compared to others of the same rarity.
-# - min-weight:   Minimum weight (in kg) for a caught instance.
-# - max-weight:   Maximum weight (in kg) for a caught instance.
-# - biomes:       A list of biomes where this fish can be caught, or "ALL" for everywhere.
-#                 Biome names must match Minecraft internal names (e.g., OCEAN, JUNGLE).
+# -------
+# material:     Bukkit Material name for the item dropped.
+#               See: https://jd.papermc.io/paper/1.21/org/bukkit/Material.html
+#
+# display-name: MiniMessage formatted name shown to players.
+#               See: https://docs.advntr.dev/minimessage/format.html
+#
+# description:  MiniMessage lore text. Use \n for line breaks.
+#
+# rarity:       Must match a key in config.yml rarities section.
+#               e.g. COMMON, UNCOMMON, RARE, EPIC, LEGENDARY, MYTHIC
+#
+# weight:       Relative chance within the rarity pool. Higher values
+#               mean this fish appears more often than others of the
+#               same rarity in the same biome.
+#
+# min-weight:   Minimum physical catch weight in kg.
+# max-weight:   Maximum physical catch weight in kg.
+#
+# biomes:       Biomes where this fish can appear. Use "ALL" for no
+#               restriction, or list Minecraft biome names.
+#               See: https://minecraft.wiki/w/Biome#Biome_IDs
+#
+# min-y:        (Optional) Minimum Y coordinate for this fish to appear.
+# max-y:        (Optional) Maximum Y coordinate for this fish to appear.
+#               Omitting both means no height restriction.
+# =============================================================
 
 fish:
   common_cod:

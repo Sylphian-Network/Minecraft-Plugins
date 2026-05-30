@@ -21,6 +21,8 @@ public class FishEntry {
     private final List<Biome> biomes;
     private final double minWeight;
     private final double maxWeight;
+    private final Integer minY;
+    private final Integer maxY;
 
     /**
      * Constructs a new FishEntry.
@@ -32,12 +34,15 @@ public class FishEntry {
      * @param rarity      the fish rarity
      * @param weight      relative weight in the weighted pool
      * @param biomes      list of biomes where this fish can be caught
-     * @param minWeight   minimum catch weight
-     * @param maxWeight   maximum catch weight
+     * @param minWeight   minimum catch weight in kg
+     * @param maxWeight   maximum catch weight in kg
+     * @param minY        minimum Y coordinate to catch this fish, or null for no restriction
+     * @param maxY        maximum Y coordinate to catch this fish, or null for no restriction
      */
     public FishEntry(String id, Material material, String displayName, String description,
                      Rarity rarity, int weight, List<Biome> biomes,
-                     double minWeight, double maxWeight) {
+                     double minWeight, double maxWeight,
+                     Integer minY, Integer maxY) {
         this.id = id;
         this.material = material;
         this.displayName = displayName;
@@ -47,6 +52,8 @@ public class FishEntry {
         this.biomes = biomes;
         this.minWeight = minWeight;
         this.maxWeight = maxWeight;
+        this.minY = minY;
+        this.maxY = maxY;
     }
 
     public String getId() { return id; }
@@ -56,12 +63,16 @@ public class FishEntry {
     public Rarity getRarity() { return rarity; }
     public int getWeight() { return weight; }
     public List<Biome> getBiomes() { return biomes; }
-    /**
-     *  Catchable anywhere
-     */
-    public boolean isGlobal() { return biomes.isEmpty(); }
     public double getMinWeight() { return minWeight; }
     public double getMaxWeight() { return maxWeight; }
+    public Integer getMinY() { return minY; }
+    public Integer getMaxY() { return maxY; }
+
+    /** Returns true if this fish has no biome restriction. */
+    public boolean isGlobal() { return biomes.isEmpty(); }
+
+    /** Returns true if this fish has no Y coordinate restriction. */
+    public boolean hasYRestriction() { return minY != null || maxY != null; }
 
     /**
      * Checks if this fish can be caught in the specified biome.
@@ -75,10 +86,23 @@ public class FishEntry {
     }
 
     /**
+     * Checks if this fish can be caught at the given Y coordinate.
+     * If no Y restriction is configured, always returns true.
+     *
+     * @param y the Y coordinate of the fishing hook
+     * @return true if catchable at this height
+     */
+    public boolean appliesToY(double y) {
+        if (minY != null && y < minY) return false;
+        if (maxY != null && y > maxY) return false;
+        return true;
+    }
+
+    /**
      * Rolls a random physical weight for the fish based on its min/max range.
      *
      * @param random the random source
-     * @return the rolled weight
+     * @return the rolled weight in kg
      */
     public double rollWeight(java.util.Random random) {
         return minWeight + (maxWeight - minWeight) * random.nextDouble();

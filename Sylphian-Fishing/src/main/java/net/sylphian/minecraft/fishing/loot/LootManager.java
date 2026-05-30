@@ -44,22 +44,22 @@ public class LootManager {
      * @param weather the current weather condition in the world
      * @return a CatchResult containing the fish ID, rarity, weight, and built ItemStack
      */
-    public CatchResult rollCatch(Biome biome, WeatherCondition weather) {
+    public CatchResult rollCatch(Biome biome, WeatherCondition weather, double hookY) {
 
-        // Collect every fish eligible for this biome
+        // Collect every fish eligible for this biome and Y coordinate
         List<FishEntry> eligiblePool = poolsByRarity.values().stream()
                 .flatMap(List::stream)
                 .filter(f -> f.appliesToBiome(biome))
+                .filter(f -> f.appliesToY(hookY))
                 .toList();
 
         if (eligiblePool.isEmpty()) {
             throw new IllegalStateException(
-                    "No fish configured for biome: " + biome.getKey().value()
-                            + " — check fish.yml has fish covering this biome."
+                    "No fish configured for biome: " + biome.getKey().value() + " at Y: " + (int) hookY + " - check fish.yml has fish covering this biome and height."
             );
         }
 
-        // Roll a rarity, using weather multipliers
+        // Roll a rarity using weather multipliers
         Rarity rolledRarity = rollRarity(weather);
 
         // Filter eligible pool to the rolled rarity
@@ -67,7 +67,7 @@ public class LootManager {
                 .filter(f -> f.getRarity().equals(rolledRarity))
                 .toList();
 
-        // If no fish of that rarity exist in this biome,
+        // If no fish of that rarity exist in this biome/Y range,
         // fall back to any fish in the eligible pool weighted by rarity chance
         if (rarityPool.isEmpty()) {
             return buildCatchResult(weightedPickByRarity(eligiblePool, weather));

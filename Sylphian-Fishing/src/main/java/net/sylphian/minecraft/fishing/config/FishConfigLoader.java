@@ -66,9 +66,11 @@ public class FishConfigLoader {
             double minWeight    = section.getDouble("min-weight", 0.5);
             double maxWeight    = section.getDouble("max-weight", 3.0);
             List<Biome> biomes  = parseBiomes(section);
+            Integer minY = section.contains("min-y") ? section.getInt("min-y") : null;
+            Integer maxY = section.contains("max-y") ? section.getInt("max-y") : null;
 
             entries.add(new FishEntry(key, material, displayName, description,
-                    rarity, weight, biomes, minWeight, maxWeight));
+                    rarity, weight, biomes, minWeight, maxWeight, minY, maxY));
         }
 
         logger.info("Fish loading complete [" + entries.size() + "] fish(s) registered.");
