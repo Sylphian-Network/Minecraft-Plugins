@@ -8,6 +8,9 @@ public class Migration002CreateSessions implements Migration {
     public int version() { return 2; }
 
     @Override
+    public String name() { return "CreateMcSessions"; }
+
+    @Override
     public String description() {
         return "Create mc_sessions table";
     }
@@ -24,5 +27,10 @@ public class Migration002CreateSessions implements Migration {
                 FOREIGN KEY (uuid) REFERENCES mc_players(uuid)
             )
         """);
+    }
+
+    @Override
+    public void down(Handle handle) {
+        handle.execute("DROP TABLE IF EXISTS mc_sessions");
     }
 }

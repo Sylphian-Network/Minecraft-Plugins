@@ -3,13 +3,22 @@ package net.sylphian.minecraft.fishing.db.migrations;
 import net.sylphian.minecraft.database.migrations.Migration;
 import org.jdbi.v3.core.Handle;
 
-public class Migration003CreateFishEncyclopaedia implements Migration {
+public class Migration001CreateFishEncyclopaedia implements Migration {
 
     @Override
-    public int version() { return 3; }
+    public int version() {
+        return 1;
+    }
 
     @Override
-    public String description() { return "Create fish_encyclopaedia table"; }
+    public String name() {
+        return "CreateFishEncyclopaedia";
+    }
+
+    @Override
+    public String description() {
+        return "Create fish_encyclopaedia table";
+    }
 
     @Override
     public void up(Handle handle) {
@@ -25,5 +34,10 @@ public class Migration003CreateFishEncyclopaedia implements Migration {
                 FOREIGN KEY (uuid) REFERENCES mc_players(uuid)
             )
         """);
+    }
+
+    @Override
+    public void down(Handle handle) {
+        handle.execute("DROP TABLE IF EXISTS fish_encyclopaedia");
     }
 }

@@ -48,9 +48,9 @@ public class DatabaseService {
         pendingMigrations.addAll(migrations);
     }
 
-    public static void runMigrations(java.util.logging.Logger logger) {
+    public static void runMigrations(String pluginName, java.util.logging.Logger logger) {
         List<Migration> all = new ArrayList<>(pendingMigrations);
-        new MigrationRunner(jdbi, all).run(logger);
+        new MigrationRunner(jdbi, all, pluginName).run(logger);
         pendingMigrations.clear();
     }
 

@@ -32,7 +32,7 @@ public final class SylphianProfile extends JavaPlugin {
                 new Migration001CreatePlayers(),
                 new Migration002CreateSessions()
         ));
-        DatabaseService.runMigrations(getLogger());
+        DatabaseService.runMigrations("Sylphian-Profile", getLogger());
         
         this.profileManager = new ProfileManager();
         this.visualManager = new VisualManager(this);

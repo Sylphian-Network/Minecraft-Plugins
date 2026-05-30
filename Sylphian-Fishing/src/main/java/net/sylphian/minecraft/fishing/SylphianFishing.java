@@ -6,7 +6,7 @@ import net.sylphian.minecraft.database.DatabaseService;
 import net.sylphian.minecraft.fishing.commands.EncyclopaediaCommand;
 import net.sylphian.minecraft.fishing.config.FishConfigLoader;
 import net.sylphian.minecraft.fishing.config.ConfigLoader;
-import net.sylphian.minecraft.fishing.db.migrations.Migration003CreateFishEncyclopaedia;
+import net.sylphian.minecraft.fishing.db.migrations.Migration001CreateFishEncyclopaedia;
 import net.sylphian.minecraft.fishing.db.repositories.FishEncyclopaediaRepository;
 import net.sylphian.minecraft.fishing.fish.FishEntry;
 import net.sylphian.minecraft.fishing.gui.EncyclopaediaMenu;
@@ -35,9 +35,9 @@ public class SylphianFishing extends JavaPlugin {
         saveResource("fish.yml", false);
 
         DatabaseService.registerMigrations(List.of(
-                new Migration003CreateFishEncyclopaedia()
+                new Migration001CreateFishEncyclopaedia()
         ));
-        DatabaseService.runMigrations(getLogger());
+        DatabaseService.runMigrations("Sylphian-Fishing", getLogger());
 
         ConfigLoader configLoader = new ConfigLoader(getConfig());
 

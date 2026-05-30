@@ -8,6 +8,9 @@ public class Migration001CreatePlayers implements Migration {
     public int version() { return 1; }
 
     @Override
+    public String name() { return "CreateMcPlayers"; }
+
+    @Override
     public String description() {
         return "Create mc_players table";
     }
@@ -26,5 +29,10 @@ public class Migration001CreatePlayers implements Migration {
                 is_online BOOLEAN NOT NULL DEFAULT FALSE
             )
         """);
+    }
+
+    @Override
+    public void down(Handle handle) {
+        handle.execute("DROP TABLE IF EXISTS mc_players");
     }
 }

@@ -39,7 +39,7 @@ public final class SylphianDatabase extends JavaPlugin {
             // Defer migration run by one tick so other plugins can register theirs first
             Bukkit.getScheduler().runTask(this, () -> {
                 try {
-                    DatabaseService.runMigrations(getLogger());
+                    DatabaseService.runMigrations("Sylphian-Database", getLogger());
                     getLogger().info("Database migrations completed successfully.");
                 } catch (Exception e) {
                     getLogger().severe("Migration failed: " + e.getMessage());
