@@ -20,10 +20,31 @@ import static io.papermc.paper.registry.RegistryAccess.registryAccess;
 import static net.sylphian.minecraft.fishing.SylphianFishingBootstrap.SUPER_FISH_KEY;
 
 /**
- * A specific mutation that applies the Super Fish enchantment to a caught fish.
- * Used to indicate a "special" or "upgraded" version of a fish.
+ * A mutation that applies the Super Fish enchantment to a caught fish.
+ * The enchantment is hidden from the tooltip using {@link ItemFlag#HIDE_ENCHANTS}
+ * and replaced with a lore line so it appears in the correct position
+ * relative to the fish's description, rarity, and weight.
+ *
+ * <p>The enchantment reference is resolved once at construction time
+ * rather than on every catch to avoid repeated registry lookups.</p>
  */
 public class SuperFishMutation implements FishMutation {
+
+    /**
+     * The Super Fish enchantment resolved from the Paper registry at construction.
+     * May be null if the enchantment was not registered correctly by the bootstrapper.
+     */
+    private final Enchantment superFish;
+
+    /**
+     * Constructs a new SuperFishMutation and resolves the Super Fish enchantment
+     * from the Paper registry using the key defined in {@link net.sylphian.minecraft.fishing.SylphianFishingBootstrap}.
+     */
+    public SuperFishMutation() {
+        this.superFish = registryAccess()
+                .getRegistry(RegistryKey.ENCHANTMENT)
+                .get(SUPER_FISH_KEY);
+    }
 
     /**
      * Always returns true as Super Fish can apply to any catch context.
@@ -38,19 +59,19 @@ public class SuperFishMutation implements FishMutation {
     }
 
     /**
-     * Applies the Super Fish enchantment to the item stack.
-     * Uses the Paper registry to retrieve the enchantment key.
+     * Applies the Super Fish enchantment to the item and appends a mutation
+     * lore line to the item's existing lore.
      *
-     * @param item    the fish item stack
+     * <p>The real enchantment is hidden via {@link ItemFlag#HIDE_ENCHANTS} so it
+     * does not render between the display name and lore. A styled lore line
+     * is appended instead to maintain correct tooltip ordering.</p>
+     *
+     * @param item    the fish item stack to mutate
      * @param player  the player who caught the fish
      * @param context the catch context
      */
     @Override
     public void apply(ItemStack item, Player player, FishContext context) {
-        Enchantment superFish = registryAccess()
-                .getRegistry(RegistryKey.ENCHANTMENT)
-                .get(SUPER_FISH_KEY);
-
         if (superFish == null) return;
 
         item.addUnsafeEnchantment(superFish, 1);
