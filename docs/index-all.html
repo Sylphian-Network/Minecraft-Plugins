@@ -126,6 +126,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Checks if this fish can be caught in the specified biome.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#appliesToY(double)" class="member-name-link">appliesToY(double)</a> - Method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
+<dd>
+<div class="block">Checks if this fish can be caught at the given Y coordinate.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/effects/CatchEffectService.html#apply(org.bukkit.entity.Player,net.sylphian.minecraft.fishing.fish.CatchResult,org.bukkit.Location)" class="member-name-link">apply(Player, CatchResult, Location)</a> - Method in class net.sylphian.minecraft.fishing.effects.<a href="net/sylphian/minecraft/fishing/effects/CatchEffectService.html" title="class in net.sylphian.minecraft.fishing.effects">CatchEffectService</a></dt>
 <dd>
 <div class="block">Applies all configured catch effects for the given catch result.</div>
@@ -238,6 +242,12 @@ lore line to the item's existing lore.</div>
 <dd>
 <div class="block">Caches a profile in memory.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/fishing/commands/TestFishingCommand.html#canUse(org.bukkit.command.CommandSender)" class="member-name-link">canUse(CommandSender)</a> - Method in class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/TestFishingCommand.html" title="class in net.sylphian.minecraft.fishing.commands">TestFishingCommand</a></dt>
+<dd>
+<div class="block">Restricts this command to players or admins with the appropriate permission.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/commands/TestEffectCommand.html#canUse(org.bukkit.command.CommandSender)" class="member-name-link">canUse(CommandSender)</a> - Method in class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/TestEffectCommand.html" title="class in net.sylphian.minecraft.fishing.commands">TestEffectCommand</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/fishing/effects/CatchEffectService.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.effects">CatchEffectService</a> - Class in <a href="net/sylphian/minecraft/fishing/effects/package-summary.html">net.sylphian.minecraft.fishing.effects</a></dt>
 <dd>
 <div class="block">Applies visual and audio catch effects to the player based on the rarity
@@ -533,6 +543,8 @@ of the fish they caught.</div>
 <dd>
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/fishing/commands/TestEffectCommand.html#execute(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" class="member-name-link">execute(CommandSourceStack, String[])</a> - Method in class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/TestEffectCommand.html" title="class in net.sylphian.minecraft.fishing.commands">TestEffectCommand</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/fishing/commands/TestFishingCommand.html#execute(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" class="member-name-link">execute(CommandSourceStack, String[])</a> - Method in class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/TestFishingCommand.html" title="class in net.sylphian.minecraft.fishing.commands">TestFishingCommand</a></dt>
 <dd>
 <div class="block">Executes the simulation.</div>
@@ -702,7 +714,7 @@ of the fish they caught.</div>
 <dd>
 <div class="block">Represents a single type of fish that can be caught.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#%3Cinit%3E(java.lang.String,org.bukkit.Material,java.lang.String,java.lang.String,net.sylphian.minecraft.fishing.fish.Rarity,int,java.util.List,double,double)" class="member-name-link">FishEntry(String, Material, String, String, Rarity, int, List, double, double)</a> - Constructor for class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
+<dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#%3Cinit%3E(java.lang.String,org.bukkit.Material,java.lang.String,java.lang.String,net.sylphian.minecraft.fishing.fish.Rarity,int,java.util.List,double,double,java.lang.Integer,java.lang.Integer)" class="member-name-link">FishEntry(String, Material, String, String, Rarity, int, List, double, double, Integer, Integer)</a> - Constructor for class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
 <dd>
 <div class="block">Constructs a new FishEntry.</div>
 </dd>
@@ -865,6 +877,8 @@ of the fish they caught.</div>
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#getMaxWeight()" class="member-name-link">getMaxWeight()</a> - Method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#getMaxY()" class="member-name-link">getMaxY()</a> - Method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/sylphian/verify/paper/api/model/VerificationResponse.html#getMcUsername()" class="member-name-link">getMcUsername()</a> - Method in class net.sylphian.verify.paper.api.model.<a href="net/sylphian/verify/paper/api/model/VerificationResponse.html" title="class in net.sylphian.verify.paper.api.model">VerificationResponse</a></dt>
 <dd>
 <div class="block">Gets the Minecraft username.</div>
@@ -892,6 +906,8 @@ of the fish they caught.</div>
 <div class="block">Gets the response metadata.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#getMinWeight()" class="member-name-link">getMinWeight()</a> - Method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#getMinY()" class="member-name-link">getMinY()</a> - Method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/fishing/config/ConfigLoader.html#getMutationConfig(java.lang.String)" class="member-name-link">getMutationConfig(String)</a> - Method in class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/ConfigLoader.html" title="class in net.sylphian.minecraft.fishing.config">ConfigLoader</a></dt>
 <dd>
@@ -1070,6 +1086,10 @@ of the fish they caught.</div>
 <dd>
 <div class="block">Returns a hash code value for this object.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#hasYRestriction()" class="member-name-link">hasYRestriction()</a> - Method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
+<dd>
+<div class="block">Returns true if this fish has no Y coordinate restriction.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:I">I</h2>
 <dl class="index">
@@ -1153,7 +1173,7 @@ of the fish they caught.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#isGlobal()" class="member-name-link">isGlobal()</a> - Method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
 <dd>
-<div class="block">Catchable anywhere</div>
+<div class="block">Returns true if this fish has no biome restriction.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/profile/db/dao/PlayerDao.PlayerRow.html#isOnline()" class="member-name-link">isOnline()</a> - Method in record class net.sylphian.minecraft.profile.db.dao.<a href="net/sylphian/minecraft/profile/db/dao/PlayerDao.PlayerRow.html" title="class in net.sylphian.minecraft.profile.db.dao">PlayerDao.PlayerRow</a></dt>
 <dd>
@@ -1752,7 +1772,7 @@ specific rarity is caught.</div>
 <dd>
 <div class="block">Rolls back database schema to a specific target version.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/fishing/loot/LootManager.html#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.weather.WeatherCondition)" class="member-name-link">rollCatch(Biome, WeatherCondition)</a> - Method in class net.sylphian.minecraft.fishing.loot.<a href="net/sylphian/minecraft/fishing/loot/LootManager.html" title="class in net.sylphian.minecraft.fishing.loot">LootManager</a></dt>
+<dt><a href="net/sylphian/minecraft/fishing/loot/LootManager.html#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.weather.WeatherCondition,double)" class="member-name-link">rollCatch(Biome, WeatherCondition, double)</a> - Method in class net.sylphian.minecraft.fishing.loot.<a href="net/sylphian/minecraft/fishing/loot/LootManager.html" title="class in net.sylphian.minecraft.fishing.loot">LootManager</a></dt>
 <dd>
 <div class="block">Rolls a catch result for the given biome and weather condition.</div>
 </dd>
@@ -1835,9 +1855,11 @@ specific rarity is caught.</div>
 <dd>
 <div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/config/RarityCatchEffects.TitleConfig.html#param-subtitle"><code>subtitle</code></a> record component.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/fishing/commands/TestEffectCommand.html#suggest(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" class="member-name-link">suggest(CommandSourceStack, String[])</a> - Method in class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/TestEffectCommand.html" title="class in net.sylphian.minecraft.fishing.commands">TestEffectCommand</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/fishing/commands/TestFishingCommand.html#suggest(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" class="member-name-link">suggest(CommandSourceStack, String[])</a> - Method in class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/TestFishingCommand.html" title="class in net.sylphian.minecraft.fishing.commands">TestFishingCommand</a></dt>
 <dd>
-<div class="block">Provides tab completion suggestions for the command arguments.</div>
+<div class="block">Provides tab completion suggestions for each argument position.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/SylphianFishingBootstrap.html#SUPER_FISH_KEY" class="member-name-link">SUPER_FISH_KEY</a> - Static variable in class net.sylphian.minecraft.fishing.<a href="net/sylphian/minecraft/fishing/SylphianFishingBootstrap.html" title="class in net.sylphian.minecraft.fishing">SylphianFishingBootstrap</a></dt>
 <dd>
@@ -1887,6 +1909,14 @@ from the Paper registry using the key defined in <a href="net/sylphian/minecraft
 </dl>
 <h2 class="title" id="I:T">T</h2>
 <dl class="index">
+<dt><a href="net/sylphian/minecraft/fishing/commands/TestEffectCommand.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.commands">TestEffectCommand</a> - Class in <a href="net/sylphian/minecraft/fishing/commands/package-summary.html">net.sylphian.minecraft.fishing.commands</a></dt>
+<dd>
+<div class="block">Command to test rarity catch effects at the player's target location.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/commands/TestEffectCommand.html#%3Cinit%3E(net.sylphian.minecraft.fishing.effects.CatchEffectService)" class="member-name-link">TestEffectCommand(CatchEffectService)</a> - Constructor for class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/TestEffectCommand.html" title="class in net.sylphian.minecraft.fishing.commands">TestEffectCommand</a></dt>
+<dd>
+<div class="block">Constructs a new TestEffectCommand.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/commands/TestFishingCommand.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.commands">TestFishingCommand</a> - Class in <a href="net/sylphian/minecraft/fishing/commands/package-summary.html">net.sylphian.minecraft.fishing.commands</a></dt>
 <dd>
 <div class="block">Administrative command to run fishing catch simulations.</div>

@@ -62,7 +62,7 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.weather.WeatherCondition)" tabindex="0">rollCatch(Biome, WeatherCondition)</a></li>
+<li><a href="#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.weather.WeatherCondition,double)" tabindex="0">rollCatch(Biome, WeatherCondition, double)</a></li>
 </ol>
 </li>
 </ol>
@@ -115,8 +115,9 @@ Uses a weighted random selection for fish within a rarity pool.</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../fish/CatchResult.html" title="class in net.sylphian.minecraft.fishing.fish">CatchResult</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.weather.WeatherCondition)" class="member-name-link">rollCatch</a><wbr>(org.bukkit.block.Biome&nbsp;biome,
- <a href="../weather/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.weather">WeatherCondition</a>&nbsp;weather)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.weather.WeatherCondition,double)" class="member-name-link">rollCatch</a><wbr>(org.bukkit.block.Biome&nbsp;biome,
+ <a href="../weather/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.weather">WeatherCondition</a>&nbsp;weather,
+ double&nbsp;hookY)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Rolls a catch result for the given biome and weather condition.</div>
 </div>
@@ -161,11 +162,12 @@ Uses a weighted random selection for fish within a rarity pool.</div>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.weather.WeatherCondition)">
+<section class="detail" id="rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.weather.WeatherCondition,double)">
 <h3>rollCatch</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../fish/CatchResult.html" title="class in net.sylphian.minecraft.fishing.fish">CatchResult</a></span>&nbsp;<span class="element-name">rollCatch</span><wbr><span class="parameters">(org.bukkit.block.Biome&nbsp;biome,
- <a href="../weather/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.weather">WeatherCondition</a>&nbsp;weather)</span></div>
+ <a href="../weather/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.weather">WeatherCondition</a>&nbsp;weather,
+ double&nbsp;hookY)</span></div>
 <div class="block">Rolls a catch result for the given biome and weather condition.
 Walks rarities from rarest to most common using a single random roll,
 applying weather multipliers to each rarity's base chance.</div>
