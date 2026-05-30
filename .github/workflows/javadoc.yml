@@ -4,9 +4,14 @@ on:
   push:
     branches:
       - master
+    paths:
+      - '**.java'
+      - 'build.gradle.kts'
+      - '**/build.gradle.kts'
 
 permissions:
   contents: write
+  actions: read
 
 jobs:
   javadoc:
