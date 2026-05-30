@@ -52,7 +52,12 @@ loadScripts(document, 'script');</script>
 <nav role="navigation" class="toc" aria-label="Table of contents">
 <div class="toc-header">Contents&nbsp;<input type="text" class="filter-input" disabled placeholder="Filter contents (type .)" aria-label="Filter table of contents" autocomplete="off" spellcheck="false"><input type="reset" class="reset-filter" disabled tabindex="-1" value="Reset"></div>
 <ol class="toc-list" tabindex="-1">
-<li><a href="#" tabindex="0">Description</a></li>
+<li><a href="#" tabindex="0">Description</a>
+<ol class="toc-list">
+<li><a href="#roll-process-heading" tabindex="0">Roll Process</a></li>
+<li><a href="#weather-modifiers-heading" tabindex="0">Weather Modifiers</a></li>
+</ol>
+</li>
 <li><a href="#constructor-summary" tabindex="0">Constructor Summary</a></li>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
@@ -62,7 +67,7 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.weather.WeatherCondition,double)" tabindex="0">rollCatch(Biome, WeatherCondition, double)</a></li>
+<li><a href="#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.weather.WeatherCondition,double,long)" tabindex="0">rollCatch(Biome, WeatherCondition, double, long)</a></li>
 </ol>
 </li>
 </ol>
@@ -80,9 +85,37 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">LootManager</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Manages the loot rolling logic for fishing.
-Responsible for selecting a fish based on rarity, biome, and weather conditions.
-Uses a weighted random selection for fish within a rarity pool.</div>
+<div class="block">Manages the loot rolling logic for the fishing system.
+
+<p>Rather than rolling a rarity first and then searching for fish, the manager
+builds an <b>eligible pool</b> upfront from all fish that match the current
+catch context. Rarity is then rolled and applied as a filter against that pool,
+ensuring biome, height, and time restrictions are always respected.</p>
+
+<h2 id="roll-process-heading">Roll Process</h2>
+<ol>
+  <li>Collect all fish matching the current biome, Y coordinate, and time of day</li>
+  <li>Roll a rarity using base chances modified by weather multipliers</li>
+  <li>Filter the eligible pool to fish of the rolled rarity</li>
+  <li>Pick a fish using weighted random selection</li>
+  <li>If no fish of the rolled rarity exist in the eligible pool, fall back to
+      a weighted pick across the entire eligible pool respecting rarity chances</li>
+</ol>
+
+<h2 id="weather-modifiers-heading">Weather Modifiers</h2>
+<p>Each weather condition (<a href="../weather/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.weather"><code>WeatherCondition</code></a>)
+applies a multiplier to each rarity's base chance. Multipliers are loaded from
+<code>config.yml</code> and clamped to a maximum of <code>1.0</code>.</p></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish"><code>FishEntry</code></a></li>
+<li><a href="../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish"><code>Rarity</code></a></li>
+<li><a href="../weather/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.weather"><code>WeatherCondition</code></a></li>
+</ul>
+</dd>
+</dl>
 </div>
 </section>
 <section class="summary">
@@ -115,11 +148,12 @@ Uses a weighted random selection for fish within a rarity pool.</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../fish/CatchResult.html" title="class in net.sylphian.minecraft.fishing.fish">CatchResult</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.weather.WeatherCondition,double)" class="member-name-link">rollCatch</a><wbr>(org.bukkit.block.Biome&nbsp;biome,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.weather.WeatherCondition,double,long)" class="member-name-link">rollCatch</a><wbr>(org.bukkit.block.Biome&nbsp;biome,
  <a href="../weather/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.weather">WeatherCondition</a>&nbsp;weather,
- double&nbsp;hookY)</code></div>
+ double&nbsp;hookY,
+ long&nbsp;worldTime)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Rolls a catch result for the given biome and weather condition.</div>
+<div class="block">Rolls a catch result for the given context.</div>
 </div>
 </div>
 </div>
@@ -162,21 +196,29 @@ Uses a weighted random selection for fish within a rarity pool.</div>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.weather.WeatherCondition,double)">
+<section class="detail" id="rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.weather.WeatherCondition,double,long)">
 <h3>rollCatch</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../fish/CatchResult.html" title="class in net.sylphian.minecraft.fishing.fish">CatchResult</a></span>&nbsp;<span class="element-name">rollCatch</span><wbr><span class="parameters">(org.bukkit.block.Biome&nbsp;biome,
  <a href="../weather/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.weather">WeatherCondition</a>&nbsp;weather,
- double&nbsp;hookY)</span></div>
-<div class="block">Rolls a catch result for the given biome and weather condition.
-Walks rarities from rarest to most common using a single random roll,
-applying weather multipliers to each rarity's base chance.</div>
+ double&nbsp;hookY,
+ long&nbsp;worldTime)</span></div>
+<div class="block">Rolls a catch result for the given context.
+First builds an eligible pool of all fish matching the biome,
+Y coordinate, and time of day. Then rolls a rarity applying
+weather multipliers, and picks a fish from the matching pool.
+If no fish of the rolled rarity exist in the eligible pool,
+falls back to a weighted pick across the entire eligible pool.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>biome</code> - the biome where the fishing hook landed</dd>
 <dd><code>weather</code> - the current weather condition in the world</dd>
+<dd><code>hookY</code> - the Y coordinate of the fishing hook</dd>
+<dd><code>worldTime</code> - the current world time in ticks (0-24000)</dd>
 <dt>Returns:</dt>
 <dd>a CatchResult containing the fish ID, rarity, weight, and built ItemStack</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalStateException.html" title="class or interface in java.lang" class="external-link">IllegalStateException</a></code> - if no fish are configured for the given context</dd>
 </dl>
 </div>
 </section>

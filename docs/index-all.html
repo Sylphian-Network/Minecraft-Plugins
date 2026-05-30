@@ -126,6 +126,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Checks if this fish can be caught in the specified biome.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#appliesToTime(long)" class="member-name-link">appliesToTime(long)</a> - Method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
+<dd>
+<div class="block">Checks if this fish can be caught at the given Minecraft time of day.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#appliesToY(double)" class="member-name-link">appliesToY(double)</a> - Method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
 <dd>
 <div class="block">Checks if this fish can be caught at the given Y coordinate.</div>
@@ -668,7 +672,7 @@ of the fish they caught.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/config/FishConfigLoader.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.config">FishConfigLoader</a> - Class in <a href="net/sylphian/minecraft/fishing/config/package-summary.html">net.sylphian.minecraft.fishing.config</a></dt>
 <dd>
-<div class="block">Loads fish definitions from a configuration file.</div>
+<div class="block">Loads and parses fish definitions from <code>fish.yml</code>.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/config/FishConfigLoader.html#%3Cinit%3E(org.bukkit.configuration.file.FileConfiguration,java.util.logging.Logger)" class="member-name-link">FishConfigLoader(FileConfiguration, Logger)</a> - Constructor for class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/FishConfigLoader.html" title="class in net.sylphian.minecraft.fishing.config">FishConfigLoader</a></dt>
 <dd>
@@ -712,9 +716,9 @@ of the fish they caught.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a> - Class in <a href="net/sylphian/minecraft/fishing/fish/package-summary.html">net.sylphian.minecraft.fishing.fish</a></dt>
 <dd>
-<div class="block">Represents a single type of fish that can be caught.</div>
+<div class="block">Represents a single type of fish that can be caught through the fishing system.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#%3Cinit%3E(java.lang.String,org.bukkit.Material,java.lang.String,java.lang.String,net.sylphian.minecraft.fishing.fish.Rarity,int,java.util.List,double,double,java.lang.Integer,java.lang.Integer)" class="member-name-link">FishEntry(String, Material, String, String, Rarity, int, List, double, double, Integer, Integer)</a> - Constructor for class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
+<dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#%3Cinit%3E(java.lang.String,org.bukkit.Material,java.lang.String,java.lang.String,net.sylphian.minecraft.fishing.fish.Rarity,int,java.util.List,double,double,java.lang.Integer,java.lang.Integer,java.lang.Long,java.lang.Long)" class="member-name-link">FishEntry(String, Material, String, String, Rarity, int, List, double, double, Integer, Integer, Long, Long)</a> - Constructor for class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
 <dd>
 <div class="block">Constructs a new FishEntry.</div>
 </dd>
@@ -875,6 +879,8 @@ of the fish they caught.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#getMaterial()" class="member-name-link">getMaterial()</a> - Method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#getMaxTime()" class="member-name-link">getMaxTime()</a> - Method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#getMaxWeight()" class="member-name-link">getMaxWeight()</a> - Method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#getMaxY()" class="member-name-link">getMaxY()</a> - Method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
@@ -905,6 +911,8 @@ of the fish they caught.</div>
 <dd>
 <div class="block">Gets the response metadata.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#getMinTime()" class="member-name-link">getMinTime()</a> - Method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#getMinWeight()" class="member-name-link">getMinWeight()</a> - Method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#getMinY()" class="member-name-link">getMinY()</a> - Method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
@@ -1086,9 +1094,13 @@ of the fish they caught.</div>
 <dd>
 <div class="block">Returns a hash code value for this object.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#hasTimeRestriction()" class="member-name-link">hasTimeRestriction()</a> - Method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
+<dd>
+<div class="block">Returns true if this fish has a time of day restriction configured.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#hasYRestriction()" class="member-name-link">hasYRestriction()</a> - Method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
 <dd>
-<div class="block">Returns true if this fish has no Y coordinate restriction.</div>
+<div class="block">Returns true if this fish has a Y coordinate restriction configured.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:I">I</h2>
@@ -1246,7 +1258,7 @@ of the fish they caught.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/loot/LootManager.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.loot">LootManager</a> - Class in <a href="net/sylphian/minecraft/fishing/loot/package-summary.html">net.sylphian.minecraft.fishing.loot</a></dt>
 <dd>
-<div class="block">Manages the loot rolling logic for fishing.</div>
+<div class="block">Manages the loot rolling logic for the fishing system.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/loot/LootManager.html#%3Cinit%3E(java.util.List,net.sylphian.minecraft.fishing.config.ConfigLoader)" class="member-name-link">LootManager(List, ConfigLoader)</a> - Constructor for class net.sylphian.minecraft.fishing.loot.<a href="net/sylphian/minecraft/fishing/loot/LootManager.html" title="class in net.sylphian.minecraft.fishing.loot">LootManager</a></dt>
 <dd>
@@ -1768,14 +1780,18 @@ specific rarity is caught.</div>
 <dd>
 <div class="block">Resets the strike counter for a player.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#restriction-dimensions-heading" class="search-tag-link">Restriction Dimensions</a> - Section in class net.sylphian.minecraft.fishing.fish.FishEntry</dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/database/migrations/MigrationRunner.html#rollbackTo(int,java.util.logging.Logger)" class="member-name-link">rollbackTo(int, Logger)</a> - Method in class net.sylphian.minecraft.database.migrations.<a href="net/sylphian/minecraft/database/migrations/MigrationRunner.html" title="class in net.sylphian.minecraft.database.migrations">MigrationRunner</a></dt>
 <dd>
 <div class="block">Rolls back database schema to a specific target version.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/fishing/loot/LootManager.html#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.weather.WeatherCondition,double)" class="member-name-link">rollCatch(Biome, WeatherCondition, double)</a> - Method in class net.sylphian.minecraft.fishing.loot.<a href="net/sylphian/minecraft/fishing/loot/LootManager.html" title="class in net.sylphian.minecraft.fishing.loot">LootManager</a></dt>
+<dt><a href="net/sylphian/minecraft/fishing/loot/LootManager.html#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.weather.WeatherCondition,double,long)" class="member-name-link">rollCatch(Biome, WeatherCondition, double, long)</a> - Method in class net.sylphian.minecraft.fishing.loot.<a href="net/sylphian/minecraft/fishing/loot/LootManager.html" title="class in net.sylphian.minecraft.fishing.loot">LootManager</a></dt>
 <dd>
-<div class="block">Rolls a catch result for the given biome and weather condition.</div>
+<div class="block">Rolls a catch result for the given context.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/fishing/loot/LootManager.html#roll-process-heading" class="search-tag-link">Roll Process</a> - Section in class net.sylphian.minecraft.fishing.loot.LootManager</dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#rollWeight(java.util.Random)" class="member-name-link">rollWeight(Random)</a> - Method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
 <dd>
 <div class="block">Rolls a random physical weight for the fish based on its min/max range.</div>
@@ -1929,6 +1945,8 @@ from the Paper registry using the key defined in <a href="net/sylphian/minecraft
 <dd>
 <div class="block">Thunderstorm.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#time-of-day-reference-heading" class="search-tag-link">Time of Day Reference</a> - Section in class net.sylphian.minecraft.fishing.fish.FishEntry</dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/fishing/db/dao/FishEncyclopaediaDao.FishEncyclopaediaRow.html#timesCaught()" class="member-name-link">timesCaught()</a> - Method in record class net.sylphian.minecraft.fishing.db.dao.<a href="net/sylphian/minecraft/fishing/db/dao/FishEncyclopaediaDao.FishEncyclopaediaRow.html" title="class in net.sylphian.minecraft.fishing.db.dao">FishEncyclopaediaDao.FishEncyclopaediaRow</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>timesCaught</code> record component.</div>
@@ -2311,6 +2329,8 @@ the order they are declared.</div>
 <dd>
 <div class="block">Represents the weather condition at the time of a fishing catch.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/fishing/loot/LootManager.html#weather-modifiers-heading" class="search-tag-link">Weather Modifiers</a> - Section in class net.sylphian.minecraft.fishing.loot.LootManager</dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/CatchResult.html#weight()" class="member-name-link">weight()</a> - Method in record class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/CatchResult.html" title="class in net.sylphian.minecraft.fishing.fish">CatchResult</a></dt>
 <dd>
 <div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/fish/CatchResult.html#param-weight"><code>weight</code></a> record component.</div>

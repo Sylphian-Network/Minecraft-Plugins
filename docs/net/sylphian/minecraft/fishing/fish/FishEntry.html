@@ -52,12 +52,17 @@ loadScripts(document, 'script');</script>
 <nav role="navigation" class="toc" aria-label="Table of contents">
 <div class="toc-header">Contents&nbsp;<input type="text" class="filter-input" disabled placeholder="Filter contents (type .)" aria-label="Filter table of contents" autocomplete="off" spellcheck="false"><input type="reset" class="reset-filter" disabled tabindex="-1" value="Reset"></div>
 <ol class="toc-list" tabindex="-1">
-<li><a href="#" tabindex="0">Description</a></li>
+<li><a href="#" tabindex="0">Description</a>
+<ol class="toc-list">
+<li><a href="#restriction-dimensions-heading" tabindex="0">Restriction Dimensions</a></li>
+<li><a href="#time-of-day-reference-heading" tabindex="0">Time of Day Reference</a></li>
+</ol>
+</li>
 <li><a href="#constructor-summary" tabindex="0">Constructor Summary</a></li>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(java.lang.String,org.bukkit.Material,java.lang.String,java.lang.String,net.sylphian.minecraft.fishing.fish.Rarity,int,java.util.List,double,double,java.lang.Integer,java.lang.Integer)" tabindex="0">FishEntry(String, Material, String, String, Rarity, int, List, double, double, Integer, Integer)</a></li>
+<li><a href="#%3Cinit%3E(java.lang.String,org.bukkit.Material,java.lang.String,java.lang.String,net.sylphian.minecraft.fishing.fish.Rarity,int,java.util.List,double,double,java.lang.Integer,java.lang.Integer,java.lang.Long,java.lang.Long)" tabindex="0">FishEntry(String, Material, String, String, Rarity, int, List, double, double, Integer, Integer, Long, Long)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -73,10 +78,14 @@ loadScripts(document, 'script');</script>
 <li><a href="#getMaxWeight()" tabindex="0">getMaxWeight()</a></li>
 <li><a href="#getMinY()" tabindex="0">getMinY()</a></li>
 <li><a href="#getMaxY()" tabindex="0">getMaxY()</a></li>
+<li><a href="#getMinTime()" tabindex="0">getMinTime()</a></li>
+<li><a href="#getMaxTime()" tabindex="0">getMaxTime()</a></li>
 <li><a href="#isGlobal()" tabindex="0">isGlobal()</a></li>
 <li><a href="#hasYRestriction()" tabindex="0">hasYRestriction()</a></li>
+<li><a href="#hasTimeRestriction()" tabindex="0">hasTimeRestriction()</a></li>
 <li><a href="#appliesToBiome(org.bukkit.block.Biome)" tabindex="0">appliesToBiome(Biome)</a></li>
 <li><a href="#appliesToY(double)" tabindex="0">appliesToY(double)</a></li>
+<li><a href="#appliesToTime(long)" tabindex="0">appliesToTime(long)</a></li>
 <li><a href="#rollWeight(java.util.Random)" tabindex="0">rollWeight(Random)</a></li>
 </ol>
 </li>
@@ -95,9 +104,39 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">FishEntry</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Represents a single type of fish that can be caught.
-Defines the fish's properties, including its rarity, relative weight in the loot pool,
-biome restrictions, and physical weight range.</div>
+<div class="block">Represents a single type of fish that can be caught through the fishing system.
+
+<p>Each fish defines its identity, appearance, and a set of optional restrictions
+that control when and where it can appear in the loot pool. All restriction fields
+are optional — omitting them means no restriction applies for that dimension.</p>
+
+<h2 id="restriction-dimensions-heading">Restriction Dimensions</h2>
+<ul>
+  <li><b>Biome</b> — list of biomes where the fish can appear, or empty for global</li>
+  <li><b>Y Coordinate</b> — optional min/max Y range for the fishing hook position</li>
+  <li><b>Time of Day</b> — optional min/max world time in ticks (0–24000)</li>
+</ul>
+
+<h2 id="time-of-day-reference-heading">Time of Day Reference</h2>
+<ul>
+  <li><code>0</code> — Dawn</li>
+  <li><code>6000</code> — Noon</li>
+  <li><code>12000</code> — Dusk</li>
+  <li><code>18000</code> — Midnight</li>
+</ul>
+
+<p>Overnight time ranges are supported — if <code>minTime &gt; maxTime</code>, the range
+wraps around midnight. For example, <code>minTime: 18000, maxTime: 6000</code> means
+the fish is catchable from dusk through to morning.</p></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../loot/LootManager.html" title="class in net.sylphian.minecraft.fishing.loot"><code>LootManager</code></a></li>
+<li><a href="../config/FishConfigLoader.html" title="class in net.sylphian.minecraft.fishing.config"><code>FishConfigLoader</code></a></li>
+</ul>
+</dd>
+</dl>
 </div>
 </section>
 <section class="summary">
@@ -110,7 +149,7 @@ biome restrictions, and physical weight range.</div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,org.bukkit.Material,java.lang.String,java.lang.String,net.sylphian.minecraft.fishing.fish.Rarity,int,java.util.List,double,double,java.lang.Integer,java.lang.Integer)" class="member-name-link">FishEntry</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,org.bukkit.Material,java.lang.String,java.lang.String,net.sylphian.minecraft.fishing.fish.Rarity,int,java.util.List,double,double,java.lang.Integer,java.lang.Integer,java.lang.Long,java.lang.Long)" class="member-name-link">FishEntry</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
  org.bukkit.Material&nbsp;material,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;displayName,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;description,
@@ -120,7 +159,9 @@ biome restrictions, and physical weight range.</div>
  double&nbsp;minWeight,
  double&nbsp;maxWeight,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;minY,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;maxY)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;maxY,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;minTime,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;maxTime)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Constructs a new FishEntry.</div>
 </div>
@@ -144,24 +185,32 @@ biome restrictions, and physical weight range.</div>
 <div class="block">Checks if this fish can be caught in the specified biome.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#appliesToY(double)" class="member-name-link">appliesToY</a><wbr>(double&nbsp;y)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#appliesToTime(long)" class="member-name-link">appliesToTime</a><wbr>(long&nbsp;worldTime)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Checks if this fish can be caught at the given Minecraft time of day.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#appliesToY(double)" class="member-name-link">appliesToY</a><wbr>(double&nbsp;y)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Checks if this fish can be caught at the given Y coordinate.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;org.bukkit.block.Biome&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBiomes()" class="member-name-link">getBiomes</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDescription()" class="member-name-link">getDescription</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;org.bukkit.block.Biome&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBiomes()" class="member-name-link">getBiomes</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDisplayName()" class="member-name-link">getDisplayName</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDescription()" class="member-name-link">getDescription</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getId()" class="member-name-link">getId</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDisplayName()" class="member-name-link">getDisplayName</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.bukkit.Material</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMaterial()" class="member-name-link">getMaterial</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getId()" class="member-name-link">getId</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.bukkit.Material</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMaterial()" class="member-name-link">getMaterial</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMaxTime()" class="member-name-link">getMaxTime</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMaxWeight()" class="member-name-link">getMaxWeight</a>()</code></div>
@@ -169,22 +218,30 @@ biome restrictions, and physical weight range.</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMaxY()" class="member-name-link">getMaxY</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMinWeight()" class="member-name-link">getMinWeight</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMinTime()" class="member-name-link">getMinTime</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMinY()" class="member-name-link">getMinY</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMinWeight()" class="member-name-link">getMinWeight</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRarity()" class="member-name-link">getRarity</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMinY()" class="member-name-link">getMinY</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWeight()" class="member-name-link">getWeight</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRarity()" class="member-name-link">getRarity</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWeight()" class="member-name-link">getWeight</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasTimeRestriction()" class="member-name-link">hasTimeRestriction</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns true if this fish has a time of day restriction configured.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasYRestriction()" class="member-name-link">hasYRestriction</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns true if this fish has no Y coordinate restriction.</div>
+<div class="block">Returns true if this fish has a Y coordinate restriction configured.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isGlobal()" class="member-name-link">isGlobal</a>()</code></div>
@@ -214,7 +271,7 @@ biome restrictions, and physical weight range.</div>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(java.lang.String,org.bukkit.Material,java.lang.String,java.lang.String,net.sylphian.minecraft.fishing.fish.Rarity,int,java.util.List,double,double,java.lang.Integer,java.lang.Integer)">
+<section class="detail" id="&lt;init&gt;(java.lang.String,org.bukkit.Material,java.lang.String,java.lang.String,net.sylphian.minecraft.fishing.fish.Rarity,int,java.util.List,double,double,java.lang.Integer,java.lang.Integer,java.lang.Long,java.lang.Long)">
 <h3>FishEntry</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">FishEntry</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
@@ -227,21 +284,25 @@ biome restrictions, and physical weight range.</div>
  double&nbsp;minWeight,
  double&nbsp;maxWeight,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;minY,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;maxY)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;maxY,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;minTime,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;maxTime)</span></div>
 <div class="block">Constructs a new FishEntry.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>id</code> - unique identifier for the fish</dd>
 <dd><code>material</code> - the item material to use</dd>
-<dd><code>displayName</code> - the name displayed to players</dd>
-<dd><code>description</code> - the description/lore of the fish</dd>
+<dd><code>displayName</code> - the MiniMessage formatted name displayed to players</dd>
+<dd><code>description</code> - the MiniMessage formatted lore description</dd>
 <dd><code>rarity</code> - the fish rarity</dd>
-<dd><code>weight</code> - relative weight in the weighted pool</dd>
-<dd><code>biomes</code> - list of biomes where this fish can be caught</dd>
-<dd><code>minWeight</code> - minimum catch weight in kg</dd>
-<dd><code>maxWeight</code> - maximum catch weight in kg</dd>
+<dd><code>weight</code> - relative weight in the weighted loot pool</dd>
+<dd><code>biomes</code> - list of biomes where this fish can be caught, empty for no restriction</dd>
+<dd><code>minWeight</code> - minimum physical catch weight in kg</dd>
+<dd><code>maxWeight</code> - maximum physical catch weight in kg</dd>
 <dd><code>minY</code> - minimum Y coordinate to catch this fish, or null for no restriction</dd>
 <dd><code>maxY</code> - maximum Y coordinate to catch this fish, or null for no restriction</dd>
+<dd><code>minTime</code> - minimum world time in ticks to catch this fish, or null for no restriction</dd>
+<dd><code>maxTime</code> - maximum world time in ticks to catch this fish, or null for no restriction</dd>
 </dl>
 </div>
 </section>
@@ -343,6 +404,22 @@ biome restrictions, and physical weight range.</div>
 </section>
 </li>
 <li>
+<section class="detail" id="getMinTime()">
+<h3>getMinTime</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a></span>&nbsp;<span class="element-name">getMinTime</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getMaxTime()">
+<h3>getMaxTime</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a></span>&nbsp;<span class="element-name">getMaxTime</span>()</div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="isGlobal()">
 <h3>isGlobal</h3>
 <div class="horizontal-scroll">
@@ -356,7 +433,24 @@ biome restrictions, and physical weight range.</div>
 <h3>hasYRestriction</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasYRestriction</span>()</div>
-<div class="block">Returns true if this fish has no Y coordinate restriction.</div>
+<div class="block">Returns true if this fish has a Y coordinate restriction configured.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>true if minY or maxY is set</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="hasTimeRestriction()">
+<h3>hasTimeRestriction</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasTimeRestriction</span>()</div>
+<div class="block">Returns true if this fish has a time of day restriction configured.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>true if minTime or maxTime is set</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -387,6 +481,24 @@ If no Y restriction is configured, always returns true.</div>
 <dd><code>y</code> - the Y coordinate of the fishing hook</dd>
 <dt>Returns:</dt>
 <dd>true if catchable at this height</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="appliesToTime(long)">
+<h3>appliesToTime</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">appliesToTime</span><wbr><span class="parameters">(long&nbsp;worldTime)</span></div>
+<div class="block">Checks if this fish can be caught at the given Minecraft time of day.
+Time is measured in ticks (0 = dawn, 6000 = noon, 12000 = dusk, 18000 = midnight).
+Supports overnight ranges where minTime is greater than maxTime
+e.g. minTime: 18000, maxTime: 6000 means dusk through to morning.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>worldTime</code> - the current world time in ticks</dd>
+<dt>Returns:</dt>
+<dd>true if catchable at this time</dd>
 </dl>
 </div>
 </section>

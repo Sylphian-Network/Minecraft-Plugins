@@ -89,12 +89,12 @@ loadScripts(document, 'script');</script>
 implements io.papermc.paper.command.brigadier.BasicCommand</span></div>
 <div class="block">Administrative command to run fishing catch simulations.
 Allows testing of loot distribution and mutation rates under
-different biomes, weather conditions, and Y coordinates.
+different biomes, weather conditions, Y coordinates, and times of day.
 
-<p>Usage: /test_fishing &lt;count&gt; [biome] [weather] [y]</p>
+<p>Usage: /test_fishing &lt;count&gt; [biome] [weather] [y] [time]</p>
 
-<p>When run by a player with no arguments provided, the player's
-current biome, weather, and Y coordinate are used as defaults.</p></div>
+<p>When run by a player, their current biome, weather, Y coordinate,
+and world time are used as defaults for any omitted arguments.</p></div>
 </div>
 </section>
 <section class="summary">
@@ -202,7 +202,7 @@ distribution and Super Fish mutation statistics to the sender.</div>
 <dd><code>execute</code>&nbsp;in interface&nbsp;<code>io.papermc.paper.command.brigadier.BasicCommand</code></dd>
 <dt>Parameters:</dt>
 <dd><code>stack</code> - the command source stack</dd>
-<dd><code>args</code> - command arguments: &lt;count&gt; [biome] [weather] [y]</dd>
+<dd><code>args</code> - command arguments: &lt;count&gt; [biome] [weather] [y] [time]</dd>
 </dl>
 </div>
 </section>

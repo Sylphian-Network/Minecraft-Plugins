@@ -178,8 +178,9 @@ and record the catch in the player's encyclopaedia.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onFish</span><wbr><span class="parameters">(org.bukkit.event.player.PlayerFishEvent&nbsp;event)</span></div>
 <div class="block">Handles the PlayerFishEvent.
-If a fish is caught, it rolls for a specific fish based on the environment,
-applies mutations, updates the caught item, and records the catch in the database.</div>
+Resolves the hook's biome, weather, Y coordinate, and world time,
+then rolls for a fish, applies mutations, updates the caught item,
+triggers rarity catch effects, and records the catch asynchronously.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>event</code> - the fishing event</dd>

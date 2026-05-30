@@ -80,8 +80,49 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">FishConfigLoader</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Loads fish definitions from a configuration file.
-Responsible for parsing material, weight, rarity, and biome restrictions for each fish.</div>
+<div class="block">Loads and parses fish definitions from <code>fish.yml</code>.
+
+<p>Each entry in the <code>fish</code> section supports the following fields:</p>
+
+<dl>
+  <dt><code>material</code> <i>(required)</i></dt>
+  <dd>Bukkit Material name for the dropped item.</dd>
+
+  <dt><code>display-name</code> <i>(required)</i></dt>
+  <dd>MiniMessage formatted name shown to the player.</dd>
+
+  <dt><code>rarity</code> <i>(required)</i></dt>
+  <dd>Must match a rarity key defined in <code>config.yml</code>. Unrecognised
+      values are logged and skipped.</dd>
+
+  <dt><code>weight</code> <i>(required)</i></dt>
+  <dd>Relative chance within the rarity pool. Higher values appear more often.</dd>
+
+  <dt><code>description</code></dt>
+  <dd>MiniMessage lore text appended below the display name. Supports <code>\n</code> for line breaks.</dd>
+
+  <dt><code>min-weight</code> / <code>max-weight</code></dt>
+  <dd>Physical catch weight range in kg. Defaults to <code>0.5</code>–<code>3.0</code>.</dd>
+
+  <dt><code>biomes</code></dt>
+  <dd>List of Minecraft biome IDs, or the string <code>ALL</code> for no restriction.</dd>
+
+  <dt><code>min-y</code> / <code>max-y</code></dt>
+  <dd>Optional Y coordinate range for the fishing hook. Omit for no restriction.</dd>
+
+  <dt><code>min-time</code> / <code>max-time</code></dt>
+  <dd>Optional world time range in ticks (0–24000). Supports overnight ranges
+      where <code>min-time</code> is greater than <code>max-time</code>.</dd>
+</dl></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish"><code>FishEntry</code></a></li>
+<li><a href="../loot/LootManager.html" title="class in net.sylphian.minecraft.fishing.loot"><code>LootManager</code></a></li>
+</ul>
+</dd>
+</dl>
 </div>
 </section>
 <section class="summary">
