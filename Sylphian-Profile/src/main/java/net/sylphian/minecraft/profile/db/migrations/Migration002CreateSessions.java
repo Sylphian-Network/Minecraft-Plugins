@@ -3,6 +3,10 @@ package net.sylphian.minecraft.profile.db.migrations;
 import net.sylphian.minecraft.database.migrations.Migration;
 import org.jdbi.v3.core.Handle;
 
+/**
+ * Migration V2: Creates the mc_sessions table.
+ * This table tracks individual player login sessions, linked to the mc_players table via UUID.
+ */
 public class Migration002CreateSessions implements Migration {
     @Override
     public int version() { return 2; }
@@ -17,6 +21,7 @@ public class Migration002CreateSessions implements Migration {
 
     @Override
     public void up(Handle handle) {
+        // Create the sessions table with a foreign key back to the players table
         handle.execute("""
             CREATE TABLE mc_sessions (
                 session_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -31,6 +36,7 @@ public class Migration002CreateSessions implements Migration {
 
     @Override
     public void down(Handle handle) {
+        // Drop the table to revert the migration
         handle.execute("DROP TABLE IF EXISTS mc_sessions");
     }
 }
