@@ -104,8 +104,7 @@ public class EncyclopaediaMenu {
     }
 
     private ItemStack createUnlockedFish(FishEntry fish, Map<String, FishEncyclopaediaModel> discovered) {
-        List<String> lore = new ArrayList<>();
-        lore.addAll(Arrays.asList(fish.getDescription().split("\n")));
+        List<String> lore = new ArrayList<>(Arrays.asList(fish.getDescription().split("\n")));
 
         FishEncyclopaediaModel model = discovered.get(fish.getId());
 
