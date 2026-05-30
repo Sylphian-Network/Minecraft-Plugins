@@ -4,11 +4,13 @@ import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.sylphian.minecraft.database.DatabaseService;
 import net.sylphian.minecraft.fishing.commands.EncyclopaediaCommand;
+import net.sylphian.minecraft.fishing.commands.TestEffectCommand;
 import net.sylphian.minecraft.fishing.commands.TestFishingCommand;
 import net.sylphian.minecraft.fishing.config.FishConfigLoader;
 import net.sylphian.minecraft.fishing.config.ConfigLoader;
 import net.sylphian.minecraft.fishing.db.migrations.Migration001CreateFishEncyclopaedia;
 import net.sylphian.minecraft.fishing.db.repositories.FishEncyclopaediaRepository;
+import net.sylphian.minecraft.fishing.effects.CatchEffectService;
 import net.sylphian.minecraft.fishing.fish.FishEntry;
 import net.sylphian.minecraft.fishing.gui.EncyclopaediaMenu;
 import net.sylphian.minecraft.fishing.listeners.EncyclopaediaListener;
@@ -33,7 +35,6 @@ import java.util.List;
 public class SylphianFishing extends JavaPlugin {
 
     private LootManager lootManager;
-    private FishMutationService mutationService;
 
     /**
      * Initializes the plugin, including configuration loading, database migrations,
@@ -52,8 +53,10 @@ public class SylphianFishing extends JavaPlugin {
 
         ConfigLoader configLoader = new ConfigLoader(getConfig(), getLogger());
 
-        this.mutationService = new FishMutationService(configLoader);
-        this.mutationService.registerMutation("super_fish", new SuperFishMutation());
+        FishMutationService mutationService = new FishMutationService(configLoader);
+        mutationService.registerMutation("super_fish", new SuperFishMutation());
+
+        CatchEffectService catchEffectService = new CatchEffectService(configLoader, getLogger());
 
         // Load fish from fish.yml
         File fishFile = new File(getDataFolder(), "fish.yml");
@@ -69,7 +72,7 @@ public class SylphianFishing extends JavaPlugin {
                 DatabaseService.getExecutor()
         );
 
-        getServer().getPluginManager().registerEvents(new FishingListener(lootManager, mutationService, encyclopaediaRepository, this), this);
+        getServer().getPluginManager().registerEvents(new FishingListener(lootManager, mutationService, catchEffectService, encyclopaediaRepository, this), this);
         getServer().getPluginManager().registerEvents(new EncyclopaediaListener(), this);
         getServer().getPluginManager().registerEvents(new SuperFishEnchantmentListener(configLoader), this);
 
@@ -80,6 +83,7 @@ public class SylphianFishing extends JavaPlugin {
 
             commands.register("encyclopaedia", new EncyclopaediaCommand(menu));
             commands.register("test_fishing", new TestFishingCommand(lootManager, configLoader));
+            commands.register("test_effect", new TestEffectCommand(catchEffectService));
         });
 
         getLogger().info("Sylphian Fishing enabled!");

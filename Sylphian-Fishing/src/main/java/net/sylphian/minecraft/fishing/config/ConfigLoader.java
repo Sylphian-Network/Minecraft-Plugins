@@ -23,6 +23,7 @@ public class ConfigLoader {
 
     private final Map<String, MutationConfig> mutations = new HashMap<>();
     private final Map<WeatherCondition, Map<String, Double>> weatherModifiers = new HashMap<>();
+    private final Map<String, RarityCatchEffects> rarityCatchEffects = new HashMap<>();
     private final Logger logger;
 
     /**
@@ -35,6 +36,7 @@ public class ConfigLoader {
         loadRarities(config.getConfigurationSection("rarities"));
         loadMutations(config.getConfigurationSection("mutations"));
         loadWeatherModifiers(config.getConfigurationSection("weather-modifiers"));
+        loadRarityCatchEffects(config.getConfigurationSection("rarities"));
     }
 
     /**
@@ -125,6 +127,83 @@ public class ConfigLoader {
             if (type != null) effects.add(new PotionEffect(type, duration, amplifier));
         }
         return effects;
+    }
+
+    /**
+     * Loads catch effects for each rarity from the config.
+     *
+     * @param section the rarities configuration section
+     */
+    private void loadRarityCatchEffects(ConfigurationSection section) {
+        if (section == null) return;
+
+        for (String key : section.getKeys(false)) {
+            ConfigurationSection effectsSection = section.getConfigurationSection(key + ".catch-effects");
+            if (effectsSection == null) {
+                rarityCatchEffects.put(key.toUpperCase(), RarityCatchEffects.empty());
+                continue;
+            }
+
+            // Sound
+            RarityCatchEffects.SoundConfig sound = null;
+            ConfigurationSection soundSec = effectsSection.getConfigurationSection("sound");
+            if (soundSec != null && soundSec.getBoolean("enabled", false)) {
+                sound = new RarityCatchEffects.SoundConfig(
+                        soundSec.getString("name", "entity.experience_orb.pickup"),
+                        (float) soundSec.getDouble("volume", 1.0),
+                        (float) soundSec.getDouble("pitch", 1.0)
+                );
+            }
+
+            // Particles
+            RarityCatchEffects.ParticleConfig particle = null;
+            ConfigurationSection particleSec = effectsSection.getConfigurationSection("particles");
+            if (particleSec != null && particleSec.getBoolean("enabled", false)) {
+                particle = new RarityCatchEffects.ParticleConfig(
+                        particleSec.getString("type", "SPLASH"),
+                        particleSec.getInt("count", 10),
+                        particleSec.getDouble("offset-x", 0.5),
+                        particleSec.getDouble("offset-y", 0.5),
+                        particleSec.getDouble("offset-z", 0.5)
+                );
+            }
+
+            // Title
+            RarityCatchEffects.TitleConfig title = null;
+            ConfigurationSection titleSec = effectsSection.getConfigurationSection("title");
+            if (titleSec != null && titleSec.getBoolean("enabled", false)) {
+                title = new RarityCatchEffects.TitleConfig(
+                        titleSec.getString("title", ""),
+                        titleSec.getString("subtitle", ""),
+                        titleSec.getInt("fade-in", 10),
+                        titleSec.getInt("stay", 40),
+                        titleSec.getInt("fade-out", 10)
+                );
+            }
+
+            // Broadcast
+            RarityCatchEffects.BroadcastConfig broadcast = null;
+            ConfigurationSection broadcastSec = effectsSection.getConfigurationSection("broadcast");
+            if (broadcastSec != null && broadcastSec.getBoolean("enabled", false)) {
+                broadcast = new RarityCatchEffects.BroadcastConfig(
+                        broadcastSec.getString("message", "")
+                );
+            }
+
+            rarityCatchEffects.put(key.toUpperCase(),
+                    new RarityCatchEffects(sound, particle, title, broadcast));
+        }
+    }
+
+    /**
+     * Retrieves the catch effects configuration for a given rarity.
+     *
+     * @param rarity the rarity to get effects for
+     * @return the RarityCatchEffects, or an empty config if none defined
+     */
+    public RarityCatchEffects getRarityCatchEffects(Rarity rarity) {
+        return rarityCatchEffects.getOrDefault(rarity.getId().toUpperCase(),
+                RarityCatchEffects.empty());
     }
 
     /**

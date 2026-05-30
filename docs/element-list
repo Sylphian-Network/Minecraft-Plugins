@@ -8,6 +8,7 @@ net.sylphian.minecraft.fishing.db.dao
 net.sylphian.minecraft.fishing.db.migrations
 net.sylphian.minecraft.fishing.db.models
 net.sylphian.minecraft.fishing.db.repositories
+net.sylphian.minecraft.fishing.effects
 net.sylphian.minecraft.fishing.fish
 net.sylphian.minecraft.fishing.gui
 net.sylphian.minecraft.fishing.listeners

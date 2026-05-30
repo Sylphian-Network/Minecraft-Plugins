@@ -1,6 +1,7 @@
 package net.sylphian.minecraft.fishing.listeners;
 
 import net.sylphian.minecraft.fishing.db.api.IFishEncyclopaediaRepository;
+import net.sylphian.minecraft.fishing.effects.CatchEffectService;
 import net.sylphian.minecraft.fishing.fish.CatchResult;
 import net.sylphian.minecraft.fishing.loot.LootManager;
 import net.sylphian.minecraft.fishing.mutation.FishContext;
@@ -24,6 +25,7 @@ public class FishingListener implements Listener {
 
     private final LootManager lootManager;
     private final FishMutationService mutationService;
+    private final CatchEffectService catchEffectService;
     private final IFishEncyclopaediaRepository encyclopaediaRepository;
     private final JavaPlugin plugin;
 
@@ -35,9 +37,10 @@ public class FishingListener implements Listener {
      * @param encyclopaediaRepository the repository for recording catches
      * @param plugin                  the plugin instance
      */
-    public FishingListener(LootManager lootManager, FishMutationService mutationService, IFishEncyclopaediaRepository encyclopaediaRepository, JavaPlugin plugin) {
+    public FishingListener(LootManager lootManager, FishMutationService mutationService, CatchEffectService catchEffectService, IFishEncyclopaediaRepository encyclopaediaRepository, JavaPlugin plugin) {
         this.lootManager = lootManager;
         this.mutationService = mutationService;
+        this.catchEffectService = catchEffectService;
         this.encyclopaediaRepository = encyclopaediaRepository;
         this.plugin = plugin;
     }
@@ -54,6 +57,8 @@ public class FishingListener implements Listener {
         if (event.getState() != PlayerFishEvent.State.CAUGHT_FISH) return;
         if (!(event.getCaught() instanceof Item caughtItem)) return;
 
+        event.setExpToDrop(0);
+
         World world = event.getHook().getLocation().getWorld();
         // Get the biome where the fishing hook actually landed
         Biome biome = world.getBiome(event.getHook().getLocation());
@@ -69,6 +74,9 @@ public class FishingListener implements Listener {
 
         // Update the physical item being reeled in
         caughtItem.setItemStack(itemStack);
+
+        // Apply rarity-based catch effects
+        catchEffectService.apply(event.getPlayer(), result, event.getHook().getLocation());
 
         // Record the catch in the database asynchronously
         encyclopaediaRepository.recordCatch(

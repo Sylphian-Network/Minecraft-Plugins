@@ -12,26 +12,137 @@ rarities:
     chance: 1.0
     color: "<white>"
     mutation-multiplier: 0.5
+    catch-effects:
+      sound:
+        enabled: false
+      particles:
+        enabled: false
+      title:
+        enabled: false
+      broadcast:
+        enabled: false
+
   UNCOMMON:
     chance: 0.50
     color: "<green>"
     mutation-multiplier: 0.8
+    catch-effects:
+      sound:
+        enabled: true
+        name: "minecraft:entity.experience_orb.pickup"
+        volume: 1.0
+        pitch: 1.2
+      particles:
+        enabled: false
+      title:
+        enabled: false
+      broadcast:
+        enabled: false
+
   RARE:
     chance: 0.20
     color: "<aqua>"
     mutation-multiplier: 1.0
+    catch-effects:
+      sound:
+        enabled: true
+        name: "minecraft:entity.player.levelup"
+        volume: 0.5
+        pitch: 1.5
+      particles:
+        enabled: true
+        type: "ENCHANTMENT_TABLE"
+        count: 20
+        offset-x: 0.5
+        offset-y: 0.5
+        offset-z: 0.5
+      title:
+        enabled: false
+      broadcast:
+        enabled: false
+
   EPIC:
     chance: 0.08
     color: "<dark_purple>"
     mutation-multiplier: 1.5
+    catch-effects:
+      sound:
+        enabled: true
+        name: "minecraft:ui.toast.challenge_complete"
+        volume: 0.7
+        pitch: 1.0
+      particles:
+        enabled: true
+        type: "WITCH"
+        count: 30
+        offset-x: 0.5
+        offset-y: 1.0
+        offset-z: 0.5
+      title:
+        enabled: true
+        title: "<dark_purple><bold>EPIC CATCH!"
+        subtitle: "<gray>You caught an epic fish!"
+        fade-in: 10
+        stay: 40
+        fade-out: 10
+      broadcast:
+        enabled: false
+
   LEGENDARY:
     chance: 0.03
     color: "<gold>"
     mutation-multiplier: 2.0
+    catch-effects:
+      sound:
+        enabled: true
+        name: "minecraft:item.totem.use"
+        volume: 1.0
+        pitch: 0.8
+      particles:
+        enabled: true
+        type: "TOTEM"
+        count: 50
+        offset-x: 0.8
+        offset-y: 1.0
+        offset-z: 0.8
+      title:
+        enabled: true
+        title: "<gold><bold>LEGENDARY CATCH!"
+        subtitle: "<yellow>An incredible fish!"
+        fade-in: 10
+        stay: 60
+        fade-out: 20
+      broadcast:
+        enabled: true
+        message: "<gold>✦ <white>{player} <gray>caught a <gold>Legendary <gray>fish!"
+
   MYTHIC:
     chance: 0.01
     color: "<light_purple>"
     mutation-multiplier: 3.0
+    catch-effects:
+      sound:
+        enabled: true
+        name: "minecraft:entity.ender_dragon.growl"
+        volume: 1.0
+        pitch: 0.5
+      particles:
+        enabled: true
+        type: "DRAGON_BREATH"
+        count: 80
+        offset-x: 1.0
+        offset-y: 1.5
+        offset-z: 1.0
+      title:
+        enabled: true
+        title: "<light_purple><bold>✦ MYTHIC CATCH! ✦"
+        subtitle: "<gray>The rarest of catches..."
+        fade-in: 10
+        stay: 80
+        fade-out: 20
+      broadcast:
+        enabled: true
+        message: "<light_purple>✦ <white>{player} <gray>caught a <light_purple>Mythic <gray>fish! <dark_gray>(Extremely rare!)"
 
 # Configuration for fish mutations
 mutations:

@@ -23,3 +23,6 @@ commands:
   test_fishing:
     description: Run simulations under different configurable conditions.
     usage: /test_fishing
+  test_effect:
+    description: Force the effects to play for the player to make sure they work.
+    usage: /test_effect
