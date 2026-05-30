@@ -14,14 +14,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Loads fish definitions from a configuration file.
+ * Responsible for parsing material, weight, rarity, and biome restrictions for each fish.
+ */
 public class FishConfigLoader {
 
     private final FileConfiguration fishConfig;
 
+    /**
+     * Constructs a new FishConfigLoader.
+     *
+     * @param fishConfig the configuration containing fish definitions
+     */
     public FishConfigLoader(FileConfiguration fishConfig) {
         this.fishConfig = fishConfig;
     }
 
+    /**
+     * Parses all fish entries from the configuration.
+     *
+     * @return a list of parsed FishEntry objects
+     * @throws IllegalArgumentException if a fish has an undefined rarity
+     */
     public List<FishEntry> loadFish() {
         List<FishEntry> entries = new ArrayList<>();
         ConfigurationSection fishSection = fishConfig.getConfigurationSection("fish");
@@ -52,6 +67,13 @@ public class FishConfigLoader {
         return entries;
     }
 
+    /**
+     * Parses the biome restrictions for a fish.
+     * If "ALL" is specified, the fish can be caught anywhere.
+     *
+     * @param section the configuration section for a specific fish
+     * @return a list of allowed biomes, or an empty list for "ALL"
+     */
     private List<Biome> parseBiomes(ConfigurationSection section) {
         if ("ALL".equals(section.getString("biomes"))) return List.of();
 

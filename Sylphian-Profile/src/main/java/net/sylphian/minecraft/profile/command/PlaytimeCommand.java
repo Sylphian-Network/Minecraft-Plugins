@@ -9,15 +9,32 @@ import org.bukkit.entity.Player;
 
 import java.util.logging.Logger;
 
+/**
+ * Command to view a player's total cumulative playtime.
+ * Uses the PlayerService to calculate real-time playtime including the current session.
+ */
 public class PlaytimeCommand implements BasicCommand {
     private final PlayerService playerService;
     private final Logger logger;
 
+    /**
+     * Constructs a new PlaytimeCommand.
+     *
+     * @param playerService the player service for playtime lookups
+     * @param logger        the plugin logger for error reporting
+     */
     public PlaytimeCommand(PlayerService playerService, Logger logger) {
         this.playerService = playerService;
         this.logger = logger;
     }
 
+    /**
+     * Executes the playtime command.
+     * Fetches playtime asynchronously and sends a formatted message to the player.
+     *
+     * @param stack the command source stack
+     * @param args  command arguments (currently unused)
+     */
     @Override
     public void execute(CommandSourceStack stack, String[] args) {
         if (!(stack.getSender() instanceof Player player)) {
@@ -25,6 +42,7 @@ public class PlaytimeCommand implements BasicCommand {
             return;
         }
 
+        // Fetch playtime from database + current session
         playerService.getTotalPlaytime(player.getUniqueId()).thenAccept(totalPlaytime -> sendPlaytime(player, player.getName(), totalPlaytime)).exceptionally(ex -> {
             player.sendMessage(Component.text("Failed to retrieve playtime.", NamedTextColor.RED));
             logger.severe("Failed to retrieve playtime: " + ex.getMessage());
@@ -32,7 +50,15 @@ public class PlaytimeCommand implements BasicCommand {
         });
     }
 
+    /**
+     * Formats and sends the playtime message to a player.
+     *
+     * @param player       the recipient
+     * @param username     the username to display in the message
+     * @param totalSeconds the total playtime in seconds
+     */
     private void sendPlaytime(Player player, String username, long totalSeconds) {
+        // Break down seconds into days, hours, minutes, and seconds
         long days    = totalSeconds / 86400;
         long hours   = (totalSeconds % 86400) / 3600;
         long minutes = (totalSeconds % 3600) / 60;
