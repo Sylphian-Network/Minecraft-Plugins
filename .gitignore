@@ -5,10 +5,6 @@ build/
 out/
 **/out/
 
-# Gradle wrapper (keep gradlew scripts, ignore the jar)
-gradle/wrapper/gradle-wrapper.jar
-**/gradle/wrapper/gradle-wrapper.jar
-
 # IntelliJ IDEA
 .idea/
 *.iml
