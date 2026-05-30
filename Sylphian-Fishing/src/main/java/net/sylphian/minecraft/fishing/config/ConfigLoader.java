@@ -21,11 +21,8 @@ import java.util.logging.Logger;
  */
 public class ConfigLoader {
 
-    private final Map<String, Double> mutationChances = new HashMap<>();
-    private final Map<String, Boolean> mutationEnabled = new HashMap<>();
-    private final Map<String, List<PotionEffect>> mutationEffects = new HashMap<>();
+    private final Map<String, MutationConfig> mutations = new HashMap<>();
     private final Map<WeatherCondition, Map<String, Double>> weatherModifiers = new HashMap<>();
-
     private final Logger logger;
 
     /**
@@ -63,18 +60,22 @@ public class ConfigLoader {
     }
 
     /**
-     * Loads mutation settings from the config.
+     * Loads mutation settings from the config into a single MutationConfig per mutation.
      *
      * @param section the configuration section containing mutations
      */
     private void loadMutations(ConfigurationSection section) {
         if (section == null) return;
+
         for (String key : section.getKeys(false)) {
             ConfigurationSection mutSection = section.getConfigurationSection(key);
             if (mutSection == null) continue;
-            mutationEnabled.put(key, mutSection.getBoolean("enabled", false));
-            mutationChances.put(key, mutSection.getDouble("base-chance", 0.0));
-            mutationEffects.put(key, loadEffects(mutSection.getList("effects")));
+
+            mutations.put(key, new MutationConfig(
+                    mutSection.getBoolean("enabled", false),
+                    mutSection.getDouble("base-chance", 0.0),
+                    loadEffects(mutSection.getList("effects"))
+            ));
         }
     }
 
@@ -119,10 +120,9 @@ public class ConfigLoader {
             int amplifier = (amplifierObj instanceof Number n) ? n.intValue() : 0;
 
             if (typeName == null) continue;
-            PotionEffectType type = Registry.POTION_EFFECT_TYPE.get(NamespacedKey.minecraft(typeName.toLowerCase()));
-            if (type != null) {
-                effects.add(new PotionEffect(type, duration, amplifier));
-            }
+            PotionEffectType type = Registry.POTION_EFFECT_TYPE.get(
+                    NamespacedKey.minecraft(typeName.toLowerCase()));
+            if (type != null) effects.add(new PotionEffect(type, duration, amplifier));
         }
         return effects;
     }
@@ -141,32 +141,12 @@ public class ConfigLoader {
     }
 
     /**
-     * Checks if a specific mutation is enabled.
+     * Retrieves the full mutation configuration for a given mutation ID.
      *
      * @param id the mutation ID
-     * @return true if enabled, false otherwise
+     * @return the MutationConfig, or an empty disabled config if not found
      */
-    public boolean isMutationEnabled(String id) {
-        return mutationEnabled.getOrDefault(id, false);
-    }
-
-    /**
-     * Gets the base chance for a mutation to occur.
-     *
-     * @param id the mutation ID
-     * @return the base chance (0.0 to 1.0)
-     */
-    public double getMutationBaseChance(String id) {
-        return mutationChances.getOrDefault(id, 0.0);
-    }
-
-    /**
-     * Gets the list of potion effects associated with a mutation.
-     *
-     * @param id the mutation ID
-     * @return the list of potion effects
-     */
-    public List<PotionEffect> getMutationEffects(String id) {
-        return mutationEffects.getOrDefault(id, List.of());
+    public MutationConfig getMutationConfig(String id) {
+        return mutations.getOrDefault(id, MutationConfig.empty());
     }
 }

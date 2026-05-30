@@ -132,7 +132,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/mutation/impl/SuperFishMutation.html#apply(org.bukkit.inventory.ItemStack,org.bukkit.entity.Player,net.sylphian.minecraft.fishing.mutation.FishContext)" class="member-name-link">apply(ItemStack, Player, FishContext)</a> - Method in class net.sylphian.minecraft.fishing.mutation.impl.<a href="net/sylphian/minecraft/fishing/mutation/impl/SuperFishMutation.html" title="class in net.sylphian.minecraft.fishing.mutation.impl">SuperFishMutation</a></dt>
 <dd>
-<div class="block">Applies the Super Fish enchantment to the item stack.</div>
+<div class="block">Applies the Super Fish enchantment to the item and appends a mutation
+lore line to the item's existing lore.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/mutation/FishMutationService.html#applyMutations(org.bukkit.entity.Player,org.bukkit.inventory.ItemStack,net.sylphian.minecraft.fishing.mutation.FishContext)" class="member-name-link">applyMutations(Player, ItemStack, FishContext)</a> - Method in class net.sylphian.minecraft.fishing.mutation.<a href="net/sylphian/minecraft/fishing/mutation/FishMutationService.html" title="class in net.sylphian.minecraft.fishing.mutation">FishMutationService</a></dt>
 <dd>
@@ -145,6 +146,10 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:B">B</h2>
 <dl class="index">
+<dt><a href="net/sylphian/minecraft/fishing/config/MutationConfig.html#baseChance()" class="member-name-link">baseChance()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/MutationConfig.html" title="class in net.sylphian.minecraft.fishing.config">MutationConfig</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/config/MutationConfig.html#param-baseChance"><code>baseChance</code></a> record component.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/db/dao/FishEncyclopaediaDao.FishEncyclopaediaRow.html#biggestWeight()" class="member-name-link">biggestWeight()</a> - Method in record class net.sylphian.minecraft.fishing.db.dao.<a href="net/sylphian/minecraft/fishing/db/dao/FishEncyclopaediaDao.FishEncyclopaediaRow.html" title="class in net.sylphian.minecraft.fishing.db.dao">FishEncyclopaediaDao.FishEncyclopaediaRow</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>biggestWeight</code> record component.</div>
@@ -371,6 +376,18 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:E">E</h2>
 <dl class="index">
+<dt><a href="net/sylphian/minecraft/fishing/config/MutationConfig.html#effects()" class="member-name-link">effects()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/MutationConfig.html" title="class in net.sylphian.minecraft.fishing.config">MutationConfig</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/config/MutationConfig.html#param-effects"><code>effects</code></a> record component.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/config/MutationConfig.html#empty()" class="member-name-link">empty()</a> - Static method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/MutationConfig.html" title="class in net.sylphian.minecraft.fishing.config">MutationConfig</a></dt>
+<dd>
+<div class="block">Returns an empty disabled mutation config used as a safe default.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/config/MutationConfig.html#enabled()" class="member-name-link">enabled()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/MutationConfig.html" title="class in net.sylphian.minecraft.fishing.config">MutationConfig</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/config/MutationConfig.html#param-enabled"><code>enabled</code></a> record component.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/commands/EncyclopaediaCommand.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.commands">EncyclopaediaCommand</a> - Class in <a href="net/sylphian/minecraft/fishing/commands/package-summary.html">net.sylphian.minecraft.fishing.commands</a></dt>
 <dd>
 <div class="block">Command to open the fish encyclopaedia GUI for a player.</div>
@@ -408,6 +425,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/sylphian/minecraft/profile/UserProfile.html#entitlements()" class="member-name-link">entitlements()</a> - Method in record class net.sylphian.minecraft.profile.<a href="net/sylphian/minecraft/profile/UserProfile.html" title="class in net.sylphian.minecraft.profile">UserProfile</a></dt>
 <dd>
 <div class="block">Returns the value of the <a href="./net/sylphian/minecraft/profile/UserProfile.html#param-entitlements"><code>entitlements</code></a> record component.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/config/MutationConfig.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/MutationConfig.html" title="class in net.sylphian.minecraft.fishing.config">MutationConfig</a></dt>
+<dd>
+<div class="block">Indicates whether some other object is "equal to" this one.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/db/dao/FishEncyclopaediaDao.FishEncyclopaediaRow.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class net.sylphian.minecraft.fishing.db.dao.<a href="net/sylphian/minecraft/fishing/db/dao/FishEncyclopaediaDao.FishEncyclopaediaRow.html" title="class in net.sylphian.minecraft.fishing.db.dao">FishEncyclopaediaDao.FishEncyclopaediaRow</a></dt>
 <dd>
@@ -815,13 +836,9 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#getMinWeight()" class="member-name-link">getMinWeight()</a> - Method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/sylphian/minecraft/fishing/config/ConfigLoader.html#getMutationBaseChance(java.lang.String)" class="member-name-link">getMutationBaseChance(String)</a> - Method in class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/ConfigLoader.html" title="class in net.sylphian.minecraft.fishing.config">ConfigLoader</a></dt>
+<dt><a href="net/sylphian/minecraft/fishing/config/ConfigLoader.html#getMutationConfig(java.lang.String)" class="member-name-link">getMutationConfig(String)</a> - Method in class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/ConfigLoader.html" title="class in net.sylphian.minecraft.fishing.config">ConfigLoader</a></dt>
 <dd>
-<div class="block">Gets the base chance for a mutation to occur.</div>
-</dd>
-<dt><a href="net/sylphian/minecraft/fishing/config/ConfigLoader.html#getMutationEffects(java.lang.String)" class="member-name-link">getMutationEffects(String)</a> - Method in class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/ConfigLoader.html" title="class in net.sylphian.minecraft.fishing.config">ConfigLoader</a></dt>
-<dd>
-<div class="block">Gets the list of potion effects associated with a mutation.</div>
+<div class="block">Retrieves the full mutation configuration for a given mutation ID.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/Rarity.html#getMutationMultiplier()" class="member-name-link">getMutationMultiplier()</a> - Method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a></dt>
 <dd>&nbsp;</dd>
@@ -913,6 +930,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/sylphian/minecraft/profile/service/PlayerService.html#handleQuit(java.util.UUID)" class="member-name-link">handleQuit(UUID)</a> - Method in class net.sylphian.minecraft.profile.service.<a href="net/sylphian/minecraft/profile/service/PlayerService.html" title="class in net.sylphian.minecraft.profile.service">PlayerService</a></dt>
 <dd>
 <div class="block">Handles a player quitting the server.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/config/MutationConfig.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/MutationConfig.html" title="class in net.sylphian.minecraft.fishing.config">MutationConfig</a></dt>
+<dd>
+<div class="block">Returns a hash code value for this object.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/db/dao/FishEncyclopaediaDao.FishEncyclopaediaRow.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class net.sylphian.minecraft.fishing.db.dao.<a href="net/sylphian/minecraft/fishing/db/dao/FishEncyclopaediaDao.FishEncyclopaediaRow.html" title="class in net.sylphian.minecraft.fishing.db.dao">FishEncyclopaediaDao.FishEncyclopaediaRow</a></dt>
 <dd>
@@ -1052,10 +1073,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#isGlobal()" class="member-name-link">isGlobal()</a> - Method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
 <dd>
 <div class="block">Catchable anywhere</div>
-</dd>
-<dt><a href="net/sylphian/minecraft/fishing/config/ConfigLoader.html#isMutationEnabled(java.lang.String)" class="member-name-link">isMutationEnabled(String)</a> - Method in class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/ConfigLoader.html" title="class in net.sylphian.minecraft.fishing.config">ConfigLoader</a></dt>
-<dd>
-<div class="block">Checks if a specific mutation is enabled.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/profile/db/dao/PlayerDao.PlayerRow.html#isOnline()" class="member-name-link">isOnline()</a> - Method in record class net.sylphian.minecraft.profile.db.dao.<a href="net/sylphian/minecraft/profile/db/dao/PlayerDao.PlayerRow.html" title="class in net.sylphian.minecraft.profile.db.dao">PlayerDao.PlayerRow</a></dt>
 <dd>
@@ -1210,6 +1227,14 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/sylphian/minecraft/database/migrations/MigrationRunner.html#%3Cinit%3E(org.jdbi.v3.core.Jdbi,java.util.List,java.lang.String)" class="member-name-link">MigrationRunner(Jdbi, List, String)</a> - Constructor for class net.sylphian.minecraft.database.migrations.<a href="net/sylphian/minecraft/database/migrations/MigrationRunner.html" title="class in net.sylphian.minecraft.database.migrations">MigrationRunner</a></dt>
 <dd>
 <div class="block">Constructs a new MigrationRunner.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/config/MutationConfig.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.config">MutationConfig</a> - Record Class in <a href="net/sylphian/minecraft/fishing/config/package-summary.html">net.sylphian.minecraft.fishing.config</a></dt>
+<dd>
+<div class="block">Immutable configuration for a single fish mutation.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/config/MutationConfig.html#%3Cinit%3E(boolean,double,java.util.List)" class="member-name-link">MutationConfig(boolean, double, List)</a> - Constructor for record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/MutationConfig.html" title="class in net.sylphian.minecraft.fishing.config">MutationConfig</a></dt>
+<dd>
+<div class="block">Creates an instance of a <code>MutationConfig</code> record class.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:N">N</h2>
@@ -1672,10 +1697,13 @@ service registration, and command/event setup.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/mutation/impl/SuperFishMutation.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.mutation.impl">SuperFishMutation</a> - Class in <a href="net/sylphian/minecraft/fishing/mutation/impl/package-summary.html">net.sylphian.minecraft.fishing.mutation.impl</a></dt>
 <dd>
-<div class="block">A specific mutation that applies the Super Fish enchantment to a caught fish.</div>
+<div class="block">A mutation that applies the Super Fish enchantment to a caught fish.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/mutation/impl/SuperFishMutation.html#%3Cinit%3E()" class="member-name-link">SuperFishMutation()</a> - Constructor for class net.sylphian.minecraft.fishing.mutation.impl.<a href="net/sylphian/minecraft/fishing/mutation/impl/SuperFishMutation.html" title="class in net.sylphian.minecraft.fishing.mutation.impl">SuperFishMutation</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Constructs a new SuperFishMutation and resolves the Super Fish enchantment
+from the Paper registry using the key defined in <a href="net/sylphian/minecraft/fishing/SylphianFishingBootstrap.html" title="class in net.sylphian.minecraft.fishing"><code>SylphianFishingBootstrap</code></a>.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/database/SylphianDatabase.html" class="type-name-link" title="class in net.sylphian.minecraft.database">SylphianDatabase</a> - Class in <a href="net/sylphian/minecraft/database/package-summary.html">net.sylphian.minecraft.database</a></dt>
 <dd>
 <div class="block">Main plugin class for Sylphian-Database.</div>
@@ -1722,6 +1750,10 @@ service registration, and command/event setup.</div>
 <dt><a href="net/sylphian/minecraft/fishing/db/models/FishEncyclopaediaModel.html#timesCaught()" class="member-name-link">timesCaught()</a> - Method in record class net.sylphian.minecraft.fishing.db.models.<a href="net/sylphian/minecraft/fishing/db/models/FishEncyclopaediaModel.html" title="class in net.sylphian.minecraft.fishing.db.models">FishEncyclopaediaModel</a></dt>
 <dd>
 <div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/db/models/FishEncyclopaediaModel.html#param-timesCaught"><code>timesCaught</code></a> record component.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/config/MutationConfig.html#toString()" class="member-name-link">toString()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/MutationConfig.html" title="class in net.sylphian.minecraft.fishing.config">MutationConfig</a></dt>
+<dd>
+<div class="block">Returns a string representation of this record class.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/db/dao/FishEncyclopaediaDao.FishEncyclopaediaRow.html#toString()" class="member-name-link">toString()</a> - Method in record class net.sylphian.minecraft.fishing.db.dao.<a href="net/sylphian/minecraft/fishing/db/dao/FishEncyclopaediaDao.FishEncyclopaediaRow.html" title="class in net.sylphian.minecraft.fishing.db.dao">FishEncyclopaediaDao.FishEncyclopaediaRow</a></dt>
 <dd>

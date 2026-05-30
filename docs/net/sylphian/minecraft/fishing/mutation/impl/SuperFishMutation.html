@@ -86,8 +86,13 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">SuperFishMutation</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="../FishMutation.html" title="interface in net.sylphian.minecraft.fishing.mutation">FishMutation</a></span></div>
-<div class="block">A specific mutation that applies the Super Fish enchantment to a caught fish.
-Used to indicate a "special" or "upgraded" version of a fish.</div>
+<div class="block">A mutation that applies the Super Fish enchantment to a caught fish.
+The enchantment is hidden from the tooltip using <code>ItemFlag.HIDE_ENCHANTS</code>
+and replaced with a lore line so it appears in the correct position
+relative to the fish's description, rarity, and weight.
+
+<p>The enchantment reference is resolved once at construction time
+rather than on every catch to avoid repeated registry lookups.</p></div>
 </div>
 </section>
 <section class="summary">
@@ -101,7 +106,10 @@ Used to indicate a "special" or "upgraded" version of a fish.</div>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">SuperFishMutation</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Constructs a new SuperFishMutation and resolves the Super Fish enchantment
+from the Paper registry using the key defined in <a href="../../SylphianFishingBootstrap.html" title="class in net.sylphian.minecraft.fishing"><code>SylphianFishingBootstrap</code></a>.</div>
+</div>
 </div>
 </section>
 </li>
@@ -121,7 +129,8 @@ Used to indicate a "special" or "upgraded" version of a fish.</div>
  org.bukkit.entity.Player&nbsp;player,
  <a href="../FishContext.html" title="class in net.sylphian.minecraft.fishing.mutation">FishContext</a>&nbsp;context)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Applies the Super Fish enchantment to the item stack.</div>
+<div class="block">Applies the Super Fish enchantment to the item and appends a mutation
+lore line to the item's existing lore.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#shouldApply(org.bukkit.entity.Player,net.sylphian.minecraft.fishing.mutation.FishContext)" class="member-name-link">shouldApply</a><wbr>(org.bukkit.entity.Player&nbsp;player,
@@ -151,6 +160,8 @@ Used to indicate a "special" or "upgraded" version of a fish.</div>
 <h3>SuperFishMutation</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SuperFishMutation</span>()</div>
+<div class="block">Constructs a new SuperFishMutation and resolves the Super Fish enchantment
+from the Paper registry using the key defined in <a href="../../SylphianFishingBootstrap.html" title="class in net.sylphian.minecraft.fishing"><code>SylphianFishingBootstrap</code></a>.</div>
 </div>
 </section>
 </li>
@@ -188,13 +199,17 @@ Used to indicate a "special" or "upgraded" version of a fish.</div>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">apply</span><wbr><span class="parameters">(org.bukkit.inventory.ItemStack&nbsp;item,
  org.bukkit.entity.Player&nbsp;player,
  <a href="../FishContext.html" title="class in net.sylphian.minecraft.fishing.mutation">FishContext</a>&nbsp;context)</span></div>
-<div class="block">Applies the Super Fish enchantment to the item stack.
-Uses the Paper registry to retrieve the enchantment key.</div>
+<div class="block">Applies the Super Fish enchantment to the item and appends a mutation
+lore line to the item's existing lore.
+
+<p>The real enchantment is hidden via <code>ItemFlag.HIDE_ENCHANTS</code> so it
+does not render between the display name and lore. A styled lore line
+is appended instead to maintain correct tooltip ordering.</p></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../FishMutation.html#apply(org.bukkit.inventory.ItemStack,org.bukkit.entity.Player,net.sylphian.minecraft.fishing.mutation.FishContext)">apply</a></code>&nbsp;in interface&nbsp;<code><a href="../FishMutation.html" title="interface in net.sylphian.minecraft.fishing.mutation">FishMutation</a></code></dd>
 <dt>Parameters:</dt>
-<dd><code>item</code> - the fish item stack</dd>
+<dd><code>item</code> - the fish item stack to mutate</dd>
 <dd><code>player</code> - the player who caught the fish</dd>
 <dd><code>context</code> - the catch context</dd>
 </dl>

@@ -8,6 +8,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.fishing.config.ConfigLoader;
+import net.sylphian.minecraft.fishing.config.MutationConfig;
 import net.sylphian.minecraft.fishing.fish.CatchResult;
 import net.sylphian.minecraft.fishing.fish.Rarity;
 import net.sylphian.minecraft.fishing.loot.LootManager;
@@ -117,8 +118,9 @@ public class TestFishingCommand implements BasicCommand {
             superFishCounts.put(rarity, 0);
         }
 
-        double superFishBaseChance = config.getMutationBaseChance("super_fish");
-        boolean superFishEnabled = config.isMutationEnabled("super_fish");
+        MutationConfig superFishConfig = config.getMutationConfig("super_fish");
+        boolean superFishEnabled = superFishConfig.enabled();
+        double superFishBaseChance = superFishConfig.baseChance();
 
         // Run the simulation loop
         for (int i = 0; i < count; i++) {

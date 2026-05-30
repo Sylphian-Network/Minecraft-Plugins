@@ -52,6 +52,6 @@ public class SuperFishEnchantmentListener implements Listener {
      * @param player the player who consumed the fish
      */
     private void applySuperFishEffects(Player player) {
-        player.addPotionEffects(config.getMutationEffects("super_fish"));
+        player.addPotionEffects(config.getMutationConfig("super_fish").effects());
     }
 }

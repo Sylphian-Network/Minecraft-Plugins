@@ -63,9 +63,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#getWeatherMultiplier(net.sylphian.minecraft.fishing.weather.WeatherCondition,net.sylphian.minecraft.fishing.fish.Rarity)" tabindex="0">getWeatherMultiplier(WeatherCondition, Rarity)</a></li>
-<li><a href="#isMutationEnabled(java.lang.String)" tabindex="0">isMutationEnabled(String)</a></li>
-<li><a href="#getMutationBaseChance(java.lang.String)" tabindex="0">getMutationBaseChance(String)</a></li>
-<li><a href="#getMutationEffects(java.lang.String)" tabindex="0">getMutationEffects(String)</a></li>
+<li><a href="#getMutationConfig(java.lang.String)" tabindex="0">getMutationConfig(String)</a></li>
 </ol>
 </li>
 </ol>
@@ -116,26 +114,16 @@ Handles rarity definitions, mutation settings, and weather-based catch modifiers
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMutationBaseChance(java.lang.String)" class="member-name-link">getMutationBaseChance</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="MutationConfig.html" title="class in net.sylphian.minecraft.fishing.config">MutationConfig</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMutationConfig(java.lang.String)" class="member-name-link">getMutationConfig</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets the base chance for a mutation to occur.</div>
+<div class="block">Retrieves the full mutation configuration for a given mutation ID.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;org.bukkit.potion.PotionEffect&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMutationEffects(java.lang.String)" class="member-name-link">getMutationEffects</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets the list of potion effects associated with a mutation.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWeatherMultiplier(net.sylphian.minecraft.fishing.weather.WeatherCondition,net.sylphian.minecraft.fishing.fish.Rarity)" class="member-name-link">getWeatherMultiplier</a><wbr>(<a href="../weather/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.weather">WeatherCondition</a>&nbsp;weather,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWeatherMultiplier(net.sylphian.minecraft.fishing.weather.WeatherCondition,net.sylphian.minecraft.fishing.fish.Rarity)" class="member-name-link">getWeatherMultiplier</a><wbr>(<a href="../weather/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.weather">WeatherCondition</a>&nbsp;weather,
  <a href="../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a>&nbsp;rarity)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Retrieves the weather-based multiplier for a specific rarity.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isMutationEnabled(java.lang.String)" class="member-name-link">isMutationEnabled</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Checks if a specific mutation is enabled.</div>
+<div class="block">Retrieves the weather-based multiplier for a specific rarity.</div>
 </div>
 </div>
 </div>
@@ -194,46 +182,16 @@ Handles rarity definitions, mutation settings, and weather-based catch modifiers
 </section>
 </li>
 <li>
-<section class="detail" id="isMutationEnabled(java.lang.String)">
-<h3>isMutationEnabled</h3>
+<section class="detail" id="getMutationConfig(java.lang.String)">
+<h3>getMutationConfig</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isMutationEnabled</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</span></div>
-<div class="block">Checks if a specific mutation is enabled.</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="MutationConfig.html" title="class in net.sylphian.minecraft.fishing.config">MutationConfig</a></span>&nbsp;<span class="element-name">getMutationConfig</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</span></div>
+<div class="block">Retrieves the full mutation configuration for a given mutation ID.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>id</code> - the mutation ID</dd>
 <dt>Returns:</dt>
-<dd>true if enabled, false otherwise</dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="getMutationBaseChance(java.lang.String)">
-<h3>getMutationBaseChance</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getMutationBaseChance</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</span></div>
-<div class="block">Gets the base chance for a mutation to occur.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>id</code> - the mutation ID</dd>
-<dt>Returns:</dt>
-<dd>the base chance (0.0 to 1.0)</dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="getMutationEffects(java.lang.String)">
-<h3>getMutationEffects</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;org.bukkit.potion.PotionEffect&gt;</span>&nbsp;<span class="element-name">getMutationEffects</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</span></div>
-<div class="block">Gets the list of potion effects associated with a mutation.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>id</code> - the mutation ID</dd>
-<dt>Returns:</dt>
-<dd>the list of potion effects</dd>
+<dd>the MutationConfig, or an empty disabled config if not found</dd>
 </dl>
 </div>
 </section>

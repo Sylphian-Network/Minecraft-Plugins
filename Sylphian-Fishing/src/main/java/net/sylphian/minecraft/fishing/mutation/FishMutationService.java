@@ -1,6 +1,7 @@
 package net.sylphian.minecraft.fishing.mutation;
 
 import net.sylphian.minecraft.fishing.config.ConfigLoader;
+import net.sylphian.minecraft.fishing.config.MutationConfig;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -53,19 +54,17 @@ public class FishMutationService {
             String id = entry.getKey();
             FishMutation mutation = entry.getValue();
 
-            // Skip if the mutation is disabled in the config
-            if (!config.isMutationEnabled(id)) continue;
+            MutationConfig mutConfig = config.getMutationConfig(id);
 
-            double baseChance = config.getMutationBaseChance(id);
-            // Apply rarity-based multiplier to the base mutation chance
-            double multiplier = context.getRarity() != null ? context.getRarity().getMutationMultiplier() : 1.0;
-            double finalChance = baseChance * multiplier;
+            if (!mutConfig.enabled()) continue;
 
-            // Roll for mutation success
-            if (random.nextDouble() < finalChance) {
-                if (mutation.shouldApply(player, context)) {
-                    mutation.apply(item, player, context);
-                }
+            double multiplier = context.getRarity() != null
+                    ? context.getRarity().getMutationMultiplier()
+                    : 1.0;
+            double finalChance = mutConfig.baseChance() * multiplier;
+
+            if (random.nextDouble() < finalChance && mutation.shouldApply(player, context)) {
+                mutation.apply(item, player, context);
             }
         }
     }
