@@ -126,36 +126,38 @@ public class TestFishingCommand implements BasicCommand {
             Rarity rarity = result.rarity();
             if (rarity == null) continue;
 
-            rarityCounts.put(rarity, rarityCounts.getOrDefault(rarity, 0) + 1);
+            rarityCounts.merge(rarity, 1, Integer::sum);
 
-            // Simulate mutation roll based on configuration
             if (superFishEnabled) {
                 double finalSuperFishChance = superFishBaseChance * rarity.getMutationMultiplier();
                 if (random.nextDouble() < finalSuperFishChance) {
-                    superFishCounts.put(rarity, superFishCounts.getOrDefault(rarity, 0) + 1);
+                    superFishCounts.merge(rarity, 1, Integer::sum);
                 }
+            }
+        }
+
+        stack.getSender().sendMessage(Component.text("--- Catch Results ---", NamedTextColor.GOLD));
+
+        for (Rarity rarity : rarities) {
+            int rCount = rarityCounts.getOrDefault(rarity, 0);
+            int sCount = superFishCounts.getOrDefault(rarity, 0);
+            int normalCount = rCount - sCount;
+
+            double rPercent = (double) rCount / count * 100;
+            double sPercent = rCount > 0 ? (double) sCount / rCount * 100 : 0;
+
+            stack.getSender().sendMessage(miniMessage.deserialize(String.format("  %s%-12s <gray>%d (%.1f%%)", rarity.getColor(), rarity.getId().toUpperCase(), rCount, rPercent)));
+
+            if (superFishEnabled && rCount > 0) {
+                stack.getSender().sendMessage(miniMessage.deserialize(String.format("  <gray>  ├ Normal:     %d", normalCount)));
+                stack.getSender().sendMessage(miniMessage.deserialize(String.format("  <gray>  └ Super Fish: %d (%.1f%% of %s)", sCount, sPercent, rarity.getId())));
             }
         }
 
         stack.getSender().sendMessage(Component.text("-----------------------------------", NamedTextColor.GRAY));
 
-        for (Rarity rarity : rarities) {
-            int rCount = rarityCounts.getOrDefault(rarity, 0);
-            double rPercent = (double) rCount / count * 100;
-            stack.getSender().sendMessage(miniMessage.deserialize(
-                    String.format("  %s%-12s <gray>%d (%.1f%%)", rarity.getColor(), rarity.getId().toUpperCase(), rCount, rPercent)));
-        }
-
-        stack.getSender().sendMessage(Component.text("-----------------------------------", NamedTextColor.GRAY));
-
-        for (Rarity rarity : rarities) {
-            int sCount = superFishCounts.getOrDefault(rarity, 0);
-            double sPercent = (double) sCount / count * 100;
-            stack.getSender().sendMessage(miniMessage.deserialize(
-                    String.format("  %s%-12s <gray>[Super Fish]      <gray>%d (%.1f%%)", rarity.getColor(), rarity.getId().toUpperCase(), sCount, sPercent)));
-        }
-
-        stack.getSender().sendMessage(Component.text("-----------------------------------", NamedTextColor.GRAY));
+        int totalSuperFish = superFishCounts.values().stream().mapToInt(Integer::intValue).sum();
+        stack.getSender().sendMessage(miniMessage.deserialize(String.format("<gray>Total catches: <white>%d <gray>| Super Fish: <white>%d <gray>(%.1f%%)", count, totalSuperFish, (double) totalSuperFish / count * 100)));
     }
 
     /**
