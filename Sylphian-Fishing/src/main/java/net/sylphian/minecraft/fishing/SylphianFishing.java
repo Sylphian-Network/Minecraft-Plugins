@@ -50,7 +50,7 @@ public class SylphianFishing extends JavaPlugin {
         ));
         DatabaseService.runMigrations("Sylphian-Fishing", getLogger());
 
-        ConfigLoader configLoader = new ConfigLoader(getConfig());
+        ConfigLoader configLoader = new ConfigLoader(getConfig(), getLogger());
 
         this.mutationService = new FishMutationService(configLoader);
         this.mutationService.registerMutation("super_fish", new SuperFishMutation());
@@ -58,7 +58,7 @@ public class SylphianFishing extends JavaPlugin {
         // Load fish from fish.yml
         File fishFile = new File(getDataFolder(), "fish.yml");
         FileConfiguration fishConfig = YamlConfiguration.loadConfiguration(fishFile);
-        FishConfigLoader loader = new FishConfigLoader(fishConfig);
+        FishConfigLoader loader = new FishConfigLoader(fishConfig, getLogger());
         List<FishEntry> fish = loader.loadFish();
 
         this.lootManager = new LootManager(fish, configLoader);

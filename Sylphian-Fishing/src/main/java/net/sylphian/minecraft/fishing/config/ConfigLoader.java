@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Loads and manages plugin configuration.
@@ -25,12 +26,15 @@ public class ConfigLoader {
     private final Map<String, List<PotionEffect>> mutationEffects = new HashMap<>();
     private final Map<WeatherCondition, Map<String, Double>> weatherModifiers = new HashMap<>();
 
+    private final Logger logger;
+
     /**
      * Constructs a new ConfigLoader and loads all configuration sections.
      *
      * @param config the file configuration to load from
      */
-    public ConfigLoader(FileConfiguration config) {
+    public ConfigLoader(FileConfiguration config, Logger logger) {
+        this.logger = logger;
         loadRarities(config.getConfigurationSection("rarities"));
         loadMutations(config.getConfigurationSection("mutations"));
         loadWeatherModifiers(config.getConfigurationSection("weather-modifiers"));
@@ -43,7 +47,10 @@ public class ConfigLoader {
      */
     private void loadRarities(ConfigurationSection section) {
         Rarity.clear();
-        if (section == null) return;
+        if (section == null) {
+            logger.warning("No 'rarities' section found in config.yml — no rarities will be registered.");
+            return;
+        }
 
         for (String key : section.getKeys(false)) {
             double chance = section.getDouble(key + ".chance", 1.0);
@@ -51,6 +58,8 @@ public class ConfigLoader {
             double mutationMultiplier = section.getDouble(key + ".mutation-multiplier", 1.0);
             Rarity.register(new Rarity(key, chance, color, mutationMultiplier));
         }
+
+        logger.info("Rarity loading complete [" + Rarity.values().size() + "] rarities registered.");
     }
 
     /**

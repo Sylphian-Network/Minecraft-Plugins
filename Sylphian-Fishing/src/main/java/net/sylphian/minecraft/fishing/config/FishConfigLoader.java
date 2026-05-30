@@ -13,6 +13,7 @@ import io.papermc.paper.registry.RegistryKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 /**
  * Loads fish definitions from a configuration file.
@@ -21,14 +22,16 @@ import java.util.Objects;
 public class FishConfigLoader {
 
     private final FileConfiguration fishConfig;
+    private final Logger logger;
 
     /**
      * Constructs a new FishConfigLoader.
      *
      * @param fishConfig the configuration containing fish definitions
      */
-    public FishConfigLoader(FileConfiguration fishConfig) {
+    public FishConfigLoader(FileConfiguration fishConfig, Logger logger) {
         this.fishConfig = fishConfig;
+        this.logger = logger;
     }
 
     /**
@@ -41,7 +44,10 @@ public class FishConfigLoader {
         List<FishEntry> entries = new ArrayList<>();
         ConfigurationSection fishSection = fishConfig.getConfigurationSection("fish");
 
-        if (fishSection == null) return entries;
+        if (fishSection == null) {
+            logger.warning("No 'fish' section found in fish.yml — no fish will be registered.");
+            return entries;
+        }
 
         for (String key : fishSection.getKeys(false)) {
             ConfigurationSection section = fishSection.getConfigurationSection(key);
@@ -53,7 +59,8 @@ public class FishConfigLoader {
             String rarityId = section.getString("rarity", "COMMON");
             Rarity rarity = Rarity.getById(rarityId);
             if (rarity == null) {
-                throw new IllegalArgumentException("Unknown rarity '" + rarityId + "' for fish '" + key + "'. Please define it in config.yml");
+                logger.warning("Unknown rarity '" + rarityId + "' for fish '" + key + "' - skipping.");
+                continue;
             }
             int weight          = section.getInt("weight", 10);
             double minWeight    = section.getDouble("min-weight", 0.5);
@@ -64,6 +71,7 @@ public class FishConfigLoader {
                     rarity, weight, biomes, minWeight, maxWeight));
         }
 
+        logger.info("Fish loading complete [" + entries.size() + "] fish(s) registered.");
         return entries;
     }
 
