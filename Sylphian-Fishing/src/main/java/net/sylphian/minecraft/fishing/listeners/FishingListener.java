@@ -47,8 +47,9 @@ public class FishingListener implements Listener {
 
     /**
      * Handles the PlayerFishEvent.
-     * If a fish is caught, it rolls for a specific fish based on the environment,
-     * applies mutations, updates the caught item, and records the catch in the database.
+     * Resolves the hook's biome, weather, Y coordinate, and world time,
+     * then rolls for a fish, applies mutations, updates the caught item,
+     * triggers rarity catch effects, and records the catch asynchronously.
      *
      * @param event the fishing event
      */
@@ -60,13 +61,15 @@ public class FishingListener implements Listener {
         event.setExpToDrop(0);
 
         World world = event.getHook().getLocation().getWorld();
-        // Get the biome where the fishing hook actually landed
+
+        // Resolve full catch context — biome, weather, depth, and time of day
         Biome biome = world.getBiome(event.getHook().getLocation());
         WeatherCondition weather = WeatherCondition.from(world);
         double hookY = event.getHook().getLocation().getY();
+        long worldTime = world.getTime();
 
-        // Roll for a fish based on rarity, biome, and weather
-        CatchResult result = lootManager.rollCatch(biome, weather, hookY);
+        // Roll for a fish based on rarity, biome, and weather, time
+        CatchResult result = lootManager.rollCatch(biome, weather, hookY, worldTime);
         ItemStack itemStack = result.itemStack();
 
         // Prepare context and attempt to apply mutations to the caught fish

@@ -24,12 +24,12 @@ import java.util.*;
 /**
  * Administrative command to run fishing catch simulations.
  * Allows testing of loot distribution and mutation rates under
- * different biomes, weather conditions, and Y coordinates.
+ * different biomes, weather conditions, Y coordinates, and times of day.
  *
- * <p>Usage: /test_fishing &lt;count&gt; [biome] [weather] [y]</p>
+ * <p>Usage: /test_fishing &lt;count&gt; [biome] [weather] [y] [time]</p>
  *
- * <p>When run by a player with no arguments provided, the player's
- * current biome, weather, and Y coordinate are used as defaults.</p>
+ * <p>When run by a player, their current biome, weather, Y coordinate,
+ * and world time are used as defaults for any omitted arguments.</p>
  */
 public class TestFishingCommand implements BasicCommand {
 
@@ -55,7 +55,7 @@ public class TestFishingCommand implements BasicCommand {
      * distribution and Super Fish mutation statistics to the sender.
      *
      * @param stack the command source stack
-     * @param args  command arguments: &lt;count&gt; [biome] [weather] [y]
+     * @param args  command arguments: &lt;count&gt; [biome] [weather] [y] [time]
      */
     @Override
     public void execute(@NotNull CommandSourceStack stack, @NotNull String[] args) {
@@ -114,14 +114,32 @@ public class TestFishingCommand implements BasicCommand {
             }
         }
 
+        Long worldTime = null;
+        if (args.length >= 5) {
+            try {
+                worldTime = Long.parseLong(args[4]);
+                if (worldTime < 0 || worldTime > 24000) {
+                    sender.sendMessage(Component.text(
+                            "Time must be between 0 and 24000 ticks.", NamedTextColor.RED));
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                sender.sendMessage(Component.text(
+                        "Invalid time: " + args[4], NamedTextColor.RED));
+                return;
+            }
+        }
+
         if (sender instanceof Player player) {
             if (biome == null) biome = player.getLocation().getBlock().getBiome();
             if (weather == null) weather = WeatherCondition.from(player.getWorld());
             if (hookY == null) hookY = player.getLocation().getY();
+            if (worldTime == null) worldTime = player.getWorld().getTime();
         } else {
             if (biome == null) biome = biomeRegistry.get(NamespacedKey.minecraft("plains"));
             if (weather == null) weather = WeatherCondition.CLEAR;
             if (hookY == null) hookY = 62.0;
+            if (worldTime == null) worldTime = 6000L;
         }
 
         if (biome == null) {
@@ -131,8 +149,8 @@ public class TestFishingCommand implements BasicCommand {
 
         sender.sendMessage(miniMessage.deserialize(String.format(
                 "<yellow>Running <white>%d <yellow>simulations — " +
-                "BIOME: <white>%s <yellow>WEATHER: <white>%s <yellow>Y: <white>%.0f",
-                count, biome.getKey().value().toUpperCase(), weather.name(), hookY)));
+                        "BIOME: <white>%s <yellow>WEATHER: <white>%s <yellow>Y: <white>%.0f <yellow>TIME: <white>%d",
+                count, biome.getKey().value().toUpperCase(), weather.name(), hookY, worldTime)));
 
         List<Rarity> rarities = Rarity.byDescendingRarity();
         Map<Rarity, Integer> rarityCounts = new LinkedHashMap<>();
@@ -148,7 +166,7 @@ public class TestFishingCommand implements BasicCommand {
 
         // Run the simulation loop
         for (int i = 0; i < count; i++) {
-            CatchResult result = lootManager.rollCatch(biome, weather, hookY);
+            CatchResult result = lootManager.rollCatch(biome, weather, hookY, worldTime);
             Rarity rarity = result.rarity();
             if (rarity == null) continue;
 
@@ -202,24 +220,36 @@ public class TestFishingCommand implements BasicCommand {
      */
     @Override
     public @NotNull Collection<String> suggest(@NotNull CommandSourceStack stack, @NotNull String[] args) {
-        if (args.length == 1) {
+        if (args.length == 1) { // Count
             return List.of("100", "250", "500", "1000", "2500", "5000");
         }
 
-        if (args.length == 2) {
+        if (args.length == 2) { // Biome
             return RegistryAccess.registryAccess().getRegistry(RegistryKey.BIOME).stream()
                     .map(b -> b.getKey().value().toLowerCase())
                     .toList();
         }
 
-        if (args.length == 3) {
+        if (args.length == 3) { // Weather
             return Arrays.stream(WeatherCondition.values())
                     .map(w -> w.name().toLowerCase())
                     .toList();
         }
 
-        if (args.length == 4) {
+        if (args.length == 4) { // Y coordinate
             return List.of("-59", "-30", "0", "30", "62", "100", "150", "200");
+        }
+
+        if (args.length == 5) { // Time
+            return List.of(
+                    "0",     // dawn
+                    "1000",  // early morning
+                    "6000",  // noon
+                    "12000", // dusk
+                    "13000", // early night
+                    "18000", // midnight
+                    "23000"  // late night
+            );
         }
 
         return List.of();

@@ -16,8 +16,43 @@ import java.util.Objects;
 import java.util.logging.Logger;
 
 /**
- * Loads fish definitions from a configuration file.
- * Responsible for parsing material, weight, rarity, and biome restrictions for each fish.
+ * Loads and parses fish definitions from {@code fish.yml}.
+ *
+ * <p>Each entry in the {@code fish} section supports the following fields:</p>
+ *
+ * <dl>
+ *   <dt>{@code material} <i>(required)</i></dt>
+ *   <dd>Bukkit Material name for the dropped item.</dd>
+ *
+ *   <dt>{@code display-name} <i>(required)</i></dt>
+ *   <dd>MiniMessage formatted name shown to the player.</dd>
+ *
+ *   <dt>{@code rarity} <i>(required)</i></dt>
+ *   <dd>Must match a rarity key defined in {@code config.yml}. Unrecognised
+ *       values are logged and skipped.</dd>
+ *
+ *   <dt>{@code weight} <i>(required)</i></dt>
+ *   <dd>Relative chance within the rarity pool. Higher values appear more often.</dd>
+ *
+ *   <dt>{@code description}</dt>
+ *   <dd>MiniMessage lore text appended below the display name. Supports {@code \n} for line breaks.</dd>
+ *
+ *   <dt>{@code min-weight} / {@code max-weight}</dt>
+ *   <dd>Physical catch weight range in kg. Defaults to {@code 0.5}–{@code 3.0}.</dd>
+ *
+ *   <dt>{@code biomes}</dt>
+ *   <dd>List of Minecraft biome IDs, or the string {@code ALL} for no restriction.</dd>
+ *
+ *   <dt>{@code min-y} / {@code max-y}</dt>
+ *   <dd>Optional Y coordinate range for the fishing hook. Omit for no restriction.</dd>
+ *
+ *   <dt>{@code min-time} / {@code max-time}</dt>
+ *   <dd>Optional world time range in ticks (0–24000). Supports overnight ranges
+ *       where {@code min-time} is greater than {@code max-time}.</dd>
+ * </dl>
+ *
+ * @see net.sylphian.minecraft.fishing.fish.FishEntry
+ * @see net.sylphian.minecraft.fishing.loot.LootManager
  */
 public class FishConfigLoader {
 
@@ -66,11 +101,15 @@ public class FishConfigLoader {
             double minWeight    = section.getDouble("min-weight", 0.5);
             double maxWeight    = section.getDouble("max-weight", 3.0);
             List<Biome> biomes  = parseBiomes(section);
+
+            // Y and time restrictions are optional — absence means no restriction
             Integer minY = section.contains("min-y") ? section.getInt("min-y") : null;
             Integer maxY = section.contains("max-y") ? section.getInt("max-y") : null;
+            Long minTime = section.contains("min-time") ? section.getLong("min-time") : null;
+            Long maxTime = section.contains("max-time") ? section.getLong("max-time") : null;
 
             entries.add(new FishEntry(key, material, displayName, description,
-                    rarity, weight, biomes, minWeight, maxWeight, minY, maxY));
+                    rarity, weight, biomes, minWeight, maxWeight, minY, maxY, minTime, maxTime));
         }
 
         logger.info("Fish loading complete [" + entries.size() + "] fish(s) registered.");

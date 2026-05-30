@@ -13,9 +13,31 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Manages the loot rolling logic for fishing.
- * Responsible for selecting a fish based on rarity, biome, and weather conditions.
- * Uses a weighted random selection for fish within a rarity pool.
+ * Manages the loot rolling logic for the fishing system.
+ *
+ * <p>Rather than rolling a rarity first and then searching for fish, the manager
+ * builds an <b>eligible pool</b> upfront from all fish that match the current
+ * catch context. Rarity is then rolled and applied as a filter against that pool,
+ * ensuring biome, height, and time restrictions are always respected.</p>
+ *
+ * <h2>Roll Process</h2>
+ * <ol>
+ *   <li>Collect all fish matching the current biome, Y coordinate, and time of day</li>
+ *   <li>Roll a rarity using base chances modified by weather multipliers</li>
+ *   <li>Filter the eligible pool to fish of the rolled rarity</li>
+ *   <li>Pick a fish using weighted random selection</li>
+ *   <li>If no fish of the rolled rarity exist in the eligible pool, fall back to
+ *       a weighted pick across the entire eligible pool respecting rarity chances</li>
+ * </ol>
+ *
+ * <h2>Weather Modifiers</h2>
+ * <p>Each weather condition ({@link net.sylphian.minecraft.fishing.weather.WeatherCondition})
+ * applies a multiplier to each rarity's base chance. Multipliers are loaded from
+ * {@code config.yml} and clamped to a maximum of {@code 1.0}.</p>
+ *
+ * @see net.sylphian.minecraft.fishing.fish.FishEntry
+ * @see net.sylphian.minecraft.fishing.fish.Rarity
+ * @see net.sylphian.minecraft.fishing.weather.WeatherCondition
  */
 public class LootManager {
 
@@ -36,27 +58,32 @@ public class LootManager {
     }
 
     /**
-     * Rolls a catch result for the given biome and weather condition.
-     * Walks rarities from rarest to most common using a single random roll,
-     * applying weather multipliers to each rarity's base chance.
+     * Rolls a catch result for the given context.
+     * First builds an eligible pool of all fish matching the biome,
+     * Y coordinate, and time of day. Then rolls a rarity applying
+     * weather multipliers, and picks a fish from the matching pool.
+     * If no fish of the rolled rarity exist in the eligible pool,
+     * falls back to a weighted pick across the entire eligible pool.
      *
-     * @param biome   the biome where the fishing hook landed
-     * @param weather the current weather condition in the world
+     * @param biome     the biome where the fishing hook landed
+     * @param weather   the current weather condition in the world
+     * @param hookY     the Y coordinate of the fishing hook
+     * @param worldTime the current world time in ticks (0-24000)
      * @return a CatchResult containing the fish ID, rarity, weight, and built ItemStack
+     * @throws IllegalStateException if no fish are configured for the given context
      */
-    public CatchResult rollCatch(Biome biome, WeatherCondition weather, double hookY) {
+    public CatchResult rollCatch(Biome biome, WeatherCondition weather, double hookY, long worldTime) {
 
         // Collect every fish eligible for this biome and Y coordinate
         List<FishEntry> eligiblePool = poolsByRarity.values().stream()
                 .flatMap(List::stream)
                 .filter(f -> f.appliesToBiome(biome))
                 .filter(f -> f.appliesToY(hookY))
+                .filter(f -> f.appliesToTime(worldTime))
                 .toList();
 
         if (eligiblePool.isEmpty()) {
-            throw new IllegalStateException(
-                    "No fish configured for biome: " + biome.getKey().value() + " at Y: " + (int) hookY + " - check fish.yml has fish covering this biome and height."
-            );
+            throw new IllegalStateException("No fish configured for biome: " + biome.getKey().value() + " at Y: " + (int) hookY + " at time: " + worldTime + " - check fish.yml has fish covering this biome, height, and time.");
         }
 
         // Roll a rarity using weather multipliers
