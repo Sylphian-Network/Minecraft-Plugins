@@ -1,12 +1,67 @@
+# =============================================================
 # Sylphian Fishing - Main Configuration
+# =============================================================
+#
+# MiniMessage formatting reference: https://docs.advntr.dev/minimessage/format.html
+# Bukkit sound reference:           https://minecraft.wiki/w/Sounds.json
+# Bukkit particle reference:        https://jd.papermc.io/paper/26.1.2/org/bukkit/Particle.html
+# =============================================================
 
-# Configuration for different rarity tiers
+
+# =============================================================
+# Rarity Tiers
+# =============================================================
+# Defines every rarity tier that fish can belong to.
+# Rarities are checked from rarest to most common on each catch.
+# A single random roll (0.0–1.0) is compared against each rarity's
+# chance in descending order — the first match wins.
+#
+# Effective catch odds (approximate):
+#   MYTHIC:    1%        (roll ≤ 0.01)
+#   LEGENDARY: 2%        (roll 0.01–0.03)
+#   EPIC:      5%        (roll 0.03–0.08)
+#   RARE:      12%       (roll 0.08–0.20)
+#   UNCOMMON:  30%       (roll 0.20–0.50)
+#   COMMON:    50%       (roll 0.50–1.00)
 #
 # Fields:
-# - chance: The probability of this rarity being selected (0.0 to 1.0).
-#           Selection is checked from highest rarity to lowest.
-# - color:  The MiniMessage color tag used for the rarity display.
-# - mutation-multiplier: Multiplier applied to mutation chances for this rarity.
+# -------
+# chance
+#   Probability threshold for this rarity (0.0–1.0).
+#   Must be unique per rarity and in ascending order from rarest to most common.
+#
+# color
+#   MiniMessage color tag applied to the rarity display name in item lore
+#   and chat messages. e.g. "<gold>", "<gradient:aqua:white>"
+#
+# mutation-multiplier
+#   Scales the base mutation chance for fish of this rarity.
+#   A value of 2.0 doubles the mutation chance; 0.5 halves it.
+#   See the mutations section for base chances.
+#
+# catch-effects
+#   Effects triggered when a fish of this rarity is caught.
+#   Each effect type can be independently enabled or disabled.
+#
+#   sound:
+#     name    — Minecraft sound ID (e.g. "minecraft:entity.player.levelup")
+#     volume  — Audible range multiplier (1.0 = normal, 2.0 = twice the range)
+#     pitch   — Playback speed and pitch (0.5 = low/slow, 2.0 = high/fast)
+#
+#   particles:
+#     type     — Bukkit Particle enum name (e.g. "TOTEM", "DRAGON_BREATH")
+#     count    — Number of particles spawned
+#     offset-x/y/z — Spread radius on each axis in blocks
+#
+#   title:
+#     title/subtitle — MiniMessage formatted strings shown on screen
+#     fade-in/stay/fade-out — Duration in ticks (20 ticks = 1 second)
+#
+#   broadcast:
+#     message — MiniMessage string sent to all online players.
+#               Use {player} to insert the catching player's name.
+# =============================================================
+
 rarities:
   COMMON:
     chance: 1.0
@@ -144,12 +199,125 @@ rarities:
         enabled: true
         message: "<light_purple>✦ <white>{player} <gray>caught a <light_purple>Mythic <gray>fish! <dark_gray>(Extremely rare!)"
 
-# Configuration for fish mutations
+
+# =============================================================
+# Rarity Catch Chance — Weather Modifiers
+# =============================================================
+# Multipliers applied to each rarity's base catch chance depending
+# on the current weather. These scale the probability of a rarity
+# being selected on each catch roll — they do not affect fish weight,
+# mutations, or bite speed (see bite-timer for that).
+#
+# A multiplier of 1.0 means no change.
+# A multiplier of 2.0 doubles the effective chance of that rarity.
+# A multiplier of 0.5 halves it.
+#
+# The final chance is clamped to a maximum of 1.0 (100%).
+#
+# Example: RARE base chance is 0.20. During a THUNDERSTORM with
+# multiplier 1.5, the effective chance becomes min(0.30, 1.0) = 0.30.
+# =============================================================
+
+weather-modifiers:
+  CLEAR:
+    COMMON:    1.0
+    UNCOMMON:  1.0
+    RARE:      1.0
+    EPIC:      1.0
+    LEGENDARY: 1.0
+    MYTHIC:    1.0
+
+  RAIN:
+    COMMON:    0.8    # Slightly fewer common fish in the rain
+    UNCOMMON:  1.0
+    RARE:      1.2    # Rain stirs up rarer species
+    EPIC:      1.3
+    LEGENDARY: 1.5
+    MYTHIC:    1.0
+
+  THUNDERSTORM:
+    COMMON:    0.6    # Common fish retreat during storms
+    UNCOMMON:  0.8
+    RARE:      1.5    # Storms drive rare fish to the surface
+    EPIC:      2.0
+    LEGENDARY: 3.0
+    MYTHIC:    2.0    # Even mythic fish are disturbed by extreme weather
+
+
+# =============================================================
+# Bite Timer
+# =============================================================
+# Controls how long a player waits for a fish to bite after casting.
+# The final delay is calculated as:
+#
+#   delay = random value between base-min and base-max
+#           × rarity modifier for the pre-rolled rarity
+#           × weather modifier for current weather
+#
+# The pre-rolled rarity is an estimate used only for timing — the
+# actual catch is rolled independently when the fish bites, so the
+# wait time hints at what might be coming but does not guarantee it.
+#
+# All values are in ticks. 20 ticks = 1 second.
+# Minimum enforced floor is 20 ticks (1 second) regardless of modifiers.
+#
+# rarity-modifiers:
+#   Multiplies the base delay for the pre-rolled rarity.
+#   Rarer fish take longer to bite, building anticipation.
+#   1.0 = no change, 2.0 = twice as long, 0.5 = half as long.
+#
+# weather-modifiers:
+#   Multiplies the delay based on current weather.
+#   Values below 1.0 reduce the wait (faster bites).
+#   Values above 1.0 increase it (slower bites).
+# =============================================================
+
+bite-timer:
+  base-min: 100   # ~5 seconds  — fastest possible bite
+  base-max: 600   # ~30 seconds — slowest base bite before modifiers
+
+  rarity-modifiers:
+    COMMON:    1.0   # No change
+    UNCOMMON:  1.2   # 20% longer
+    RARE:      1.5   # 50% longer
+    EPIC:      2.0   # Double the wait
+    LEGENDARY: 2.8   # Nearly triple
+    MYTHIC:    4.0   # ~2 minutes at base-max — extremely rare event
+
+  weather-modifiers:
+    CLEAR:        1.0    # Standard wait
+    RAIN:         0.75   # 25% faster — rain attracts fish to the surface
+    THUNDERSTORM: 0.5    # 50% faster — storms drive fish into a frenzy
+
+
+# =============================================================
+# Mutations
+# =============================================================
+# Mutations are special modifiers applied to a fish at the moment
+# of catching, before the item is given to the player.
+#
+# The chance a mutation applies is calculated as:
+#   final chance = base-chance × rarity's mutation-multiplier
+#
+# Example: super_fish base-chance is 0.05 (5%).
+# Caught as LEGENDARY (multiplier 2.0) → 10% chance of mutation.
+# Caught as COMMON (multiplier 0.5)    → 2.5% chance of mutation.
+#
+# Fields:
+# -------
+# enabled      — Whether this mutation is active at all.
+# base-chance  — Base probability before rarity multiplier (0.0–1.0).
+# effects      — Potion effects applied to the player when the mutated
+#               fish is consumed. Each effect requires:
+#                 effect    — Minecraft effect ID (e.g. "regeneration")
+#                 duration  — Duration in ticks (20 = 1 second)
+#                 amplifier — Effect level, 0-indexed (0 = level I)
+# =============================================================
+
 mutations:
   super_fish:
     enabled: true
     base-chance: 0.05
-    # Effects applied when a Super Fish is consumed
     effects:
       - effect: REGENERATION
         duration: 100
@@ -160,20 +328,3 @@ mutations:
       - effect: SATURATION
         duration: 20
         amplifier: 1
-
-weather-modifiers:
-  CLEAR:
-    COMMON: 1.0
-    RARE: 1.0
-    EPIC: 1.0
-    LEGENDARY: 1.0
-  RAIN:
-    COMMON: 0.8
-    RARE: 1.2
-    EPIC: 1.3
-    LEGENDARY: 1.5
-  THUNDERSTORM:
-    COMMON: 0.6
-    RARE: 1.5
-    EPIC: 2.0
-    LEGENDARY: 3.0

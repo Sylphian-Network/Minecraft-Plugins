@@ -190,6 +190,30 @@ public class LootManager {
     }
 
     /**
+     * Rolls a rarity without selecting a fish.
+     * Used by the bite timer system to determine wait time before a catch occurs.
+     * The actual catch rolls rarity again independently.
+     *
+     * @param weather the current weather condition
+     * @return the rolled rarity
+     */
+    public Rarity peekRarity(WeatherCondition weather) {
+        double roll = random.nextDouble();
+
+        for (Rarity rarity : Rarity.byDescendingRarity()) {
+            double baseChance = rarity.getChance();
+            double multiplier = config.getWeatherMultiplier(weather, rarity);
+            double finalChance = Math.min(1.0, baseChance * multiplier);
+
+            if (roll <= finalChance) return rarity;
+        }
+
+        return Rarity.values().stream()
+                .max(Comparator.comparingDouble(Rarity::getChance))
+                .orElseThrow();
+    }
+
+    /**
      * Builds the ItemStack for the caught fish, setting its name and lore.
      *
      * @param fish         the fish entry

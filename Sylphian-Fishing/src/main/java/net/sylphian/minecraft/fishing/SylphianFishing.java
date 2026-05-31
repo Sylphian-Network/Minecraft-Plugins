@@ -13,6 +13,7 @@ import net.sylphian.minecraft.fishing.db.repositories.FishEncyclopaediaRepositor
 import net.sylphian.minecraft.fishing.effects.CatchEffectService;
 import net.sylphian.minecraft.fishing.fish.FishEntry;
 import net.sylphian.minecraft.fishing.gui.EncyclopaediaMenu;
+import net.sylphian.minecraft.fishing.listeners.BiteTimerListener;
 import net.sylphian.minecraft.fishing.listeners.EncyclopaediaListener;
 import net.sylphian.minecraft.fishing.listeners.FishingListener;
 import net.sylphian.minecraft.fishing.listeners.SuperFishEnchantmentListener;
@@ -73,6 +74,7 @@ public class SylphianFishing extends JavaPlugin {
         );
 
         getServer().getPluginManager().registerEvents(new FishingListener(lootManager, mutationService, catchEffectService, encyclopaediaRepository, this), this);
+        getServer().getPluginManager().registerEvents(new BiteTimerListener(configLoader, lootManager, this), this);
         getServer().getPluginManager().registerEvents(new EncyclopaediaListener(), this);
         getServer().getPluginManager().registerEvents(new SuperFishEnchantmentListener(configLoader), this);
 

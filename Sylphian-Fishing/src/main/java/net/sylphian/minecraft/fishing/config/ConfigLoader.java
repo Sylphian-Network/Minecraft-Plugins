@@ -24,6 +24,9 @@ public class ConfigLoader {
     private final Map<String, MutationConfig> mutations = new HashMap<>();
     private final Map<WeatherCondition, Map<String, Double>> weatherModifiers = new HashMap<>();
     private final Map<String, RarityCatchEffects> rarityCatchEffects = new HashMap<>();
+
+    private BiteTimerConfig biteTimerConfig;
+
     private final Logger logger;
 
     /**
@@ -37,6 +40,7 @@ public class ConfigLoader {
         loadMutations(config.getConfigurationSection("mutations"));
         loadWeatherModifiers(config.getConfigurationSection("weather-modifiers"));
         loadRarityCatchEffects(config.getConfigurationSection("rarities"));
+        loadBiteTimer(config.getConfigurationSection("bite-timer"));
     }
 
     /**
@@ -195,6 +199,39 @@ public class ConfigLoader {
         }
     }
 
+    private void loadBiteTimer(ConfigurationSection section) {
+        if (section == null) {
+            // Sensible defaults if section is missing
+            biteTimerConfig = new BiteTimerConfig(100, 600, Map.of(), Map.of());
+            return;
+        }
+
+        int baseMin = section.getInt("base-min", 100);
+        int baseMax = section.getInt("base-max", 600);
+
+        Map<Rarity, Double> rarityModifiers = new HashMap<>();
+        ConfigurationSection raritySection = section.getConfigurationSection("rarity-modifiers");
+        if (raritySection != null) {
+            for (String key : raritySection.getKeys(false)) {
+                Rarity rarity = Rarity.getById(key);
+                if (rarity != null) {
+                    rarityModifiers.put(rarity, raritySection.getDouble(key, 1.0));
+                }
+            }
+        }
+
+        Map<WeatherCondition, Double> weatherModifiers = new HashMap<>();
+        ConfigurationSection weatherSection = section.getConfigurationSection("weather-modifiers");
+        if (weatherSection != null) {
+            for (WeatherCondition weather : WeatherCondition.values()) {
+                weatherModifiers.put(weather,
+                        weatherSection.getDouble(weather.name(), 1.0));
+            }
+        }
+
+        biteTimerConfig = new BiteTimerConfig(baseMin, baseMax, rarityModifiers, weatherModifiers);
+    }
+
     /**
      * Retrieves the catch effects configuration for a given rarity.
      *
@@ -218,6 +255,8 @@ public class ConfigLoader {
                 .getOrDefault(weather, Map.of())
                 .getOrDefault(rarity.getId(), 1.0);
     }
+
+    public BiteTimerConfig getBiteTimerConfig() { return biteTimerConfig; }
 
     /**
      * Retrieves the full mutation configuration for a given mutation ID.
