@@ -7,6 +7,7 @@ import net.sylphian.minecraft.fishing.loot.LootManager;
 import net.sylphian.minecraft.fishing.mutation.FishContext;
 import net.sylphian.minecraft.fishing.mutation.FishMutationService;
 import net.sylphian.minecraft.fishing.weather.WeatherCondition;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Item;
@@ -60,16 +61,13 @@ public class FishingListener implements Listener {
 
         event.setExpToDrop(0);
 
-        World world = event.getHook().getLocation().getWorld();
-
         // Resolve full catch context — biome, weather, depth, and time of day
-        Biome biome = world.getBiome(event.getHook().getLocation());
-        WeatherCondition weather = WeatherCondition.from(world);
-        double hookY = event.getHook().getLocation().getY();
-        long worldTime = world.getTime();
+        Location hookLocation = event.getHook().getLocation();
+        World world = hookLocation.getWorld();
+        Biome biome = world.getBiome(hookLocation);
 
         // Roll for a fish based on rarity, biome, and weather, time
-        CatchResult result = lootManager.rollCatch(biome, weather, hookY, worldTime);
+        CatchResult result = lootManager.rollCatch(biome, WeatherCondition.from(world), hookLocation.getY(), world.getTime());
         ItemStack itemStack = result.itemStack();
 
         // Prepare context and attempt to apply mutations to the caught fish
@@ -80,7 +78,7 @@ public class FishingListener implements Listener {
         caughtItem.setItemStack(itemStack);
 
         // Apply rarity-based catch effects
-        catchEffectService.apply(event.getPlayer(), result, event.getHook().getLocation());
+        catchEffectService.apply(event.getPlayer(), result, hookLocation);
 
         // Record the catch in the database asynchronously
         encyclopaediaRepository.recordCatch(
