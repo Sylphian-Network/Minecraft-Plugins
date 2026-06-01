@@ -16,7 +16,7 @@ import java.util.Random;
  */
 public class FishMutationService {
 
-    private final ConfigLoader config;
+    private ConfigLoader config;
     private final Map<String, FishMutation> mutations = new LinkedHashMap<>();
     private final Random random = new Random();
 
@@ -67,5 +67,15 @@ public class FishMutationService {
                 mutation.apply(item, player, context);
             }
         }
+    }
+
+    /**
+     * Reloads the service with updated configuration.
+     * Registered mutations are preserved — only config values are refreshed.
+     *
+     * @param config the new configuration loader
+     */
+    public void reload(ConfigLoader config) {
+        this.config = config;
     }
 }

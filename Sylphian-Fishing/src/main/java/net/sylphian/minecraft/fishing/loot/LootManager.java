@@ -41,8 +41,8 @@ import java.util.stream.Collectors;
  */
 public class LootManager {
 
-    private final Map<Rarity, List<FishEntry>> poolsByRarity;
-    private final ConfigLoader config;
+    private Map<Rarity, List<FishEntry>> poolsByRarity;
+    private ConfigLoader config;
     private final Random random = new Random();
 
     /**
@@ -246,5 +246,18 @@ public class LootManager {
         lore.add(String.format("<gray>Weight: <white>%.2fkg", caughtWeight));
 
         return lore;
+    }
+
+    /**
+     * Reloads the loot manager with updated configuration and fish definitions.
+     * Rebuilds the internal rarity pool from the new fish list.
+     *
+     * @param config  the new configuration loader
+     * @param allFish the updated list of all fish entries
+     */
+    public void reload(ConfigLoader config, List<FishEntry> allFish) {
+        this.config = config;
+        this.poolsByRarity = allFish.stream()
+                .collect(Collectors.groupingBy(FishEntry::getRarity));
     }
 }

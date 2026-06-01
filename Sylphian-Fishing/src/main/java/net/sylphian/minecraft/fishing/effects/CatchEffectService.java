@@ -20,7 +20,7 @@ public class CatchEffectService {
 
     private static final MiniMessage MINI = MiniMessage.miniMessage();
 
-    private final ConfigLoader config;
+    private ConfigLoader config;
     private final Logger logger;
 
     /**
@@ -91,7 +91,7 @@ public class CatchEffectService {
                     particle.offsetZ()
             );
         } catch (IllegalArgumentException e) {
-            // Invalid particle type in config — skip silently
+            logger.warning("Invalid particle type '" + particle.type() + "' in catch-effects config - skipping.");
         }
     }
 
@@ -132,5 +132,14 @@ public class CatchEffectService {
                 .replace("{fish}", result.fishId());
 
         Bukkit.broadcast(MINI.deserialize(message));
+    }
+
+    /**
+     * Reloads the service with updated configuration.
+     *
+     * @param config the new configuration loader
+     */
+    public void reload(ConfigLoader config) {
+        this.config = config;
     }
 }

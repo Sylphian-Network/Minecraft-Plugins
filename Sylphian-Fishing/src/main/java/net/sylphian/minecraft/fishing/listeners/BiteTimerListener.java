@@ -29,7 +29,7 @@ import java.util.Random;
  */
 public class BiteTimerListener implements Listener {
 
-    private final ConfigLoader config;
+    private ConfigLoader config;
     private final LootManager lootManager;
     private final JavaPlugin plugin;
     private final Random random = new Random();
@@ -74,5 +74,14 @@ public class BiteTimerListener implements Listener {
 
         plugin.getLogger().fine("Bite timer set to " + delay + " ticks for "
                 + preRolledRarity.getId() + " rarity in " + weather.name());
+    }
+
+    /**
+     * Reloads the listener with updated configuration.
+     *
+     * @param config the new configuration loader
+     */
+    public void reload(ConfigLoader config) {
+        this.config = config;
     }
 }
