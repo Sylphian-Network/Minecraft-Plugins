@@ -64,6 +64,7 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#getRarityCatchEffects(net.sylphian.minecraft.fishing.fish.Rarity)" tabindex="0">getRarityCatchEffects(Rarity)</a></li>
 <li><a href="#getWeatherMultiplier(net.sylphian.minecraft.fishing.weather.WeatherCondition,net.sylphian.minecraft.fishing.fish.Rarity)" tabindex="0">getWeatherMultiplier(WeatherCondition, Rarity)</a></li>
+<li><a href="#getBiteTimerConfig()" tabindex="0">getBiteTimerConfig()</a></li>
 <li><a href="#getMutationConfig(java.lang.String)" tabindex="0">getMutationConfig(String)</a></li>
 </ol>
 </li>
@@ -115,20 +116,23 @@ Handles rarity definitions, mutation settings, and weather-based catch modifiers
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="MutationConfig.html" title="class in net.sylphian.minecraft.fishing.config">MutationConfig</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMutationConfig(java.lang.String)" class="member-name-link">getMutationConfig</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="BiteTimerConfig.html" title="class in net.sylphian.minecraft.fishing.config">BiteTimerConfig</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBiteTimerConfig()" class="member-name-link">getBiteTimerConfig</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="MutationConfig.html" title="class in net.sylphian.minecraft.fishing.config">MutationConfig</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMutationConfig(java.lang.String)" class="member-name-link">getMutationConfig</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Retrieves the full mutation configuration for a given mutation ID.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="RarityCatchEffects.html" title="class in net.sylphian.minecraft.fishing.config">RarityCatchEffects</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRarityCatchEffects(net.sylphian.minecraft.fishing.fish.Rarity)" class="member-name-link">getRarityCatchEffects</a><wbr>(<a href="../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a>&nbsp;rarity)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="RarityCatchEffects.html" title="class in net.sylphian.minecraft.fishing.config">RarityCatchEffects</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRarityCatchEffects(net.sylphian.minecraft.fishing.fish.Rarity)" class="member-name-link">getRarityCatchEffects</a><wbr>(<a href="../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a>&nbsp;rarity)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Retrieves the catch effects configuration for a given rarity.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWeatherMultiplier(net.sylphian.minecraft.fishing.weather.WeatherCondition,net.sylphian.minecraft.fishing.fish.Rarity)" class="member-name-link">getWeatherMultiplier</a><wbr>(<a href="../weather/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.weather">WeatherCondition</a>&nbsp;weather,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWeatherMultiplier(net.sylphian.minecraft.fishing.weather.WeatherCondition,net.sylphian.minecraft.fishing.fish.Rarity)" class="member-name-link">getWeatherMultiplier</a><wbr>(<a href="../weather/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.weather">WeatherCondition</a>&nbsp;weather,
  <a href="../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a>&nbsp;rarity)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Retrieves the weather-based multiplier for a specific rarity.</div>
 </div>
 </div>
@@ -199,6 +203,14 @@ Handles rarity definitions, mutation settings, and weather-based catch modifiers
 <dt>Returns:</dt>
 <dd>the multiplier to apply to the rarity chance</dd>
 </dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getBiteTimerConfig()">
+<h3>getBiteTimerConfig</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="BiteTimerConfig.html" title="class in net.sylphian.minecraft.fishing.config">BiteTimerConfig</a></span>&nbsp;<span class="element-name">getBiteTimerConfig</span>()</div>
 </div>
 </section>
 </li>
