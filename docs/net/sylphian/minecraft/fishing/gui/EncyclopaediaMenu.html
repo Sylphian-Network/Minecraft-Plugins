@@ -63,6 +63,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#open(org.bukkit.entity.Player,int)" tabindex="0">open(Player, int)</a></li>
+<li><a href="#reload(java.util.List)" tabindex="0">reload(List)</a></li>
 </ol>
 </li>
 </ol>
@@ -121,6 +122,11 @@ and building the inventory with appropriate items and lore.</div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Opens the encyclopaedia GUI for a player on a specific page.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reload(java.util.List)" class="member-name-link">reload</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a>&gt;&nbsp;fishEntries)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Reloads the menu with an updated list of fish entries.</div>
+</div>
 </div>
 </div>
 </div>
@@ -175,6 +181,19 @@ Fetches player catch data from the database asynchronously.</div>
 <dt>Parameters:</dt>
 <dd><code>player</code> - the player to open the menu for</dd>
 <dd><code>page</code> - the page number to open</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="reload(java.util.List)">
+<h3>reload</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">reload</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a>&gt;&nbsp;fishEntries)</span></div>
+<div class="block">Reloads the menu with an updated list of fish entries.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>fishEntries</code> - the updated list of all available fish</dd>
 </dl>
 </div>
 </section>

@@ -57,7 +57,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(net.sylphian.minecraft.fishing.SylphianFishing)" tabindex="0">SylphianFishingCommand(SylphianFishing)</a></li>
+<li><a href="#%3Cinit%3E(net.sylphian.minecraft.fishing.SylphianFishing,net.sylphian.minecraft.fishing.services.CatchEffectService,net.sylphian.minecraft.fishing.services.LootService,net.sylphian.minecraft.fishing.services.FishMutationService)" tabindex="0">SylphianFishingCommand(SylphianFishing, CatchEffectService, LootService, FishMutationService)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -87,12 +87,14 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">SylphianFishingCommand</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements io.papermc.paper.command.brigadier.BasicCommand</span></div>
-<div class="block">Root command for Sylphian Fishing administrative actions.
+<div class="block">Root administrative command for Sylphian Fishing.
 
 <p>Usage: <code>/sylphian-fishing &lt;subcommand&gt;</code></p>
 
 <ul>
   <li><code>reload</code> — reloads config.yml and fish.yml without restarting</li>
+  <li><code>test-effect &lt;rarity&gt;</code> — triggers rarity catch effects at the player's target location</li>
+  <li><code>test-fishing &lt;count&gt; [biome] [weather] [y] [time]</code> — simulates fishing catches and prints distribution</li>
 </ul></div>
 </div>
 </section>
@@ -106,7 +108,10 @@ implements io.papermc.paper.command.brigadier.BasicCommand</span></div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.sylphian.minecraft.fishing.SylphianFishing)" class="member-name-link">SylphianFishingCommand</a><wbr>(<a href="../SylphianFishing.html" title="class in net.sylphian.minecraft.fishing">SylphianFishing</a>&nbsp;plugin)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.sylphian.minecraft.fishing.SylphianFishing,net.sylphian.minecraft.fishing.services.CatchEffectService,net.sylphian.minecraft.fishing.services.LootService,net.sylphian.minecraft.fishing.services.FishMutationService)" class="member-name-link">SylphianFishingCommand</a><wbr>(<a href="../SylphianFishing.html" title="class in net.sylphian.minecraft.fishing">SylphianFishing</a>&nbsp;plugin,
+ <a href="../services/CatchEffectService.html" title="class in net.sylphian.minecraft.fishing.services">CatchEffectService</a>&nbsp;catchEffectService,
+ <a href="../services/LootService.html" title="class in net.sylphian.minecraft.fishing.services">LootService</a>&nbsp;lootService,
+ <a href="../services/FishMutationService.html" title="class in net.sylphian.minecraft.fishing.services">FishMutationService</a>&nbsp;mutationService)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Constructs a new SylphianFishingCommand.</div>
 </div>
@@ -133,13 +138,13 @@ implements io.papermc.paper.command.brigadier.BasicCommand</span></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#execute(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" class="member-name-link">execute</a><wbr>(@NotNull io.papermc.paper.command.brigadier.CommandSourceStack&nbsp;stack,
  @NotNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;args)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Executes the command, routing to the appropriate subcommand handler.</div>
+<div class="block">Routes execution to the appropriate subcommand handler.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NotNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#suggest(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" class="member-name-link">suggest</a><wbr>(@NotNull io.papermc.paper.command.brigadier.CommandSourceStack&nbsp;stack,
  @NotNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;args)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Provides tab completion for subcommands.</div>
+<div class="block">Provides tab completion for all subcommands and their arguments.</div>
 </div>
 </div>
 </div>
@@ -162,14 +167,20 @@ implements io.papermc.paper.command.brigadier.BasicCommand</span></div>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(net.sylphian.minecraft.fishing.SylphianFishing)">
+<section class="detail" id="&lt;init&gt;(net.sylphian.minecraft.fishing.SylphianFishing,net.sylphian.minecraft.fishing.services.CatchEffectService,net.sylphian.minecraft.fishing.services.LootService,net.sylphian.minecraft.fishing.services.FishMutationService)">
 <h3>SylphianFishingCommand</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SylphianFishingCommand</span><wbr><span class="parameters">(<a href="../SylphianFishing.html" title="class in net.sylphian.minecraft.fishing">SylphianFishing</a>&nbsp;plugin)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SylphianFishingCommand</span><wbr><span class="parameters">(<a href="../SylphianFishing.html" title="class in net.sylphian.minecraft.fishing">SylphianFishing</a>&nbsp;plugin,
+ <a href="../services/CatchEffectService.html" title="class in net.sylphian.minecraft.fishing.services">CatchEffectService</a>&nbsp;catchEffectService,
+ <a href="../services/LootService.html" title="class in net.sylphian.minecraft.fishing.services">LootService</a>&nbsp;lootService,
+ <a href="../services/FishMutationService.html" title="class in net.sylphian.minecraft.fishing.services">FishMutationService</a>&nbsp;mutationService)</span></div>
 <div class="block">Constructs a new SylphianFishingCommand.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>plugin</code> - the plugin instance used to trigger reloads</dd>
+<dd><code>catchEffectService</code> - the service used to apply rarity catch effects</dd>
+<dd><code>lootService</code> - the loot service used for fishing simulations</dd>
+<dd><code>mutationService</code> - the mutation service used for simulation statistics</dd>
 </dl>
 </div>
 </section>
@@ -190,7 +201,7 @@ implements io.papermc.paper.command.brigadier.BasicCommand</span></div>
  @NotNull io.papermc.paper.command.brigadier.CommandSourceStack&nbsp;stack,
  @NotNull
  @NotNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;args)</span></div>
-<div class="block">Executes the command, routing to the appropriate subcommand handler.</div>
+<div class="block">Routes execution to the appropriate subcommand handler.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>execute</code>&nbsp;in interface&nbsp;<code>io.papermc.paper.command.brigadier.BasicCommand</code></dd>
@@ -210,7 +221,7 @@ implements io.papermc.paper.command.brigadier.BasicCommand</span></div>
  @NotNull io.papermc.paper.command.brigadier.CommandSourceStack&nbsp;stack,
  @NotNull
  @NotNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;args)</span></div>
-<div class="block">Provides tab completion for subcommands.</div>
+<div class="block">Provides tab completion for all subcommands and their arguments.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>suggest</code>&nbsp;in interface&nbsp;<code>io.papermc.paper.command.brigadier.BasicCommand</code></dd>
@@ -218,7 +229,7 @@ implements io.papermc.paper.command.brigadier.BasicCommand</span></div>
 <dd><code>stack</code> - the command source stack</dd>
 <dd><code>args</code> - the current arguments</dd>
 <dt>Returns:</dt>
-<dd>available subcommand suggestions</dd>
+<dd>available suggestions for the current argument position</dd>
 </dl>
 </div>
 </section>

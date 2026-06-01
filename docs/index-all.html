@@ -286,12 +286,6 @@ lore line to the item's existing lore.</div>
 <dd>
 <div class="block">Restricts this command to senders with the admin permission.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/fishing/commands/TestFishingCommand.html#canUse(org.bukkit.command.CommandSender)" class="member-name-link">canUse(CommandSender)</a> - Method in class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/TestFishingCommand.html" title="class in net.sylphian.minecraft.fishing.commands">TestFishingCommand</a></dt>
-<dd>
-<div class="block">Restricts this command to players or admins with the appropriate permission.</div>
-</dd>
-<dt><a href="net/sylphian/minecraft/fishing/commands/TestEffectCommand.html#canUse(org.bukkit.command.CommandSender)" class="member-name-link">canUse(CommandSender)</a> - Method in class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/TestEffectCommand.html" title="class in net.sylphian.minecraft.fishing.commands">TestEffectCommand</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/fishing/services/CatchEffectService.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.services">CatchEffectService</a> - Class in <a href="net/sylphian/minecraft/fishing/services/package-summary.html">net.sylphian.minecraft.fishing.services</a></dt>
 <dd>
 <div class="block">Applies visual and audio catch effects to the player based on the rarity
@@ -605,13 +599,7 @@ of the fish they caught.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/commands/SylphianFishingCommand.html#execute(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" class="member-name-link">execute(CommandSourceStack, String[])</a> - Method in class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/SylphianFishingCommand.html" title="class in net.sylphian.minecraft.fishing.commands">SylphianFishingCommand</a></dt>
 <dd>
-<div class="block">Executes the command, routing to the appropriate subcommand handler.</div>
-</dd>
-<dt><a href="net/sylphian/minecraft/fishing/commands/TestEffectCommand.html#execute(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" class="member-name-link">execute(CommandSourceStack, String[])</a> - Method in class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/TestEffectCommand.html" title="class in net.sylphian.minecraft.fishing.commands">TestEffectCommand</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/sylphian/minecraft/fishing/commands/TestFishingCommand.html#execute(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" class="member-name-link">execute(CommandSourceStack, String[])</a> - Method in class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/TestFishingCommand.html" title="class in net.sylphian.minecraft.fishing.commands">TestFishingCommand</a></dt>
-<dd>
-<div class="block">Executes the simulation.</div>
+<div class="block">Routes execution to the appropriate subcommand handler.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/commands/EncyclopaediaCommand.html#execute(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" class="member-name-link">execute(CommandSourceStack, String[])</a> - Method in class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/EncyclopaediaCommand.html" title="class in net.sylphian.minecraft.fishing.commands">EncyclopaediaCommand</a></dt>
 <dd>
@@ -1872,6 +1860,10 @@ specific rarity is caught.</div>
 <dd>
 <div class="block">Registers a new mutation with the service.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/fishing/gui/EncyclopaediaMenu.html#reload(java.util.List)" class="member-name-link">reload(List)</a> - Method in class net.sylphian.minecraft.fishing.gui.<a href="net/sylphian/minecraft/fishing/gui/EncyclopaediaMenu.html" title="class in net.sylphian.minecraft.fishing.gui">EncyclopaediaMenu</a></dt>
+<dd>
+<div class="block">Reloads the menu with an updated list of fish entries.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/services/BiteTimerService.html#reload(net.sylphian.minecraft.fishing.config.ConfigLoader)" class="member-name-link">reload(ConfigLoader)</a> - Method in class net.sylphian.minecraft.fishing.services.<a href="net/sylphian/minecraft/fishing/services/BiteTimerService.html" title="class in net.sylphian.minecraft.fishing.services">BiteTimerService</a></dt>
 <dd>
 <div class="block">Reloads the service with updated configuration.</div>
@@ -1994,13 +1986,7 @@ configuration into all dependent services without a restart.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/commands/SylphianFishingCommand.html#suggest(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" class="member-name-link">suggest(CommandSourceStack, String[])</a> - Method in class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/SylphianFishingCommand.html" title="class in net.sylphian.minecraft.fishing.commands">SylphianFishingCommand</a></dt>
 <dd>
-<div class="block">Provides tab completion for subcommands.</div>
-</dd>
-<dt><a href="net/sylphian/minecraft/fishing/commands/TestEffectCommand.html#suggest(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" class="member-name-link">suggest(CommandSourceStack, String[])</a> - Method in class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/TestEffectCommand.html" title="class in net.sylphian.minecraft.fishing.commands">TestEffectCommand</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/sylphian/minecraft/fishing/commands/TestFishingCommand.html#suggest(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" class="member-name-link">suggest(CommandSourceStack, String[])</a> - Method in class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/TestFishingCommand.html" title="class in net.sylphian.minecraft.fishing.commands">TestFishingCommand</a></dt>
-<dd>
-<div class="block">Provides tab completion suggestions for each argument position.</div>
+<div class="block">Provides tab completion for all subcommands and their arguments.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/SylphianFishingBootstrap.html#SUPER_FISH_KEY" class="member-name-link">SUPER_FISH_KEY</a> - Static variable in class net.sylphian.minecraft.fishing.<a href="net/sylphian/minecraft/fishing/SylphianFishingBootstrap.html" title="class in net.sylphian.minecraft.fishing">SylphianFishingBootstrap</a></dt>
 <dd>
@@ -2043,9 +2029,9 @@ from the Paper registry using the key defined in <a href="net/sylphian/minecraft
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/fishing/commands/SylphianFishingCommand.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.commands">SylphianFishingCommand</a> - Class in <a href="net/sylphian/minecraft/fishing/commands/package-summary.html">net.sylphian.minecraft.fishing.commands</a></dt>
 <dd>
-<div class="block">Root command for Sylphian Fishing administrative actions.</div>
+<div class="block">Root administrative command for Sylphian Fishing.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/fishing/commands/SylphianFishingCommand.html#%3Cinit%3E(net.sylphian.minecraft.fishing.SylphianFishing)" class="member-name-link">SylphianFishingCommand(SylphianFishing)</a> - Constructor for class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/SylphianFishingCommand.html" title="class in net.sylphian.minecraft.fishing.commands">SylphianFishingCommand</a></dt>
+<dt><a href="net/sylphian/minecraft/fishing/commands/SylphianFishingCommand.html#%3Cinit%3E(net.sylphian.minecraft.fishing.SylphianFishing,net.sylphian.minecraft.fishing.services.CatchEffectService,net.sylphian.minecraft.fishing.services.LootService,net.sylphian.minecraft.fishing.services.FishMutationService)" class="member-name-link">SylphianFishingCommand(SylphianFishing, CatchEffectService, LootService, FishMutationService)</a> - Constructor for class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/SylphianFishingCommand.html" title="class in net.sylphian.minecraft.fishing.commands">SylphianFishingCommand</a></dt>
 <dd>
 <div class="block">Constructs a new SylphianFishingCommand.</div>
 </dd>
@@ -2058,22 +2044,6 @@ from the Paper registry using the key defined in <a href="net/sylphian/minecraft
 </dl>
 <h2 class="title" id="I:T">T</h2>
 <dl class="index">
-<dt><a href="net/sylphian/minecraft/fishing/commands/TestEffectCommand.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.commands">TestEffectCommand</a> - Class in <a href="net/sylphian/minecraft/fishing/commands/package-summary.html">net.sylphian.minecraft.fishing.commands</a></dt>
-<dd>
-<div class="block">Command to test rarity catch effects at the player's target location.</div>
-</dd>
-<dt><a href="net/sylphian/minecraft/fishing/commands/TestEffectCommand.html#%3Cinit%3E(net.sylphian.minecraft.fishing.services.CatchEffectService)" class="member-name-link">TestEffectCommand(CatchEffectService)</a> - Constructor for class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/TestEffectCommand.html" title="class in net.sylphian.minecraft.fishing.commands">TestEffectCommand</a></dt>
-<dd>
-<div class="block">Constructs a new TestEffectCommand.</div>
-</dd>
-<dt><a href="net/sylphian/minecraft/fishing/commands/TestFishingCommand.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.commands">TestFishingCommand</a> - Class in <a href="net/sylphian/minecraft/fishing/commands/package-summary.html">net.sylphian.minecraft.fishing.commands</a></dt>
-<dd>
-<div class="block">Administrative command to run fishing catch simulations.</div>
-</dd>
-<dt><a href="net/sylphian/minecraft/fishing/commands/TestFishingCommand.html#%3Cinit%3E(net.sylphian.minecraft.fishing.services.LootService,net.sylphian.minecraft.fishing.config.ConfigLoader)" class="member-name-link">TestFishingCommand(LootService, ConfigLoader)</a> - Constructor for class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/TestFishingCommand.html" title="class in net.sylphian.minecraft.fishing.commands">TestFishingCommand</a></dt>
-<dd>
-<div class="block">Constructs a new TestFishingCommand.</div>
-</dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/WeatherCondition.html#THUNDERSTORM" class="member-name-link">THUNDERSTORM</a> - Enum constant in enum class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.fish">WeatherCondition</a></dt>
 <dd>
 <div class="block">Thunderstorm.</div>
