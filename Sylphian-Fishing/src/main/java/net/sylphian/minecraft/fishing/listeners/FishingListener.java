@@ -11,6 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
@@ -61,33 +62,27 @@ public class FishingListener implements Listener {
 
         event.setExpToDrop(0);
 
-        // Resolve full catch context — biome, weather, depth, and time of day
         Location hookLocation = event.getHook().getLocation();
         World world = hookLocation.getWorld();
-        Biome biome = world.getBiome(hookLocation);
+        if (world == null) return;
 
-        // Roll for a fish based on rarity, biome, and weather, time
-        CatchResult result = lootManager.rollCatch(biome, WeatherCondition.from(world), hookLocation.getY(), world.getTime());
+        Biome biome = world.getBiome(hookLocation);
+        WeatherCondition weather = WeatherCondition.from(world);
+
+        CatchResult result = lootManager.rollCatch(biome, weather, hookLocation.getY(), world.getTime());
         ItemStack itemStack = result.itemStack();
 
-        // Prepare context and attempt to apply mutations to the caught fish
-        FishContext context = new FishContext(result.rarity(), biome, event.getPlayer());
-        mutationService.applyMutations(event.getPlayer(), itemStack, context);
-
-        // Update the physical item being reeled in
+        mutationService.applyMutations(event.getPlayer(), itemStack, new FishContext(result.rarity(), biome, event.getPlayer()));
         caughtItem.setItemStack(itemStack);
-
-        // Apply rarity-based catch effects
         catchEffectService.apply(event.getPlayer(), result, hookLocation);
+        recordCatchAsync(event.getPlayer(), result);
+    }
 
-        // Record the catch in the database asynchronously
-        encyclopaediaRepository.recordCatch(
-                event.getPlayer().getUniqueId(),
-                result.fishId(),
-                result.weight()
-        ).exceptionally(ex -> {
-            plugin.getLogger().severe("Failed to record catch for " + event.getPlayer().getName() + ": " + ex.getMessage());
-            return null;
-        });
+    private void recordCatchAsync(Player player, CatchResult result) {
+        encyclopaediaRepository.recordCatch(player.getUniqueId(), result.fishId(), result.weight())
+                .exceptionally(ex -> {
+                    plugin.getLogger().severe("Failed to record catch for " + player.getName() + ": " + ex.getMessage());
+                    return null;
+                });
     }
 }
