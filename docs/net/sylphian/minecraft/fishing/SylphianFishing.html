@@ -64,6 +64,7 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#onEnable()" tabindex="0">onEnable()</a></li>
 <li><a href="#onDisable()" tabindex="0">onDisable()</a></li>
+<li><a href="#reload(org.bukkit.command.CommandSender)" tabindex="0">reload(CommandSender)</a></li>
 </ol>
 </li>
 </ol>
@@ -130,6 +131,12 @@ registering listeners and commands, and managing the plugin lifecycle.</div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Initializes the plugin, including configuration loading, database migrations,
 service registration, and command/event setup.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reload(org.bukkit.command.CommandSender)" class="member-name-link">reload</a><wbr>(org.bukkit.command.CommandSender&nbsp;sender)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Reloads config.yml and fish.yml from disk and pushes the updated
+configuration into all dependent services without a restart.</div>
 </div>
 </div>
 </div>
@@ -200,6 +207,23 @@ service registration, and command/event setup.</div>
 <dd><code>onDisable</code>&nbsp;in interface&nbsp;<code>org.bukkit.plugin.Plugin</code></dd>
 <dt>Overrides:</dt>
 <dd><code>onDisable</code>&nbsp;in class&nbsp;<code>org.bukkit.plugin.java.JavaPlugin</code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="reload(org.bukkit.command.CommandSender)">
+<h3>reload</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">reload</span><wbr><span class="parameters">(org.bukkit.command.CommandSender&nbsp;sender)</span></div>
+<div class="block">Reloads config.yml and fish.yml from disk and pushes the updated
+configuration into all dependent services without a restart.
+If parsing fails, the existing configuration is kept and the error
+is logged to console.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>sender</code> - the command sender to notify of success or failure,
+              or null if called internally</dd>
 </dl>
 </div>
 </section>

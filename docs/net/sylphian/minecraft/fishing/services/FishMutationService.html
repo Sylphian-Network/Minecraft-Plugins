@@ -5,7 +5,7 @@
 <title>FishMutationService (Sylphian Network - Plugin API Documentation)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="description" content="declaration: package: net.sylphian.minecraft.fishing.mutation, class: FishMutationService">
+<meta name="description" content="declaration: package: net.sylphian.minecraft.fishing.services, class: FishMutationService">
 <meta name="generator" content="javadoc/ClassWriter">
 <link rel="stylesheet" type="text/css" href="../../../../../resource-files/jquery-ui.min.css">
 <link rel="stylesheet" type="text/css" href="../../../../../resource-files/stylesheet.css">
@@ -39,7 +39,7 @@ loadScripts(document, 'script');</script>
 <div class="sub-nav">
 <div class="nav-content">
 <ol class="sub-nav-list">
-<li><a href="package-summary.html">net.sylphian.minecraft.fishing.mutation</a></li>
+<li><a href="package-summary.html">net.sylphian.minecraft.fishing.services</a></li>
 <li><a href="FishMutationService.html" class="current-selection">FishMutationService</a></li>
 </ol>
 <div class="nav-list-search"><input type="text" id="search-input" disabled placeholder="Search documentation (type /)" aria-label="Search in documentation" autocomplete="off" spellcheck="false"><input type="reset" id="reset-search" disabled value="Reset"></div>
@@ -62,8 +62,10 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#registerMutation(java.lang.String,net.sylphian.minecraft.fishing.mutation.FishMutation)" tabindex="0">registerMutation(String, FishMutation)</a></li>
-<li><a href="#applyMutations(org.bukkit.entity.Player,org.bukkit.inventory.ItemStack,net.sylphian.minecraft.fishing.mutation.FishContext)" tabindex="0">applyMutations(Player, ItemStack, FishContext)</a></li>
+<li><a href="#registerMutation(java.lang.String,net.sylphian.minecraft.fishing.services.mutation.FishMutation)" tabindex="0">registerMutation(String, FishMutation)</a></li>
+<li><a href="#applyMutations(org.bukkit.entity.Player,org.bukkit.inventory.ItemStack,net.sylphian.minecraft.fishing.services.mutation.FishContext)" tabindex="0">applyMutations(Player, ItemStack, FishContext)</a></li>
+<li><a href="#getMutationConfig(java.lang.String)" tabindex="0">getMutationConfig(String)</a></li>
+<li><a href="#reload(net.sylphian.minecraft.fishing.config.ConfigLoader)" tabindex="0">reload(ConfigLoader)</a></li>
 </ol>
 </li>
 </ol>
@@ -74,7 +76,7 @@ loadScripts(document, 'script');</script>
 <h1 title="Class FishMutationService" class="title">Class FishMutationService</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">net.sylphian.minecraft.fishing.mutation.FishMutationService</div>
+<div class="inheritance">net.sylphian.minecraft.fishing.services.FishMutationService</div>
 </div>
 <section class="class-description" id="class-description">
 <hr>
@@ -115,17 +117,27 @@ based on configuration and catch context.</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#applyMutations(org.bukkit.entity.Player,org.bukkit.inventory.ItemStack,net.sylphian.minecraft.fishing.mutation.FishContext)" class="member-name-link">applyMutations</a><wbr>(org.bukkit.entity.Player&nbsp;player,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#applyMutations(org.bukkit.entity.Player,org.bukkit.inventory.ItemStack,net.sylphian.minecraft.fishing.services.mutation.FishContext)" class="member-name-link">applyMutations</a><wbr>(org.bukkit.entity.Player&nbsp;player,
  org.bukkit.inventory.ItemStack&nbsp;item,
- <a href="FishContext.html" title="class in net.sylphian.minecraft.fishing.mutation">FishContext</a>&nbsp;context)</code></div>
+ <a href="mutation/FishContext.html" title="class in net.sylphian.minecraft.fishing.services.mutation">FishContext</a>&nbsp;context)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Attempts to apply all registered and enabled mutations to a caught fish.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#registerMutation(java.lang.String,net.sylphian.minecraft.fishing.mutation.FishMutation)" class="member-name-link">registerMutation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
- <a href="FishMutation.html" title="interface in net.sylphian.minecraft.fishing.mutation">FishMutation</a>&nbsp;mutation)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../config/MutationConfig.html" title="class in net.sylphian.minecraft.fishing.config">MutationConfig</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMutationConfig(java.lang.String)" class="member-name-link">getMutationConfig</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Retrieves the configuration for a given mutation ID.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#registerMutation(java.lang.String,net.sylphian.minecraft.fishing.services.mutation.FishMutation)" class="member-name-link">registerMutation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
+ <a href="mutation/FishMutation.html" title="interface in net.sylphian.minecraft.fishing.services.mutation">FishMutation</a>&nbsp;mutation)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Registers a new mutation with the service.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reload(net.sylphian.minecraft.fishing.config.ConfigLoader)" class="member-name-link">reload</a><wbr>(<a href="../config/ConfigLoader.html" title="class in net.sylphian.minecraft.fishing.config">ConfigLoader</a>&nbsp;config)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Reloads the service with updated configuration.</div>
 </div>
 </div>
 </div>
@@ -166,11 +178,11 @@ based on configuration and catch context.</div>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="registerMutation(java.lang.String,net.sylphian.minecraft.fishing.mutation.FishMutation)">
+<section class="detail" id="registerMutation(java.lang.String,net.sylphian.minecraft.fishing.services.mutation.FishMutation)">
 <h3>registerMutation</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerMutation</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
- <a href="FishMutation.html" title="interface in net.sylphian.minecraft.fishing.mutation">FishMutation</a>&nbsp;mutation)</span></div>
+ <a href="mutation/FishMutation.html" title="interface in net.sylphian.minecraft.fishing.services.mutation">FishMutation</a>&nbsp;mutation)</span></div>
 <div class="block">Registers a new mutation with the service.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -181,12 +193,12 @@ based on configuration and catch context.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="applyMutations(org.bukkit.entity.Player,org.bukkit.inventory.ItemStack,net.sylphian.minecraft.fishing.mutation.FishContext)">
+<section class="detail" id="applyMutations(org.bukkit.entity.Player,org.bukkit.inventory.ItemStack,net.sylphian.minecraft.fishing.services.mutation.FishContext)">
 <h3>applyMutations</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">applyMutations</span><wbr><span class="parameters">(org.bukkit.entity.Player&nbsp;player,
  org.bukkit.inventory.ItemStack&nbsp;item,
- <a href="FishContext.html" title="class in net.sylphian.minecraft.fishing.mutation">FishContext</a>&nbsp;context)</span></div>
+ <a href="mutation/FishContext.html" title="class in net.sylphian.minecraft.fishing.services.mutation">FishContext</a>&nbsp;context)</span></div>
 <div class="block">Attempts to apply all registered and enabled mutations to a caught fish.
 Each mutation has a chance to occur, which is modified by the fish's rarity.</div>
 <dl class="notes">
@@ -194,6 +206,35 @@ Each mutation has a chance to occur, which is modified by the fish's rarity.</di
 <dd><code>player</code> - the player who caught the fish</dd>
 <dd><code>item</code> - the fish item stack</dd>
 <dd><code>context</code> - the catch context</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getMutationConfig(java.lang.String)">
+<h3>getMutationConfig</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../config/MutationConfig.html" title="class in net.sylphian.minecraft.fishing.config">MutationConfig</a></span>&nbsp;<span class="element-name">getMutationConfig</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</span></div>
+<div class="block">Retrieves the configuration for a given mutation ID.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>id</code> - the mutation identifier</dd>
+<dt>Returns:</dt>
+<dd>the MutationConfig, or an empty disabled config if not found</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="reload(net.sylphian.minecraft.fishing.config.ConfigLoader)">
+<h3>reload</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">reload</span><wbr><span class="parameters">(<a href="../config/ConfigLoader.html" title="class in net.sylphian.minecraft.fishing.config">ConfigLoader</a>&nbsp;config)</span></div>
+<div class="block">Reloads the service with updated configuration.
+Registered mutations are preserved — only config values are refreshed.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>config</code> - the new configuration loader</dd>
 </dl>
 </div>
 </section>

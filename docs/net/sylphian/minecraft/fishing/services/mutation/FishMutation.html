@@ -5,16 +5,16 @@
 <title>FishMutation (Sylphian Network - Plugin API Documentation)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="description" content="declaration: package: net.sylphian.minecraft.fishing.mutation, interface: FishMutation">
+<meta name="description" content="declaration: package: net.sylphian.minecraft.fishing.services.mutation, interface: FishMutation">
 <meta name="generator" content="javadoc/ClassWriter">
-<link rel="stylesheet" type="text/css" href="../../../../../resource-files/jquery-ui.min.css">
-<link rel="stylesheet" type="text/css" href="../../../../../resource-files/stylesheet.css">
-<script type="text/javascript" src="../../../../../script-files/script.js"></script>
-<script type="text/javascript" src="../../../../../script-files/jquery-3.7.1.min.js"></script>
-<script type="text/javascript" src="../../../../../script-files/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../../../../resource-files/jquery-ui.min.css">
+<link rel="stylesheet" type="text/css" href="../../../../../../resource-files/stylesheet.css">
+<script type="text/javascript" src="../../../../../../script-files/script.js"></script>
+<script type="text/javascript" src="../../../../../../script-files/jquery-3.7.1.min.js"></script>
+<script type="text/javascript" src="../../../../../../script-files/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">const pathtoroot = "../../../../../";
+<script type="text/javascript">const pathtoroot = "../../../../../../";
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -27,19 +27,19 @@ loadScripts(document, 'script');</script>
 <div class="nav-menu-button"><button id="navbar-toggle-button" aria-controls="navbar-top" aria-expanded="false" aria-label="Toggle navigation links"><span class="nav-bar-toggle-icon">&nbsp;</span><span class="nav-bar-toggle-icon">&nbsp;</span><span class="nav-bar-toggle-icon">&nbsp;</span></button></div>
 <div class="skip-nav"><a href="#skip-navbar-top" title="Skip navigation links">Skip navigation links</a></div>
 <ul id="navbar-top-firstrow" class="nav-list" title="Navigation">
-<li><a href="../../../../../index.html">Overview</a></li>
+<li><a href="../../../../../../index.html">Overview</a></li>
 <li class="nav-bar-cell1-rev">Class</li>
 <li><a href="package-tree.html">Tree</a></li>
-<li><a href="../../../../../index-all.html">Index</a></li>
-<li><a href="../../../../../search.html">Search</a></li>
-<li><a href="../../../../../help-doc.html#class">Help</a></li>
+<li><a href="../../../../../../index-all.html">Index</a></li>
+<li><a href="../../../../../../search.html">Search</a></li>
+<li><a href="../../../../../../help-doc.html#class">Help</a></li>
 </ul>
 </div>
 </div>
 <div class="sub-nav">
 <div class="nav-content">
 <ol class="sub-nav-list">
-<li><a href="package-summary.html">net.sylphian.minecraft.fishing.mutation</a></li>
+<li><a href="package-summary.html">net.sylphian.minecraft.fishing.services.mutation</a></li>
 <li><a href="FishMutation.html" class="current-selection">FishMutation</a></li>
 </ol>
 <div class="nav-list-search"><input type="text" id="search-input" disabled placeholder="Search documentation (type /)" aria-label="Search in documentation" autocomplete="off" spellcheck="false"><input type="reset" id="reset-search" disabled value="Reset"></div>
@@ -56,12 +56,12 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#shouldApply(org.bukkit.entity.Player,net.sylphian.minecraft.fishing.mutation.FishContext)" tabindex="0">shouldApply(Player, FishContext)</a></li>
-<li><a href="#apply(org.bukkit.inventory.ItemStack,org.bukkit.entity.Player,net.sylphian.minecraft.fishing.mutation.FishContext)" tabindex="0">apply(ItemStack, Player, FishContext)</a></li>
+<li><a href="#shouldApply(org.bukkit.entity.Player,net.sylphian.minecraft.fishing.services.mutation.FishContext)" tabindex="0">shouldApply(Player, FishContext)</a></li>
+<li><a href="#apply(org.bukkit.inventory.ItemStack,org.bukkit.entity.Player,net.sylphian.minecraft.fishing.services.mutation.FishContext)" tabindex="0">apply(ItemStack, Player, FishContext)</a></li>
 </ol>
 </li>
 </ol>
-<button class="hide-sidebar"><span>Hide sidebar&nbsp;</span><img src="../../../../../resource-files/left.svg" alt="Hide sidebar"></button><button class="show-sidebar"><img src="../../../../../resource-files/right.svg" alt="Show sidebar"><span>&nbsp;Show sidebar</span></button></nav>
+<button class="hide-sidebar"><span>Hide sidebar&nbsp;</span><img src="../../../../../../resource-files/left.svg" alt="Hide sidebar"></button><button class="show-sidebar"><img src="../../../../../../resource-files/right.svg" alt="Show sidebar"><span>&nbsp;Show sidebar</span></button></nav>
 <main role="main">
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
@@ -70,7 +70,7 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Known Implementing Classes:</dt>
-<dd><code><a href="impl/SuperFishMutation.html" title="class in net.sylphian.minecraft.fishing.mutation.impl">SuperFishMutation</a></code></dd>
+<dd><code><a href="impl/SuperFishMutation.html" title="class in net.sylphian.minecraft.fishing.services.mutation.impl">SuperFishMutation</a></code></dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
@@ -93,15 +93,15 @@ Mutations can modify the fish's ItemStack, add metadata, or apply effects to the
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#apply(org.bukkit.inventory.ItemStack,org.bukkit.entity.Player,net.sylphian.minecraft.fishing.mutation.FishContext)" class="member-name-link">apply</a><wbr>(org.bukkit.inventory.ItemStack&nbsp;item,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#apply(org.bukkit.inventory.ItemStack,org.bukkit.entity.Player,net.sylphian.minecraft.fishing.services.mutation.FishContext)" class="member-name-link">apply</a><wbr>(org.bukkit.inventory.ItemStack&nbsp;item,
  org.bukkit.entity.Player&nbsp;player,
- <a href="FishContext.html" title="class in net.sylphian.minecraft.fishing.mutation">FishContext</a>&nbsp;context)</code></div>
+ <a href="FishContext.html" title="class in net.sylphian.minecraft.fishing.services.mutation">FishContext</a>&nbsp;context)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Applies the mutation to the caught fish item.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#shouldApply(org.bukkit.entity.Player,net.sylphian.minecraft.fishing.mutation.FishContext)" class="member-name-link">shouldApply</a><wbr>(org.bukkit.entity.Player&nbsp;player,
- <a href="FishContext.html" title="class in net.sylphian.minecraft.fishing.mutation">FishContext</a>&nbsp;context)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#shouldApply(org.bukkit.entity.Player,net.sylphian.minecraft.fishing.services.mutation.FishContext)" class="member-name-link">shouldApply</a><wbr>(org.bukkit.entity.Player&nbsp;player,
+ <a href="FishContext.html" title="class in net.sylphian.minecraft.fishing.services.mutation">FishContext</a>&nbsp;context)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Determines if the mutation should be applied based on the player and context.</div>
 </div>
@@ -120,11 +120,11 @@ Mutations can modify the fish's ItemStack, add metadata, or apply effects to the
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="shouldApply(org.bukkit.entity.Player,net.sylphian.minecraft.fishing.mutation.FishContext)">
+<section class="detail" id="shouldApply(org.bukkit.entity.Player,net.sylphian.minecraft.fishing.services.mutation.FishContext)">
 <h3>shouldApply</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="return-type">boolean</span>&nbsp;<span class="element-name">shouldApply</span><wbr><span class="parameters">(org.bukkit.entity.Player&nbsp;player,
- <a href="FishContext.html" title="class in net.sylphian.minecraft.fishing.mutation">FishContext</a>&nbsp;context)</span></div>
+ <a href="FishContext.html" title="class in net.sylphian.minecraft.fishing.services.mutation">FishContext</a>&nbsp;context)</span></div>
 <div class="block">Determines if the mutation should be applied based on the player and context.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -137,12 +137,12 @@ Mutations can modify the fish's ItemStack, add metadata, or apply effects to the
 </section>
 </li>
 <li>
-<section class="detail" id="apply(org.bukkit.inventory.ItemStack,org.bukkit.entity.Player,net.sylphian.minecraft.fishing.mutation.FishContext)">
+<section class="detail" id="apply(org.bukkit.inventory.ItemStack,org.bukkit.entity.Player,net.sylphian.minecraft.fishing.services.mutation.FishContext)">
 <h3>apply</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">apply</span><wbr><span class="parameters">(org.bukkit.inventory.ItemStack&nbsp;item,
  org.bukkit.entity.Player&nbsp;player,
- <a href="FishContext.html" title="class in net.sylphian.minecraft.fishing.mutation">FishContext</a>&nbsp;context)</span></div>
+ <a href="FishContext.html" title="class in net.sylphian.minecraft.fishing.services.mutation">FishContext</a>&nbsp;context)</span></div>
 <div class="block">Applies the mutation to the caught fish item.</div>
 <dl class="notes">
 <dt>Parameters:</dt>

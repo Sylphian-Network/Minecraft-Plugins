@@ -67,11 +67,11 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab4">
 <div class="block">Immutable configuration for the custom bite timer system.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/listeners/BiteTimerListener.html" title="class in net.sylphian.minecraft.fishing.listeners">BiteTimerListener</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/services/BiteTimerService.html" title="class in net.sylphian.minecraft.fishing.services">BiteTimerService</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Listener responsible for overriding the vanilla fishing bite timer.</div>
+<div class="block">Service responsible for overriding the vanilla fishing bite timer.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/effects/CatchEffectService.html" title="class in net.sylphian.minecraft.fishing.effects">CatchEffectService</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/services/CatchEffectService.html" title="class in net.sylphian.minecraft.fishing.services">CatchEffectService</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Applies visual and audio catch effects to the player based on the rarity
 of the fish they caught.</div>
@@ -112,7 +112,7 @@ of the fish they caught.</div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Loads and parses fish definitions from <code>fish.yml</code>.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/mutation/FishContext.html" title="class in net.sylphian.minecraft.fishing.mutation">FishContext</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/services/mutation/FishContext.html" title="class in net.sylphian.minecraft.fishing.services.mutation">FishContext</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Contextual information for a fish catch.</div>
 </div>
@@ -132,19 +132,19 @@ of the fish they caught.</div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Implementation of IFishEncyclopaediaRepository using JDBI.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab4">
 <div class="block">Represents a single type of fish that can be caught through the fishing system.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/listeners/FishingListener.html" title="class in net.sylphian.minecraft.fishing.listeners">FishingListener</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Listener for player fishing events.</div>
+<div class="block">Central listener for all player fishing events.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="net/sylphian/minecraft/fishing/mutation/FishMutation.html" title="interface in net.sylphian.minecraft.fishing.mutation">FishMutation</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="net/sylphian/minecraft/fishing/services/mutation/FishMutation.html" title="interface in net.sylphian.minecraft.fishing.services.mutation">FishMutation</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Interface representing a mutation that can be applied to a caught fish.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/mutation/FishMutationService.html" title="class in net.sylphian.minecraft.fishing.mutation">FishMutationService</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/services/FishMutationService.html" title="class in net.sylphian.minecraft.fishing.services">FishMutationService</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Service for managing and applying fish mutations.</div>
 </div>
@@ -164,7 +164,7 @@ of the fish they caught.</div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Utility class for building ItemStacks with fluent API.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/loot/LootManager.html" title="class in net.sylphian.minecraft.fishing.loot">LootManager</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/services/LootService.html" title="class in net.sylphian.minecraft.fishing.services">LootService</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Manages the loot rolling logic for the fishing system.</div>
 </div>
@@ -293,7 +293,7 @@ specific rarity is caught.</div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Listener for consumption of items with the Super Fish enchantment.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/mutation/impl/SuperFishMutation.html" title="class in net.sylphian.minecraft.fishing.mutation.impl">SuperFishMutation</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/services/mutation/impl/SuperFishMutation.html" title="class in net.sylphian.minecraft.fishing.services.mutation.impl">SuperFishMutation</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A mutation that applies the Super Fish enchantment to a caught fish.</div>
 </div>
@@ -309,92 +309,96 @@ specific rarity is caught.</div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Bootstrapper for the Sylphian-Fishing plugin.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/profile/SylphianProfile.html" title="class in net.sylphian.minecraft.profile">SylphianProfile</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/commands/SylphianFishingCommand.html" title="class in net.sylphian.minecraft.fishing.commands">SylphianFishingCommand</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Root command for Sylphian Fishing administrative actions.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/profile/SylphianProfile.html" title="class in net.sylphian.minecraft.profile">SylphianProfile</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Main plugin class for Sylphian-Profile.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/commands/TestEffectCommand.html" title="class in net.sylphian.minecraft.fishing.commands">TestEffectCommand</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/commands/TestEffectCommand.html" title="class in net.sylphian.minecraft.fishing.commands">TestEffectCommand</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Command to test rarity catch effects at the player's target location.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/commands/TestFishingCommand.html" title="class in net.sylphian.minecraft.fishing.commands">TestFishingCommand</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/commands/TestFishingCommand.html" title="class in net.sylphian.minecraft.fishing.commands">TestFishingCommand</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Administrative command to run fishing catch simulations.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab4"><a href="net/sylphian/minecraft/profile/UserProfile.html" title="class in net.sylphian.minecraft.profile">UserProfile</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab4">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="net/sylphian/minecraft/profile/UserProfile.html" title="class in net.sylphian.minecraft.profile">UserProfile</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab4">
 <div class="block">Represents a cached player profile in memory.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="net/sylphian/minecraft/profile/UserProfile.Entitlement.html" title="class in net.sylphian.minecraft.profile">UserProfile.Entitlement</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab4">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab4"><a href="net/sylphian/minecraft/profile/UserProfile.Entitlement.html" title="class in net.sylphian.minecraft.profile">UserProfile.Entitlement</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab4">
 <div class="block">Represents a specific entitlement owned by a player.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab3"><a href="net/sylphian/verify/paper/api/model/VerificationReason.html" title="enum class in net.sylphian.verify.paper.api.model">VerificationReason</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab3">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab3"><a href="net/sylphian/verify/paper/api/model/VerificationReason.html" title="enum class in net.sylphian.verify.paper.api.model">VerificationReason</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab3">
 <div class="block">Enumeration of reasons why a player verification might fail or be restricted.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab3"><a href="net/sylphian/verify/velocity/api/model/VerificationReason.html" title="enum class in net.sylphian.verify.velocity.api.model">VerificationReason</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab3">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab3"><a href="net/sylphian/verify/velocity/api/model/VerificationReason.html" title="enum class in net.sylphian.verify.velocity.api.model">VerificationReason</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab3">
 <div class="block">Reasons for verification failure or access denial on the Velocity proxy.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/verify/paper/api/model/VerificationResponse.html" title="class in net.sylphian.verify.paper.api.model">VerificationResponse</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/verify/paper/api/model/VerificationResponse.html" title="class in net.sylphian.verify.paper.api.model">VerificationResponse</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Represents the detailed verification data returned by the API for a specific player.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/verify/velocity/api/model/VerificationResponse.html" title="class in net.sylphian.verify.velocity.api.model">VerificationResponse</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/verify/velocity/api/model/VerificationResponse.html" title="class in net.sylphian.verify.velocity.api.model">VerificationResponse</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Data model for the verification payload returned by the API.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab4"><a href="net/sylphian/verify/paper/model/VerificationResult.html" title="class in net.sylphian.verify.paper.model">VerificationResult</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab4">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="net/sylphian/verify/paper/model/VerificationResult.html" title="class in net.sylphian.verify.paper.model">VerificationResult</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab4">
 <div class="block">Represents the final result of a verification check within the plugin.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="net/sylphian/verify/velocity/model/VerificationResult.html" title="class in net.sylphian.verify.velocity.model">VerificationResult</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab4">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab4"><a href="net/sylphian/verify/velocity/model/VerificationResult.html" title="class in net.sylphian.verify.velocity.model">VerificationResult</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab4">
 <div class="block">Represents the final decision of a verification check on Velocity.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/verify/paper/api/VerifyClient.html" title="class in net.sylphian.verify.paper.api">VerifyClient</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/verify/paper/api/VerifyClient.html" title="class in net.sylphian.verify.paper.api">VerifyClient</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">HTTP client for communicating with the Sylphian verification API.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/verify/velocity/api/VerifyClient.html" title="class in net.sylphian.verify.velocity.api">VerifyClient</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/verify/velocity/api/VerifyClient.html" title="class in net.sylphian.verify.velocity.api">VerifyClient</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">HTTP client for communicating with the Sylphian verification API from the Velocity proxy.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/verify/paper/manager/VerifyManager.html" title="class in net.sylphian.verify.paper.manager">VerifyManager</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/verify/paper/manager/VerifyManager.html" title="class in net.sylphian.verify.paper.manager">VerifyManager</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Manages the verification lifecycle for players, including rate limiting and cooldowns.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/verify/velocity/manager/VerifyManager.html" title="class in net.sylphian.verify.velocity.manager">VerifyManager</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/verify/velocity/manager/VerifyManager.html" title="class in net.sylphian.verify.velocity.manager">VerifyManager</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Manages the verification logic on the Velocity proxy.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/verify/paper/VerifyPaper.html" title="class in net.sylphian.verify.paper">VerifyPaper</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/verify/paper/VerifyPaper.html" title="class in net.sylphian.verify.paper">VerifyPaper</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Main plugin class for Sylphian-Verify-Paper.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/verify/paper/listener/VerifyPluginMessageListener.html" title="class in net.sylphian.verify.paper.listener">VerifyPluginMessageListener</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/verify/paper/listener/VerifyPluginMessageListener.html" title="class in net.sylphian.verify.paper.listener">VerifyPluginMessageListener</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Listens for plugin messages from the Velocity proxy.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/verify/paper/api/VerifyService.html" title="class in net.sylphian.verify.paper.api">VerifyService</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/verify/paper/api/VerifyService.html" title="class in net.sylphian.verify.paper.api">VerifyService</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">High-level service for handling player verification.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/verify/velocity/api/VerifyService.html" title="class in net.sylphian.verify.velocity.api">VerifyService</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/verify/velocity/api/VerifyService.html" title="class in net.sylphian.verify.velocity.api">VerifyService</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">High-level service for handling player verification on Velocity.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/verify/velocity/VerifyVelocity.html" title="class in net.sylphian.verify.velocity">VerifyVelocity</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/verify/velocity/VerifyVelocity.html" title="class in net.sylphian.verify.velocity">VerifyVelocity</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Main plugin class for Sylphian-Verify-Velocity.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/profile/utils/VisualManager.html" title="class in net.sylphian.minecraft.profile.utils">VisualManager</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/profile/utils/VisualManager.html" title="class in net.sylphian.minecraft.profile.utils">VisualManager</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Manages the visual representation of player profiles in-game.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab3"><a href="net/sylphian/minecraft/fishing/weather/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.weather">WeatherCondition</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab3">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab3"><a href="net/sylphian/minecraft/fishing/fish/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.fish">WeatherCondition</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab3">
 <div class="block">Represents the weather condition at the time of a fishing catch.</div>
 </div>
 </div>
