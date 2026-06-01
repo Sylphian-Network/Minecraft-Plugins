@@ -4,13 +4,14 @@
 #
 # This file defines every fish that can be caught on the server.
 # Fish are selected by first filtering eligible fish for the
-# player's biome and Y coordinate, then rolling a rarity, and
-# finally picking a fish by weight within that rarity pool.
+# player's biome, Y coordinate, and time of day, then rolling
+# a rarity, and finally picking a fish by weight within that
+# rarity pool.
 #
 # Fields:
 # -------
 # material:     Bukkit Material name for the item dropped.
-#               See: https://jd.papermc.io/paper/1.21/org/bukkit/Material.html
+#               See: https://jd.papermc.io/paper/26.1.2/org/bukkit/Material.html
 #
 # display-name: MiniMessage formatted name shown to players.
 #               See: https://docs.advntr.dev/minimessage/format.html
@@ -34,9 +35,35 @@
 # min-y:        (Optional) Minimum Y coordinate for this fish to appear.
 # max-y:        (Optional) Maximum Y coordinate for this fish to appear.
 #               Omitting both means no height restriction.
+#
+# min-time:     (Optional) Minimum world time in ticks for this fish to appear.
+# max-time:     (Optional) Maximum world time in ticks for this fish to appear.
+#               Supports overnight wrap-around — if min-time is greater than
+#               max-time, the window crosses midnight. For example:
+#                 min-time: 13000, max-time: 1000  →  night only
+#               Omitting both means no time restriction.
+#
+# Time of day reference (ticks):
+#   0     = 06:00  Dawn
+#   1000  = 07:00  Early Morning
+#   6000  = 12:00  Noon
+#   12000 = 18:00  Dusk
+#   13000 = 19:00  Early Night
+#   18000 = 00:00  Midnight
+#   23000 = 05:00  Late Night
 # =============================================================
 
 fish:
+
+  # =============================================================
+  # NOTE: The fish entries in this file were initially AI-generated
+  # as a starting point.
+  # =============================================================
+
+  # ───────────────────────────────────────────
+  # Global / Universal
+  # ───────────────────────────────────────────
+
   common_cod:
     material: COD
     display-name: "<white>Common Cod"
@@ -67,6 +94,135 @@ fish:
     max-weight: 1.5
     biomes: ALL
 
+  starlight_koi:
+    material: TROPICAL_FISH
+    display-name: "<gradient:white:aqua>✦ Starlight Koi</gradient>"
+    description: "<gray>Its scales shine brighter beneath the night sky."
+    rarity: EPIC
+    weight: 3
+    min-weight: 1.5
+    max-weight: 5.0
+    biomes: ALL
+    min-time: 13000  # 19:00 — only surfaces after dark
+    max-time: 1000   # 07:00
+
+  # ───────────────────────────────────────────
+  # Ocean
+  # ───────────────────────────────────────────
+
+  pearlscale_tuna:
+    material: COD
+    display-name: "<white>Pearlscale Tuna"
+    description: "<gray>Fast swimmers of warm ocean currents."
+    rarity: COMMON
+    weight: 28
+    min-weight: 4.0
+    max-weight: 12.0
+    biomes:
+      - LUKEWARM_OCEAN
+      - WARM_OCEAN
+    max-y: 60
+
+  reef_glider:
+    material: TROPICAL_FISH
+    display-name: "<light_purple>Reef Glider"
+    description: "<gray>Drifts elegantly above coral reefs."
+    rarity: COMMON
+    weight: 34
+    min-weight: 0.3
+    max-weight: 1.4
+    biomes:
+      - WARM_OCEAN
+      - LUKEWARM_OCEAN
+    max-y: 62
+    min-time: 1000   # 07:00 — retreats into the reef at night
+    max-time: 12000  # 18:00
+
+  coral_butterfly:
+    material: TROPICAL_FISH
+    display-name: "<gradient:aqua:pink>Coral Butterfly</gradient>"
+    description: "<gray>Its fins resemble delicate reef petals."
+    rarity: UNCOMMON
+    weight: 20
+    min-weight: 0.1
+    max-weight: 0.6
+    biomes:
+      - WARM_OCEAN
+    max-y: 55
+
+  moonlit_jelly:
+    material: SLIME_BALL
+    display-name: "<aqua>☾ Moonlit Jelly"
+    description: "<gray>Glows softly under the midnight tide."
+    rarity: RARE
+    weight: 13
+    min-weight: 0.2
+    max-weight: 1.0
+    biomes:
+      - OCEAN
+      - BEACH
+    max-y: 62
+    min-time: 12000  # 18:00 — rises to the surface at dusk
+    max-time: 2000   # 08:00
+
+  phantom_mackerel:
+    material: COD
+    display-name: "<gray>Phantom Mackerel"
+    description: "<gray>Nearly invisible beneath moonlit waves."
+    rarity: RARE
+    weight: 10
+    min-weight: 1.0
+    max-weight: 3.0
+    biomes:
+      - OCEAN
+      - DEEP_OCEAN
+    max-y: 50
+    min-time: 13000  # 19:00 — emerges only after dark
+    max-time: 1000   # 07:00
+
+  tidehunter_shark:
+    material: SALMON
+    display-name: "<dark_aqua>Tidehunter Shark"
+    description: "<gray>A ruthless hunter of shallow coastlines."
+    rarity: EPIC
+    weight: 5
+    min-weight: 20.0
+    max-weight: 60.0
+    biomes:
+      - OCEAN
+      - COLD_OCEAN
+    max-y: 50
+
+  driftwood_grouper:
+    material: COD
+    display-name: "<gold>Driftwood Grouper"
+    description: "<gray>Masters of camouflage among floating debris."
+    rarity: COMMON
+    weight: 23
+    min-weight: 3.0
+    max-weight: 9.0
+    biomes:
+      - BEACH
+      - OCEAN
+    max-y: 64
+
+  stonejaw_bass:
+    material: COD
+    display-name: "<gray>Stonejaw Bass"
+    description: "<gray>Known for crushing shells with ease."
+    rarity: COMMON
+    weight: 27
+    min-weight: 1.5
+    max-weight: 5.0
+    biomes:
+      - STONY_SHORE
+      - BEACH
+    max-y: 64
+
+  # ───────────────────────────────────────────
+  # Deep Ocean
+  # ───────────────────────────────────────────
+
   heart_of_the_deep:
     material: HEART_OF_THE_SEA
     display-name: "<gradient:dark_purple:light_purple>❤ Heart of the Deep</gradient>"
@@ -79,19 +235,183 @@ fish:
       - DEEP_OCEAN
       - DEEP_COLD_OCEAN
       - DEEP_FROZEN_OCEAN
+    max-y: 30
 
-  sunscale_koi:
-    material: TROPICAL_FISH
-    display-name: "<gold>☀ Sunscale Koi"
-    description: "<gray>Its scales shimmer like a summer sunrise."
-    rarity: UNCOMMON
-    weight: 24
+  trench_maw:
+    material: PUFFERFISH
+    display-name: "<dark_blue>☠ Trench Maw"
+    description: "<gray>An abyssal predator with endless hunger."
+    rarity: EPIC
+    weight: 4
+    min-weight: 12.0
+    max-weight: 30.0
+    biomes:
+      - DEEP_OCEAN
+      - DEEP_COLD_OCEAN
+    max-y: 20
+
+  abyssal_guardian:
+    material: PRISMARINE_CRYSTALS
+    display-name: "<gradient:dark_aqua:blue>Abyssal Guardian</gradient>"
+    description: "<gray>Ancient ocean magic pulses within it."
+    rarity: LEGENDARY
+    weight: 1
+    min-weight: 5.0
+    max-weight: 15.0
+    biomes:
+      - DEEP_OCEAN
+    max-y: 10
+
+  leviathan_relic:
+    material: NAUTILUS_SHELL
+    display-name: "<gradient:dark_blue:gold>Leviathan Relic</gradient>"
+    description: "<gray>A fragment said to come from an ancient beast."
+    rarity: LEGENDARY
+    weight: 1
+    min-weight: 10.0
+    max-weight: 40.0
+    biomes:
+      - DEEP_OCEAN
+      - DEEP_LUKEWARM_OCEAN
+    max-y: 15
+
+  prismfin:
+    material: PRISMARINE_SHARD
+    display-name: "<gradient:aqua:light_purple>Prismfin</gradient>"
+    description: "<gray>Its scales refract every color of the sea."
+    rarity: EPIC
+    weight: 5
     min-weight: 1.0
-    max-weight: 3.2
+    max-weight: 3.5
+    biomes:
+      - DEEP_LUKEWARM_OCEAN
+      - WARM_OCEAN
+    max-y: 30
+
+  # ───────────────────────────────────────────
+  # Frozen / Cold
+  # ───────────────────────────────────────────
+
+  crystal_carp:
+    material: TROPICAL_FISH
+    display-name: "<aqua>❄ Crystal Carp"
+    description: "<gray>Cold to the touch and clear as ice."
+    rarity: UNCOMMON
+    weight: 18
+    min-weight: 1.2
+    max-weight: 4.0
+    biomes:
+      - FROZEN_RIVER
+      - ICE_SPIKES
+      - SNOWY_TAIGA
+
+  glacier_eel:
+    material: SALMON
+    display-name: "<blue>Glacier Eel"
+    description: "<gray>Moves silently beneath frozen lakes."
+    rarity: RARE
+    weight: 8
+    min-weight: 2.0
+    max-weight: 6.5
+    biomes:
+      - FROZEN_OCEAN
+      - DEEP_FROZEN_OCEAN
+    max-y: 62
+
+  aurora_kelpfin:
+    material: TROPICAL_FISH
+    display-name: "<gradient:aqua:white>Aurora Kelpfin</gradient>"
+    description: "<gray>Its scales ripple with polar colors."
+    rarity: EPIC
+    weight: 4
+    min-weight: 1.0
+    max-weight: 3.5
+    biomes:
+      - COLD_OCEAN
+      - FROZEN_OCEAN
+    max-y: 50
+    min-time: 13000  # 19:00 — colours only visible at night like a true aurora
+    max-time: 3000   # 09:00
+
+  frostbite_perch:
+    material: COD
+    display-name: "<aqua>Frostbite Perch"
+    description: "<gray>Its touch numbs exposed skin."
+    rarity: UNCOMMON
+    weight: 14
+    min-weight: 1.0
+    max-weight: 4.0
+    biomes:
+      - SNOWY_TAIGA
+      - FROZEN_RIVER
+
+  cloudscale_char:
+    material: SALMON
+    display-name: "<aqua>Cloudscale Char"
+    description: "<gray>Its scales reflect the sky above."
+    rarity: RARE
+    weight: 7
+    min-weight: 2.0
+    max-weight: 6.0
+    biomes:
+      - FROZEN_PEAKS
+      - JAGGED_PEAKS
+    min-y: 100
+    min-time: 1000   # 07:00 — needs daylight to mirror the sky
+    max-time: 11000  # 17:00
+
+  permafrost_pike:
+    material: SALMON
+    display-name: "<gradient:aqua:white>Permafrost Pike</gradient>"
+    description: "<gray>Frozen solid and somehow still alive."
+    rarity: EPIC
+    weight: 4
+    min-weight: 3.0
+    max-weight: 9.0
+    biomes:
+      - DEEP_FROZEN_OCEAN
+      - ICE_SPIKES
+    max-y: 40
+
+  # ───────────────────────────────────────────
+  # Rivers & Swamps
+  # ───────────────────────────────────────────
+
+  mossback_catfish:
+    material: COD
+    display-name: "<green>Mossback Catfish"
+    description: "<gray>Covered in slick moss and river algae."
+    rarity: COMMON
+    weight: 30
+    min-weight: 2.0
+    max-weight: 8.0
     biomes:
       - RIVER
-      - BAMBOO_JUNGLE
-      - JUNGLE
+      - SWAMP
+
+  willow_whisker:
+    material: SALMON
+    display-name: "<dark_green>Willow Whisker"
+    description: "<gray>Often found beneath hanging willow roots."
+    rarity: UNCOMMON
+    weight: 15
+    min-weight: 1.5
+    max-weight: 5.5
+    biomes:
+      - SWAMP
+      - MANGROVE_SWAMP
+
+  thunder_trout:
+    material: COD
+    display-name: "<yellow>⚡ Thunder Trout"
+    description: "<gray>Leaps from rivers during heavy storms."
+    rarity: RARE
+    weight: 11
+    min-weight: 2.0
+    max-weight: 6.0
+    biomes:
+      - RIVER
+      - STONY_SHORE
 
   mangrove_snapper:
     material: COD
@@ -116,16 +436,486 @@ fish:
     biomes:
       - SWAMP
       - MANGROVE_SWAMP
+    min-time: 12000  # 18:00 — lurks in the fog after dark
+    max-time: 2000   # 08:00
 
-  crystal_carp:
-    material: TROPICAL_FISH
-    display-name: "<aqua>❄ Crystal Carp"
-    description: "<gray>Cold to the touch and clear as ice."
+  ancient_mudskipper:
+    material: COD
+    display-name: "<gold>Ancient Mudskipper"
+    description: "<gray>A relic species from forgotten wetlands."
+    rarity: EPIC
+    weight: 4
+    min-weight: 4.0
+    max-weight: 12.0
+    biomes:
+      - MANGROVE_SWAMP
+
+  emerald_scale_barbel:
+    material: SALMON
+    display-name: "<green>Emerald Scale Barbel"
+    description: "<gray>A prized river fish with jewel-like scales."
     rarity: UNCOMMON
     weight: 18
-    min-weight: 1.2
+    min-weight: 2.0
+    max-weight: 5.5
+    biomes:
+      - FOREST
+      - RIVER
+
+  swamp_serpent:
+    material: SALMON
+    display-name: "<dark_green>Swamp Serpent"
+    description: "<gray>Long and sinuous, it coils through the reeds."
+    rarity: RARE
+    weight: 8
+    min-weight: 3.0
+    max-weight: 10.0
+    biomes:
+      - SWAMP
+      - MANGROVE_SWAMP
+
+  # ───────────────────────────────────────────
+  # Jungle
+  # ───────────────────────────────────────────
+
+  sunscale_koi:
+    material: TROPICAL_FISH
+    display-name: "<gold>☀ Sunscale Koi"
+    description: "<gray>Its scales shimmer like a summer sunrise."
+    rarity: UNCOMMON
+    weight: 24
+    min-weight: 1.0
+    max-weight: 3.2
+    biomes:
+      - RIVER
+      - BAMBOO_JUNGLE
+      - JUNGLE
+    min-time: 23000  # 05:00 — most vibrant at dawn and morning
+    max-time: 8000   # 14:00
+
+  jungle_darter:
+    material: TROPICAL_FISH
+    display-name: "<green>Jungle Darter"
+    description: "<gray>Too quick for most predators to catch."
+    rarity: COMMON
+    weight: 26
+    min-weight: 0.2
+    max-weight: 0.8
+    biomes:
+      - JUNGLE
+      - BAMBOO_JUNGLE
+
+  vinefang_eel:
+    material: SALMON
+    display-name: "<dark_green>Vinefang Eel"
+    description: "<gray>Slithers through submerged jungle roots."
+    rarity: RARE
+    weight: 9
+    min-weight: 3.0
+    max-weight: 8.5
+    biomes:
+      - JUNGLE
+
+  parrotfish_prime:
+    material: TROPICAL_FISH
+    display-name: "<gradient:red:yellow>Parrotfish Prime</gradient>"
+    description: "<gray>A brilliantly colored reef dweller."
+    rarity: UNCOMMON
+    weight: 17
+    min-weight: 1.0
+    max-weight: 2.5
+    biomes:
+      - WARM_OCEAN
+      - JUNGLE
+
+  canopy_leaper:
+    material: TROPICAL_FISH
+    display-name: "<green>Canopy Leaper"
+    description: "<gray>Known to leap from the water to catch insects\nhanging from low branches."
+    rarity: UNCOMMON
+    weight: 14
+    min-weight: 0.4
+    max-weight: 1.5
+    biomes:
+      - JUNGLE
+      - BAMBOO_JUNGLE
+
+  # ───────────────────────────────────────────
+  # Desert & Badlands
+  # ───────────────────────────────────────────
+
+  dune_skipper:
+    material: COD
+    display-name: "<yellow>Dune Skipper"
+    description: "<gray>Burrows beneath desert oasis sands."
+    rarity: COMMON
+    weight: 22
+    min-weight: 0.4
+    max-weight: 1.8
+    biomes:
+      - DESERT
+
+  mirage_minnow:
+    material: TROPICAL_FISH
+    display-name: "<gold>Mirage Minnow"
+    description: "<gray>Seems to vanish when viewed directly."
+    rarity: RARE
+    weight: 10
+    min-weight: 0.1
+    max-weight: 0.5
+    biomes:
+      - DESERT
+
+  cactus_spine_pike:
+    material: SALMON
+    display-name: "<green>Cactus Spine Pike"
+    description: "<gray>Its fins are sharp as desert thorns."
+    rarity: UNCOMMON
+    weight: 16
+    min-weight: 2.0
+    max-weight: 7.0
+    biomes:
+      - DESERT
+      - BADLANDS
+
+  emberfin:
+    material: TROPICAL_FISH
+    display-name: "<red>🔥 Emberfin"
+    description: "<gray>Warm to the touch despite the water around it."
+    rarity: RARE
+    weight: 12
+    min-weight: 0.7
+    max-weight: 2.0
+    biomes:
+      - BADLANDS
+      - WOODED_BADLANDS
+
+  oasis_barracuda:
+    material: COD
+    display-name: "<yellow>Oasis Barracuda"
+    description: "<gray>An aggressive hunter of scarce desert waters."
+    rarity: EPIC
+    weight: 4
+    min-weight: 5.0
+    max-weight: 14.0
+    biomes:
+      - DESERT
+      - BADLANDS
+
+  # ───────────────────────────────────────────
+  # Taiga & Mountains
+  # ───────────────────────────────────────────
+
+  taiga_grayling:
+    material: COD
+    display-name: "<gray>Taiga Grayling"
+    description: "<gray>Prefers the cold shade of pine forests."
+    rarity: COMMON
+    weight: 24
+    min-weight: 0.8
+    max-weight: 3.0
+    biomes:
+      - TAIGA
+      - OLD_GROWTH_PINE_TAIGA
+
+  pinewater_salmon:
+    material: SALMON
+    display-name: "<green>Pinewater Salmon"
+    description: "<gray>Strong migrators of icy forest streams."
+    rarity: COMMON
+    weight: 25
+    min-weight: 2.0
+    max-weight: 7.0
+    biomes:
+      - TAIGA
+      - SNOWY_TAIGA
+
+  skyfin_trout:
+    material: COD
+    display-name: "<white>Skyfin Trout"
+    description: "<gray>Found only in high mountain lakes."
+    rarity: UNCOMMON
+    weight: 13
+    min-weight: 1.5
+    max-weight: 4.5
+    biomes:
+      - WINDSWEPT_HILLS
+      - JAGGED_PEAKS
+    min-y: 80
+
+  peak_drifter:
+    material: SALMON
+    display-name: "<white>Peak Drifter"
+    description: "<gray>Survives in thin air and icy meltwater pools."
+    rarity: RARE
+    weight: 7
+    min-weight: 1.0
+    max-weight: 3.5
+    biomes:
+      - FROZEN_PEAKS
+      - STONY_PEAKS
+      - JAGGED_PEAKS
+    min-y: 150
+
+  # ───────────────────────────────────────────
+  # Meadow & Forest
+  # ───────────────────────────────────────────
+
+  bloomtail_guppy:
+    material: TROPICAL_FISH
+    display-name: "<light_purple>Bloomtail Guppy"
+    description: "<gray>Seen darting between flower petals and ponds."
+    rarity: COMMON
+    weight: 20
+    min-weight: 0.1
+    max-weight: 0.4
+    biomes:
+      - FLOWER_FOREST
+      - MEADOW
+
+  meadow_koi:
+    material: TROPICAL_FISH
+    display-name: "<yellow>Meadow Koi"
+    description: "<gray>A peaceful fish from crystal-clear streams."
+    rarity: UNCOMMON
+    weight: 15
+    min-weight: 1.0
+    max-weight: 3.0
+    biomes:
+      - MEADOW
+      - CHERRY_GROVE
+
+  cherry_blossom_betta:
+    material: TROPICAL_FISH
+    display-name: "<gradient:pink:white>Cherry Blossom Betta</gradient>"
+    description: "<gray>Petal-like fins drift elegantly through the water."
+    rarity: RARE
+    weight: 8
+    min-weight: 0.3
+    max-weight: 1.2
+    biomes:
+      - CHERRY_GROVE
+
+  gilded_dace:
+    material: TROPICAL_FISH
+    display-name: "<gold>Gilded Dace"
+    description: "<gray>Shimmers like sunlight through forest canopy."
+    rarity: UNCOMMON
+    weight: 16
+    min-weight: 0.5
+    max-weight: 2.0
+    biomes:
+      - FOREST
+      - FLOWER_FOREST
+      - BIRCH_FOREST
+
+  # ───────────────────────────────────────────
+  # Nether
+  # ───────────────────────────────────────────
+
+  obsidian_sturgeon:
+    material: COD
+    display-name: "<dark_gray>Obsidian Sturgeon"
+    description: "<gray>Its hide is rough as volcanic glass."
+    rarity: EPIC
+    weight: 6
+    min-weight: 8.0
+    max-weight: 20.0
+    biomes:
+      - BASALT_DELTAS
+      - SOUL_SAND_VALLEY
+
+  soulscale_ray:
+    material: PHANTOM_MEMBRANE
+    display-name: "<dark_purple>☠ Soulscale Ray"
+    description: "<gray>It glides through lava seas like a spirit."
+    rarity: LEGENDARY
+    weight: 2
+    min-weight: 3.0
+    max-weight: 9.0
+    biomes:
+      - SOUL_SAND_VALLEY
+      - NETHER_WASTES
+
+  lavafang_perch:
+    material: SALMON
+    display-name: "<red>Lavafang Perch"
+    description: "<gray>Its bite can melt weak fishing lines."
+    rarity: EPIC
+    weight: 7
+    min-weight: 2.5
+    max-weight: 7.5
+    biomes:
+      - NETHER_WASTES
+      - BASALT_DELTAS
+
+  warped_guppy:
+    material: TROPICAL_FISH
+    display-name: "<aqua>Warped Guppy"
+    description: "<gray>A bizarre fish twisted by Nether energy."
+    rarity: UNCOMMON
+    weight: 16
+    min-weight: 0.2
+    max-weight: 1.0
+    biomes:
+      - WARPED_FOREST
+
+  crimson_angler:
+    material: PUFFERFISH
+    display-name: "<dark_red>Crimson Angler"
+    description: "<gray>Its glowing lure attracts prey in the Nether dark."
+    rarity: EPIC
+    weight: 5
+    min-weight: 1.0
     max-weight: 4.0
     biomes:
-      - FROZEN_RIVER
-      - ICE_SPIKES
-      - SNOWY_TAIGA
+      - CRIMSON_FOREST
+
+  ashen_drifter:
+    material: COD
+    display-name: "<gray>Ashen Drifter"
+    description: "<gray>Coated in soot, it survives on ember motes."
+    rarity: UNCOMMON
+    weight: 14
+    min-weight: 0.5
+    max-weight: 2.5
+    biomes:
+      - BASALT_DELTAS
+      - NETHER_WASTES
+
+  # ───────────────────────────────────────────
+  # Underground & Caves
+  # ───────────────────────────────────────────
+
+  sirens_bloom:
+    material: GLOW_BERRIES
+    display-name: "<light_purple>✿ Siren's Bloom</light_purple>"
+    description: "<gray>A glowing aquatic plant often mistaken for a fish."
+    rarity: EPIC
+    weight: 3
+    min-weight: 0.2
+    max-weight: 0.9
+    biomes:
+      - LUSH_CAVES
+    min-y: -64
+    max-y: 20
+
+  caveblind_tetra:
+    material: TROPICAL_FISH
+    display-name: "<gray>Caveblind Tetra"
+    description: "<gray>Adapted to the endless dark underground."
+    rarity: COMMON
+    weight: 21
+    min-weight: 0.1
+    max-weight: 0.5
+    biomes:
+      - LUSH_CAVES
+      - DRIPSTONE_CAVES
+    min-y: -64
+    max-y: 30
+
+  dripstone_crusher:
+    material: COD
+    display-name: "<dark_gray>Dripstone Crusher"
+    description: "<gray>Its armored skull can crack solid stone."
+    rarity: RARE
+    weight: 6
+    min-weight: 5.0
+    max-weight: 14.0
+    biomes:
+      - DRIPSTONE_CAVES
+    min-y: -64
+    max-y: 20
+
+  glowcap_floater:
+    material: TROPICAL_FISH
+    display-name: "<green>Glowcap Floater"
+    description: "<gray>Feeds on bioluminescent fungi.\nIts belly glows faintly in the dark."
+    rarity: UNCOMMON
+    weight: 12
+    min-weight: 0.3
+    max-weight: 1.2
+    biomes:
+      - LUSH_CAVES
+    min-y: -64
+    max-y: 10
+
+  echofin:
+    material: SCULK
+    display-name: "<dark_aqua>Echofin"
+    description: "<gray>It reacts to the faintest vibrations underground."
+    rarity: LEGENDARY
+    weight: 2
+    min-weight: 1.0
+    max-weight: 4.0
+    biomes:
+      - DEEP_DARK
+    min-y: -64
+    max-y: -20
+
+  wardens_bane_eel:
+    material: SCULK_VEIN
+    display-name: "<dark_blue>Warden's Bane Eel"
+    description: "<gray>Even Wardens avoid its chilling presence."
+    rarity: MYTHIC
+    weight: 1
+    min-weight: 4.0
+    max-weight: 12.0
+    biomes:
+      - DEEP_DARK
+    min-y: -64
+    max-y: -30
+
+  abyssal_crawler:
+    material: SPIDER_EYE
+    display-name: "<dark_red>Abyssal Crawler"
+    description: "<gray>Eight-legged and somehow aquatic.\nBest not to ask questions."
+    rarity: EPIC
+    weight: 3
+    min-weight: 1.5
+    max-weight: 5.0
+    biomes:
+      - DEEP_DARK
+      - DRIPSTONE_CAVES
+    min-y: -64
+    max-y: -10
+
+  # ───────────────────────────────────────────
+  # The End
+  # ───────────────────────────────────────────
+
+  voidscale_serpent:
+    material: ENDER_EYE
+    display-name: "<dark_purple>☄ Voidscale Serpent"
+    description: "<gray>Whispers echo from its endless black eyes."
+    rarity: MYTHIC
+    weight: 1
+    min-weight: 15.0
+    max-weight: 50.0
+    biomes:
+      - THE_END
+      - END_HIGHLANDS
+
+  void_drifter:
+    material: ENDER_PEARL
+    display-name: "<dark_purple>Void Drifter"
+    description: "<gray>Teleports short distances when startled.\nAlmost impossible to hook."
+    rarity: LEGENDARY
+    weight: 2
+    min-weight: 2.0
+    max-weight: 8.0
+    biomes:
+      - THE_END
+      - END_MIDLANDS
+
+  endmire_leech:
+    material: PHANTOM_MEMBRANE
+    display-name: "<gray>Endmire Leech"
+    description: "<gray>Latches onto Endermen and drains their energy."
+    rarity: EPIC
+    weight: 4
+    min-weight: 0.5
+    max-weight: 2.0
+    biomes:
+      - THE_END
+      - END_BARRENS
