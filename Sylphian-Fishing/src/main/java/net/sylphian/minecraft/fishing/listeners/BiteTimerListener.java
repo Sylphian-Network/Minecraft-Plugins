@@ -57,7 +57,7 @@ public class BiteTimerListener implements Listener {
     @EventHandler
     public void onBobberThrow(PlayerFishEvent event) {
         if (event.getState() != PlayerFishEvent.State.FISHING) return;
-        if (!(event.getHook() instanceof FishHook hook)) return;
+        FishHook hook = event.getHook();
 
         Player player = event.getPlayer();
         WeatherCondition weather = WeatherCondition.from(player.getWorld());
