@@ -1,12 +1,13 @@
 package net.sylphian.minecraft.fishing.listeners;
 
 import net.sylphian.minecraft.fishing.db.api.IFishEncyclopaediaRepository;
-import net.sylphian.minecraft.fishing.effects.CatchEffectService;
 import net.sylphian.minecraft.fishing.fish.CatchResult;
-import net.sylphian.minecraft.fishing.loot.LootManager;
-import net.sylphian.minecraft.fishing.mutation.FishContext;
-import net.sylphian.minecraft.fishing.mutation.FishMutationService;
-import net.sylphian.minecraft.fishing.weather.WeatherCondition;
+import net.sylphian.minecraft.fishing.services.BiteTimerService;
+import net.sylphian.minecraft.fishing.services.CatchEffectService;
+import net.sylphian.minecraft.fishing.services.FishMutationService;
+import net.sylphian.minecraft.fishing.services.LootService;
+import net.sylphian.minecraft.fishing.services.mutation.FishContext;
+import net.sylphian.minecraft.fishing.fish.WeatherCondition;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
@@ -19,45 +20,65 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * Listener for player fishing events.
- * Intercepts successful catches to determine the fish type, apply mutations,
- * and record the catch in the player's encyclopaedia.
+ * Central listener for all player fishing events.
+ *
+ * <p>Delegates each fishing state to the appropriate service:</p>
+ * <ul>
+ *   <li>{@link PlayerFishEvent.State#FISHING} — applies a custom bite timer via {@link BiteTimerService}</li>
+ *   <li>{@link PlayerFishEvent.State#CAUGHT_FISH} — rolls loot, applies mutations, triggers effects,
+ *       and records the catch asynchronously</li>
+ * </ul>
  */
 public class FishingListener implements Listener {
 
-    private final LootManager lootManager;
+    private final LootService lootService;
     private final FishMutationService mutationService;
     private final CatchEffectService catchEffectService;
+    private final BiteTimerService biteTimerService;
     private final IFishEncyclopaediaRepository encyclopaediaRepository;
     private final JavaPlugin plugin;
 
     /**
      * Constructs a new FishingListener.
      *
-     * @param lootManager             the manager for rolling catches
+     * @param lootService             the service for rolling catches
      * @param mutationService         the service for applying mutations
+     * @param catchEffectService      the service for applying rarity catch effects
+     * @param biteTimerService        the service for applying custom bite delays
      * @param encyclopaediaRepository the repository for recording catches
-     * @param plugin                  the plugin instance
+     * @param plugin                  the plugin instance for logging
      */
-    public FishingListener(LootManager lootManager, FishMutationService mutationService, CatchEffectService catchEffectService, IFishEncyclopaediaRepository encyclopaediaRepository, JavaPlugin plugin) {
-        this.lootManager = lootManager;
+    public FishingListener(LootService lootService, FishMutationService mutationService,
+                           CatchEffectService catchEffectService, BiteTimerService biteTimerService,
+                           IFishEncyclopaediaRepository encyclopaediaRepository, JavaPlugin plugin) {
+        this.lootService = lootService;
         this.mutationService = mutationService;
         this.catchEffectService = catchEffectService;
+        this.biteTimerService = biteTimerService;
         this.encyclopaediaRepository = encyclopaediaRepository;
         this.plugin = plugin;
     }
 
     /**
-     * Handles the PlayerFishEvent.
-     * Resolves the hook's biome, weather, Y coordinate, and world time,
-     * then rolls for a fish, applies mutations, updates the caught item,
-     * triggers rarity catch effects, and records the catch asynchronously.
+     * Routes fishing state transitions to the appropriate handler.
      *
      * @param event the fishing event
      */
     @EventHandler
     public void onFish(PlayerFishEvent event) {
-        if (event.getState() != PlayerFishEvent.State.CAUGHT_FISH) return;
+        switch (event.getState()) {
+            case FISHING     -> biteTimerService.applyBiteTimer(event.getHook(), event.getPlayer());
+            case CAUGHT_FISH -> handleCatch(event);
+        }
+    }
+
+    /**
+     * Handles a successful catch — rolls loot, applies mutations, triggers
+     * rarity effects, and records the catch to the database.
+     *
+     * @param event the fishing event in the CAUGHT_FISH state
+     */
+    private void handleCatch(PlayerFishEvent event) {
         if (!(event.getCaught() instanceof Item caughtItem)) return;
 
         event.setExpToDrop(0);
@@ -69,7 +90,7 @@ public class FishingListener implements Listener {
         Biome biome = world.getBiome(hookLocation);
         WeatherCondition weather = WeatherCondition.from(world);
 
-        CatchResult result = lootManager.rollCatch(biome, weather, hookLocation.getY(), world.getTime());
+        CatchResult result = lootService.rollCatch(biome, weather, hookLocation.getY(), world.getTime());
         ItemStack itemStack = result.itemStack();
 
         mutationService.applyMutations(event.getPlayer(), itemStack, new FishContext(result.rarity(), biome, event.getPlayer()));
@@ -78,6 +99,12 @@ public class FishingListener implements Listener {
         recordCatchAsync(event.getPlayer(), result);
     }
 
+    /**
+     * Records the catch asynchronously via the encyclopaedia repository.
+     *
+     * @param player the player who caught the fish
+     * @param result the catch result to record
+     */
     private void recordCatchAsync(Player player, CatchResult result) {
         encyclopaediaRepository.recordCatch(player.getUniqueId(), result.fishId(), result.weight())
                 .exceptionally(ex -> {

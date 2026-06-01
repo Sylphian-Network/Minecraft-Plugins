@@ -1,4 +1,4 @@
-package net.sylphian.minecraft.fishing.mutation;
+package net.sylphian.minecraft.fishing.services.mutation;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

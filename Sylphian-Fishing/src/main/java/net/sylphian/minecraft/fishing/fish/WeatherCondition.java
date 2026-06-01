@@ -1,10 +1,10 @@
-package net.sylphian.minecraft.fishing.weather;
+package net.sylphian.minecraft.fishing.fish;
 
 import org.bukkit.World;
 
 /**
  * Represents the weather condition at the time of a fishing catch.
- * Used by LootManager to apply rarity chance multipliers.
+ * Used by LootService to apply rarity chance multipliers.
  */
 public enum WeatherCondition {
     /** No precipitation. Default multipliers apply. */

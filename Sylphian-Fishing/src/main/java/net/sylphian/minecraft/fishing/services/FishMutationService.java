@@ -1,7 +1,9 @@
-package net.sylphian.minecraft.fishing.mutation;
+package net.sylphian.minecraft.fishing.services;
 
 import net.sylphian.minecraft.fishing.config.ConfigLoader;
 import net.sylphian.minecraft.fishing.config.MutationConfig;
+import net.sylphian.minecraft.fishing.services.mutation.FishContext;
+import net.sylphian.minecraft.fishing.services.mutation.FishMutation;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 

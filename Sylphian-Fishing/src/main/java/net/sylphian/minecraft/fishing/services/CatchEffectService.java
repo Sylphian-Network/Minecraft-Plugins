@@ -1,4 +1,4 @@
-package net.sylphian.minecraft.fishing.effects;
+package net.sylphian.minecraft.fishing.services;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;

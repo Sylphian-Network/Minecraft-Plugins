@@ -1,11 +1,11 @@
-package net.sylphian.minecraft.fishing.loot;
+package net.sylphian.minecraft.fishing.services;
 
 import net.sylphian.minecraft.fishing.config.ConfigLoader;
 import net.sylphian.minecraft.fishing.fish.CatchResult;
 import net.sylphian.minecraft.fishing.fish.FishEntry;
 import net.sylphian.minecraft.fishing.fish.Rarity;
 import net.sylphian.minecraft.fishing.util.ItemBuilder;
-import net.sylphian.minecraft.fishing.weather.WeatherCondition;
+import net.sylphian.minecraft.fishing.fish.WeatherCondition;
 import org.bukkit.block.Biome;
 import org.bukkit.inventory.ItemStack;
 
@@ -31,29 +31,29 @@ import java.util.stream.Collectors;
  * </ol>
  *
  * <h2>Weather Modifiers</h2>
- * <p>Each weather condition ({@link net.sylphian.minecraft.fishing.weather.WeatherCondition})
+ * <p>Each weather condition ({@link WeatherCondition})
  * applies a multiplier to each rarity's base chance. Multipliers are loaded from
  * {@code config.yml} and clamped to a maximum of {@code 1.0}.</p>
  *
  * @see net.sylphian.minecraft.fishing.fish.FishEntry
  * @see net.sylphian.minecraft.fishing.fish.Rarity
- * @see net.sylphian.minecraft.fishing.weather.WeatherCondition
+ * @see WeatherCondition
  */
-public class LootManager {
+public class LootService {
 
     private Map<Rarity, List<FishEntry>> poolsByRarity;
     private ConfigLoader config;
     private final Random random = new Random();
 
     /**
-     * Constructs a new LootManager.
+     * Constructs a new LootService.
      *
      * @param allFish the list of all available fish entries
      * @param config  the configuration loader for retrieving multipliers
      */
-    public LootManager(List<FishEntry> allFish, ConfigLoader config) {
+    public LootService(List<FishEntry> allFish, ConfigLoader config) {
         this.poolsByRarity = allFish.stream()
-                .collect(Collectors.groupingBy(FishEntry::getRarity));
+                .collect(Collectors.groupingBy(FishEntry::rarity));
         this.config = config;
     }
 
@@ -91,7 +91,7 @@ public class LootManager {
 
         // Filter eligible pool to the rolled rarity
         List<FishEntry> rarityPool = eligiblePool.stream()
-                .filter(f -> f.getRarity().equals(rolledRarity))
+                .filter(f -> f.rarity().equals(rolledRarity))
                 .toList();
 
         // If no fish of that rarity exist in this biome/Y range,
@@ -138,8 +138,8 @@ public class LootManager {
         // Weight each fish by its rarity's effective chance
         double totalWeight = pool.stream()
                 .mapToDouble(f -> {
-                    double chance = f.getRarity().getChance();
-                    double multiplier = config.getWeatherMultiplier(weather, f.getRarity());
+                    double chance = f.rarity().getChance();
+                    double multiplier = config.getWeatherMultiplier(weather, f.rarity());
                     return Math.min(1.0, chance * multiplier);
                 })
                 .sum();
@@ -148,8 +148,8 @@ public class LootManager {
         double cursor = 0;
 
         for (FishEntry fish : pool) {
-            double chance = fish.getRarity().getChance();
-            double multiplier = config.getWeatherMultiplier(weather, fish.getRarity());
+            double chance = fish.rarity().getChance();
+            double multiplier = config.getWeatherMultiplier(weather, fish.rarity());
             cursor += Math.min(1.0, chance * multiplier);
             if (roll <= cursor) return fish;
         }
@@ -164,13 +164,13 @@ public class LootManager {
      * @return the selected fish entry
      */
     private FishEntry weightedPick(List<FishEntry> pool) {
-        int totalWeight = pool.stream().mapToInt(FishEntry::getWeight).sum();
+        int totalWeight = pool.stream().mapToInt(FishEntry::weight).sum();
         int roll = random.nextInt(totalWeight);
         int cursor = 0;
 
         // Iterate through the pool and accumulate weights until the roll is matched
         for (FishEntry fish : pool) {
-            cursor += fish.getWeight();
+            cursor += fish.weight();
             if (roll < cursor) return fish;
         }
 
@@ -186,7 +186,7 @@ public class LootManager {
     private CatchResult buildCatchResult(FishEntry fish) {
         double weight = fish.rollWeight(random);
         ItemStack itemStack = buildItemStack(fish, weight);
-        return new CatchResult(fish.getId(), fish.getRarity(), weight, itemStack);
+        return new CatchResult(fish.id(), fish.rarity(), weight, itemStack);
     }
 
     /**
@@ -221,8 +221,8 @@ public class LootManager {
      * @return the built ItemStack
      */
     private ItemStack buildItemStack(FishEntry fish, double caughtWeight) {
-        return new ItemBuilder(fish.getMaterial())
-                .name(fish.getDisplayName())
+        return new ItemBuilder(fish.material())
+                .name(fish.displayName())
                 .loreStrings(buildLore(fish, caughtWeight))
                 .build();
     }
@@ -237,12 +237,12 @@ public class LootManager {
     private List<String> buildLore(FishEntry fish, double caughtWeight) {
         List<String> lore = new ArrayList<>();
 
-        if (!fish.getDescription().isEmpty()) {
-            lore.addAll(Arrays.asList(fish.getDescription().split("\n")));
+        if (!fish.description().isEmpty()) {
+            lore.addAll(Arrays.asList(fish.description().split("\n")));
             lore.add("");
         }
 
-        lore.add(String.format("<gray>Rarity: %s", fish.getRarity().getDisplayName()));
+        lore.add(String.format("<gray>Rarity: %s", fish.rarity().getDisplayName()));
         lore.add(String.format("<gray>Weight: <white>%.2fkg", caughtWeight));
 
         return lore;
@@ -258,6 +258,6 @@ public class LootManager {
     public void reload(ConfigLoader config, List<FishEntry> allFish) {
         this.config = config;
         this.poolsByRarity = allFish.stream()
-                .collect(Collectors.groupingBy(FishEntry::getRarity));
+                .collect(Collectors.groupingBy(FishEntry::rarity));
     }
 }

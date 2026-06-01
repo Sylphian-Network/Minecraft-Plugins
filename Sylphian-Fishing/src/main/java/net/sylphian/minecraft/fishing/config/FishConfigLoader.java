@@ -2,6 +2,7 @@ package net.sylphian.minecraft.fishing.config;
 
 import net.sylphian.minecraft.fishing.fish.FishEntry;
 import net.sylphian.minecraft.fishing.fish.Rarity;
+import net.sylphian.minecraft.fishing.services.LootService;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Biome;
@@ -52,7 +53,7 @@ import java.util.logging.Logger;
  * </dl>
  *
  * @see net.sylphian.minecraft.fishing.fish.FishEntry
- * @see net.sylphian.minecraft.fishing.loot.LootManager
+ * @see LootService
  */
 public class FishConfigLoader {
 

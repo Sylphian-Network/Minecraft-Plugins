@@ -1,9 +1,12 @@
 package net.sylphian.minecraft.fishing.fish;
 
+import net.sylphian.minecraft.fishing.config.FishConfigLoader;
+import net.sylphian.minecraft.fishing.services.LootService;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * Represents a single type of fish that can be caught through the fishing system.
@@ -31,24 +34,12 @@ import java.util.List;
  * wraps around midnight. For example, {@code minTime: 18000, maxTime: 6000} means
  * the fish is catchable from dusk through to morning.</p>
  *
- * @see net.sylphian.minecraft.fishing.loot.LootManager
- * @see net.sylphian.minecraft.fishing.config.FishConfigLoader
+ * @see LootService
+ * @see FishConfigLoader
  */
-public class FishEntry {
-
-    private final String id;
-    private final Material material;
-    private final String displayName;
-    private final String description;
-    private final Rarity rarity;
-    private final int weight;
-    private final List<Biome> biomes;
-    private final double minWeight;
-    private final double maxWeight;
-    private final Integer minY;
-    private final Integer maxY;
-    private final Long minTime;
-    private final Long maxTime;
+public record FishEntry(String id, Material material, String displayName, String description, Rarity rarity, int weight,
+                        List<Biome> biomes, double minWeight, double maxWeight, Integer minY, Integer maxY,
+                        Long minTime, Long maxTime) {
 
     /**
      * Constructs a new FishEntry.
@@ -67,56 +58,33 @@ public class FishEntry {
      * @param minTime     minimum world time in ticks to catch this fish, or null for no restriction
      * @param maxTime     maximum world time in ticks to catch this fish, or null for no restriction
      */
-    public FishEntry(String id, Material material, String displayName, String description,
-                     Rarity rarity, int weight, List<Biome> biomes,
-                     double minWeight, double maxWeight,
-                     Integer minY, Integer maxY,
-                     Long minTime, Long maxTime) {
-        this.id = id;
-        this.material = material;
-        this.displayName = displayName;
-        this.description = description;
-        this.rarity = rarity;
-        this.weight = weight;
-        this.biomes = biomes;
-        this.minWeight = minWeight;
-        this.maxWeight = maxWeight;
-        this.minY = minY;
-        this.maxY = maxY;
-        this.minTime = minTime;
-        this.maxTime = maxTime;
+    public FishEntry {
     }
 
-    public String getId() { return id; }
-    public Material getMaterial() { return material; }
-    public String getDisplayName() { return displayName; }
-    public String getDescription() { return description; }
-    public Rarity getRarity() { return rarity; }
-    public int getWeight() { return weight; }
-    public List<Biome> getBiomes() { return biomes; }
-    public double getMinWeight() { return minWeight; }
-    public double getMaxWeight() { return maxWeight; }
-    public Integer getMinY() { return minY; }
-    public Integer getMaxY() { return maxY; }
-    public Long getMinTime() { return minTime; }
-    public Long getMaxTime() { return maxTime; }
-
-    /** Returns true if this fish has no biome restriction. */
-    public boolean isGlobal() { return biomes.isEmpty(); }
+    /**
+     * Returns true if this fish has no biome restriction.
+     */
+    public boolean isGlobal() {
+        return biomes.isEmpty();
+    }
 
     /**
      * Returns true if this fish has a Y coordinate restriction configured.
      *
      * @return true if minY or maxY is set
      */
-    public boolean hasYRestriction() { return minY != null || maxY != null; }
+    public boolean hasYRestriction() {
+        return minY != null || maxY != null;
+    }
 
     /**
      * Returns true if this fish has a time of day restriction configured.
      *
      * @return true if minTime or maxTime is set
      */
-    public boolean hasTimeRestriction() { return minTime != null || maxTime != null; }
+    public boolean hasTimeRestriction() {
+        return minTime != null || maxTime != null;
+    }
 
     /**
      * Checks if this fish can be caught in the specified biome.
@@ -171,7 +139,7 @@ public class FishEntry {
      * @param random the random source
      * @return the rolled weight in kg
      */
-    public double rollWeight(java.util.Random random) {
+    public double rollWeight(Random random) {
         return minWeight + (maxWeight - minWeight) * random.nextDouble();
     }
 }

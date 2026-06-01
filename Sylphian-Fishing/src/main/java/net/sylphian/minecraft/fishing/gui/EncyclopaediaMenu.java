@@ -99,7 +99,7 @@ public class EncyclopaediaMenu {
             FishEntry fish = fishEntries.get(i);
 
             // Check if the player has caught this fish before
-            boolean unlocked = discovered.containsKey(fish.getId());
+            boolean unlocked = discovered.containsKey(fish.id());
 
             // Show fish info if unlocked, otherwise show as unknown
             inventory.setItem(i - start, unlocked ? createUnlockedFish(fish, discovered) : createUnknownFish());
@@ -134,9 +134,9 @@ public class EncyclopaediaMenu {
     }
 
     private ItemStack createUnlockedFish(FishEntry fish, Map<String, FishEncyclopaediaModel> discovered) {
-        List<String> lore = new ArrayList<>(Arrays.asList(fish.getDescription().split("\n")));
+        List<String> lore = new ArrayList<>(Arrays.asList(fish.description().split("\n")));
 
-        FishEncyclopaediaModel model = discovered.get(fish.getId());
+        FishEncyclopaediaModel model = discovered.get(fish.id());
 
         if (model != null) {
             lore.add("");
@@ -149,11 +149,11 @@ public class EncyclopaediaMenu {
             lore.add("<aqua>Biomes:");
             lore.add("<gray>• <white>All Biomes");
 
-        } else if (!fish.getBiomes().isEmpty()) {
+        } else if (!fish.biomes().isEmpty()) {
             lore.add("");
             lore.add("<aqua>Biomes:");
 
-            for (Biome biome : fish.getBiomes()) {
+            for (Biome biome : fish.biomes()) {
                 String formattedBiome = Arrays.stream(biome.getKey().getKey().split("_"))
                         .map(s -> Character.toUpperCase(s.charAt(0)) + s.substring(1))
                         .collect(Collectors.joining(" "));
@@ -162,8 +162,8 @@ public class EncyclopaediaMenu {
             }
         }
 
-        return new ItemBuilder(fish.getMaterial())
-                .name(fish.getDisplayName())
+        return new ItemBuilder(fish.material())
+                .name(fish.displayName())
                 .loreStrings(lore)
                 .build();
     }

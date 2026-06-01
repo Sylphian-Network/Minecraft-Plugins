@@ -1,4 +1,4 @@
-package net.sylphian.minecraft.fishing.mutation;
+package net.sylphian.minecraft.fishing.services.mutation;
 
 import net.sylphian.minecraft.fishing.fish.Rarity;
 import org.bukkit.block.Biome;

@@ -13,17 +13,17 @@ import net.sylphian.minecraft.fishing.config.FishConfigLoader;
 import net.sylphian.minecraft.fishing.config.ConfigLoader;
 import net.sylphian.minecraft.fishing.db.migrations.Migration001CreateFishEncyclopaedia;
 import net.sylphian.minecraft.fishing.db.repositories.FishEncyclopaediaRepository;
-import net.sylphian.minecraft.fishing.effects.CatchEffectService;
+import net.sylphian.minecraft.fishing.services.BiteTimerService;
+import net.sylphian.minecraft.fishing.services.CatchEffectService;
 import net.sylphian.minecraft.fishing.fish.FishEntry;
 import net.sylphian.minecraft.fishing.gui.EncyclopaediaMenu;
-import net.sylphian.minecraft.fishing.listeners.BiteTimerListener;
 import net.sylphian.minecraft.fishing.listeners.EncyclopaediaListener;
 import net.sylphian.minecraft.fishing.listeners.FishingListener;
 import net.sylphian.minecraft.fishing.listeners.SuperFishEnchantmentListener;
-import net.sylphian.minecraft.fishing.loot.LootManager;
+import net.sylphian.minecraft.fishing.services.LootService;
 import net.sylphian.minecraft.fishing.fish.Rarity;
-import net.sylphian.minecraft.fishing.mutation.FishMutationService;
-import net.sylphian.minecraft.fishing.mutation.impl.SuperFishMutation;
+import net.sylphian.minecraft.fishing.services.FishMutationService;
+import net.sylphian.minecraft.fishing.services.mutation.impl.SuperFishMutation;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -39,10 +39,10 @@ import java.util.List;
  */
 public class SylphianFishing extends JavaPlugin {
 
-    private LootManager lootManager;
+    private LootService lootService;
     private FishMutationService mutationService;
     private CatchEffectService catchEffectService;
-    private BiteTimerListener biteTimerListener;
+    private BiteTimerService biteTimerService;
     private File fishFile;
 
     /**
@@ -70,10 +70,8 @@ public class SylphianFishing extends JavaPlugin {
         this.mutationService.registerMutation("super_fish", new SuperFishMutation());
 
         this.catchEffectService = new CatchEffectService(configLoader, getLogger());
-        this.lootManager = new LootManager(fish, configLoader);
-        this.biteTimerListener = new BiteTimerListener(configLoader, lootManager, this);
-
-        this.lootManager = new LootManager(fish, configLoader);
+        this.lootService = new LootService(fish, configLoader);
+        this.biteTimerService = new BiteTimerService(configLoader, lootService, getLogger());
 
         // Initialize repository with JDBI and async executor from Sylphian-Database
         FishEncyclopaediaRepository encyclopaediaRepository = new FishEncyclopaediaRepository(
@@ -81,8 +79,7 @@ public class SylphianFishing extends JavaPlugin {
                 DatabaseService.getExecutor()
         );
 
-        getServer().getPluginManager().registerEvents(new FishingListener(lootManager, mutationService, catchEffectService, encyclopaediaRepository, this), this);
-        getServer().getPluginManager().registerEvents(biteTimerListener, this);
+        getServer().getPluginManager().registerEvents(new FishingListener(lootService, mutationService, catchEffectService, biteTimerService, encyclopaediaRepository, this), this);
         getServer().getPluginManager().registerEvents(new EncyclopaediaListener(), this);
         getServer().getPluginManager().registerEvents(new SuperFishEnchantmentListener(configLoader), this);
 
@@ -93,7 +90,7 @@ public class SylphianFishing extends JavaPlugin {
 
             commands.register("sylphian-fishing", new SylphianFishingCommand(this));
             commands.register("encyclopaedia", new EncyclopaediaCommand(menu));
-            commands.register("test_fishing", new TestFishingCommand(lootManager, configLoader));
+            commands.register("test_fishing", new TestFishingCommand(lootService, configLoader));
             commands.register("test_effect", new TestEffectCommand(this.catchEffectService));
         });
 
@@ -126,10 +123,10 @@ public class SylphianFishing extends JavaPlugin {
             ConfigLoader newConfig = new ConfigLoader(getConfig(), getLogger());
             List<FishEntry> newFish = new FishConfigLoader(fishConfig, getLogger()).loadFish();
 
-            lootManager.reload(newConfig, newFish);
+            lootService.reload(newConfig, newFish);
             catchEffectService.reload(newConfig);
             mutationService.reload(newConfig);
-            biteTimerListener.reload(newConfig);
+            biteTimerService.reload(newConfig);
 
             getLogger().info("Configuration reloaded successfully.");
             if (sender != null) {

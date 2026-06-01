@@ -3,7 +3,7 @@ package net.sylphian.minecraft.fishing.commands;
 import io.papermc.paper.command.brigadier.BasicCommand;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.sylphian.minecraft.fishing.effects.CatchEffectService;
+import net.sylphian.minecraft.fishing.services.CatchEffectService;
 import net.sylphian.minecraft.fishing.fish.CatchResult;
 import net.sylphian.minecraft.fishing.fish.Rarity;
 import org.bukkit.Location;

@@ -1,7 +1,7 @@
 package net.sylphian.minecraft.fishing.config;
 
 import net.sylphian.minecraft.fishing.fish.Rarity;
-import net.sylphian.minecraft.fishing.weather.WeatherCondition;
+import net.sylphian.minecraft.fishing.fish.WeatherCondition;
 
 import java.util.Map;
 

@@ -11,8 +11,8 @@ import net.sylphian.minecraft.fishing.config.ConfigLoader;
 import net.sylphian.minecraft.fishing.config.MutationConfig;
 import net.sylphian.minecraft.fishing.fish.CatchResult;
 import net.sylphian.minecraft.fishing.fish.Rarity;
-import net.sylphian.minecraft.fishing.loot.LootManager;
-import net.sylphian.minecraft.fishing.weather.WeatherCondition;
+import net.sylphian.minecraft.fishing.services.LootService;
+import net.sylphian.minecraft.fishing.fish.WeatherCondition;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Biome;
 import org.bukkit.command.CommandSender;
@@ -33,7 +33,7 @@ import java.util.*;
  */
 public class TestFishingCommand implements BasicCommand {
 
-    private final LootManager lootManager;
+    private final LootService lootService;
     private final ConfigLoader config;
     private final Random random = new Random();
     private final MiniMessage miniMessage = MiniMessage.miniMessage();
@@ -41,11 +41,11 @@ public class TestFishingCommand implements BasicCommand {
     /**
      * Constructs a new TestFishingCommand.
      *
-     * @param lootManager the loot manager to use for simulations
+     * @param lootService the loot manager to use for simulations
      * @param config      the config loader for retrieving mutation chances
      */
-    public TestFishingCommand(LootManager lootManager, ConfigLoader config) {
-        this.lootManager = lootManager;
+    public TestFishingCommand(LootService lootService, ConfigLoader config) {
+        this.lootService = lootService;
         this.config = config;
     }
 
@@ -166,7 +166,7 @@ public class TestFishingCommand implements BasicCommand {
 
         // Run the simulation loop
         for (int i = 0; i < count; i++) {
-            CatchResult result = lootManager.rollCatch(biome, weather, hookY, worldTime);
+            CatchResult result = lootService.rollCatch(biome, weather, hookY, worldTime);
             Rarity rarity = result.rarity();
             if (rarity == null) continue;
 

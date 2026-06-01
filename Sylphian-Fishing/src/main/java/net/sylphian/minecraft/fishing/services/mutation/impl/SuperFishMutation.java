@@ -1,11 +1,11 @@
-package net.sylphian.minecraft.fishing.mutation.impl;
+package net.sylphian.minecraft.fishing.services.mutation.impl;
 
 import io.papermc.paper.registry.RegistryKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.sylphian.minecraft.fishing.mutation.FishContext;
-import net.sylphian.minecraft.fishing.mutation.FishMutation;
+import net.sylphian.minecraft.fishing.services.mutation.FishContext;
+import net.sylphian.minecraft.fishing.services.mutation.FishMutation;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
