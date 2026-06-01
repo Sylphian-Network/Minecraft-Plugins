@@ -330,7 +330,7 @@ public class SylphianFishingCommand implements BasicCommand {
      */
     @Override
     public @NotNull Collection<String> suggest(@NotNull CommandSourceStack stack, @NotNull String[] args) {
-        if (args.length == 1) {
+        if (args.length <= 1) {
             return List.of("reload", "test-effect", "test-fishing");
         }
 
