@@ -19,13 +19,7 @@ dependencies:
 commands:
   sylphian-fishing:
     description: Administrative commands for Sylphian Fishing.
-    usage: /sylphian-fishing <reload>
+    usage: /sylphian-fishing <reload|test-effect|test-fishing>
   encyclopaedia:
     description: Track your fishing discoveries and collection progress.
     usage: /encyclopaedia
-  test_fishing:
-    description: Run simulations under different configurable conditions.
-    usage: /test_fishing
-  test_effect:
-    description: Force the effects to play for the player to make sure they work.
-    usage: /test_effect

@@ -7,8 +7,6 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.sylphian.minecraft.database.DatabaseService;
 import net.sylphian.minecraft.fishing.commands.EncyclopaediaCommand;
 import net.sylphian.minecraft.fishing.commands.SylphianFishingCommand;
-import net.sylphian.minecraft.fishing.commands.TestEffectCommand;
-import net.sylphian.minecraft.fishing.commands.TestFishingCommand;
 import net.sylphian.minecraft.fishing.config.FishConfigLoader;
 import net.sylphian.minecraft.fishing.config.ConfigLoader;
 import net.sylphian.minecraft.fishing.db.migrations.Migration001CreateFishEncyclopaedia;
@@ -88,10 +86,8 @@ public class SylphianFishing extends JavaPlugin {
         getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
             Commands commands = event.registrar();
 
-            commands.register("sylphian-fishing", new SylphianFishingCommand(this));
+            commands.register("sylphian-fishing", new SylphianFishingCommand(this, catchEffectService, lootService, mutationService));
             commands.register("encyclopaedia", new EncyclopaediaCommand(menu));
-            commands.register("test_fishing", new TestFishingCommand(lootService, configLoader));
-            commands.register("test_effect", new TestEffectCommand(this.catchEffectService));
         });
 
         getLogger().info("Sylphian Fishing enabled!");
