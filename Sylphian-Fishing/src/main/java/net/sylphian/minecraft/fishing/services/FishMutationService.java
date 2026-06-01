@@ -72,6 +72,16 @@ public class FishMutationService {
     }
 
     /**
+     * Retrieves the configuration for a given mutation ID.
+     *
+     * @param id the mutation identifier
+     * @return the MutationConfig, or an empty disabled config if not found
+     */
+    public MutationConfig getMutationConfig(String id) {
+        return config.getMutationConfig(id);
+    }
+
+    /**
      * Reloads the service with updated configuration.
      * Registered mutations are preserved — only config values are refreshed.
      *

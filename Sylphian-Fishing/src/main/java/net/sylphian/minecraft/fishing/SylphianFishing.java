@@ -81,7 +81,7 @@ public class SylphianFishing extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new FishingListener(lootService, mutationService, catchEffectService, biteTimerService, encyclopaediaRepository, this), this);
         getServer().getPluginManager().registerEvents(new EncyclopaediaListener(), this);
-        getServer().getPluginManager().registerEvents(new SuperFishEnchantmentListener(configLoader), this);
+        getServer().getPluginManager().registerEvents(new SuperFishEnchantmentListener(mutationService), this);
 
         EncyclopaediaMenu menu = new EncyclopaediaMenu(fish, encyclopaediaRepository, this);
 

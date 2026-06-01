@@ -1,7 +1,7 @@
 package net.sylphian.minecraft.fishing.listeners;
 
 import io.papermc.paper.registry.RegistryKey;
-import net.sylphian.minecraft.fishing.config.ConfigLoader;
+import net.sylphian.minecraft.fishing.services.FishMutationService;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,17 +16,17 @@ import static net.sylphian.minecraft.fishing.SylphianFishingBootstrap.SUPER_FISH
  * Applies configured potion effects to the player when they eat a Super Fish.
  */
 public class SuperFishEnchantmentListener implements Listener {
-    
-    private final ConfigLoader config;
+
+    private final FishMutationService mutationService;
     private final Enchantment superFishEnchantment;
 
     /**
      * Constructs a new SuperFishEnchantmentListener.
      *
-     * @param config the configuration loader
+     * @param mutationService the mutation service for retrieving effect configurations
      */
-    public SuperFishEnchantmentListener(ConfigLoader config) {
-        this.config = config;
+    public SuperFishEnchantmentListener(FishMutationService mutationService) {
+        this.mutationService = mutationService;
         this.superFishEnchantment = registryAccess()
                 .getRegistry(RegistryKey.ENCHANTMENT)
                 .get(SUPER_FISH_KEY);
@@ -52,6 +52,6 @@ public class SuperFishEnchantmentListener implements Listener {
      * @param player the player who consumed the fish
      */
     private void applySuperFishEffects(Player player) {
-        player.addPotionEffects(config.getMutationConfig("super_fish").effects());
+        player.addPotionEffects(mutationService.getMutationConfig("super_fish").effects());
     }
 }
