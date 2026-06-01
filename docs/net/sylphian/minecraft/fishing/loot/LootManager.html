@@ -68,6 +68,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.weather.WeatherCondition,double,long)" tabindex="0">rollCatch(Biome, WeatherCondition, double, long)</a></li>
+<li><a href="#peekRarity(net.sylphian.minecraft.fishing.weather.WeatherCondition)" tabindex="0">peekRarity(WeatherCondition)</a></li>
 </ol>
 </li>
 </ol>
@@ -147,12 +148,17 @@ applies a multiplier to each rarity's base chance. Multipliers are loaded from
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../fish/CatchResult.html" title="class in net.sylphian.minecraft.fishing.fish">CatchResult</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.weather.WeatherCondition,double,long)" class="member-name-link">rollCatch</a><wbr>(org.bukkit.block.Biome&nbsp;biome,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#peekRarity(net.sylphian.minecraft.fishing.weather.WeatherCondition)" class="member-name-link">peekRarity</a><wbr>(<a href="../weather/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.weather">WeatherCondition</a>&nbsp;weather)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Rolls a rarity without selecting a fish.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../fish/CatchResult.html" title="class in net.sylphian.minecraft.fishing.fish">CatchResult</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.weather.WeatherCondition,double,long)" class="member-name-link">rollCatch</a><wbr>(org.bukkit.block.Biome&nbsp;biome,
  <a href="../weather/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.weather">WeatherCondition</a>&nbsp;weather,
  double&nbsp;hookY,
  long&nbsp;worldTime)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Rolls a catch result for the given context.</div>
 </div>
 </div>
@@ -219,6 +225,23 @@ falls back to a weighted pick across the entire eligible pool.</div>
 <dd>a CatchResult containing the fish ID, rarity, weight, and built ItemStack</dd>
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalStateException.html" title="class or interface in java.lang" class="external-link">IllegalStateException</a></code> - if no fish are configured for the given context</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="peekRarity(net.sylphian.minecraft.fishing.weather.WeatherCondition)">
+<h3>peekRarity</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a></span>&nbsp;<span class="element-name">peekRarity</span><wbr><span class="parameters">(<a href="../weather/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.weather">WeatherCondition</a>&nbsp;weather)</span></div>
+<div class="block">Rolls a rarity without selecting a fish.
+Used by the bite timer system to determine wait time before a catch occurs.
+The actual catch rolls rarity again independently.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>weather</code> - the current weather condition</dd>
+<dt>Returns:</dt>
+<dd>the rolled rarity</dd>
 </dl>
 </div>
 </section>
