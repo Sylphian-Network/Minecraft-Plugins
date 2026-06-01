@@ -2,16 +2,10 @@ package net.sylphian.minecraft.fishing.config;
 
 import net.sylphian.minecraft.fishing.fish.Rarity;
 import net.sylphian.minecraft.fishing.weather.WeatherCondition;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -39,12 +33,11 @@ public class ConfigLoader {
         loadRarities(config.getConfigurationSection("rarities"));
         loadMutations(config.getConfigurationSection("mutations"));
         loadWeatherModifiers(config.getConfigurationSection("weather-modifiers"));
-        loadRarityCatchEffects(config.getConfigurationSection("rarities"));
         loadBiteTimer(config.getConfigurationSection("bite-timer"));
     }
 
     /**
-     * Loads rarity definitions from the config.
+     * Loads rarity definitions and their associated catch effects from the config.
      *
      * @param section the configuration section containing rarities
      */
@@ -60,6 +53,19 @@ public class ConfigLoader {
             String color = section.getString(key + ".color", "<white>");
             double mutationMultiplier = section.getDouble(key + ".mutation-multiplier", 1.0);
             Rarity.register(new Rarity(key, chance, color, mutationMultiplier));
+
+            ConfigurationSection effectsSection = section.getConfigurationSection(key + ".catch-effects");
+            if (effectsSection == null) {
+                rarityCatchEffects.put(key.toUpperCase(), RarityCatchEffects.empty());
+                continue;
+            }
+
+            rarityCatchEffects.put(key.toUpperCase(), new RarityCatchEffects(
+                    RarityCatchEffects.SoundConfig.fromSection(effectsSection.getConfigurationSection("sound")),
+                    RarityCatchEffects.ParticleConfig.fromSection(effectsSection.getConfigurationSection("particles")),
+                    RarityCatchEffects.TitleConfig.fromSection(effectsSection.getConfigurationSection("title")),
+                    RarityCatchEffects.BroadcastConfig.fromSection(effectsSection.getConfigurationSection("broadcast"))
+            ));
         }
 
         logger.info("Rarity loading complete [" + Rarity.values().size() + "] rarities registered.");
@@ -74,14 +80,7 @@ public class ConfigLoader {
         if (section == null) return;
 
         for (String key : section.getKeys(false)) {
-            ConfigurationSection mutSection = section.getConfigurationSection(key);
-            if (mutSection == null) continue;
-
-            mutations.put(key, new MutationConfig(
-                    mutSection.getBoolean("enabled", false),
-                    mutSection.getDouble("base-chance", 0.0),
-                    loadEffects(mutSection.getList("effects"))
-            ));
+            mutations.put(key, MutationConfig.fromSection(section.getConfigurationSection(key)));
         }
     }
 
@@ -107,98 +106,11 @@ public class ConfigLoader {
     }
 
     /**
-     * Parses a list of potion effects from the config.
+     * Loads the bite timer configuration, falling back to sensible defaults
+     * if the section is missing.
      *
-     * @param list the raw list from the configuration
-     * @return a list of parsed PotionEffect objects
+     * @param section the configuration section containing bite timer settings
      */
-    private List<PotionEffect> loadEffects(List<?> list) {
-        List<PotionEffect> effects = new ArrayList<>();
-        if (list == null) return effects;
-
-        for (Object obj : list) {
-            if (!(obj instanceof Map<?, ?> map)) continue;
-            
-            String typeName = (String) map.get("effect");
-            Object durationObj = map.get("duration");
-            int duration = (durationObj instanceof Number n) ? n.intValue() : 200;
-            Object amplifierObj = map.get("amplifier");
-            int amplifier = (amplifierObj instanceof Number n) ? n.intValue() : 0;
-
-            if (typeName == null) continue;
-            PotionEffectType type = Registry.POTION_EFFECT_TYPE.get(
-                    NamespacedKey.minecraft(typeName.toLowerCase()));
-            if (type != null) effects.add(new PotionEffect(type, duration, amplifier));
-        }
-        return effects;
-    }
-
-    /**
-     * Loads catch effects for each rarity from the config.
-     *
-     * @param section the rarities configuration section
-     */
-    private void loadRarityCatchEffects(ConfigurationSection section) {
-        if (section == null) return;
-
-        for (String key : section.getKeys(false)) {
-            ConfigurationSection effectsSection = section.getConfigurationSection(key + ".catch-effects");
-            if (effectsSection == null) {
-                rarityCatchEffects.put(key.toUpperCase(), RarityCatchEffects.empty());
-                continue;
-            }
-
-            // Sound
-            RarityCatchEffects.SoundConfig sound = null;
-            ConfigurationSection soundSec = effectsSection.getConfigurationSection("sound");
-            if (soundSec != null && soundSec.getBoolean("enabled", false)) {
-                sound = new RarityCatchEffects.SoundConfig(
-                        soundSec.getString("name", "entity.experience_orb.pickup"),
-                        (float) soundSec.getDouble("volume", 1.0),
-                        (float) soundSec.getDouble("pitch", 1.0)
-                );
-            }
-
-            // Particles
-            RarityCatchEffects.ParticleConfig particle = null;
-            ConfigurationSection particleSec = effectsSection.getConfigurationSection("particles");
-            if (particleSec != null && particleSec.getBoolean("enabled", false)) {
-                particle = new RarityCatchEffects.ParticleConfig(
-                        particleSec.getString("type", "SPLASH"),
-                        particleSec.getInt("count", 10),
-                        particleSec.getDouble("offset-x", 0.5),
-                        particleSec.getDouble("offset-y", 0.5),
-                        particleSec.getDouble("offset-z", 0.5)
-                );
-            }
-
-            // Title
-            RarityCatchEffects.TitleConfig title = null;
-            ConfigurationSection titleSec = effectsSection.getConfigurationSection("title");
-            if (titleSec != null && titleSec.getBoolean("enabled", false)) {
-                title = new RarityCatchEffects.TitleConfig(
-                        titleSec.getString("title", ""),
-                        titleSec.getString("subtitle", ""),
-                        titleSec.getInt("fade-in", 10),
-                        titleSec.getInt("stay", 40),
-                        titleSec.getInt("fade-out", 10)
-                );
-            }
-
-            // Broadcast
-            RarityCatchEffects.BroadcastConfig broadcast = null;
-            ConfigurationSection broadcastSec = effectsSection.getConfigurationSection("broadcast");
-            if (broadcastSec != null && broadcastSec.getBoolean("enabled", false)) {
-                broadcast = new RarityCatchEffects.BroadcastConfig(
-                        broadcastSec.getString("message", "")
-                );
-            }
-
-            rarityCatchEffects.put(key.toUpperCase(),
-                    new RarityCatchEffects(sound, particle, title, broadcast));
-        }
-    }
-
     private void loadBiteTimer(ConfigurationSection section) {
         if (section == null) {
             // Sensible defaults if section is missing
