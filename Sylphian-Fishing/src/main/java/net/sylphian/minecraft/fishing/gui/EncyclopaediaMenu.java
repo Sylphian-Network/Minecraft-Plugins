@@ -31,7 +31,7 @@ public class EncyclopaediaMenu {
 
     private static final MiniMessage MINI = MiniMessage.miniMessage();
 
-    private final List<FishEntry> fishEntries;
+    private List<FishEntry> fishEntries;
     private final FishEncyclopaediaRepository repository;
     private final JavaPlugin plugin;
 
@@ -137,7 +137,6 @@ public class EncyclopaediaMenu {
         List<String> lore = new ArrayList<>(Arrays.asList(fish.description().split("\n")));
 
         FishEncyclopaediaModel model = discovered.get(fish.id());
-
         if (model != null) {
             lore.add("");
             lore.add("<gray>Caught: <white>" + model.timesCaught());
@@ -148,24 +147,78 @@ public class EncyclopaediaMenu {
             lore.add("");
             lore.add("<aqua>Biomes:");
             lore.add("<gray>• <white>All Biomes");
-
         } else if (!fish.biomes().isEmpty()) {
             lore.add("");
             lore.add("<aqua>Biomes:");
-
             for (Biome biome : fish.biomes()) {
                 String formattedBiome = Arrays.stream(biome.getKey().getKey().split("_"))
                         .map(s -> Character.toUpperCase(s.charAt(0)) + s.substring(1))
                         .collect(Collectors.joining(" "));
-
                 lore.add("<gray>• <white>" + formattedBiome);
             }
+        }
+
+        if (fish.hasYRestriction()) {
+            lore.add("");
+            lore.add("<aqua>Depth:");
+            lore.add("<gray>• <white>" + formatYRestriction(fish));
+        }
+
+        if (fish.hasTimeRestriction()) {
+            lore.add("");
+            lore.add("<aqua>Active Time:");
+            lore.add("<gray>• <white>" + formatTimeRestriction(fish));
         }
 
         return new ItemBuilder(fish.material())
                 .name(fish.displayName())
                 .loreStrings(lore)
                 .build();
+    }
+
+    /**
+     * Formats the Y restriction of a fish into a human-readable depth range string.
+     *
+     * @param fish the fish entry to format
+     * @return a string such as "Below Y 60", "Above Y -64", or "Y -64 to 20"
+     */
+    private String formatYRestriction(FishEntry fish) {
+        if (fish.minY() != null && fish.maxY() != null) {
+            return "Y " + fish.minY() + " to " + fish.maxY();
+        } else if (fish.minY() != null) {
+            return "Above Y " + fish.minY();
+        } else {
+            return "Below Y " + fish.maxY();
+        }
+    }
+
+    /**
+     * Formats the time restriction of a fish into a human-readable clock range string.
+     * Converts Minecraft ticks to approximate real-world time, where tick 0 = 6:00 AM.
+     *
+     * @param fish the fish entry to format
+     * @return a string such as "18:00 – 06:00" or "After 12:00"
+     */
+    private String formatTimeRestriction(FishEntry fish) {
+        if (fish.minTime() != null && fish.maxTime() != null) {
+            return ticksToTime(fish.minTime()) + " – " + ticksToTime(fish.maxTime());
+        } else if (fish.minTime() != null) {
+            return "After " + ticksToTime(fish.minTime());
+        } else {
+            return "Before " + ticksToTime(fish.maxTime());
+        }
+    }
+
+    /**
+     * Converts a Minecraft world time in ticks to an approximate clock string.
+     * Tick 0 = 6:00 AM, tick 6000 = 12:00 PM, tick 12000 = 6:00 PM, tick 18000 = 12:00 AM.
+     *
+     * @param ticks the world time in ticks (0–24000)
+     * @return a formatted time string such as "18:00"
+     */
+    private String ticksToTime(long ticks) {
+        int hour = (int) ((ticks / 1000 + 6) % 24);
+        return String.format("%02d:00", hour);
     }
 
     private ItemStack createPreviousButton(int page) {
@@ -205,5 +258,14 @@ public class EncyclopaediaMenu {
                                 / PAGE_SIZE
                 ) - 1
         );
+    }
+
+    /**
+     * Reloads the menu with an updated list of fish entries.
+     *
+     * @param fishEntries the updated list of all available fish
+     */
+    public void reload(List<FishEntry> fishEntries) {
+        this.fishEntries = fishEntries;
     }
 }

@@ -37,10 +37,13 @@ import java.util.List;
  */
 public class SylphianFishing extends JavaPlugin {
 
+    private EncyclopaediaMenu encyclopaediaMenu;
+
     private LootService lootService;
     private FishMutationService mutationService;
     private CatchEffectService catchEffectService;
     private BiteTimerService biteTimerService;
+
     private File fishFile;
 
     /**
@@ -81,13 +84,13 @@ public class SylphianFishing extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EncyclopaediaListener(), this);
         getServer().getPluginManager().registerEvents(new SuperFishEnchantmentListener(mutationService), this);
 
-        EncyclopaediaMenu menu = new EncyclopaediaMenu(fish, encyclopaediaRepository, this);
+        this.encyclopaediaMenu = new EncyclopaediaMenu(fish, encyclopaediaRepository, this);
 
         getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
             Commands commands = event.registrar();
 
             commands.register("sylphian-fishing", new SylphianFishingCommand(this, catchEffectService, lootService, mutationService));
-            commands.register("encyclopaedia", new EncyclopaediaCommand(menu));
+            commands.register("encyclopaedia", new EncyclopaediaCommand(encyclopaediaMenu));
         });
 
         getLogger().info("Sylphian Fishing enabled!");
@@ -123,6 +126,8 @@ public class SylphianFishing extends JavaPlugin {
             catchEffectService.reload(newConfig);
             mutationService.reload(newConfig);
             biteTimerService.reload(newConfig);
+
+            encyclopaediaMenu.reload(newFish);
 
             getLogger().info("Configuration reloaded successfully.");
             if (sender != null) {
