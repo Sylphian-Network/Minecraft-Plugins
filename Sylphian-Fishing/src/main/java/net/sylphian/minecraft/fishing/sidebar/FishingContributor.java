@@ -1,10 +1,9 @@
 package net.sylphian.minecraft.fishing.sidebar;
 
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.fishing.fish.WeatherCondition;
 import net.sylphian.minecraft.fishing.services.BaitZoneService;
 import net.sylphian.minecraft.fishing.services.bait.BaitZone;
-import net.sylphian.minecraft.scoreboard.api.SidebarContributor;
+import net.sylphian.minecraft.scoreboard.api.AbstractSidebarContributor;
 import net.sylphian.minecraft.scoreboard.api.SidebarLine;
 import org.bukkit.World;
 import org.bukkit.entity.FishHook;
@@ -23,9 +22,8 @@ import java.util.UUID;
  * and include biome, weather, elapsed cast time, and any active bait zones
  * at the hook's location.</p>
  */
-public class FishingContributor implements SidebarContributor {
-
-    private static final MiniMessage MINI = MiniMessage.miniMessage();
+public class FishingContributor extends AbstractSidebarContributor {
+    public static final int PRIORITY = 10;
 
     private final BaitZoneService baitZoneService;
 
@@ -38,17 +36,8 @@ public class FishingContributor implements SidebarContributor {
      * @param baitZoneService the service used to query active bait zones
      */
     public FishingContributor(BaitZoneService baitZoneService) {
+        super("sylphian-fishing", PRIORITY);
         this.baitZoneService = baitZoneService;
-    }
-
-    @Override
-    public String getId() {
-        return "sylphian-fishing";
-    }
-
-    @Override
-    public int getPriority() {
-        return 10;
     }
 
     /**
