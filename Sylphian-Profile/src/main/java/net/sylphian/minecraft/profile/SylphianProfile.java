@@ -14,7 +14,6 @@ import net.sylphian.minecraft.profile.utils.ProfileManager;
 import net.sylphian.minecraft.profile.utils.VisualManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.List;
 
@@ -28,7 +27,6 @@ public final class SylphianProfile extends JavaPlugin {
     private ProfileManager profileManager;
     private VisualManager visualManager;
     private PlayerService playerService;
-    private Scoreboard scoreboard;
 
     /**
      * Called when the plugin is enabled.
@@ -53,7 +51,6 @@ public final class SylphianProfile extends JavaPlugin {
                 new SessionRepository(DatabaseService.getJdbi(), DatabaseService.getExecutor()),
                 profileManager
         );
-        this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 
         // Register event listeners
         ProfileListener profileListener = new ProfileListener(this, playerService);
@@ -94,13 +91,5 @@ public final class SylphianProfile extends JavaPlugin {
      */
     public VisualManager getVisualManager() {
         return visualManager;
-    }
-
-    /**
-     * Gets the global scoreboard used for teams and visual styling.
-     * @return the scoreboard
-     */
-    public Scoreboard getScoreboard() {
-        return scoreboard;
     }
 }

@@ -6,9 +6,8 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.sylphian.minecraft.profile.SylphianProfile;
 import net.sylphian.minecraft.profile.UserProfile;
+import net.sylphian.minecraft.scoreboard.services.NametagService;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 
 /**
  * Manages the visual representation of player profiles in-game.
@@ -78,28 +77,16 @@ public class VisualManager {
         String forumName = profile.forumUsername();
         if (forumName == null) return;
 
-        Scoreboard scoreboard = plugin.getScoreboard();
-        if (scoreboard == null) return;
+        String forumBase = plugin.getConfig().getString("forum_base_url", "https://example.com/community");
+        String profileUrl = forumBase + "/members/" + forumName + "." + profile.xfUserId();
 
-        // Use a unique team name per forum user to avoid conflicts
-        String teamName = "f_" + profile.xfUserId();
-        Team team = scoreboard.getTeam(teamName);
+        Component prefix = Component.text("[", NamedTextColor.DARK_GRAY)
+                .append(Component.text(forumName, NamedTextColor.WHITE)
+                        .hoverEvent(Component.text("View " + forumName + "'s forum profile"))
+                        .clickEvent(ClickEvent.openUrl(profileUrl)))
+                .append(Component.text("] ", NamedTextColor.DARK_GRAY));
 
-        if (team == null) {
-            team = scoreboard.registerNewTeam(teamName);
-        }
-
-        // Apply the forum prefix to the team
-        team.prefix(
-                Component.text("[", NamedTextColor.DARK_GRAY)
-                        .append(Component.text(forumName, NamedTextColor.WHITE))
-                        .append(Component.text("] ", NamedTextColor.DARK_GRAY))
-        );
-
-        // Add the player to the team so they receive the prefix
-        if (!team.hasEntry(player.getName())) {
-            team.addEntry(player.getName());
-        }
+        NametagService.setNametag("f_" + profile.xfUserId(), player.getName(), prefix);
     }
 
     /**
@@ -118,25 +105,5 @@ public class VisualManager {
                         .append(fullDisplayName)
                         .append(separator)
                         .append(message.color(NamedTextColor.WHITE));
-    }
-
-    /**
-     * Cleans up visual data for a player when they leave.
-     * Removes them from their scoreboard team and unregisters the team if empty.
-     *
-     * @param player the player who is leaving
-     */
-    public void cleanUpPlayer(Player player) {
-        Scoreboard scoreboard = plugin.getScoreboard();
-        if (scoreboard == null) return;
-
-        Team team = scoreboard.getEntryTeam(player.getName());
-        if (team != null) {
-            team.removeEntry(player.getName());
-            // Clean up empty teams to keep the scoreboard manageable
-            if (team.getEntries().isEmpty()) {
-                team.unregister();
-            }
-        }
     }
 }

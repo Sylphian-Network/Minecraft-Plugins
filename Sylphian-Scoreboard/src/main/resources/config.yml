@@ -1,0 +1,31 @@
+# =============================================================
+# Sylphian Scoreboard - Configuration
+# =============================================================
+# MiniMessage reference: https://docs.advntr.dev/minimessage/format.html
+# =============================================================
+
+sidebar:
+
+  # MiniMessage formatted title shown at the top of the sidebar.
+  title: "<gradient:aqua:white><bold>Sylphian Network</bold></gradient>"
+
+  # Whether to show the numeric score values on the right side of each line.
+  # false gives a clean modern look — true shows the raw numbers.
+  show-scores: false
+
+  # How often (in ticks) the sidebar refreshes. 20 ticks = 1 second.
+  # Lower values are smoother but slightly more expensive. Default: 10 (0.5s).
+  update-interval: 10
+
+  # Static lines always shown above all contributor sections.
+  header:
+    enabled: true
+    lines:
+      - "<dark_aqua>┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄"
+
+  # Static lines always shown below all contributor sections.
+  footer:
+    enabled: true
+    lines:
+      - "<dark_aqua>┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄"
+      - "<dark_gray>⬡ <aqua>play.sylphian.net"

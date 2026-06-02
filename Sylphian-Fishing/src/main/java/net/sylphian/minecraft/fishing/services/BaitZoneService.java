@@ -102,29 +102,20 @@ public class BaitZoneService {
     }
 
     /**
-     * Returns the first active zone containing the given location, or null.
+     * Returns at most one active zone per bait type whose radius contains the given location.
+     * If multiple zones of the same type overlap, only the first (oldest) is included.
      *
      * @param location the location to check
-     * @return the matching BaitZone, or null
-     */
-    @Nullable
-    public BaitZone getZoneAt(Location location) {
-        return activeZones.stream()
-                .filter(zone -> zone.contains(location))
-                .findFirst()
-                .orElse(null);
-    }
-
-    /**
-     * Returns all active zones whose radius contains the given location.
-     *
-     * @param location the location to check
-     * @return a list of all matching BaitZones, empty if none
+     * @return a list of matching BaitZones with no duplicate bait types, empty if none
      */
     public List<BaitZone> getZonesAt(Location location) {
-        return activeZones.stream()
-                .filter(zone -> zone.contains(location))
-                .toList();
+        Map<String, BaitZone> byType = new LinkedHashMap<>();
+        for (BaitZone zone : activeZones) {
+            if (zone.contains(location)) {
+                byType.putIfAbsent(zone.config().id(), zone);
+            }
+        }
+        return List.copyOf(byType.values());
     }
 
     private void renderAndExpire() {

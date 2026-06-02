@@ -15,6 +15,9 @@ dependencies:
     Sylphian-Database:
       load: BEFORE
       required: true
+    Sylphian-Scoreboard:
+      load: BEFORE
+      required: true
 
 commands:
   sylphian-fishing:

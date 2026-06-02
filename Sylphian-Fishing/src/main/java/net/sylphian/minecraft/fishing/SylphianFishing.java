@@ -22,6 +22,8 @@ import net.sylphian.minecraft.fishing.listeners.FishingListener;
 import net.sylphian.minecraft.fishing.listeners.SuperFishEnchantmentListener;
 import net.sylphian.minecraft.fishing.fish.Rarity;
 import net.sylphian.minecraft.fishing.services.mutation.impl.SuperFishMutation;
+import net.sylphian.minecraft.fishing.sidebar.FishingContributor;
+import net.sylphian.minecraft.scoreboard.services.SidebarService;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -88,13 +90,16 @@ public class SylphianFishing extends JavaPlugin {
         this.baitListener = new BaitListener(baitZoneService, this);
         baitListener.start(this);
 
+        FishingContributor baitContributor = new FishingContributor(baitZoneService);
+        SidebarService.registerContributor(baitContributor);
+
         // Initialize repository with JDBI and async executor from Sylphian-Database
         FishEncyclopaediaRepository encyclopaediaRepository = new FishEncyclopaediaRepository(
                 DatabaseService.getJdbi(),
                 DatabaseService.getExecutor()
         );
 
-        getServer().getPluginManager().registerEvents(new FishingListener(lootService, mutationService, catchEffectService, biteTimerService, baitZoneService, encyclopaediaRepository, this), this);
+        getServer().getPluginManager().registerEvents(new FishingListener(lootService, mutationService, catchEffectService, biteTimerService, baitZoneService, baitContributor, encyclopaediaRepository, this), this);
         getServer().getPluginManager().registerEvents(baitListener, this);
         getServer().getPluginManager().registerEvents(new EncyclopaediaListener(), this);
         getServer().getPluginManager().registerEvents(new SuperFishEnchantmentListener(mutationService), this);

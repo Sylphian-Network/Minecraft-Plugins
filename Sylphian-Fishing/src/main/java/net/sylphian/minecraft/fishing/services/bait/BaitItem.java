@@ -38,7 +38,9 @@ public class BaitItem {
                         "",
                         "<aqua>Radius: <white>" + config.radius() + " blocks",
                         "<aqua>Duration: <white>" + formatDuration(config.durationSeconds()),
-                        "<aqua>Bite Speed: <white>" + (int) ((1.0 - config.biteTimerMultiplier()) * 100) + "% faster"
+                        "<aqua>Bite Speed: <white>" + (int) ((1.0 - config.biteTimerMultiplier()) * 100) + "% faster",
+                        "",
+                        "<dark_gray>Duplicate bait zones do not stack."
                 )
                 .build();
 

@@ -2,6 +2,7 @@ package net.sylphian.minecraft.profile.listener;
 
 import net.sylphian.minecraft.profile.SylphianProfile;
 import net.sylphian.minecraft.profile.service.PlayerService;
+import net.sylphian.minecraft.scoreboard.services.NametagService;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -40,9 +41,6 @@ public class ProfileListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        // Assign the global scoreboard for team/nametag support
-        player.setScoreboard(plugin.getScoreboard());
-
         // Process join asynchronously
         playerService.handleJoin(player.getUniqueId(), player.getName())
             .thenAccept(profile -> Bukkit.getScheduler().runTaskLater(plugin, () ->
@@ -62,9 +60,7 @@ public class ProfileListener implements Listener {
      */
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        // Remove from scoreboard teams
-        plugin.getVisualManager().cleanUpPlayer(event.getPlayer());
-        // Handle database quit logic
+        NametagService.clearNametagEntry(event.getPlayer().getName());
         playerService.handleQuit(event.getPlayer().getUniqueId());
     }
 }

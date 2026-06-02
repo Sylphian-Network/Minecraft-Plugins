@@ -1,13 +1,16 @@
 package net.sylphian.minecraft.fishing.listeners;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.fishing.db.api.IFishEncyclopaediaRepository;
 import net.sylphian.minecraft.fishing.fish.CatchResult;
 import net.sylphian.minecraft.fishing.fish.WeatherCondition;
 import net.sylphian.minecraft.fishing.services.*;
+import net.sylphian.minecraft.fishing.config.BaitConfig;
 import net.sylphian.minecraft.fishing.services.bait.BaitZone;
+
+import java.util.List;
 import net.sylphian.minecraft.fishing.services.mutation.FishContext;
+import net.sylphian.minecraft.fishing.sidebar.FishingContributor;
+import net.sylphian.minecraft.scoreboard.services.SidebarService;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
@@ -19,13 +22,6 @@ import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * Central listener for all player fishing events.
@@ -41,17 +37,14 @@ import java.util.stream.Collectors;
  */
 public class FishingListener implements Listener {
 
-    private static final MiniMessage MINI = MiniMessage.miniMessage();
-
     private final LootService lootService;
     private final FishMutationService mutationService;
     private final CatchEffectService catchEffectService;
     private final BiteTimerService biteTimerService;
     private final BaitZoneService baitZoneService;
+    private final FishingContributor baitContributor;
     private final IFishEncyclopaediaRepository encyclopaediaRepository;
     private final JavaPlugin plugin;
-
-    private final Map<UUID, BukkitTask> actionBarTasks = new HashMap<>();
 
     /**
      * Constructs a new FishingListener.
@@ -66,13 +59,14 @@ public class FishingListener implements Listener {
      */
     public FishingListener(LootService lootService, FishMutationService mutationService,
                            CatchEffectService catchEffectService, BiteTimerService biteTimerService,
-                           BaitZoneService baitZoneService,
+                           BaitZoneService baitZoneService, FishingContributor baitContributor,
                            IFishEncyclopaediaRepository encyclopaediaRepository, JavaPlugin plugin) {
         this.lootService = lootService;
         this.mutationService = mutationService;
         this.catchEffectService = catchEffectService;
         this.biteTimerService = biteTimerService;
         this.baitZoneService = baitZoneService;
+        this.baitContributor = baitContributor;
         this.encyclopaediaRepository = encyclopaediaRepository;
         this.plugin = plugin;
     }
@@ -87,14 +81,18 @@ public class FishingListener implements Listener {
         switch (event.getState()) {
             case FISHING -> {
                 biteTimerService.applyBiteTimer(event.getHook(), event.getPlayer());
-                startActionBarTask(event.getPlayer(), event.getHook());
+                baitContributor.trackHook(event.getPlayer().getUniqueId(), event.getHook());
+                SidebarService.refresh(event.getPlayer());
             }
             case CAUGHT_FISH -> {
-                stopActionBarTask(event.getPlayer());
+                baitContributor.clearHook(event.getPlayer().getUniqueId());
+                SidebarService.refresh(event.getPlayer());
                 handleCatch(event);
             }
-            case REEL_IN, IN_GROUND, CAUGHT_ENTITY ->
-                    stopActionBarTask(event.getPlayer());
+            case REEL_IN, IN_GROUND, CAUGHT_ENTITY -> {
+                baitContributor.clearHook(event.getPlayer().getUniqueId());
+                SidebarService.refresh(event.getPlayer());
+            }
         }
     }
 
@@ -105,7 +103,7 @@ public class FishingListener implements Listener {
      */
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        stopActionBarTask(event.getPlayer());
+        baitContributor.clearHook(event.getPlayer().getUniqueId());
     }
 
     /**
@@ -126,10 +124,11 @@ public class FishingListener implements Listener {
         Biome biome = world.getBiome(hookLocation);
         WeatherCondition weather = WeatherCondition.from(world);
 
-        BaitZone zone = baitZoneService.getZoneAt(hookLocation);
+        List<BaitConfig> baitBonuses = baitZoneService.getZonesAt(hookLocation).stream()
+                .map(BaitZone::config)
+                .toList();
         CatchResult result = lootService.rollCatch(
-                biome, weather, hookLocation.getY(), world.getTime(),
-                zone != null ? zone.config() : null);
+                biome, weather, hookLocation.getY(), world.getTime(), baitBonuses);
         ItemStack itemStack = result.itemStack();
 
         mutationService.applyMutations(event.getPlayer(), itemStack,
@@ -137,66 +136,6 @@ public class FishingListener implements Listener {
         caughtItem.setItemStack(itemStack);
         catchEffectService.apply(event.getPlayer(), result, hookLocation);
         recordCatchAsync(event.getPlayer(), result);
-    }
-
-    /**
-     * Starts a repeating task that updates the player's action bar with
-     * the names of any bait zones currently containing the hook.
-     * Cancels any existing task for this player first.
-     *
-     * @param player the fishing player
-     * @param hook   the active fishing hook to track
-     */
-    private void startActionBarTask(Player player, org.bukkit.entity.FishHook hook) {
-        stopActionBarTask(player);
-
-        UUID uuid = player.getUniqueId();
-        BukkitTask task = plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
-            if (!hook.isValid()) {
-                stopActionBarTask(player);
-                return;
-            }
-
-            if (hook.getState() != org.bukkit.entity.FishHook.HookState.BOBBING) return;
-
-            List<BaitZone> zones = baitZoneService.getZonesAt(hook.getLocation());
-
-            if (zones.isEmpty()) {
-                player.sendActionBar(Component.empty());
-                return;
-            }
-
-            player.sendActionBar(buildActionBarMessage(zones));
-        }, 0L, 10L);
-
-        actionBarTasks.put(uuid, task);
-    }
-
-    /**
-     * Cancels the action bar task for the given player and clears their action bar.
-     *
-     * @param player the player to clean up
-     */
-    private void stopActionBarTask(Player player) {
-        BukkitTask task = actionBarTasks.remove(player.getUniqueId());
-        if (task != null) {
-            task.cancel();
-            player.sendActionBar(Component.empty());
-        }
-    }
-
-    /**
-     * Builds the action bar component listing all active bait zones by display name.
-     *
-     * @param zones the active bait zones at the hook location
-     * @return the formatted action bar component
-     */
-    private Component buildActionBarMessage(List<BaitZone> zones) {
-        String names = zones.stream()
-                .map(zone -> zone.config().displayName())
-                .collect(Collectors.joining("<gray>, "));
-
-        return MINI.deserialize("<gray>Active Baits: " + names);
     }
 
     /**

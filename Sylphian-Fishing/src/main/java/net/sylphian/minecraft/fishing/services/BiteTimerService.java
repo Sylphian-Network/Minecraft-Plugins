@@ -8,6 +8,7 @@ import net.sylphian.minecraft.fishing.fish.WeatherCondition;
 import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -59,18 +60,18 @@ public class BiteTimerService {
         BiteTimerConfig timerConfig = config.getBiteTimerConfig();
         int delay = timerConfig.calculate(preRolledRarity, weather, random);
 
-        BaitZone zone = baitZoneService.getZoneAt(hook.getLocation());
-        if (zone != null) {
-            delay = (int) (delay * zone.config().biteTimerMultiplier());
-            delay = Math.max(20, delay);
-        }
+        List<BaitZone> zones = baitZoneService.getZonesAt(hook.getLocation());
+        double biteTimerMult = zones.stream()
+                .mapToDouble(z -> z.config().biteTimerMultiplier())
+                .reduce(1.0, (a, b) -> a * b);
+        delay = Math.max(20, (int) (delay * biteTimerMult));
 
         hook.setMinWaitTime(delay);
         hook.setMaxWaitTime(delay);
 
         logger.fine("Bite timer set to " + delay + " ticks for "
                 + preRolledRarity.getId() + " rarity in " + weather.name()
-                + (zone != null ? " (bait: " + zone.config().id() + ")" : ""));
+                + (!zones.isEmpty() ? " (baits: " + zones.stream().map(z -> z.config().id()).collect(java.util.stream.Collectors.joining(", ")) + ")" : ""));
     }
 
     /**

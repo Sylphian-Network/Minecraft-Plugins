@@ -1,0 +1,10 @@
+name: Sylphian-Scoreboard
+prefix: Sylphian-Scoreboard
+version: '${version}'
+
+main: net.sylphian.minecraft.scoreboard.SylphianScoreboard
+api-version: '26.1.2'
+load: POSTWORLD
+
+authors: [QuackieMackie]
+website: https://sylphian.net
