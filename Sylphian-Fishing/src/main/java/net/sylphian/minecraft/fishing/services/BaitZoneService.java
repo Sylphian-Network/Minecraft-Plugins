@@ -87,6 +87,14 @@ public class BaitZoneService {
      * @param config the bait configuration for this zone
      */
     public void createZone(Location centre, BaitConfig config) {
+        for (BaitZone zone : activeZones) {
+            if (zone.config().id().equals(config.id()) && zone.contains(centre)) {
+                zone.extendExpiry(config.durationSeconds());
+                zone.updateLabel(buildLabel(zone.config().displayName(), (int) zone.secondsRemaining()));
+                return;
+            }
+        }
+
         Instant expiry = Instant.now().plusSeconds(config.durationSeconds());
 
         Location displayLoc = centre.clone().add(0, 1.8, 0);

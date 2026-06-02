@@ -18,7 +18,7 @@ public class BaitZone {
 
     private final Location centre;
     private final BaitConfig config;
-    private final Instant expiry;
+    private Instant expiry;
     private final TextDisplay display;
 
     /**
@@ -55,6 +55,16 @@ public class BaitZone {
      */
     public long secondsRemaining() {
         return Math.max(0, expiry.getEpochSecond() - Instant.now().getEpochSecond());
+    }
+
+    /**
+     * Extends this zone's expiry by the given number of seconds.
+     *
+     * @param seconds the number of seconds to add to the remaining duration
+     */
+    public void extendExpiry(int seconds) {
+        expiry = expiry.plusSeconds(seconds);
+
     }
 
     /**
