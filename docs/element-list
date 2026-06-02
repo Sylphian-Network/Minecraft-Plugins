@@ -26,6 +26,7 @@ net.sylphian.minecraft.profile.db.models
 net.sylphian.minecraft.profile.db.repositories
 net.sylphian.minecraft.profile.listener
 net.sylphian.minecraft.profile.service
+net.sylphian.minecraft.profile.sidebar
 net.sylphian.minecraft.profile.utils
 net.sylphian.minecraft.scoreboard
 net.sylphian.minecraft.scoreboard.api

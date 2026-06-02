@@ -66,6 +66,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#config()" tabindex="0">config()</a></li>
 <li><a href="#isExpired()" tabindex="0">isExpired()</a></li>
 <li><a href="#secondsRemaining()" tabindex="0">secondsRemaining()</a></li>
+<li><a href="#extendExpiry(int)" tabindex="0">extendExpiry(int)</a></li>
 <li><a href="#contains(org.bukkit.Location)" tabindex="0">contains(Location)</a></li>
 <li><a href="#updateLabel(net.kyori.adventure.text.Component)" tabindex="0">updateLabel(Component)</a></li>
 <li><a href="#removeDisplay()" tabindex="0">removeDisplay()</a></li>
@@ -135,24 +136,29 @@ the zone's radius receives the configured bonuses.</p></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns true if the given location falls within this zone's radius.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isExpired()" class="member-name-link">isExpired</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#extendExpiry(int)" class="member-name-link">extendExpiry</a><wbr>(int&nbsp;seconds)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Extends this zone's expiry by the given number of seconds.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isExpired()" class="member-name-link">isExpired</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns true if this zone has passed its expiry time.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeDisplay()" class="member-name-link">removeDisplay</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeDisplay()" class="member-name-link">removeDisplay</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Removes the text display entity from the world if it is still alive.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#secondsRemaining()" class="member-name-link">secondsRemaining</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#secondsRemaining()" class="member-name-link">secondsRemaining</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the number of seconds remaining before this zone expires.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateLabel(net.kyori.adventure.text.Component)" class="member-name-link">updateLabel</a><wbr>(net.kyori.adventure.text.Component&nbsp;text)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateLabel(net.kyori.adventure.text.Component)" class="member-name-link">updateLabel</a><wbr>(net.kyori.adventure.text.Component&nbsp;text)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Updates the text shown on the floating display entity.</div>
 </div>
 </div>
@@ -237,6 +243,19 @@ the zone's radius receives the configured bonuses.</p></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>seconds remaining, clamped to zero</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="extendExpiry(int)">
+<h3>extendExpiry</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extendExpiry</span><wbr><span class="parameters">(int&nbsp;seconds)</span></div>
+<div class="block">Extends this zone's expiry by the given number of seconds.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>seconds</code> - the number of seconds to add to the remaining duration</dd>
 </dl>
 </div>
 </section>
