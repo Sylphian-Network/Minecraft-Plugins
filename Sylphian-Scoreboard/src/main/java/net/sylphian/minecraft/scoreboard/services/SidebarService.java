@@ -50,8 +50,18 @@ public class SidebarService {
      * Registers a sidebar contributor. Lower priority values appear higher.
      *
      * @param contributor the contributor to register
+     * @throws IllegalArgumentException if a contributor with the same ID or priority is already registered
      */
     public static void registerContributor(SidebarContributor contributor) {
+        if (contributorsById.containsKey(contributor.getId())) {
+            throw new IllegalArgumentException(
+                    "A contributor with ID '" + contributor.getId() + "' is already registered.");
+        }
+        if (contributors.containsKey(contributor.getPriority())) {
+            throw new IllegalArgumentException(
+                    "A contributor with priority " + contributor.getPriority() + " is already registered" +
+                            " (conflict with '" + contributors.get(contributor.getPriority()).getId() + "').");
+        }
         contributorsById.put(contributor.getId(), contributor);
         contributors.put(contributor.getPriority(), contributor);
     }
