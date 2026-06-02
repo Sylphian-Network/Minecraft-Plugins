@@ -23,7 +23,7 @@ import java.util.UUID;
  * at the hook's location.</p>
  */
 public class FishingContributor extends AbstractSidebarContributor {
-    public static final int PRIORITY = 10;
+    public static final int PRIORITY = 20;
 
     private final BaitZoneService baitZoneService;
 

@@ -10,8 +10,10 @@ import net.sylphian.minecraft.profile.db.repositories.SessionRepository;
 import net.sylphian.minecraft.profile.listener.ChatListener;
 import net.sylphian.minecraft.profile.listener.ProfileListener;
 import net.sylphian.minecraft.profile.service.PlayerService;
+import net.sylphian.minecraft.profile.sidebar.ProfileContributor;
 import net.sylphian.minecraft.profile.utils.ProfileManager;
 import net.sylphian.minecraft.profile.utils.VisualManager;
+import net.sylphian.minecraft.scoreboard.services.SidebarService;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -62,6 +64,8 @@ public final class SylphianProfile extends JavaPlugin {
                 event.registrar().register("playtime", "View your playtime on the server.",
                         new PlaytimeCommand(playerService, getLogger()))
         );
+
+        SidebarService.registerContributor(new ProfileContributor(profileManager));
 
         getLogger().info("Sylphian-Profile initialized.");
     }
