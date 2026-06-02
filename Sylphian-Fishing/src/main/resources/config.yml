@@ -106,7 +106,7 @@ rarities:
         pitch: 1.5
       particles:
         enabled: true
-        type: "ENCHANTMENT_TABLE"
+        type: "ENCHANT"
         count: 20
         offset-x: 0.5
         offset-y: 0.5
