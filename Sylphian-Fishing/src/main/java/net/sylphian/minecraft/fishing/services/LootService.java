@@ -1,5 +1,6 @@
 package net.sylphian.minecraft.fishing.services;
 
+import net.sylphian.minecraft.fishing.config.BaitConfig;
 import net.sylphian.minecraft.fishing.config.ConfigLoader;
 import net.sylphian.minecraft.fishing.fish.CatchResult;
 import net.sylphian.minecraft.fishing.fish.FishEntry;
@@ -9,6 +10,7 @@ import net.sylphian.minecraft.fishing.fish.WeatherCondition;
 import org.bukkit.block.Biome;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -58,6 +60,20 @@ public class LootService {
     }
 
     /**
+     * Convenience overload for {@link #rollCatch(Biome, WeatherCondition, double, long, BaitConfig)}
+     * with no active bait bonus.
+     *
+     * @param biome     the biome where the fishing hook landed
+     * @param weather   the current weather condition in the world
+     * @param hookY     the Y coordinate of the fishing hook
+     * @param worldTime the current world time in ticks (0-24000)
+     * @return a CatchResult containing the fish ID, rarity, weight, and built ItemStack
+     */
+    public CatchResult rollCatch(Biome biome, WeatherCondition weather, double hookY, long worldTime) {
+        return rollCatch(biome, weather, hookY, worldTime, null);
+    }
+
+    /**
      * Rolls a catch result for the given context.
      * First builds an eligible pool of all fish matching the biome,
      * Y coordinate, and time of day. Then rolls a rarity applying
@@ -69,12 +85,11 @@ public class LootService {
      * @param weather   the current weather condition in the world
      * @param hookY     the Y coordinate of the fishing hook
      * @param worldTime the current world time in ticks (0-24000)
+     * @param baitBonus optional bait zone bonus to apply to rarity multipliers, or null for none
      * @return a CatchResult containing the fish ID, rarity, weight, and built ItemStack
      * @throws IllegalStateException if no fish are configured for the given context
      */
-    public CatchResult rollCatch(Biome biome, WeatherCondition weather, double hookY, long worldTime) {
-
-        // Collect every fish eligible for this biome and Y coordinate
+    public CatchResult rollCatch(Biome biome, WeatherCondition weather, double hookY, long worldTime, @Nullable BaitConfig baitBonus) {
         List<FishEntry> eligiblePool = poolsByRarity.values().stream()
                 .flatMap(List::stream)
                 .filter(f -> f.appliesToBiome(biome))
@@ -83,19 +98,17 @@ public class LootService {
                 .toList();
 
         if (eligiblePool.isEmpty()) {
-            throw new IllegalStateException("No fish configured for biome: " + biome.getKey().value() + " at Y: " + (int) hookY + " at time: " + worldTime + " - check fish.yml has fish covering this biome, height, and time.");
+            throw new IllegalStateException("No fish configured for biome: " + biome.getKey().value()
+                    + " at Y: " + (int) hookY + " at time: " + worldTime
+                    + " - check fish.yml has fish covering this biome, height, and time.");
         }
 
-        // Roll a rarity using weather multipliers
-        Rarity rolledRarity = rollRarity(weather);
+        Rarity rolledRarity = rollRarity(weather, baitBonus);
 
-        // Filter eligible pool to the rolled rarity
         List<FishEntry> rarityPool = eligiblePool.stream()
                 .filter(f -> f.rarity().equals(rolledRarity))
                 .toList();
 
-        // If no fish of that rarity exist in this biome/Y range,
-        // fall back to any fish in the eligible pool weighted by rarity chance
         if (rarityPool.isEmpty()) {
             return buildCatchResult(weightedPickByRarity(eligiblePool, weather));
         }
@@ -104,23 +117,26 @@ public class LootService {
     }
 
     /**
-     * Rolls a rarity based on chance and weather multipliers.
+     * Rolls a rarity based on chance, weather, and optional bait multipliers.
      *
      * @param weather the current weather condition
+     * @param baitBonus optional bait bonus to stack on top of weather multipliers, or null for none
      * @return the rolled rarity
      */
-    private Rarity rollRarity(WeatherCondition weather) {
+    private Rarity rollRarity(WeatherCondition weather, @Nullable BaitConfig baitBonus) {
         double roll = random.nextDouble();
 
         for (Rarity rarity : Rarity.byDescendingRarity()) {
             double baseChance = rarity.getChance();
-            double multiplier = config.getWeatherMultiplier(weather, rarity);
-            double finalChance = Math.min(1.0, baseChance * multiplier);
+            double weatherMult = config.getWeatherMultiplier(weather, rarity);
+            double baitMult = baitBonus != null
+                    ? baitBonus.rarityMultipliers().getOrDefault(rarity.getId(), 1.0)
+                    : 1.0;
+            double finalChance = Math.min(1.0, baseChance * weatherMult * baitMult);
 
             if (roll <= finalChance) return rarity;
         }
 
-        // Guaranteed fallback to most common rarity
         return Rarity.values().stream()
                 .max(Comparator.comparingDouble(Rarity::getChance))
                 .orElseThrow();

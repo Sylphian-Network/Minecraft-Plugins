@@ -1,5 +1,6 @@
 package net.sylphian.minecraft.fishing.services;
 
+import net.sylphian.minecraft.fishing.services.bait.BaitZone;
 import net.sylphian.minecraft.fishing.config.BiteTimerConfig;
 import net.sylphian.minecraft.fishing.config.ConfigLoader;
 import net.sylphian.minecraft.fishing.fish.Rarity;
@@ -25,6 +26,7 @@ public class BiteTimerService {
 
     private ConfigLoader config;
     private final LootService lootService;
+    private final BaitZoneService baitZoneService;
     private final Logger logger;
     private final Random random = new Random();
 
@@ -33,11 +35,13 @@ public class BiteTimerService {
      *
      * @param config      the config loader providing bite timer settings
      * @param lootService the loot service used to peek at a likely rarity
+     * @param baitZoneService the service used to check for active bait zones at the hook location
      * @param logger      the logger for debug output
      */
-    public BiteTimerService(ConfigLoader config, LootService lootService, Logger logger) {
+    public BiteTimerService(ConfigLoader config, LootService lootService, BaitZoneService baitZoneService, Logger logger) {
         this.config = config;
         this.lootService = lootService;
+        this.baitZoneService = baitZoneService;
         this.logger = logger;
     }
 
@@ -55,11 +59,18 @@ public class BiteTimerService {
         BiteTimerConfig timerConfig = config.getBiteTimerConfig();
         int delay = timerConfig.calculate(preRolledRarity, weather, random);
 
+        BaitZone zone = baitZoneService.getZoneAt(hook.getLocation());
+        if (zone != null) {
+            delay = (int) (delay * zone.config().biteTimerMultiplier());
+            delay = Math.max(20, delay);
+        }
+
         hook.setMinWaitTime(delay);
         hook.setMaxWaitTime(delay);
 
         logger.fine("Bite timer set to " + delay + " ticks for "
-                + preRolledRarity.getId() + " rarity in " + weather.name());
+                + preRolledRarity.getId() + " rarity in " + weather.name()
+                + (zone != null ? " (bait: " + zone.config().id() + ")" : ""));
     }
 
     /**

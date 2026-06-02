@@ -1,0 +1,68 @@
+# =============================================================
+# Sylphian Fishing - Bait Configuration
+# =============================================================
+#
+# Baits are throwable items. Right-click to launch into water.
+# When a bait lands on a water block, a zone is created at the
+# impact point. Any fishing hook cast within that zone benefits
+# from the configured bonuses until the zone expires.
+#
+# Fields:
+# -------
+# material:              Bukkit Material name for the throwable item.
+#
+# display-name:          MiniMessage name shown on the item and floating label.
+#
+# radius:                Zone radius in blocks. Uses a flat 2D check — height
+#                        is ignored, only X/Z distance from centre matters.
+#
+# duration:              How long the zone persists in seconds.
+#
+# particle:              Bukkit Particle enum name used for the ring display.
+#                        See: https://jd.papermc.io/paper/26.1.2/org/bukkit/Particle.html
+#
+# bite-timer-multiplier: Multiplier applied to the calculated bite delay for
+#                        any player fishing inside the zone.
+#                        Below 1.0 = faster bites. e.g. 0.6 = 40% faster.
+#
+# rarity-multipliers:    Per-rarity catch chance multipliers applied inside
+#                        the zone, stacked on top of weather multipliers.
+#                        e.g. EPIC: 2.0 doubles the chance of rolling EPIC.
+# =============================================================
+
+baits:
+
+  ocean_bait:
+    display-name: "<aqua>🪱 Ocean Bait"
+    material: SLIME_BALL
+    radius: 8
+    duration: 300
+    particle: BUBBLE
+    bite-timer-multiplier: 0.8
+    rarity-multipliers:
+      RARE: 1.3
+      EPIC: 1.5
+
+  storm_bait:
+    display-name: "<yellow>⚡ Storm Bait"
+    material: GLOWSTONE_DUST
+    radius: 10
+    duration: 180
+    particle: ELECTRIC_SPARK
+    bite-timer-multiplier: 0.5
+    rarity-multipliers:
+      RARE: 1.5
+      EPIC: 2.0
+      LEGENDARY: 1.5
+
+  deep_lure:
+    display-name: "<dark_aqua>🎣 Deep Lure"
+    material: PRISMARINE_SHARD
+    radius: 6
+    duration: 240
+    particle: CHERRY_LEAVES
+    bite-timer-multiplier: 0.9
+    rarity-multipliers:
+      EPIC: 1.8
+      LEGENDARY: 2.0
+      MYTHIC: 1.5
