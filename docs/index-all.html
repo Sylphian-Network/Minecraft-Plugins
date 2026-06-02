@@ -159,9 +159,57 @@ lore line to the item's existing lore.</div>
 <dd>
 <div class="block">Applies a forum prefix to the player's nametag using Minecraft scoreboard teams.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/services/NametagService.html#applyToScoreboard(org.bukkit.scoreboard.Scoreboard)" class="member-name-link">applyToScoreboard(Scoreboard)</a> - Static method in class net.sylphian.minecraft.scoreboard.services.<a href="net/sylphian/minecraft/scoreboard/services/NametagService.html" title="class in net.sylphian.minecraft.scoreboard.services">NametagService</a></dt>
+<dd>
+<div class="block">Applies all registered nametag teams to a newly created scoreboard.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:B">B</h2>
 <dl class="index">
+<dt><a href="net/sylphian/minecraft/fishing/config/BaitConfig.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.config">BaitConfig</a> - Record Class in <a href="net/sylphian/minecraft/fishing/config/package-summary.html">net.sylphian.minecraft.fishing.config</a></dt>
+<dd>
+<div class="block">Immutable configuration for a single bait type.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/config/BaitConfig.html#%3Cinit%3E(java.lang.String,java.lang.String,org.bukkit.Material,int,int,java.lang.String,double,java.util.Map)" class="member-name-link">BaitConfig(String, String, Material, int, int, String, double, Map)</a> - Constructor for record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BaitConfig.html" title="class in net.sylphian.minecraft.fishing.config">BaitConfig</a></dt>
+<dd>
+<div class="block">Creates an instance of a <code>BaitConfig</code> record class.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/config/BaitConfigLoader.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.config">BaitConfigLoader</a> - Class in <a href="net/sylphian/minecraft/fishing/config/package-summary.html">net.sylphian.minecraft.fishing.config</a></dt>
+<dd>
+<div class="block">Loads bait definitions from <code>baits.yml</code>.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/config/BaitConfigLoader.html#%3Cinit%3E(org.bukkit.configuration.file.FileConfiguration,java.util.logging.Logger)" class="member-name-link">BaitConfigLoader(FileConfiguration, Logger)</a> - Constructor for class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BaitConfigLoader.html" title="class in net.sylphian.minecraft.fishing.config">BaitConfigLoader</a></dt>
+<dd>
+<div class="block">Constructs a new BaitConfigLoader.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/bait/BaitItem.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.services.bait">BaitItem</a> - Class in <a href="net/sylphian/minecraft/fishing/services/bait/package-summary.html">net.sylphian.minecraft.fishing.services.bait</a></dt>
+<dd>
+<div class="block">Utility class for creating bait items and identifying bait projectiles.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/listeners/BaitListener.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.listeners">BaitListener</a> - Class in <a href="net/sylphian/minecraft/fishing/listeners/package-summary.html">net.sylphian.minecraft.fishing.listeners</a></dt>
+<dd>
+<div class="block">Handles bait item throwing and zone creation on water landing.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/listeners/BaitListener.html#%3Cinit%3E(net.sylphian.minecraft.fishing.services.BaitZoneService,org.bukkit.plugin.java.JavaPlugin)" class="member-name-link">BaitListener(BaitZoneService, JavaPlugin)</a> - Constructor for class net.sylphian.minecraft.fishing.listeners.<a href="net/sylphian/minecraft/fishing/listeners/BaitListener.html" title="class in net.sylphian.minecraft.fishing.listeners">BaitListener</a></dt>
+<dd>
+<div class="block">Constructs a new BaitListener.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/bait/BaitZone.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.services.bait">BaitZone</a> - Class in <a href="net/sylphian/minecraft/fishing/services/bait/package-summary.html">net.sylphian.minecraft.fishing.services.bait</a></dt>
+<dd>
+<div class="block">Represents an active bait zone in the world.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/bait/BaitZone.html#%3Cinit%3E(org.bukkit.Location,net.sylphian.minecraft.fishing.config.BaitConfig,java.time.Instant,org.bukkit.entity.TextDisplay)" class="member-name-link">BaitZone(Location, BaitConfig, Instant, TextDisplay)</a> - Constructor for class net.sylphian.minecraft.fishing.services.bait.<a href="net/sylphian/minecraft/fishing/services/bait/BaitZone.html" title="class in net.sylphian.minecraft.fishing.services.bait">BaitZone</a></dt>
+<dd>
+<div class="block">Constructs a new BaitZone.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/BaitZoneService.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.services">BaitZoneService</a> - Class in <a href="net/sylphian/minecraft/fishing/services/package-summary.html">net.sylphian.minecraft.fishing.services</a></dt>
+<dd>
+<div class="block">Manages bait configurations and active bait zones.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/BaitZoneService.html#%3Cinit%3E(java.util.Map)" class="member-name-link">BaitZoneService(Map)</a> - Constructor for class net.sylphian.minecraft.fishing.services.<a href="net/sylphian/minecraft/fishing/services/BaitZoneService.html" title="class in net.sylphian.minecraft.fishing.services">BaitZoneService</a></dt>
+<dd>
+<div class="block">Constructs a new BaitZoneService.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/config/MutationConfig.html#baseChance()" class="member-name-link">baseChance()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/MutationConfig.html" title="class in net.sylphian.minecraft.fishing.config">MutationConfig</a></dt>
 <dd>
 <div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/config/MutationConfig.html#param-baseChance"><code>baseChance</code></a> record component.</div>
@@ -194,11 +242,15 @@ lore line to the item's existing lore.</div>
 <dd>
 <div class="block">Creates an instance of a <code>BiteTimerConfig</code> record class.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/fishing/config/BaitConfig.html#biteTimerMultiplier()" class="member-name-link">biteTimerMultiplier()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BaitConfig.html" title="class in net.sylphian.minecraft.fishing.config">BaitConfig</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/config/BaitConfig.html#param-biteTimerMultiplier"><code>biteTimerMultiplier</code></a> record component.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/services/BiteTimerService.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.services">BiteTimerService</a> - Class in <a href="net/sylphian/minecraft/fishing/services/package-summary.html">net.sylphian.minecraft.fishing.services</a></dt>
 <dd>
 <div class="block">Service responsible for overriding the vanilla fishing bite timer.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/fishing/services/BiteTimerService.html#%3Cinit%3E(net.sylphian.minecraft.fishing.config.ConfigLoader,net.sylphian.minecraft.fishing.services.LootService,java.util.logging.Logger)" class="member-name-link">BiteTimerService(ConfigLoader, LootService, Logger)</a> - Constructor for class net.sylphian.minecraft.fishing.services.<a href="net/sylphian/minecraft/fishing/services/BiteTimerService.html" title="class in net.sylphian.minecraft.fishing.services">BiteTimerService</a></dt>
+<dt><a href="net/sylphian/minecraft/fishing/services/BiteTimerService.html#%3Cinit%3E(net.sylphian.minecraft.fishing.config.ConfigLoader,net.sylphian.minecraft.fishing.services.LootService,net.sylphian.minecraft.fishing.services.BaitZoneService,java.util.logging.Logger)" class="member-name-link">BiteTimerService(ConfigLoader, LootService, BaitZoneService, Logger)</a> - Constructor for class net.sylphian.minecraft.fishing.services.<a href="net/sylphian/minecraft/fishing/services/BiteTimerService.html" title="class in net.sylphian.minecraft.fishing.services">BiteTimerService</a></dt>
 <dd>
 <div class="block">Constructs a new BiteTimerService.</div>
 </dd>
@@ -303,6 +355,8 @@ of the fish they caught.</div>
 <dd>
 <div class="block">Creates an instance of a <code>CatchResult</code> record class.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/bait/BaitZone.html#centre()" class="member-name-link">centre()</a> - Method in class net.sylphian.minecraft.fishing.services.bait.<a href="net/sylphian/minecraft/fishing/services/bait/BaitZone.html" title="class in net.sylphian.minecraft.fishing.services.bait">BaitZone</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/sylphian/verify/paper/model/PlayerIdentity.html#CHANNEL" class="member-name-link">CHANNEL</a> - Static variable in record class net.sylphian.verify.paper.model.<a href="net/sylphian/verify/paper/model/PlayerIdentity.html" title="class in net.sylphian.verify.paper.model">PlayerIdentity</a></dt>
 <dd>
 <div class="block">The plugin messaging channel used for identity synchronization.</div>
@@ -363,17 +417,30 @@ of the fish they caught.</div>
 <dd>
 <div class="block">Checks the verification status of multiple players.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/profile/utils/VisualManager.html#cleanUpPlayer(org.bukkit.entity.Player)" class="member-name-link">cleanUpPlayer(Player)</a> - Method in class net.sylphian.minecraft.profile.utils.<a href="net/sylphian/minecraft/profile/utils/VisualManager.html" title="class in net.sylphian.minecraft.profile.utils">VisualManager</a></dt>
-<dd>
-<div class="block">Cleans up visual data for a player when they leave.</div>
-</dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/Rarity.html#clear()" class="member-name-link">clear()</a> - Static method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a></dt>
 <dd>
 <div class="block">Clears the rarity registry.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/services/NametagService.html#clear()" class="member-name-link">clear()</a> - Static method in class net.sylphian.minecraft.scoreboard.services.<a href="net/sylphian/minecraft/scoreboard/services/NametagService.html" title="class in net.sylphian.minecraft.scoreboard.services">NametagService</a></dt>
+<dd>
+<div class="block">Clears all nametag state.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/services/SidebarService.html#clear()" class="member-name-link">clear()</a> - Static method in class net.sylphian.minecraft.scoreboard.services.<a href="net/sylphian/minecraft/scoreboard/services/SidebarService.html" title="class in net.sylphian.minecraft.scoreboard.services">SidebarService</a></dt>
+<dd>
+<div class="block">Clears all contributor state.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/WeatherCondition.html#CLEAR" class="member-name-link">CLEAR</a> - Enum constant in enum class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.fish">WeatherCondition</a></dt>
 <dd>
 <div class="block">No precipitation.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/sidebar/FishingContributor.html#clearHook(java.util.UUID)" class="member-name-link">clearHook(UUID)</a> - Method in class net.sylphian.minecraft.fishing.sidebar.<a href="net/sylphian/minecraft/fishing/sidebar/FishingContributor.html" title="class in net.sylphian.minecraft.fishing.sidebar">FishingContributor</a></dt>
+<dd>
+<div class="block">Removes the player's hook from tracking.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/services/NametagService.html#clearNametagEntry(java.lang.String)" class="member-name-link">clearNametagEntry(String)</a> - Static method in class net.sylphian.minecraft.scoreboard.services.<a href="net/sylphian/minecraft/scoreboard/services/NametagService.html" title="class in net.sylphian.minecraft.scoreboard.services">NametagService</a></dt>
+<dd>
+<div class="block">Removes an entry from whichever nametag team it belongs to across all
+online player scoreboards.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/profile/db/api/ISessionRepository.html#close(int,long,long)" class="member-name-link">close(int, long, long)</a> - Method in interface net.sylphian.minecraft.profile.db.api.<a href="net/sylphian/minecraft/profile/db/api/ISessionRepository.html" title="interface in net.sylphian.minecraft.profile.db.api">ISessionRepository</a></dt>
 <dd>
@@ -385,6 +452,8 @@ of the fish they caught.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/profile/db/repositories/SessionRepository.html#close(int,long,long)" class="member-name-link">close(int, long, long)</a> - Method in class net.sylphian.minecraft.profile.db.repositories.<a href="net/sylphian/minecraft/profile/db/repositories/SessionRepository.html" title="class in net.sylphian.minecraft.profile.db.repositories">SessionRepository</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/bait/BaitZone.html#config()" class="member-name-link">config()</a> - Method in class net.sylphian.minecraft.fishing.services.bait.<a href="net/sylphian/minecraft/fishing/services/bait/BaitZone.html" title="class in net.sylphian.minecraft.fishing.services.bait">BaitZone</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/fishing/config/ConfigLoader.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.config">ConfigLoader</a> - Class in <a href="net/sylphian/minecraft/fishing/config/package-summary.html">net.sylphian.minecraft.fishing.config</a></dt>
 <dd>
 <div class="block">Loads and manages plugin configuration.</div>
@@ -393,6 +462,18 @@ of the fish they caught.</div>
 <dd>
 <div class="block">Constructs a new ConfigLoader and loads all configuration sections.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/services/SidebarService.html#configure(net.sylphian.minecraft.scoreboard.config.ScoreboardConfig)" class="member-name-link">configure(ScoreboardConfig)</a> - Static method in class net.sylphian.minecraft.scoreboard.services.<a href="net/sylphian/minecraft/scoreboard/services/SidebarService.html" title="class in net.sylphian.minecraft.scoreboard.services">SidebarService</a></dt>
+<dd>
+<div class="block">Applies the loaded configuration to the sidebar service.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/bait/BaitZone.html#contains(org.bukkit.Location)" class="member-name-link">contains(Location)</a> - Method in class net.sylphian.minecraft.fishing.services.bait.<a href="net/sylphian/minecraft/fishing/services/bait/BaitZone.html" title="class in net.sylphian.minecraft.fishing.services.bait">BaitZone</a></dt>
+<dd>
+<div class="block">Returns true if the given location falls within this zone's radius.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/api/SidebarLine.html#content()" class="member-name-link">content()</a> - Method in record class net.sylphian.minecraft.scoreboard.api.<a href="net/sylphian/minecraft/scoreboard/api/SidebarLine.html" title="class in net.sylphian.minecraft.scoreboard.api">SidebarLine</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./net/sylphian/minecraft/scoreboard/api/SidebarLine.html#param-content"><code>content</code></a> record component.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/profile/UserProfile.Entitlement.html#cosmeticId()" class="member-name-link">cosmeticId()</a> - Method in record class net.sylphian.minecraft.profile.<a href="net/sylphian/minecraft/profile/UserProfile.Entitlement.html" title="class in net.sylphian.minecraft.profile">UserProfile.Entitlement</a></dt>
 <dd>
 <div class="block">Returns the value of the <a href="./net/sylphian/minecraft/profile/UserProfile.Entitlement.html#param-cosmeticId"><code>cosmeticId</code></a> record component.</div>
@@ -400,6 +481,14 @@ of the fish they caught.</div>
 <dt><a href="net/sylphian/minecraft/fishing/config/RarityCatchEffects.ParticleConfig.html#count()" class="member-name-link">count()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/RarityCatchEffects.ParticleConfig.html" title="class in net.sylphian.minecraft.fishing.config">RarityCatchEffects.ParticleConfig</a></dt>
 <dd>
 <div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/config/RarityCatchEffects.ParticleConfig.html#param-count"><code>count</code></a> record component.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/bait/BaitItem.html#create(net.sylphian.minecraft.fishing.config.BaitConfig,org.bukkit.plugin.java.JavaPlugin)" class="member-name-link">create(BaitConfig, JavaPlugin)</a> - Static method in class net.sylphian.minecraft.fishing.services.bait.<a href="net/sylphian/minecraft/fishing/services/bait/BaitItem.html" title="class in net.sylphian.minecraft.fishing.services.bait">BaitItem</a></dt>
+<dd>
+<div class="block">Creates a bait ItemStack tagged with the bait ID in its persistent data.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/BaitZoneService.html#createZone(org.bukkit.Location,net.sylphian.minecraft.fishing.config.BaitConfig)" class="member-name-link">createZone(Location, BaitConfig)</a> - Method in class net.sylphian.minecraft.fishing.services.<a href="net/sylphian/minecraft/fishing/services/BaitZoneService.html" title="class in net.sylphian.minecraft.fishing.services">BaitZoneService</a></dt>
+<dd>
+<div class="block">Creates a new bait zone centred at the given location.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/util/ItemBuilder.html#customModelData(float)" class="member-name-link">customModelData(float)</a> - Method in class net.sylphian.minecraft.fishing.util.<a href="net/sylphian/minecraft/fishing/util/ItemBuilder.html" title="class in net.sylphian.minecraft.fishing.util">ItemBuilder</a></dt>
 <dd>&nbsp;</dd>
@@ -432,6 +521,10 @@ of the fish they caught.</div>
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/profile/db/migrations/Migration002CreateSessions.html#description()" class="member-name-link">description()</a> - Method in class net.sylphian.minecraft.profile.db.migrations.<a href="net/sylphian/minecraft/profile/db/migrations/Migration002CreateSessions.html" title="class in net.sylphian.minecraft.profile.db.migrations">Migration002CreateSessions</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/fishing/config/BaitConfig.html#displayName()" class="member-name-link">displayName()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BaitConfig.html" title="class in net.sylphian.minecraft.fishing.config">BaitConfig</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/config/BaitConfig.html#param-displayName"><code>displayName</code></a> record component.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#displayName()" class="member-name-link">displayName()</a> - Method in record class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>displayName</code> record component.</div>
@@ -453,6 +546,10 @@ of the fish they caught.</div>
 <dt><a href="net/sylphian/minecraft/profile/db/models/SessionModel.html#duration()" class="member-name-link">duration()</a> - Method in record class net.sylphian.minecraft.profile.db.models.<a href="net/sylphian/minecraft/profile/db/models/SessionModel.html" title="class in net.sylphian.minecraft.profile.db.models">SessionModel</a></dt>
 <dd>
 <div class="block">Returns the value of the <a href="./net/sylphian/minecraft/profile/db/models/SessionModel.html#param-duration"><code>duration</code></a> record component.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/config/BaitConfig.html#durationSeconds()" class="member-name-link">durationSeconds()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BaitConfig.html" title="class in net.sylphian.minecraft.fishing.config">BaitConfig</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/config/BaitConfig.html#param-durationSeconds"><code>durationSeconds</code></a> record component.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:E">E</h2>
@@ -510,6 +607,14 @@ of the fish they caught.</div>
 <dt><a href="net/sylphian/minecraft/profile/UserProfile.html#entitlements()" class="member-name-link">entitlements()</a> - Method in record class net.sylphian.minecraft.profile.<a href="net/sylphian/minecraft/profile/UserProfile.html" title="class in net.sylphian.minecraft.profile">UserProfile</a></dt>
 <dd>
 <div class="block">Returns the value of the <a href="./net/sylphian/minecraft/profile/UserProfile.html#param-entitlements"><code>entitlements</code></a> record component.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/services/NametagTeam.html#entries()" class="member-name-link">entries()</a> - Method in class net.sylphian.minecraft.scoreboard.services.<a href="net/sylphian/minecraft/scoreboard/services/NametagTeam.html" title="class in net.sylphian.minecraft.scoreboard.services">NametagTeam</a></dt>
+<dd>
+<div class="block">Returns the mutable set of player name entries assigned to this team.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/config/BaitConfig.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BaitConfig.html" title="class in net.sylphian.minecraft.fishing.config">BaitConfig</a></dt>
+<dd>
+<div class="block">Indicates whether some other object is "equal to" this one.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/config/BiteTimerConfig.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BiteTimerConfig.html" title="class in net.sylphian.minecraft.fishing.config">BiteTimerConfig</a></dt>
 <dd>
@@ -578,6 +683,14 @@ of the fish they caught.</div>
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/profile/UserProfile.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class net.sylphian.minecraft.profile.<a href="net/sylphian/minecraft/profile/UserProfile.html" title="class in net.sylphian.minecraft.profile">UserProfile</a></dt>
+<dd>
+<div class="block">Indicates whether some other object is "equal to" this one.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/api/SidebarLine.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class net.sylphian.minecraft.scoreboard.api.<a href="net/sylphian/minecraft/scoreboard/api/SidebarLine.html" title="class in net.sylphian.minecraft.scoreboard.api">SidebarLine</a></dt>
+<dd>
+<div class="block">Indicates whether some other object is "equal to" this one.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class net.sylphian.minecraft.scoreboard.config.<a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html" title="class in net.sylphian.minecraft.scoreboard.config">ScoreboardConfig</a></dt>
 <dd>
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
 </dd>
@@ -782,11 +895,19 @@ of the fish they caught.</div>
 <dd>
 <div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/fish/CatchResult.html#param-fishId"><code>fishId</code></a> record component.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/fishing/sidebar/FishingContributor.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.sidebar">FishingContributor</a> - Class in <a href="net/sylphian/minecraft/fishing/sidebar/package-summary.html">net.sylphian.minecraft.fishing.sidebar</a></dt>
+<dd>
+<div class="block">Contributes fishing session information to the player sidebar.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/sidebar/FishingContributor.html#%3Cinit%3E(net.sylphian.minecraft.fishing.services.BaitZoneService)" class="member-name-link">FishingContributor(BaitZoneService)</a> - Constructor for class net.sylphian.minecraft.fishing.sidebar.<a href="net/sylphian/minecraft/fishing/sidebar/FishingContributor.html" title="class in net.sylphian.minecraft.fishing.sidebar">FishingContributor</a></dt>
+<dd>
+<div class="block">Constructs a new FishingContributor.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/listeners/FishingListener.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.listeners">FishingListener</a> - Class in <a href="net/sylphian/minecraft/fishing/listeners/package-summary.html">net.sylphian.minecraft.fishing.listeners</a></dt>
 <dd>
 <div class="block">Central listener for all player fishing events.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/fishing/listeners/FishingListener.html#%3Cinit%3E(net.sylphian.minecraft.fishing.services.LootService,net.sylphian.minecraft.fishing.services.FishMutationService,net.sylphian.minecraft.fishing.services.CatchEffectService,net.sylphian.minecraft.fishing.services.BiteTimerService,net.sylphian.minecraft.fishing.db.api.IFishEncyclopaediaRepository,org.bukkit.plugin.java.JavaPlugin)" class="member-name-link">FishingListener(LootService, FishMutationService, CatchEffectService, BiteTimerService, IFishEncyclopaediaRepository, JavaPlugin)</a> - Constructor for class net.sylphian.minecraft.fishing.listeners.<a href="net/sylphian/minecraft/fishing/listeners/FishingListener.html" title="class in net.sylphian.minecraft.fishing.listeners">FishingListener</a></dt>
+<dt><a href="net/sylphian/minecraft/fishing/listeners/FishingListener.html#%3Cinit%3E(net.sylphian.minecraft.fishing.services.LootService,net.sylphian.minecraft.fishing.services.FishMutationService,net.sylphian.minecraft.fishing.services.CatchEffectService,net.sylphian.minecraft.fishing.services.BiteTimerService,net.sylphian.minecraft.fishing.services.BaitZoneService,net.sylphian.minecraft.fishing.sidebar.FishingContributor,net.sylphian.minecraft.fishing.db.api.IFishEncyclopaediaRepository,org.bukkit.plugin.java.JavaPlugin)" class="member-name-link">FishingListener(LootService, FishMutationService, CatchEffectService, BiteTimerService, BaitZoneService, FishingContributor, IFishEncyclopaediaRepository, JavaPlugin)</a> - Constructor for class net.sylphian.minecraft.fishing.listeners.<a href="net/sylphian/minecraft/fishing/listeners/FishingListener.html" title="class in net.sylphian.minecraft.fishing.listeners">FishingListener</a></dt>
 <dd>
 <div class="block">Constructs a new FishingListener.</div>
 </dd>
@@ -801,6 +922,10 @@ of the fish they caught.</div>
 <dt><a href="net/sylphian/minecraft/fishing/services/FishMutationService.html#%3Cinit%3E(net.sylphian.minecraft.fishing.config.ConfigLoader)" class="member-name-link">FishMutationService(ConfigLoader)</a> - Constructor for class net.sylphian.minecraft.fishing.services.<a href="net/sylphian/minecraft/fishing/services/FishMutationService.html" title="class in net.sylphian.minecraft.fishing.services">FishMutationService</a></dt>
 <dd>
 <div class="block">Constructs a new FishMutationService.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html#footerLines()" class="member-name-link">footerLines()</a> - Method in record class net.sylphian.minecraft.scoreboard.config.<a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html" title="class in net.sylphian.minecraft.scoreboard.config">ScoreboardConfig</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html#param-footerLines"><code>footerLines</code></a> record component.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/profile/utils/VisualManager.html#formatFullDisplayName(org.bukkit.entity.Player,net.sylphian.minecraft.profile.UserProfile)" class="member-name-link">formatFullDisplayName(Player, UserProfile)</a> - Method in class net.sylphian.minecraft.profile.utils.<a href="net/sylphian/minecraft/profile/utils/VisualManager.html" title="class in net.sylphian.minecraft.profile.utils">VisualManager</a></dt>
 <dd>
@@ -838,6 +963,10 @@ of the fish they caught.</div>
 <dd>
 <div class="block">Determines the current weather condition in the specified world.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/fishing/config/BaitConfig.html#fromSection(java.lang.String,org.bukkit.configuration.ConfigurationSection)" class="member-name-link">fromSection(String, ConfigurationSection)</a> - Static method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BaitConfig.html" title="class in net.sylphian.minecraft.fishing.config">BaitConfig</a></dt>
+<dd>
+<div class="block">Parses a BaitConfig from a configuration section.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/config/MutationConfig.html#fromSection(org.bukkit.configuration.ConfigurationSection)" class="member-name-link">fromSection(ConfigurationSection)</a> - Static method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/MutationConfig.html" title="class in net.sylphian.minecraft.fishing.config">MutationConfig</a></dt>
 <dd>
 <div class="block">Parses a MutationConfig from a configuration section.</div>
@@ -856,6 +985,22 @@ of the fish they caught.</div>
 <dt><a href="net/sylphian/minecraft/profile/utils/ProfileManager.html#getActiveProfiles()" class="member-name-link">getActiveProfiles()</a> - Method in class net.sylphian.minecraft.profile.utils.<a href="net/sylphian/minecraft/profile/utils/ProfileManager.html" title="class in net.sylphian.minecraft.profile.utils">ProfileManager</a></dt>
 <dd>
 <div class="block">Gets an unmodifiable view of all currently cached profiles.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/BaitZoneService.html#getBaitConfig(java.lang.String)" class="member-name-link">getBaitConfig(String)</a> - Method in class net.sylphian.minecraft.fishing.services.<a href="net/sylphian/minecraft/fishing/services/BaitZoneService.html" title="class in net.sylphian.minecraft.fishing.services">BaitZoneService</a></dt>
+<dd>
+<div class="block">Returns the config for the given bait ID, or null if not found.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/bait/BaitItem.html#getBaitId(org.bukkit.entity.Projectile,org.bukkit.plugin.java.JavaPlugin)" class="member-name-link">getBaitId(Projectile, JavaPlugin)</a> - Static method in class net.sylphian.minecraft.fishing.services.bait.<a href="net/sylphian/minecraft/fishing/services/bait/BaitItem.html" title="class in net.sylphian.minecraft.fishing.services.bait">BaitItem</a></dt>
+<dd>
+<div class="block">Reads the bait ID from a projectile's persistent data.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/bait/BaitItem.html#getBaitId(org.bukkit.inventory.ItemStack,org.bukkit.plugin.java.JavaPlugin)" class="member-name-link">getBaitId(ItemStack, JavaPlugin)</a> - Static method in class net.sylphian.minecraft.fishing.services.bait.<a href="net/sylphian/minecraft/fishing/services/bait/BaitItem.html" title="class in net.sylphian.minecraft.fishing.services.bait">BaitItem</a></dt>
+<dd>
+<div class="block">Reads the bait ID from an ItemStack's persistent data.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/BaitZoneService.html#getBaitIds()" class="member-name-link">getBaitIds()</a> - Method in class net.sylphian.minecraft.fishing.services.<a href="net/sylphian/minecraft/fishing/services/BaitZoneService.html" title="class in net.sylphian.minecraft.fishing.services">BaitZoneService</a></dt>
+<dd>
+<div class="block">Returns all registered bait IDs.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/services/mutation/FishContext.html#getBiome()" class="member-name-link">getBiome()</a> - Method in class net.sylphian.minecraft.fishing.services.mutation.<a href="net/sylphian/minecraft/fishing/services/mutation/FishContext.html" title="class in net.sylphian.minecraft.fishing.services.mutation">FishContext</a></dt>
 <dd>&nbsp;</dd>
@@ -919,6 +1064,12 @@ of the fish they caught.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/Rarity.html#getId()" class="member-name-link">getId()</a> - Method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/fishing/sidebar/FishingContributor.html#getId()" class="member-name-link">getId()</a> - Method in class net.sylphian.minecraft.fishing.sidebar.<a href="net/sylphian/minecraft/fishing/sidebar/FishingContributor.html" title="class in net.sylphian.minecraft.fishing.sidebar">FishingContributor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/api/SidebarContributor.html#getId()" class="member-name-link">getId()</a> - Method in interface net.sylphian.minecraft.scoreboard.api.<a href="net/sylphian/minecraft/scoreboard/api/SidebarContributor.html" title="interface in net.sylphian.minecraft.scoreboard.api">SidebarContributor</a></dt>
+<dd>
+<div class="block">Returns the unique identifier for this contributor.</div>
+</dd>
 <dt><a href="net/sylphian/verify/paper/VerifyPaper.html#getInstance()" class="member-name-link">getInstance()</a> - Static method in class net.sylphian.verify.paper.<a href="net/sylphian/verify/paper/VerifyPaper.html" title="class in net.sylphian.verify.paper">VerifyPaper</a></dt>
 <dd>
 <div class="block">Gets the singleton instance of the plugin.</div>
@@ -927,6 +1078,14 @@ of the fish they caught.</div>
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/database/DatabaseService.html#getJdbi()" class="member-name-link">getJdbi()</a> - Static method in class net.sylphian.minecraft.database.<a href="net/sylphian/minecraft/database/DatabaseService.html" title="class in net.sylphian.minecraft.database">DatabaseService</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/fishing/sidebar/FishingContributor.html#getLinesFor(org.bukkit.entity.Player)" class="member-name-link">getLinesFor(Player)</a> - Method in class net.sylphian.minecraft.fishing.sidebar.<a href="net/sylphian/minecraft/fishing/sidebar/FishingContributor.html" title="class in net.sylphian.minecraft.fishing.sidebar">FishingContributor</a></dt>
+<dd>
+<div class="block">Returns bait zone lines if the player's hook is bobbing in one or more zones.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/api/SidebarContributor.html#getLinesFor(org.bukkit.entity.Player)" class="member-name-link">getLinesFor(Player)</a> - Method in interface net.sylphian.minecraft.scoreboard.api.<a href="net/sylphian/minecraft/scoreboard/api/SidebarContributor.html" title="interface in net.sylphian.minecraft.scoreboard.api">SidebarContributor</a></dt>
+<dd>
+<div class="block">Returns the sidebar lines to display for the given player.</div>
+</dd>
 <dt><a href="net/sylphian/verify/velocity/VerifyVelocity.html#getLogger()" class="member-name-link">getLogger()</a> - Method in class net.sylphian.verify.velocity.<a href="net/sylphian/verify/velocity/VerifyVelocity.html" title="class in net.sylphian.verify.velocity">VerifyVelocity</a></dt>
 <dd>
 <div class="block">Gets the logger instance.</div>
@@ -979,6 +1138,13 @@ of the fish they caught.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/services/mutation/FishContext.html#getPlayer()" class="member-name-link">getPlayer()</a> - Method in class net.sylphian.minecraft.fishing.services.mutation.<a href="net/sylphian/minecraft/fishing/services/mutation/FishContext.html" title="class in net.sylphian.minecraft.fishing.services.mutation">FishContext</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/fishing/sidebar/FishingContributor.html#getPriority()" class="member-name-link">getPriority()</a> - Method in class net.sylphian.minecraft.fishing.sidebar.<a href="net/sylphian/minecraft/fishing/sidebar/FishingContributor.html" title="class in net.sylphian.minecraft.fishing.sidebar">FishingContributor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/api/SidebarContributor.html#getPriority()" class="member-name-link">getPriority()</a> - Method in interface net.sylphian.minecraft.scoreboard.api.<a href="net/sylphian/minecraft/scoreboard/api/SidebarContributor.html" title="interface in net.sylphian.minecraft.scoreboard.api">SidebarContributor</a></dt>
+<dd>
+<div class="block">Returns the priority that controls this contributor's vertical
+position relative to others.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/profile/utils/ProfileManager.html#getProfile(java.util.UUID)" class="member-name-link">getProfile(UUID)</a> - Method in class net.sylphian.minecraft.profile.utils.<a href="net/sylphian/minecraft/profile/utils/ProfileManager.html" title="class in net.sylphian.minecraft.profile.utils">ProfileManager</a></dt>
 <dd>
 <div class="block">Retrieves a cached profile by UUID.</div>
@@ -1005,9 +1171,9 @@ of the fish they caught.</div>
 <dd>
 <div class="block">Gets the verification reason.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/profile/SylphianProfile.html#getScoreboard()" class="member-name-link">getScoreboard()</a> - Method in class net.sylphian.minecraft.profile.<a href="net/sylphian/minecraft/profile/SylphianProfile.html" title="class in net.sylphian.minecraft.profile">SylphianProfile</a></dt>
+<dt><a href="net/sylphian/minecraft/scoreboard/ScoreboardService.html#getScoreboard(java.util.UUID)" class="member-name-link">getScoreboard(UUID)</a> - Static method in class net.sylphian.minecraft.scoreboard.<a href="net/sylphian/minecraft/scoreboard/ScoreboardService.html" title="class in net.sylphian.minecraft.scoreboard">ScoreboardService</a></dt>
 <dd>
-<div class="block">Gets the global scoreboard used for teams and visual styling.</div>
+<div class="block">Returns the managed scoreboard for the given player UUID.</div>
 </dd>
 <dt><a href="net/sylphian/verify/velocity/manager/VerifyManager.html#getStrikeCount(java.util.UUID)" class="member-name-link">getStrikeCount(UUID)</a> - Method in class net.sylphian.verify.velocity.manager.<a href="net/sylphian/verify/velocity/manager/VerifyManager.html" title="class in net.sylphian.verify.velocity.manager">VerifyManager</a></dt>
 <dd>
@@ -1045,6 +1211,10 @@ of the fish they caught.</div>
 <dd>
 <div class="block">Gets the forum user ID.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/BaitZoneService.html#getZonesAt(org.bukkit.Location)" class="member-name-link">getZonesAt(Location)</a> - Method in class net.sylphian.minecraft.fishing.services.<a href="net/sylphian/minecraft/fishing/services/BaitZoneService.html" title="class in net.sylphian.minecraft.fishing.services">BaitZoneService</a></dt>
+<dd>
+<div class="block">Returns at most one active zone per bait type whose radius contains the given location.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:H">H</h2>
 <dl class="index">
@@ -1055,6 +1225,10 @@ of the fish they caught.</div>
 <dt><a href="net/sylphian/minecraft/profile/service/PlayerService.html#handleQuit(java.util.UUID)" class="member-name-link">handleQuit(UUID)</a> - Method in class net.sylphian.minecraft.profile.service.<a href="net/sylphian/minecraft/profile/service/PlayerService.html" title="class in net.sylphian.minecraft.profile.service">PlayerService</a></dt>
 <dd>
 <div class="block">Handles a player quitting the server.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/config/BaitConfig.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BaitConfig.html" title="class in net.sylphian.minecraft.fishing.config">BaitConfig</a></dt>
+<dd>
+<div class="block">Returns a hash code value for this object.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/config/BiteTimerConfig.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BiteTimerConfig.html" title="class in net.sylphian.minecraft.fishing.config">BiteTimerConfig</a></dt>
 <dd>
@@ -1126,6 +1300,14 @@ of the fish they caught.</div>
 <dd>
 <div class="block">Returns a hash code value for this object.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/api/SidebarLine.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class net.sylphian.minecraft.scoreboard.api.<a href="net/sylphian/minecraft/scoreboard/api/SidebarLine.html" title="class in net.sylphian.minecraft.scoreboard.api">SidebarLine</a></dt>
+<dd>
+<div class="block">Returns a hash code value for this object.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class net.sylphian.minecraft.scoreboard.config.<a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html" title="class in net.sylphian.minecraft.scoreboard.config">ScoreboardConfig</a></dt>
+<dd>
+<div class="block">Returns a hash code value for this object.</div>
+</dd>
 <dt><a href="net/sylphian/verify/paper/model/PlayerIdentity.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class net.sylphian.verify.paper.model.<a href="net/sylphian/verify/paper/model/PlayerIdentity.html" title="class in net.sylphian.verify.paper.model">PlayerIdentity</a></dt>
 <dd>
 <div class="block">Returns a hash code value for this object.</div>
@@ -1150,9 +1332,17 @@ of the fish they caught.</div>
 <dd>
 <div class="block">Returns true if this fish has a Y coordinate restriction configured.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html#headerLines()" class="member-name-link">headerLines()</a> - Method in record class net.sylphian.minecraft.scoreboard.config.<a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html" title="class in net.sylphian.minecraft.scoreboard.config">ScoreboardConfig</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html#param-headerLines"><code>headerLines</code></a> record component.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:I">I</h2>
 <dl class="index">
+<dt><a href="net/sylphian/minecraft/fishing/config/BaitConfig.html#id()" class="member-name-link">id()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BaitConfig.html" title="class in net.sylphian.minecraft.fishing.config">BaitConfig</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/config/BaitConfig.html#param-id"><code>id</code></a> record component.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#id()" class="member-name-link">id()</a> - Method in record class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>id</code> record component.</div>
@@ -1176,6 +1366,10 @@ of the fish they caught.</div>
 <dt><a href="net/sylphian/minecraft/database/DatabaseService.html#init(java.lang.String,java.lang.String,java.lang.String,int,java.lang.String)" class="member-name-link">init(String, String, String, int, String)</a> - Static method in class net.sylphian.minecraft.database.<a href="net/sylphian/minecraft/database/DatabaseService.html" title="class in net.sylphian.minecraft.database">DatabaseService</a></dt>
 <dd>
 <div class="block">Initializes the database connection pool and JDBI instance.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/ScoreboardService.html#init(org.bukkit.plugin.java.JavaPlugin,net.sylphian.minecraft.scoreboard.config.ScoreboardConfig)" class="member-name-link">init(JavaPlugin, ScoreboardConfig)</a> - Static method in class net.sylphian.minecraft.scoreboard.<a href="net/sylphian/minecraft/scoreboard/ScoreboardService.html" title="class in net.sylphian.minecraft.scoreboard">ScoreboardService</a></dt>
+<dd>
+<div class="block">Configures sub-services and starts the periodic refresh task.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/profile/db/dao/SessionDao.html#insert(java.lang.String,long,java.lang.Long,long)" class="member-name-link">insert(String, long, Long, long)</a> - Method in interface net.sylphian.minecraft.profile.db.dao.<a href="net/sylphian/minecraft/profile/db/dao/SessionDao.html" title="interface in net.sylphian.minecraft.profile.db.dao">SessionDao</a></dt>
 <dd>
@@ -1226,6 +1420,10 @@ of the fish they caught.</div>
 <dt><a href="net/sylphian/minecraft/profile/db/api/ISessionRepository.html" class="type-name-link" title="interface in net.sylphian.minecraft.profile.db.api">ISessionRepository</a> - Interface in <a href="net/sylphian/minecraft/profile/db/api/package-summary.html">net.sylphian.minecraft.profile.db.api</a></dt>
 <dd>
 <div class="block">Interface for session data persistence operations.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/bait/BaitZone.html#isExpired()" class="member-name-link">isExpired()</a> - Method in class net.sylphian.minecraft.fishing.services.bait.<a href="net/sylphian/minecraft/fishing/services/bait/BaitZone.html" title="class in net.sylphian.minecraft.fishing.services.bait">BaitZone</a></dt>
+<dd>
+<div class="block">Returns true if this zone has passed its expiry time.</div>
 </dd>
 <dt><a href="net/sylphian/verify/paper/api/model/ApiEnvelope.html#isFailed()" class="member-name-link">isFailed()</a> - Method in class net.sylphian.verify.paper.api.model.<a href="net/sylphian/verify/paper/api/model/ApiEnvelope.html" title="class in net.sylphian.verify.paper.api.model">ApiEnvelope</a></dt>
 <dd>
@@ -1304,6 +1502,14 @@ of the fish they caught.</div>
 <dd>
 <div class="block">Returns the value of the <a href="./net/sylphian/minecraft/profile/UserProfile.html#param-lastSeen"><code>lastSeen</code></a> record component.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfigLoader.html#load()" class="member-name-link">load()</a> - Method in class net.sylphian.minecraft.scoreboard.config.<a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfigLoader.html" title="class in net.sylphian.minecraft.scoreboard.config">ScoreboardConfigLoader</a></dt>
+<dd>
+<div class="block">Parses and returns the scoreboard configuration.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/config/BaitConfigLoader.html#loadBaits()" class="member-name-link">loadBaits()</a> - Method in class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BaitConfigLoader.html" title="class in net.sylphian.minecraft.fishing.config">BaitConfigLoader</a></dt>
+<dd>
+<div class="block">Parses all bait definitions from the configuration.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/config/FishConfigLoader.html#loadFish()" class="member-name-link">loadFish()</a> - Method in class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/FishConfigLoader.html" title="class in net.sylphian.minecraft.fishing.config">FishConfigLoader</a></dt>
 <dd>
 <div class="block">Parses all fish entries from the configuration.</div>
@@ -1331,6 +1537,10 @@ of the fish they caught.</div>
 </dl>
 <h2 class="title" id="I:M">M</h2>
 <dl class="index">
+<dt><a href="net/sylphian/minecraft/fishing/config/BaitConfig.html#material()" class="member-name-link">material()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BaitConfig.html" title="class in net.sylphian.minecraft.fishing.config">BaitConfig</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/config/BaitConfig.html#param-material"><code>material</code></a> record component.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html#material()" class="member-name-link">material()</a> - Method in record class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>material</code> record component.</div>
@@ -1456,6 +1666,19 @@ of the fish they caught.</div>
 <dd>
 <div class="block">Sets the display name of the item using an Adventure Component.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/services/NametagService.html" class="type-name-link" title="class in net.sylphian.minecraft.scoreboard.services">NametagService</a> - Class in <a href="net/sylphian/minecraft/scoreboard/services/package-summary.html">net.sylphian.minecraft.scoreboard.services</a></dt>
+<dd>
+<div class="block">Sub-service responsible for nametag team management.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/services/NametagTeam.html" class="type-name-link" title="class in net.sylphian.minecraft.scoreboard.services">NametagTeam</a> - Class in <a href="net/sylphian/minecraft/scoreboard/services/package-summary.html">net.sylphian.minecraft.scoreboard.services</a></dt>
+<dd>
+<div class="block">Holds the state for a single nametag team — the prefix shown above a player's
+head and the set of player name entries assigned to that team.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/services/NametagTeam.html#%3Cinit%3E(net.kyori.adventure.text.Component)" class="member-name-link">NametagTeam(Component)</a> - Constructor for class net.sylphian.minecraft.scoreboard.services.<a href="net/sylphian/minecraft/scoreboard/services/NametagTeam.html" title="class in net.sylphian.minecraft.scoreboard.services">NametagTeam</a></dt>
+<dd>
+<div class="block">Constructs a new NametagTeam.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/database/package-summary.html">net.sylphian.minecraft.database</a> - package net.sylphian.minecraft.database</dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/database/migrations/package-summary.html">net.sylphian.minecraft.database.migrations</a> - package net.sylphian.minecraft.database.migrations</dt>
@@ -1484,9 +1707,13 @@ of the fish they caught.</div>
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/fishing/services/package-summary.html">net.sylphian.minecraft.fishing.services</a> - package net.sylphian.minecraft.fishing.services</dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/bait/package-summary.html">net.sylphian.minecraft.fishing.services.bait</a> - package net.sylphian.minecraft.fishing.services.bait</dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/fishing/services/mutation/package-summary.html">net.sylphian.minecraft.fishing.services.mutation</a> - package net.sylphian.minecraft.fishing.services.mutation</dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/fishing/services/mutation/impl/package-summary.html">net.sylphian.minecraft.fishing.services.mutation.impl</a> - package net.sylphian.minecraft.fishing.services.mutation.impl</dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/fishing/sidebar/package-summary.html">net.sylphian.minecraft.fishing.sidebar</a> - package net.sylphian.minecraft.fishing.sidebar</dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/fishing/util/package-summary.html">net.sylphian.minecraft.fishing.util</a> - package net.sylphian.minecraft.fishing.util</dt>
 <dd>&nbsp;</dd>
@@ -1509,6 +1736,14 @@ of the fish they caught.</div>
 <dt><a href="net/sylphian/minecraft/profile/service/package-summary.html">net.sylphian.minecraft.profile.service</a> - package net.sylphian.minecraft.profile.service</dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/profile/utils/package-summary.html">net.sylphian.minecraft.profile.utils</a> - package net.sylphian.minecraft.profile.utils</dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/package-summary.html">net.sylphian.minecraft.scoreboard</a> - package net.sylphian.minecraft.scoreboard</dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/api/package-summary.html">net.sylphian.minecraft.scoreboard.api</a> - package net.sylphian.minecraft.scoreboard.api</dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/config/package-summary.html">net.sylphian.minecraft.scoreboard.config</a> - package net.sylphian.minecraft.scoreboard.config</dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/services/package-summary.html">net.sylphian.minecraft.scoreboard.services</a> - package net.sylphian.minecraft.scoreboard.services</dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/verify/paper/package-summary.html">net.sylphian.verify.paper</a> - package net.sylphian.verify.paper</dt>
 <dd>&nbsp;</dd>
@@ -1581,6 +1816,8 @@ of the fish they caught.</div>
 <dd>
 <div class="block">Called when the plugin is disabled.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/SylphianScoreboard.html#onDisable()" class="member-name-link">onDisable()</a> - Method in class net.sylphian.minecraft.scoreboard.<a href="net/sylphian/minecraft/scoreboard/SylphianScoreboard.html" title="class in net.sylphian.minecraft.scoreboard">SylphianScoreboard</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/sylphian/verify/velocity/listener/PlayerListener.html#onDisconnect(com.velocitypowered.api.event.connection.DisconnectEvent)" class="member-name-link">onDisconnect(DisconnectEvent)</a> - Method in class net.sylphian.verify.velocity.listener.<a href="net/sylphian/verify/velocity/listener/PlayerListener.html" title="class in net.sylphian.verify.velocity.listener">PlayerListener</a></dt>
 <dd>
 <div class="block">Cleans up cached data and state when a player disconnects from the proxy.</div>
@@ -1598,6 +1835,8 @@ service registration, and command/event setup.</div>
 <dd>
 <div class="block">Called when the plugin is enabled.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/SylphianScoreboard.html#onEnable()" class="member-name-link">onEnable()</a> - Method in class net.sylphian.minecraft.scoreboard.<a href="net/sylphian/minecraft/scoreboard/SylphianScoreboard.html" title="class in net.sylphian.minecraft.scoreboard">SylphianScoreboard</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/sylphian/verify/paper/VerifyPaper.html#onEnable()" class="member-name-link">onEnable()</a> - Method in class net.sylphian.verify.paper.<a href="net/sylphian/verify/paper/VerifyPaper.html" title="class in net.sylphian.verify.paper">VerifyPaper</a></dt>
 <dd>
 <div class="block">Called when the plugin is enabled.</div>
@@ -1605,6 +1844,14 @@ service registration, and command/event setup.</div>
 <dt><a href="net/sylphian/minecraft/fishing/listeners/FishingListener.html#onFish(org.bukkit.event.player.PlayerFishEvent)" class="member-name-link">onFish(PlayerFishEvent)</a> - Method in class net.sylphian.minecraft.fishing.listeners.<a href="net/sylphian/minecraft/fishing/listeners/FishingListener.html" title="class in net.sylphian.minecraft.fishing.listeners">FishingListener</a></dt>
 <dd>
 <div class="block">Routes fishing state transitions to the appropriate handler.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/listeners/BaitListener.html#onInteract(org.bukkit.event.player.PlayerInteractEvent)" class="member-name-link">onInteract(PlayerInteractEvent)</a> - Method in class net.sylphian.minecraft.fishing.listeners.<a href="net/sylphian/minecraft/fishing/listeners/BaitListener.html" title="class in net.sylphian.minecraft.fishing.listeners">BaitListener</a></dt>
+<dd>
+<div class="block">Handles right-clicking with a bait item.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/ScoreboardService.html#onJoin(org.bukkit.entity.Player)" class="member-name-link">onJoin(Player)</a> - Static method in class net.sylphian.minecraft.scoreboard.<a href="net/sylphian/minecraft/scoreboard/ScoreboardService.html" title="class in net.sylphian.minecraft.scoreboard">ScoreboardService</a></dt>
+<dd>
+<div class="block">Creates and assigns a fresh scoreboard for a joining player.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/profile/listener/ProfileListener.html#onJoin(org.bukkit.event.player.PlayerJoinEvent)" class="member-name-link">onJoin(PlayerJoinEvent)</a> - Method in class net.sylphian.minecraft.profile.listener.<a href="net/sylphian/minecraft/profile/listener/ProfileListener.html" title="class in net.sylphian.minecraft.profile.listener">ProfileListener</a></dt>
 <dd>
@@ -1614,6 +1861,18 @@ service registration, and command/event setup.</div>
 <dd>
 <div class="block">Intercepts the login process to verify the player's status.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/SylphianScoreboard.html#onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent)" class="member-name-link">onPlayerJoin(PlayerJoinEvent)</a> - Method in class net.sylphian.minecraft.scoreboard.<a href="net/sylphian/minecraft/scoreboard/SylphianScoreboard.html" title="class in net.sylphian.minecraft.scoreboard">SylphianScoreboard</a></dt>
+<dd>
+<div class="block">Assigns a managed scoreboard to the player when they join.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/listeners/FishingListener.html#onPlayerQuit(org.bukkit.event.player.PlayerQuitEvent)" class="member-name-link">onPlayerQuit(PlayerQuitEvent)</a> - Method in class net.sylphian.minecraft.fishing.listeners.<a href="net/sylphian/minecraft/fishing/listeners/FishingListener.html" title="class in net.sylphian.minecraft.fishing.listeners">FishingListener</a></dt>
+<dd>
+<div class="block">Cleans up the action bar task when a player disconnects.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/SylphianScoreboard.html#onPlayerQuit(org.bukkit.event.player.PlayerQuitEvent)" class="member-name-link">onPlayerQuit(PlayerQuitEvent)</a> - Method in class net.sylphian.minecraft.scoreboard.<a href="net/sylphian/minecraft/scoreboard/SylphianScoreboard.html" title="class in net.sylphian.minecraft.scoreboard">SylphianScoreboard</a></dt>
+<dd>
+<div class="block">Removes the player's managed scoreboard on disconnect.</div>
+</dd>
 <dt><a href="net/sylphian/verify/paper/listener/PlayerListener.html#onPlayerQuit(org.bukkit.event.player.PlayerQuitEvent)" class="member-name-link">onPlayerQuit(PlayerQuitEvent)</a> - Method in class net.sylphian.verify.paper.listener.<a href="net/sylphian/verify/paper/listener/PlayerListener.html" title="class in net.sylphian.verify.paper.listener">PlayerListener</a></dt>
 <dd>
 <div class="block">Cleans up verification state when a player leaves the server.</div>
@@ -1622,9 +1881,17 @@ service registration, and command/event setup.</div>
 <dd>
 <div class="block">Handles incoming plugin messages on the verification channel.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/fishing/listeners/BaitListener.html#onProjectileHit(org.bukkit.event.entity.ProjectileHitEvent)" class="member-name-link">onProjectileHit(ProjectileHitEvent)</a> - Method in class net.sylphian.minecraft.fishing.listeners.<a href="net/sylphian/minecraft/fishing/listeners/BaitListener.html" title="class in net.sylphian.minecraft.fishing.listeners">BaitListener</a></dt>
+<dd>
+<div class="block">Handles the bait projectile hitting a solid block.</div>
+</dd>
 <dt><a href="net/sylphian/verify/velocity/VerifyVelocity.html#onProxyInitialization(com.velocitypowered.api.event.proxy.ProxyInitializeEvent)" class="member-name-link">onProxyInitialization(ProxyInitializeEvent)</a> - Method in class net.sylphian.verify.velocity.<a href="net/sylphian/verify/velocity/VerifyVelocity.html" title="class in net.sylphian.verify.velocity">VerifyVelocity</a></dt>
 <dd>
 <div class="block">Handles the proxy initialization event.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/ScoreboardService.html#onQuit(org.bukkit.entity.Player)" class="member-name-link">onQuit(Player)</a> - Static method in class net.sylphian.minecraft.scoreboard.<a href="net/sylphian/minecraft/scoreboard/ScoreboardService.html" title="class in net.sylphian.minecraft.scoreboard">ScoreboardService</a></dt>
+<dd>
+<div class="block">Removes the player's scoreboard on quit.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/profile/listener/ProfileListener.html#onQuit(org.bukkit.event.player.PlayerQuitEvent)" class="member-name-link">onQuit(PlayerQuitEvent)</a> - Method in class net.sylphian.minecraft.profile.listener.<a href="net/sylphian/minecraft/profile/listener/ProfileListener.html" title="class in net.sylphian.minecraft.profile.listener">ProfileListener</a></dt>
 <dd>
@@ -1651,6 +1918,10 @@ service registration, and command/event setup.</div>
 </dl>
 <h2 class="title" id="I:P">P</h2>
 <dl class="index">
+<dt><a href="net/sylphian/minecraft/fishing/config/BaitConfig.html#particle()" class="member-name-link">particle()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BaitConfig.html" title="class in net.sylphian.minecraft.fishing.config">BaitConfig</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/config/BaitConfig.html#param-particle"><code>particle</code></a> record component.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/config/RarityCatchEffects.html#particle()" class="member-name-link">particle()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/RarityCatchEffects.html" title="class in net.sylphian.minecraft.fishing.config">RarityCatchEffects</a></dt>
 <dd>
 <div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/config/RarityCatchEffects.html#param-particle"><code>particle</code></a> record component.</div>
@@ -1755,6 +2026,10 @@ service registration, and command/event setup.</div>
 <dd>
 <div class="block">Constructs a new PlaytimeCommand.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/services/NametagTeam.html#prefix()" class="member-name-link">prefix()</a> - Method in class net.sylphian.minecraft.scoreboard.services.<a href="net/sylphian/minecraft/scoreboard/services/NametagTeam.html" title="class in net.sylphian.minecraft.scoreboard.services">NametagTeam</a></dt>
+<dd>
+<div class="block">Returns the prefix Component shown before the player's name.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/profile/listener/ProfileListener.html" class="type-name-link" title="class in net.sylphian.minecraft.profile.listener">ProfileListener</a> - Class in <a href="net/sylphian/minecraft/profile/listener/package-summary.html">net.sylphian.minecraft.profile.listener</a></dt>
 <dd>
 <div class="block">Listener for player join and quit events.</div>
@@ -1783,6 +2058,10 @@ service registration, and command/event setup.</div>
 </dl>
 <h2 class="title" id="I:R">R</h2>
 <dl class="index">
+<dt><a href="net/sylphian/minecraft/fishing/config/BaitConfig.html#radius()" class="member-name-link">radius()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BaitConfig.html" title="class in net.sylphian.minecraft.fishing.config">BaitConfig</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/config/BaitConfig.html#param-radius"><code>radius</code></a> record component.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/WeatherCondition.html#RAIN" class="member-name-link">RAIN</a> - Enum constant in enum class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.fish">WeatherCondition</a></dt>
 <dd>
 <div class="block">Standard rainfall.</div>
@@ -1832,6 +2111,10 @@ specific rarity is caught.</div>
 <dd>
 <div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/config/BiteTimerConfig.html#param-rarityModifiers"><code>rarityModifiers</code></a> record component.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/fishing/config/BaitConfig.html#rarityMultipliers()" class="member-name-link">rarityMultipliers()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BaitConfig.html" title="class in net.sylphian.minecraft.fishing.config">BaitConfig</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/config/BaitConfig.html#param-rarityMultipliers"><code>rarityMultipliers</code></a> record component.</div>
+</dd>
 <dt><a href="net/sylphian/verify/paper/api/model/VerificationReason.html#RE_VERIFICATION_FAILED" class="member-name-link">RE_VERIFICATION_FAILED</a> - Enum constant in enum class net.sylphian.verify.paper.api.model.<a href="net/sylphian/verify/paper/api/model/VerificationReason.html" title="enum class in net.sylphian.verify.paper.api.model">VerificationReason</a></dt>
 <dd>
 <div class="block">A periodic check failed (e.g., account was unlinked or banned on forum).</div>
@@ -1848,9 +2131,25 @@ specific rarity is caught.</div>
 <dd>
 <div class="block">Records or updates a fish catch record.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/ScoreboardService.html#refresh(org.bukkit.entity.Player)" class="member-name-link">refresh(Player)</a> - Static method in class net.sylphian.minecraft.scoreboard.<a href="net/sylphian/minecraft/scoreboard/ScoreboardService.html" title="class in net.sylphian.minecraft.scoreboard">ScoreboardService</a></dt>
+<dd>
+<div class="block">Immediately refreshes the sidebar for a single player.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/services/SidebarService.html#refresh(org.bukkit.entity.Player)" class="member-name-link">refresh(Player)</a> - Static method in class net.sylphian.minecraft.scoreboard.services.<a href="net/sylphian/minecraft/scoreboard/services/SidebarService.html" title="class in net.sylphian.minecraft.scoreboard.services">SidebarService</a></dt>
+<dd>
+<div class="block">Immediately refreshes the sidebar for a single player.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/ScoreboardService.html#refreshAll()" class="member-name-link">refreshAll()</a> - Static method in class net.sylphian.minecraft.scoreboard.<a href="net/sylphian/minecraft/scoreboard/ScoreboardService.html" title="class in net.sylphian.minecraft.scoreboard">ScoreboardService</a></dt>
+<dd>
+<div class="block">Called by the periodic refresh task at the configured update interval.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/Rarity.html#register(net.sylphian.minecraft.fishing.fish.Rarity)" class="member-name-link">register(Rarity)</a> - Static method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a></dt>
 <dd>
 <div class="block">Registers a rarity in the global registry.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/services/SidebarService.html#registerContributor(net.sylphian.minecraft.scoreboard.api.SidebarContributor)" class="member-name-link">registerContributor(SidebarContributor)</a> - Static method in class net.sylphian.minecraft.scoreboard.services.<a href="net/sylphian/minecraft/scoreboard/services/SidebarService.html" title="class in net.sylphian.minecraft.scoreboard.services">SidebarService</a></dt>
+<dd>
+<div class="block">Registers a sidebar contributor.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/database/DatabaseService.html#registerMigrations(java.util.List)" class="member-name-link">registerMigrations(List)</a> - Static method in class net.sylphian.minecraft.database.<a href="net/sylphian/minecraft/database/DatabaseService.html" title="class in net.sylphian.minecraft.database">DatabaseService</a></dt>
 <dd>
@@ -1863,6 +2162,10 @@ specific rarity is caught.</div>
 <dt><a href="net/sylphian/minecraft/fishing/gui/EncyclopaediaMenu.html#reload(java.util.List)" class="member-name-link">reload(List)</a> - Method in class net.sylphian.minecraft.fishing.gui.<a href="net/sylphian/minecraft/fishing/gui/EncyclopaediaMenu.html" title="class in net.sylphian.minecraft.fishing.gui">EncyclopaediaMenu</a></dt>
 <dd>
 <div class="block">Reloads the menu with an updated list of fish entries.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/BaitZoneService.html#reload(java.util.Map)" class="member-name-link">reload(Map)</a> - Method in class net.sylphian.minecraft.fishing.services.<a href="net/sylphian/minecraft/fishing/services/BaitZoneService.html" title="class in net.sylphian.minecraft.fishing.services">BaitZoneService</a></dt>
+<dd>
+<div class="block">Reloads the bait configuration map.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/services/BiteTimerService.html#reload(net.sylphian.minecraft.fishing.config.ConfigLoader)" class="member-name-link">reload(ConfigLoader)</a> - Method in class net.sylphian.minecraft.fishing.services.<a href="net/sylphian/minecraft/fishing/services/BiteTimerService.html" title="class in net.sylphian.minecraft.fishing.services">BiteTimerService</a></dt>
 <dd>
@@ -1885,6 +2188,10 @@ specific rarity is caught.</div>
 <div class="block">Reloads config.yml and fish.yml from disk and pushes the updated
 configuration into all dependent services without a restart.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/bait/BaitZone.html#removeDisplay()" class="member-name-link">removeDisplay()</a> - Method in class net.sylphian.minecraft.fishing.services.bait.<a href="net/sylphian/minecraft/fishing/services/bait/BaitZone.html" title="class in net.sylphian.minecraft.fishing.services.bait">BaitZone</a></dt>
+<dd>
+<div class="block">Removes the text display entity from the world if it is still alive.</div>
+</dd>
 <dt><a href="net/sylphian/verify/paper/manager/VerifyManager.html#resetStrikes(java.util.UUID)" class="member-name-link">resetStrikes(UUID)</a> - Method in class net.sylphian.verify.paper.manager.<a href="net/sylphian/verify/paper/manager/VerifyManager.html" title="class in net.sylphian.verify.paper.manager">VerifyManager</a></dt>
 <dd>
 <div class="block">Resets the strike counter for a player.</div>
@@ -1900,6 +2207,11 @@ configuration into all dependent services without a restart.</div>
 <div class="block">Rolls back database schema to a specific target version.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/services/LootService.html#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.fish.WeatherCondition,double,long)" class="member-name-link">rollCatch(Biome, WeatherCondition, double, long)</a> - Method in class net.sylphian.minecraft.fishing.services.<a href="net/sylphian/minecraft/fishing/services/LootService.html" title="class in net.sylphian.minecraft.fishing.services">LootService</a></dt>
+<dd>
+<div class="block">Convenience overload for <a href="net/sylphian/minecraft/fishing/services/LootService.html#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.fish.WeatherCondition,double,long,java.util.List)"><code>LootService.rollCatch(Biome, WeatherCondition, double, long, List)</code></a>
+with no active bait bonuses.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/LootService.html#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.fish.WeatherCondition,double,long,java.util.List)" class="member-name-link">rollCatch(Biome, WeatherCondition, double, long, List)</a> - Method in class net.sylphian.minecraft.fishing.services.<a href="net/sylphian/minecraft/fishing/services/LootService.html" title="class in net.sylphian.minecraft.fishing.services">LootService</a></dt>
 <dd>
 <div class="block">Rolls a catch result for the given context.</div>
 </dd>
@@ -1920,6 +2232,30 @@ configuration into all dependent services without a restart.</div>
 </dl>
 <h2 class="title" id="I:S">S</h2>
 <dl class="index">
+<dt><a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html" class="type-name-link" title="class in net.sylphian.minecraft.scoreboard.config">ScoreboardConfig</a> - Record Class in <a href="net/sylphian/minecraft/scoreboard/config/package-summary.html">net.sylphian.minecraft.scoreboard.config</a></dt>
+<dd>
+<div class="block">Immutable configuration for the Sylphian Scoreboard sidebar appearance.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html#%3Cinit%3E(net.kyori.adventure.text.Component,boolean,int,java.util.List,java.util.List)" class="member-name-link">ScoreboardConfig(Component, boolean, int, List, List)</a> - Constructor for record class net.sylphian.minecraft.scoreboard.config.<a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html" title="class in net.sylphian.minecraft.scoreboard.config">ScoreboardConfig</a></dt>
+<dd>
+<div class="block">Creates an instance of a <code>ScoreboardConfig</code> record class.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfigLoader.html" class="type-name-link" title="class in net.sylphian.minecraft.scoreboard.config">ScoreboardConfigLoader</a> - Class in <a href="net/sylphian/minecraft/scoreboard/config/package-summary.html">net.sylphian.minecraft.scoreboard.config</a></dt>
+<dd>
+<div class="block">Loads and parses sidebar appearance configuration from <code>config.yml</code>.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfigLoader.html#%3Cinit%3E(org.bukkit.configuration.file.FileConfiguration)" class="member-name-link">ScoreboardConfigLoader(FileConfiguration)</a> - Constructor for class net.sylphian.minecraft.scoreboard.config.<a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfigLoader.html" title="class in net.sylphian.minecraft.scoreboard.config">ScoreboardConfigLoader</a></dt>
+<dd>
+<div class="block">Constructs a new ScoreboardConfigLoader.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/ScoreboardService.html" class="type-name-link" title="class in net.sylphian.minecraft.scoreboard">ScoreboardService</a> - Class in <a href="net/sylphian/minecraft/scoreboard/package-summary.html">net.sylphian.minecraft.scoreboard</a></dt>
+<dd>
+<div class="block">Core service for Sylphian-Scoreboard.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/bait/BaitZone.html#secondsRemaining()" class="member-name-link">secondsRemaining()</a> - Method in class net.sylphian.minecraft.fishing.services.bait.<a href="net/sylphian/minecraft/fishing/services/bait/BaitZone.html" title="class in net.sylphian.minecraft.fishing.services.bait">BaitZone</a></dt>
+<dd>
+<div class="block">Returns the number of seconds remaining before this zone expires.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/profile/db/dao/SessionDao.html" class="type-name-link" title="interface in net.sylphian.minecraft.profile.db.dao">SessionDao</a> - Interface in <a href="net/sylphian/minecraft/profile/db/dao/package-summary.html">net.sylphian.minecraft.profile.db.dao</a></dt>
 <dd>
 <div class="block">JDBI DAO for the mc_sessions table.</div>
@@ -1956,6 +2292,18 @@ configuration into all dependent services without a restart.</div>
 <dd>
 <div class="block">Creates an instance of a <code>SessionRow</code> record class.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/services/NametagService.html#setNametag(java.lang.String,java.lang.String,net.kyori.adventure.text.Component)" class="member-name-link">setNametag(String, String, Component)</a> - Static method in class net.sylphian.minecraft.scoreboard.services.<a href="net/sylphian/minecraft/scoreboard/services/NametagService.html" title="class in net.sylphian.minecraft.scoreboard.services">NametagService</a></dt>
+<dd>
+<div class="block">Registers or updates a nametag team across all online player scoreboards.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/services/NametagTeam.html#setPrefix(net.kyori.adventure.text.Component)" class="member-name-link">setPrefix(Component)</a> - Method in class net.sylphian.minecraft.scoreboard.services.<a href="net/sylphian/minecraft/scoreboard/services/NametagTeam.html" title="class in net.sylphian.minecraft.scoreboard.services">NametagTeam</a></dt>
+<dd>
+<div class="block">Updates the prefix for this team.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/services/SidebarService.html#setup(org.bukkit.scoreboard.Scoreboard)" class="member-name-link">setup(Scoreboard)</a> - Static method in class net.sylphian.minecraft.scoreboard.services.<a href="net/sylphian/minecraft/scoreboard/services/SidebarService.html" title="class in net.sylphian.minecraft.scoreboard.services">SidebarService</a></dt>
+<dd>
+<div class="block">Sets up the sidebar objective and pre-allocated line slots on a new scoreboard.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/services/mutation/FishMutation.html#shouldApply(org.bukkit.entity.Player,net.sylphian.minecraft.fishing.services.mutation.FishContext)" class="member-name-link">shouldApply(Player, FishContext)</a> - Method in interface net.sylphian.minecraft.fishing.services.mutation.<a href="net/sylphian/minecraft/fishing/services/mutation/FishMutation.html" title="interface in net.sylphian.minecraft.fishing.services.mutation">FishMutation</a></dt>
 <dd>
 <div class="block">Determines if the mutation should be applied based on the player and context.</div>
@@ -1964,9 +2312,42 @@ configuration into all dependent services without a restart.</div>
 <dd>
 <div class="block">Always returns true as Super Fish can apply to any catch context.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html#showScores()" class="member-name-link">showScores()</a> - Method in record class net.sylphian.minecraft.scoreboard.config.<a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html" title="class in net.sylphian.minecraft.scoreboard.config">ScoreboardConfig</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html#param-showScores"><code>showScores</code></a> record component.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/database/DatabaseService.html#shutdown()" class="member-name-link">shutdown()</a> - Static method in class net.sylphian.minecraft.database.<a href="net/sylphian/minecraft/database/DatabaseService.html" title="class in net.sylphian.minecraft.database">DatabaseService</a></dt>
 <dd>
 <div class="block">Shuts down the connection pool and the async executor service.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/listeners/BaitListener.html#shutdown()" class="member-name-link">shutdown()</a> - Method in class net.sylphian.minecraft.fishing.listeners.<a href="net/sylphian/minecraft/fishing/listeners/BaitListener.html" title="class in net.sylphian.minecraft.fishing.listeners">BaitListener</a></dt>
+<dd>
+<div class="block">Cancels the tracking task and clears all active projectiles.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/BaitZoneService.html#shutdown()" class="member-name-link">shutdown()</a> - Method in class net.sylphian.minecraft.fishing.services.<a href="net/sylphian/minecraft/fishing/services/BaitZoneService.html" title="class in net.sylphian.minecraft.fishing.services">BaitZoneService</a></dt>
+<dd>
+<div class="block">Cancels all tasks and removes all active zones and their display entities.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/ScoreboardService.html#shutdown()" class="member-name-link">shutdown()</a> - Static method in class net.sylphian.minecraft.scoreboard.<a href="net/sylphian/minecraft/scoreboard/ScoreboardService.html" title="class in net.sylphian.minecraft.scoreboard">ScoreboardService</a></dt>
+<dd>
+<div class="block">Shuts down the service — cancels the refresh task, restores all players
+to the main scoreboard, and clears all state in both sub-services.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/api/SidebarContributor.html" class="type-name-link" title="interface in net.sylphian.minecraft.scoreboard.api">SidebarContributor</a> - Interface in <a href="net/sylphian/minecraft/scoreboard/api/package-summary.html">net.sylphian.minecraft.scoreboard.api</a></dt>
+<dd>
+<div class="block">Interface for plugins that wish to contribute content to the player sidebar.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/api/SidebarLine.html" class="type-name-link" title="class in net.sylphian.minecraft.scoreboard.api">SidebarLine</a> - Record Class in <a href="net/sylphian/minecraft/scoreboard/api/package-summary.html">net.sylphian.minecraft.scoreboard.api</a></dt>
+<dd>
+<div class="block">Represents a single line of content in the player sidebar.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/api/SidebarLine.html#%3Cinit%3E(net.kyori.adventure.text.Component)" class="member-name-link">SidebarLine(Component)</a> - Constructor for record class net.sylphian.minecraft.scoreboard.api.<a href="net/sylphian/minecraft/scoreboard/api/SidebarLine.html" title="class in net.sylphian.minecraft.scoreboard.api">SidebarLine</a></dt>
+<dd>
+<div class="block">Creates an instance of a <code>SidebarLine</code> record class.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/services/SidebarService.html" class="type-name-link" title="class in net.sylphian.minecraft.scoreboard.services">SidebarService</a> - Class in <a href="net/sylphian/minecraft/scoreboard/services/package-summary.html">net.sylphian.minecraft.scoreboard.services</a></dt>
+<dd>
+<div class="block">Sub-service responsible for sidebar content.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/config/RarityCatchEffects.html#sound()" class="member-name-link">sound()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/RarityCatchEffects.html" title="class in net.sylphian.minecraft.fishing.config">RarityCatchEffects</a></dt>
 <dd>
@@ -1975,6 +2356,14 @@ configuration into all dependent services without a restart.</div>
 <dt><a href="net/sylphian/minecraft/fishing/config/RarityCatchEffects.SoundConfig.html#%3Cinit%3E(java.lang.String,float,float)" class="member-name-link">SoundConfig(String, float, float)</a> - Constructor for record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/RarityCatchEffects.SoundConfig.html" title="class in net.sylphian.minecraft.fishing.config">RarityCatchEffects.SoundConfig</a></dt>
 <dd>
 <div class="block">Creates an instance of a <code>SoundConfig</code> record class.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/listeners/BaitListener.html#start(org.bukkit.plugin.java.JavaPlugin)" class="member-name-link">start(JavaPlugin)</a> - Method in class net.sylphian.minecraft.fishing.listeners.<a href="net/sylphian/minecraft/fishing/listeners/BaitListener.html" title="class in net.sylphian.minecraft.fishing.listeners">BaitListener</a></dt>
+<dd>
+<div class="block">Starts the shared projectile tracking task.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/BaitZoneService.html#start(org.bukkit.plugin.java.JavaPlugin)" class="member-name-link">start(JavaPlugin)</a> - Method in class net.sylphian.minecraft.fishing.services.<a href="net/sylphian/minecraft/fishing/services/BaitZoneService.html" title="class in net.sylphian.minecraft.fishing.services">BaitZoneService</a></dt>
+<dd>
+<div class="block">Starts the rendering and label update tasks.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/config/RarityCatchEffects.TitleConfig.html#stay()" class="member-name-link">stay()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/RarityCatchEffects.TitleConfig.html" title="class in net.sylphian.minecraft.fishing.config">RarityCatchEffects.TitleConfig</a></dt>
 <dd>
@@ -2031,7 +2420,7 @@ from the Paper registry using the key defined in <a href="net/sylphian/minecraft
 <dd>
 <div class="block">Root administrative command for Sylphian Fishing.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/fishing/commands/SylphianFishingCommand.html#%3Cinit%3E(net.sylphian.minecraft.fishing.SylphianFishing,net.sylphian.minecraft.fishing.services.CatchEffectService,net.sylphian.minecraft.fishing.services.LootService,net.sylphian.minecraft.fishing.services.FishMutationService)" class="member-name-link">SylphianFishingCommand(SylphianFishing, CatchEffectService, LootService, FishMutationService)</a> - Constructor for class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/SylphianFishingCommand.html" title="class in net.sylphian.minecraft.fishing.commands">SylphianFishingCommand</a></dt>
+<dt><a href="net/sylphian/minecraft/fishing/commands/SylphianFishingCommand.html#%3Cinit%3E(net.sylphian.minecraft.fishing.SylphianFishing,net.sylphian.minecraft.fishing.services.CatchEffectService,net.sylphian.minecraft.fishing.services.LootService,net.sylphian.minecraft.fishing.services.FishMutationService,net.sylphian.minecraft.fishing.services.BaitZoneService)" class="member-name-link">SylphianFishingCommand(SylphianFishing, CatchEffectService, LootService, FishMutationService, BaitZoneService)</a> - Constructor for class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/SylphianFishingCommand.html" title="class in net.sylphian.minecraft.fishing.commands">SylphianFishingCommand</a></dt>
 <dd>
 <div class="block">Constructs a new SylphianFishingCommand.</div>
 </dd>
@@ -2041,9 +2430,19 @@ from the Paper registry using the key defined in <a href="net/sylphian/minecraft
 </dd>
 <dt><a href="net/sylphian/minecraft/profile/SylphianProfile.html#%3Cinit%3E()" class="member-name-link">SylphianProfile()</a> - Constructor for class net.sylphian.minecraft.profile.<a href="net/sylphian/minecraft/profile/SylphianProfile.html" title="class in net.sylphian.minecraft.profile">SylphianProfile</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/SylphianScoreboard.html" class="type-name-link" title="class in net.sylphian.minecraft.scoreboard">SylphianScoreboard</a> - Class in <a href="net/sylphian/minecraft/scoreboard/package-summary.html">net.sylphian.minecraft.scoreboard</a></dt>
+<dd>
+<div class="block">Main plugin class for Sylphian-Scoreboard.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/SylphianScoreboard.html#%3Cinit%3E()" class="member-name-link">SylphianScoreboard()</a> - Constructor for class net.sylphian.minecraft.scoreboard.<a href="net/sylphian/minecraft/scoreboard/SylphianScoreboard.html" title="class in net.sylphian.minecraft.scoreboard">SylphianScoreboard</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:T">T</h2>
 <dl class="index">
+<dt><a href="net/sylphian/minecraft/fishing/services/bait/BaitItem.html#tagProjectile(org.bukkit.entity.Projectile,java.lang.String,org.bukkit.plugin.java.JavaPlugin)" class="member-name-link">tagProjectile(Projectile, String, JavaPlugin)</a> - Static method in class net.sylphian.minecraft.fishing.services.bait.<a href="net/sylphian/minecraft/fishing/services/bait/BaitItem.html" title="class in net.sylphian.minecraft.fishing.services.bait">BaitItem</a></dt>
+<dd>
+<div class="block">Tags a projectile with a bait ID in its persistent data.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/WeatherCondition.html#THUNDERSTORM" class="member-name-link">THUNDERSTORM</a> - Enum constant in enum class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.fish">WeatherCondition</a></dt>
 <dd>
 <div class="block">Thunderstorm.</div>
@@ -2066,9 +2465,17 @@ from the Paper registry using the key defined in <a href="net/sylphian/minecraft
 <dd>
 <div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/config/RarityCatchEffects.TitleConfig.html#param-title"><code>title</code></a> record component.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html#title()" class="member-name-link">title()</a> - Method in record class net.sylphian.minecraft.scoreboard.config.<a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html" title="class in net.sylphian.minecraft.scoreboard.config">ScoreboardConfig</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html#param-title"><code>title</code></a> record component.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/config/RarityCatchEffects.TitleConfig.html#%3Cinit%3E(java.lang.String,java.lang.String,int,int,int)" class="member-name-link">TitleConfig(String, String, int, int, int)</a> - Constructor for record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/RarityCatchEffects.TitleConfig.html" title="class in net.sylphian.minecraft.fishing.config">RarityCatchEffects.TitleConfig</a></dt>
 <dd>
 <div class="block">Creates an instance of a <code>TitleConfig</code> record class.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/config/BaitConfig.html#toString()" class="member-name-link">toString()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BaitConfig.html" title="class in net.sylphian.minecraft.fishing.config">BaitConfig</a></dt>
+<dd>
+<div class="block">Returns a string representation of this record class.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/config/BiteTimerConfig.html#toString()" class="member-name-link">toString()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BiteTimerConfig.html" title="class in net.sylphian.minecraft.fishing.config">BiteTimerConfig</a></dt>
 <dd>
@@ -2140,6 +2547,14 @@ from the Paper registry using the key defined in <a href="net/sylphian/minecraft
 <dd>
 <div class="block">Returns a string representation of this record class.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/api/SidebarLine.html#toString()" class="member-name-link">toString()</a> - Method in record class net.sylphian.minecraft.scoreboard.api.<a href="net/sylphian/minecraft/scoreboard/api/SidebarLine.html" title="class in net.sylphian.minecraft.scoreboard.api">SidebarLine</a></dt>
+<dd>
+<div class="block">Returns a string representation of this record class.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html#toString()" class="member-name-link">toString()</a> - Method in record class net.sylphian.minecraft.scoreboard.config.<a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html" title="class in net.sylphian.minecraft.scoreboard.config">ScoreboardConfig</a></dt>
+<dd>
+<div class="block">Returns a string representation of this record class.</div>
+</dd>
 <dt><a href="net/sylphian/verify/paper/model/PlayerIdentity.html#toString()" class="member-name-link">toString()</a> - Method in record class net.sylphian.verify.paper.model.<a href="net/sylphian/verify/paper/model/PlayerIdentity.html" title="class in net.sylphian.verify.paper.model">PlayerIdentity</a></dt>
 <dd>
 <div class="block">Returns a string representation of this record class.</div>
@@ -2156,6 +2571,10 @@ from the Paper registry using the key defined in <a href="net/sylphian/minecraft
 <dd>
 <div class="block">Returns a string representation of this record class.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/fishing/sidebar/FishingContributor.html#trackHook(java.util.UUID,org.bukkit.entity.FishHook)" class="member-name-link">trackHook(UUID, FishHook)</a> - Method in class net.sylphian.minecraft.fishing.sidebar.<a href="net/sylphian/minecraft/fishing/sidebar/FishingContributor.html" title="class in net.sylphian.minecraft.fishing.sidebar">FishingContributor</a></dt>
+<dd>
+<div class="block">Registers the player's active fishing hook for zone tracking.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/config/RarityCatchEffects.ParticleConfig.html#type()" class="member-name-link">type()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/RarityCatchEffects.ParticleConfig.html" title="class in net.sylphian.minecraft.fishing.config">RarityCatchEffects.ParticleConfig</a></dt>
 <dd>
 <div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/config/RarityCatchEffects.ParticleConfig.html#param-type"><code>type</code></a> record component.</div>
@@ -2167,6 +2586,10 @@ from the Paper registry using the key defined in <a href="net/sylphian/minecraft
 </dl>
 <h2 class="title" id="I:U">U</h2>
 <dl class="index">
+<dt><a href="net/sylphian/minecraft/scoreboard/services/SidebarService.html#unregisterContributor(java.lang.String)" class="member-name-link">unregisterContributor(String)</a> - Static method in class net.sylphian.minecraft.scoreboard.services.<a href="net/sylphian/minecraft/scoreboard/services/SidebarService.html" title="class in net.sylphian.minecraft.scoreboard.services">SidebarService</a></dt>
+<dd>
+<div class="block">Removes a contributor by ID and refreshes all online players.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/database/migrations/Migration.html#up(org.jdbi.v3.core.Handle)" class="member-name-link">up(Handle)</a> - Method in interface net.sylphian.minecraft.database.migrations.<a href="net/sylphian/minecraft/database/migrations/Migration.html" title="interface in net.sylphian.minecraft.database.migrations">Migration</a></dt>
 <dd>
 <div class="block">Applies the migration changes to the database.</div>
@@ -2201,6 +2624,18 @@ from the Paper registry using the key defined in <a href="net/sylphian/minecraft
 </dd>
 <dt><a href="net/sylphian/minecraft/profile/db/repositories/SessionRepository.html#update(net.sylphian.minecraft.profile.db.models.SessionModel)" class="member-name-link">update(SessionModel)</a> - Method in class net.sylphian.minecraft.profile.db.repositories.<a href="net/sylphian/minecraft/profile/db/repositories/SessionRepository.html" title="class in net.sylphian.minecraft.profile.db.repositories">SessionRepository</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/services/SidebarService.html#update(org.bukkit.scoreboard.Scoreboard,org.bukkit.entity.Player)" class="member-name-link">update(Scoreboard, Player)</a> - Static method in class net.sylphian.minecraft.scoreboard.services.<a href="net/sylphian/minecraft/scoreboard/services/SidebarService.html" title="class in net.sylphian.minecraft.scoreboard.services">SidebarService</a></dt>
+<dd>
+<div class="block">Renders the current sidebar content for the given player onto their scoreboard.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html#updateIntervalTicks()" class="member-name-link">updateIntervalTicks()</a> - Method in record class net.sylphian.minecraft.scoreboard.config.<a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html" title="class in net.sylphian.minecraft.scoreboard.config">ScoreboardConfig</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html#param-updateIntervalTicks"><code>updateIntervalTicks</code></a> record component.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/bait/BaitZone.html#updateLabel(net.kyori.adventure.text.Component)" class="member-name-link">updateLabel(Component)</a> - Method in class net.sylphian.minecraft.fishing.services.bait.<a href="net/sylphian/minecraft/fishing/services/bait/BaitZone.html" title="class in net.sylphian.minecraft.fishing.services.bait">BaitZone</a></dt>
+<dd>
+<div class="block">Updates the text shown on the floating display entity.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/profile/utils/VisualManager.html#updateVisuals(org.bukkit.entity.Player,net.sylphian.minecraft.profile.UserProfile)" class="member-name-link">updateVisuals(Player, UserProfile)</a> - Method in class net.sylphian.minecraft.profile.utils.<a href="net/sylphian/minecraft/profile/utils/VisualManager.html" title="class in net.sylphian.minecraft.profile.utils">VisualManager</a></dt>
 <dd>
 <div class="block">Updates all visual elements for a player.</div>

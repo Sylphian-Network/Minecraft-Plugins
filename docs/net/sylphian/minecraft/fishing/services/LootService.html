@@ -68,6 +68,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.fish.WeatherCondition,double,long)" tabindex="0">rollCatch(Biome, WeatherCondition, double, long)</a></li>
+<li><a href="#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.fish.WeatherCondition,double,long,java.util.List)" tabindex="0">rollCatch(Biome, WeatherCondition, double, long, List)</a></li>
 <li><a href="#peekRarity(net.sylphian.minecraft.fishing.fish.WeatherCondition)" tabindex="0">peekRarity(WeatherCondition)</a></li>
 <li><a href="#reload(net.sylphian.minecraft.fishing.config.ConfigLoader,java.util.List)" tabindex="0">reload(ConfigLoader, List)</a></li>
 </ol>
@@ -166,6 +167,16 @@ applies a multiplier to each rarity's base chance. Multipliers are loaded from
  double&nbsp;hookY,
  long&nbsp;worldTime)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Convenience overload for <a href="#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.fish.WeatherCondition,double,long,java.util.List)"><code>rollCatch(Biome, WeatherCondition, double, long, List)</code></a>
+with no active bait bonuses.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../fish/CatchResult.html" title="class in net.sylphian.minecraft.fishing.fish">CatchResult</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.fish.WeatherCondition,double,long,java.util.List)" class="member-name-link">rollCatch</a><wbr>(org.bukkit.block.Biome&nbsp;biome,
+ <a href="../fish/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.fish">WeatherCondition</a>&nbsp;weather,
+ double&nbsp;hookY,
+ long&nbsp;worldTime,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../config/BaitConfig.html" title="class in net.sylphian.minecraft.fishing.config">BaitConfig</a>&gt;&nbsp;baitBonuses)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Rolls a catch result for the given context.</div>
 </div>
 </div>
@@ -216,18 +227,46 @@ applies a multiplier to each rarity's base chance. Multipliers are loaded from
  <a href="../fish/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.fish">WeatherCondition</a>&nbsp;weather,
  double&nbsp;hookY,
  long&nbsp;worldTime)</span></div>
-<div class="block">Rolls a catch result for the given context.
-First builds an eligible pool of all fish matching the biome,
-Y coordinate, and time of day. Then rolls a rarity applying
-weather multipliers, and picks a fish from the matching pool.
-If no fish of the rolled rarity exist in the eligible pool,
-falls back to a weighted pick across the entire eligible pool.</div>
+<div class="block">Convenience overload for <a href="#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.fish.WeatherCondition,double,long,java.util.List)"><code>rollCatch(Biome, WeatherCondition, double, long, List)</code></a>
+with no active bait bonuses.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>biome</code> - the biome where the fishing hook landed</dd>
 <dd><code>weather</code> - the current weather condition in the world</dd>
 <dd><code>hookY</code> - the Y coordinate of the fishing hook</dd>
 <dd><code>worldTime</code> - the current world time in ticks (0-24000)</dd>
+<dt>Returns:</dt>
+<dd>a CatchResult containing the fish ID, rarity, weight, and built ItemStack</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.fish.WeatherCondition,double,long,java.util.List)">
+<h3>rollCatch</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../fish/CatchResult.html" title="class in net.sylphian.minecraft.fishing.fish">CatchResult</a></span>&nbsp;<span class="element-name">rollCatch</span><wbr><span class="parameters">(org.bukkit.block.Biome&nbsp;biome,
+ <a href="../fish/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.fish">WeatherCondition</a>&nbsp;weather,
+ double&nbsp;hookY,
+ long&nbsp;worldTime,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../config/BaitConfig.html" title="class in net.sylphian.minecraft.fishing.config">BaitConfig</a>&gt;&nbsp;baitBonuses)</span></div>
+<div class="block">Rolls a catch result for the given context.
+First builds an eligible pool of all fish matching the biome,
+Y coordinate, and time of day. Then rolls a rarity applying
+weather and bait multipliers, and picks a fish from the matching pool.
+If no fish of the rolled rarity exist in the eligible pool,
+falls back to a weighted pick across the entire eligible pool.
+
+<p>Each bait config in <code>baitBonuses</code> must be a distinct type —
+callers should use <a href="BaitZoneService.html#getZonesAt(org.bukkit.Location)"><code>BaitZoneService.getZonesAt(Location)</code></a> which already
+enforces one zone per bait type.</p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>biome</code> - the biome where the fishing hook landed</dd>
+<dd><code>weather</code> - the current weather condition in the world</dd>
+<dd><code>hookY</code> - the Y coordinate of the fishing hook</dd>
+<dd><code>worldTime</code> - the current world time in ticks (0-24000)</dd>
+<dd><code>baitBonuses</code> - bait zone bonuses to apply to rarity multipliers, empty for none</dd>
 <dt>Returns:</dt>
 <dd>a CatchResult containing the fish ID, rarity, weight, and built ItemStack</dd>
 <dt>Throws:</dt>

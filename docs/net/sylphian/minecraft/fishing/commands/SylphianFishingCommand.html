@@ -57,7 +57,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(net.sylphian.minecraft.fishing.SylphianFishing,net.sylphian.minecraft.fishing.services.CatchEffectService,net.sylphian.minecraft.fishing.services.LootService,net.sylphian.minecraft.fishing.services.FishMutationService)" tabindex="0">SylphianFishingCommand(SylphianFishing, CatchEffectService, LootService, FishMutationService)</a></li>
+<li><a href="#%3Cinit%3E(net.sylphian.minecraft.fishing.SylphianFishing,net.sylphian.minecraft.fishing.services.CatchEffectService,net.sylphian.minecraft.fishing.services.LootService,net.sylphian.minecraft.fishing.services.FishMutationService,net.sylphian.minecraft.fishing.services.BaitZoneService)" tabindex="0">SylphianFishingCommand(SylphianFishing, CatchEffectService, LootService, FishMutationService, BaitZoneService)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -95,6 +95,7 @@ implements io.papermc.paper.command.brigadier.BasicCommand</span></div>
   <li><code>reload</code> — reloads config.yml and fish.yml without restarting</li>
   <li><code>test-effect &lt;rarity&gt;</code> — triggers rarity catch effects at the player's target location</li>
   <li><code>test-fishing &lt;count&gt; [biome] [weather] [y] [time]</code> — simulates fishing catches and prints distribution</li>
+  <li><code>give-bait &lt;bait-id&gt; [amount]</code> — gives the executing player a bait item</li>
 </ul></div>
 </div>
 </section>
@@ -108,10 +109,11 @@ implements io.papermc.paper.command.brigadier.BasicCommand</span></div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.sylphian.minecraft.fishing.SylphianFishing,net.sylphian.minecraft.fishing.services.CatchEffectService,net.sylphian.minecraft.fishing.services.LootService,net.sylphian.minecraft.fishing.services.FishMutationService)" class="member-name-link">SylphianFishingCommand</a><wbr>(<a href="../SylphianFishing.html" title="class in net.sylphian.minecraft.fishing">SylphianFishing</a>&nbsp;plugin,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.sylphian.minecraft.fishing.SylphianFishing,net.sylphian.minecraft.fishing.services.CatchEffectService,net.sylphian.minecraft.fishing.services.LootService,net.sylphian.minecraft.fishing.services.FishMutationService,net.sylphian.minecraft.fishing.services.BaitZoneService)" class="member-name-link">SylphianFishingCommand</a><wbr>(<a href="../SylphianFishing.html" title="class in net.sylphian.minecraft.fishing">SylphianFishing</a>&nbsp;plugin,
  <a href="../services/CatchEffectService.html" title="class in net.sylphian.minecraft.fishing.services">CatchEffectService</a>&nbsp;catchEffectService,
  <a href="../services/LootService.html" title="class in net.sylphian.minecraft.fishing.services">LootService</a>&nbsp;lootService,
- <a href="../services/FishMutationService.html" title="class in net.sylphian.minecraft.fishing.services">FishMutationService</a>&nbsp;mutationService)</code></div>
+ <a href="../services/FishMutationService.html" title="class in net.sylphian.minecraft.fishing.services">FishMutationService</a>&nbsp;mutationService,
+ <a href="../services/BaitZoneService.html" title="class in net.sylphian.minecraft.fishing.services">BaitZoneService</a>&nbsp;baitZoneService)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Constructs a new SylphianFishingCommand.</div>
 </div>
@@ -167,13 +169,14 @@ implements io.papermc.paper.command.brigadier.BasicCommand</span></div>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(net.sylphian.minecraft.fishing.SylphianFishing,net.sylphian.minecraft.fishing.services.CatchEffectService,net.sylphian.minecraft.fishing.services.LootService,net.sylphian.minecraft.fishing.services.FishMutationService)">
+<section class="detail" id="&lt;init&gt;(net.sylphian.minecraft.fishing.SylphianFishing,net.sylphian.minecraft.fishing.services.CatchEffectService,net.sylphian.minecraft.fishing.services.LootService,net.sylphian.minecraft.fishing.services.FishMutationService,net.sylphian.minecraft.fishing.services.BaitZoneService)">
 <h3>SylphianFishingCommand</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SylphianFishingCommand</span><wbr><span class="parameters">(<a href="../SylphianFishing.html" title="class in net.sylphian.minecraft.fishing">SylphianFishing</a>&nbsp;plugin,
  <a href="../services/CatchEffectService.html" title="class in net.sylphian.minecraft.fishing.services">CatchEffectService</a>&nbsp;catchEffectService,
  <a href="../services/LootService.html" title="class in net.sylphian.minecraft.fishing.services">LootService</a>&nbsp;lootService,
- <a href="../services/FishMutationService.html" title="class in net.sylphian.minecraft.fishing.services">FishMutationService</a>&nbsp;mutationService)</span></div>
+ <a href="../services/FishMutationService.html" title="class in net.sylphian.minecraft.fishing.services">FishMutationService</a>&nbsp;mutationService,
+ <a href="../services/BaitZoneService.html" title="class in net.sylphian.minecraft.fishing.services">BaitZoneService</a>&nbsp;baitZoneService)</span></div>
 <div class="block">Constructs a new SylphianFishingCommand.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -181,6 +184,7 @@ implements io.papermc.paper.command.brigadier.BasicCommand</span></div>
 <dd><code>catchEffectService</code> - the service used to apply rarity catch effects</dd>
 <dd><code>lootService</code> - the loot service used for fishing simulations</dd>
 <dd><code>mutationService</code> - the mutation service used for simulation statistics</dd>
+<dd><code>baitZoneService</code> - the service used to look up bait configs and provide tab completion</dd>
 </dl>
 </div>
 </section>
