@@ -39,6 +39,7 @@ baits:
     duration: 300
     particle: BUBBLE
     bite-timer-multiplier: 0.8
+    mutation-chance-multiplier: 1.5
     rarity-multipliers:
       RARE: 1.3
       EPIC: 1.5

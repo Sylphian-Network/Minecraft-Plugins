@@ -8,6 +8,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Utility class for creating bait items and identifying bait projectiles.
  *
@@ -33,13 +37,7 @@ public class BaitItem {
     public static ItemStack create(BaitConfig config, JavaPlugin plugin) {
         ItemStack item = new ItemBuilder(config.material())
                 .name(config.displayName())
-                .lore(
-                        "<gray>Throw into water to create a bait zone.",
-                        "",
-                        "<aqua>Radius: <white>" + config.radius() + " blocks",
-                        "<aqua>Duration: <white>" + formatDuration(config.durationSeconds()),
-                        "<aqua>Bite Speed: <white>" + (int) ((1.0 - config.biteTimerMultiplier()) * 100) + "% faster"
-                )
+                .loreStrings(buildLore(config))
                 .build();
 
         item.editMeta(meta -> meta.getPersistentDataContainer()
@@ -82,6 +80,46 @@ public class BaitItem {
     public static void tagProjectile(Projectile projectile, String baitId, JavaPlugin plugin) {
         projectile.getPersistentDataContainer()
                 .set(baitKey(plugin), PersistentDataType.STRING, baitId);
+    }
+
+    /**
+     * Builds the lore for a bait item, including zone stats and all active effects.
+     * Lines with a zero net effect (multiplier of 1.0) are omitted.
+     *
+     * @param config the bait configuration to build lore from
+     * @return ordered list of MiniMessage lore strings
+     */
+    private static List<String> buildLore(BaitConfig config) {
+        List<String> lore = new ArrayList<>();
+
+        lore.add("<gray>Throw into water to create a bait zone.");
+        lore.add("");
+        lore.add("<aqua>Radius: <white>" + config.radius() + " blocks");
+        lore.add("<aqua>Duration: <white>" + formatDuration(config.durationSeconds()));
+        lore.add("");
+        lore.add("<aqua>Effects");
+
+        int biteSpeedPercent = (int) ((1.0 - config.biteTimerMultiplier()) * 100);
+        if (biteSpeedPercent != 0) {
+            lore.add("<dark_aqua> • Bite Speed: <white>" + biteSpeedPercent + "% faster");
+        }
+
+        config.rarityMultipliers().entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .forEach(entry -> {
+                    int percent = (int) ((entry.getValue() - 1.0) * 100);
+                    if (percent != 0) {
+                        String rarity = entry.getKey().charAt(0) + entry.getKey().substring(1).toLowerCase();
+                        lore.add("<dark_aqua> • " + rarity + ": <white>+" + percent + "% chance");
+                    }
+                });
+
+        int mutationPercent = (int) ((config.mutationChanceMultiplier() - 1.0) * 100);
+        if (mutationPercent != 0) {
+            lore.add("<dark_aqua> • Mutation Chance: <white>+" + mutationPercent + "%");
+        }
+
+        return lore;
     }
 
     private static String formatDuration(int seconds) {

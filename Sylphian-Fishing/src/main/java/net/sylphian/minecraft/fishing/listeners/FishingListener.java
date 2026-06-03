@@ -127,12 +127,14 @@ public class FishingListener implements Listener {
         List<BaitConfig> baitBonuses = baitZoneService.getZonesAt(hookLocation).stream()
                 .map(BaitZone::config)
                 .toList();
-        CatchResult result = lootService.rollCatch(
-                biome, weather, hookLocation.getY(), world.getTime(), baitBonuses);
+        double mutationMult = baitBonuses.stream()
+                .mapToDouble(BaitConfig::mutationChanceMultiplier)
+                .reduce(1.0, (a, b) -> a * b);
+        CatchResult result = lootService.rollCatch(biome, weather, hookLocation.getY(), world.getTime(), baitBonuses);
         ItemStack itemStack = result.itemStack();
 
         mutationService.applyMutations(event.getPlayer(), itemStack,
-                new FishContext(result.rarity(), biome, event.getPlayer()));
+                new FishContext(result.rarity(), biome, event.getPlayer(), mutationMult));
         caughtItem.setItemStack(itemStack);
         catchEffectService.apply(event.getPlayer(), result, hookLocation);
         recordCatchAsync(event.getPlayer(), result);

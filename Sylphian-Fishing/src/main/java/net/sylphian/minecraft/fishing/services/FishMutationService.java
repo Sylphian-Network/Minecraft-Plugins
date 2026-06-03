@@ -43,7 +43,8 @@ public class FishMutationService {
 
     /**
      * Attempts to apply all registered and enabled mutations to a caught fish.
-     * Each mutation has a chance to occur, which is modified by the fish's rarity.
+     * Each mutation's chance is modified by the fish's rarity multiplier and
+     * any active bait zone mutation multipliers from the catch context.
      *
      * @param player  the player who caught the fish
      * @param item    the fish item stack
@@ -63,7 +64,7 @@ public class FishMutationService {
             double multiplier = context.getRarity() != null
                     ? context.getRarity().getMutationMultiplier()
                     : 1.0;
-            double finalChance = mutConfig.baseChance() * multiplier;
+            double finalChance = mutConfig.baseChance() * multiplier * context.getMutationChanceMultiplier();
 
             if (random.nextDouble() < finalChance && mutation.shouldApply(player, context)) {
                 mutation.apply(item, player, context);

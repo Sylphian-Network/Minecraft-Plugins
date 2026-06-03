@@ -13,6 +13,7 @@ public class FishContext {
     private final Rarity rarity;
     private final Biome biome;
     private final Player player;
+    private final double mutationChanceMultiplier;
 
     /**
      * Constructs a new FishContext.
@@ -20,11 +21,13 @@ public class FishContext {
      * @param rarity the rarity of the caught fish
      * @param biome  the biome where the fish was caught
      * @param player the player who caught the fish
+     * @param mutationChanceMultiplier combined bait multiplier applied to all mutation base chances
      */
-    public FishContext(Rarity rarity, Biome biome, Player player) {
+    public FishContext(Rarity rarity, Biome biome, Player player, double mutationChanceMultiplier) {
         this.rarity = rarity;
         this.biome = biome;
         this.player = player;
+        this.mutationChanceMultiplier = mutationChanceMultiplier;
     }
 
     public Rarity getRarity() {
@@ -37,5 +40,14 @@ public class FishContext {
 
     public Player getPlayer() {
         return player;
+    }
+
+    /**
+     * Returns the combined bait multiplier to apply to mutation base chances.
+     *
+     * @return the mutation chance multiplier
+     */
+    public double getMutationChanceMultiplier() {
+        return mutationChanceMultiplier;
     }
 }

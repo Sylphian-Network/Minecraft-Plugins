@@ -19,6 +19,7 @@ import java.util.Map;
  * @param durationSeconds     how long the zone persists after landing
  * @param particle            Bukkit Particle enum name rendered on the zone ring
  * @param biteTimerMultiplier multiplier applied to the calculated bite delay (below 1.0 = faster)
+ * @param mutationChanceMultiplier multiplier applied to all mutation base chances inside the zone
  * @param rarityMultipliers   per-rarity catch chance multipliers applied inside the zone
  */
 public record BaitConfig(
@@ -29,6 +30,7 @@ public record BaitConfig(
         int durationSeconds,
         String particle,
         double biteTimerMultiplier,
+        double mutationChanceMultiplier,
         Map<String, Double> rarityMultipliers
 ) {
 
@@ -65,6 +67,7 @@ public record BaitConfig(
                 sec.getInt("duration", 300),
                 sec.getString("particle", "BUBBLE"),
                 sec.getDouble("bite-timer-multiplier", 1.0),
+                sec.getDouble("mutation-chance-multiplier", 1.0),
                 rarityMultipliers
         );
     }
