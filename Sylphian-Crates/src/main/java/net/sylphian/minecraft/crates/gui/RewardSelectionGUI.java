@@ -9,14 +9,11 @@ import net.sylphian.minecraft.crates.service.CrateService;
 import net.sylphian.minecraft.crates.util.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -46,8 +43,7 @@ public class RewardSelectionGUI {
         int size = (rewardRows + 1) * 9; // extra row for confirm button
 
         RewardSelectionGUIHolder holder = new RewardSelectionGUIHolder(rewards, picks);
-        Inventory inv = Bukkit.createInventory(holder, size,
-                MiniMessage.miniMessage().deserialize("<dark_gray>Choose Your Rewards"));
+        Inventory inv = Bukkit.createInventory(holder, size, MiniMessage.miniMessage().deserialize("<dark_gray>Choose Your Rewards"));
         holder.setInventory(inv);
 
         for (int i = 0; i < rewards.size(); i++) {

@@ -85,8 +85,7 @@ public class SylphianCratesCommand implements BasicCommand {
      */
     private void handleGive(CommandSender sender, String[] args) {
         if (args.length < 3) {
-            sender.sendMessage(Component.text(
-                    "Usage: /sylphian-crates give <player> <key-id> [amount]", NamedTextColor.RED));
+            sender.sendMessage(Component.text("Usage: /sylphian-crates give <player> <key-id> [amount]", NamedTextColor.RED));
             return;
         }
 

@@ -211,8 +211,7 @@ public class CratesListener implements Listener {
 
         boolean nowSelected = holder.toggleSelect(slot);
         ItemStack base = crateService.buildItem(holder.getRewards().get(slot));
-        event.getInventory().setItem(slot,
-                nowSelected ? RewardSelectionGUI.asSelected(base) : base);
+        event.getInventory().setItem(slot, nowSelected ? RewardSelectionGUI.asSelected(base) : base);
 
         // Refresh confirm button
         event.getInventory().setItem(holder.getConfirmSlot(),

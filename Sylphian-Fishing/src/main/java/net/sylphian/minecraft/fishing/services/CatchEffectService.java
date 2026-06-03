@@ -4,7 +4,6 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;
 import net.sylphian.minecraft.fishing.config.ConfigLoader;
 import net.sylphian.minecraft.fishing.config.RarityCatchEffects;
-import net.sylphian.minecraft.fishing.fish.CatchResult;
 import net.sylphian.minecraft.fishing.fish.Rarity;
 import org.bukkit.*;
 import org.bukkit.entity.Player;

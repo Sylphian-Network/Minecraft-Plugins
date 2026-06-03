@@ -40,7 +40,6 @@ public final class SylphianCrates extends JavaPlugin {
         saveResource("crates.yml", false);
 
         keys = new KeyConfigLoader(YamlConfiguration.loadConfiguration(new File(getDataFolder(), "keys.yml")), getLogger()).loadKeys();
-
         crates = new CrateConfigLoader(YamlConfiguration.loadConfiguration(new File(getDataFolder(), "crates.yml")), getLogger()).loadCrates();
 
         CrateService crateService = new CrateService();

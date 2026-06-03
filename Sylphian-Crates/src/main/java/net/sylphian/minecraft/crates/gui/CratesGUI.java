@@ -40,8 +40,7 @@ public class CratesGUI {
      */
     public static void open(Player player) {
         CratesGUIHolder holder = new CratesGUIHolder();
-        Inventory inv = Bukkit.createInventory(holder, 27,
-                MINI.deserialize("<dark_gray>Crates"));
+        Inventory inv = Bukkit.createInventory(holder, 27, MINI.deserialize("<dark_gray>Crates"));
         holder.setInventory(inv);
 
         fillBorder(inv);
