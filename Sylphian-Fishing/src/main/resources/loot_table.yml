@@ -51,6 +51,14 @@
 #   13000 = 19:00  Early Night
 #   18000 = 00:00  Midnight
 #   23000 = 05:00  Late Night
+#
+# type:             (Optional) ITEM (default) gives a standard item built from material.
+#                   CRATE_KEY delivers a Sylphian Crates key directly to the player's
+#                   inventory. When using CRATE_KEY, material, display-name, and
+#                   description are not required and will be ignored.
+#
+# key-id:           Required when type is CRATE_KEY. Must match a key ID defined
+#                   in Sylphian-Crates' keys.yml.
 # =============================================================
 
 entries:
@@ -59,6 +67,13 @@ entries:
   # NOTE: The fish entries in this file were initially AI-generated
   # as a starting point.
   # =============================================================
+
+  legendary_key:
+    type: CRATE_KEY
+    key-id: legendary_key
+    rarity: LEGENDARY
+    weight: 1
+    biomes: ALL
 
   # ───────────────────────────────────────────
   # Global / Universal

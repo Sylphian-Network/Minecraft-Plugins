@@ -1,0 +1,10 @@
+name: Sylphian-Crates
+prefix: Sylphian-Crates
+version: '${version}'
+
+main: net.sylphian.minecraft.crates.SylphianCrates
+api-version: '26.1.2'
+load: POSTWORLD
+
+authors: [QuackieMackie]
+website: https://sylphian.net

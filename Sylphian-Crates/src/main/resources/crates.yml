@@ -1,0 +1,88 @@
+# =============================================================
+# Sylphian Crates - Crate Configuration
+# =============================================================
+#
+# Fields:
+# -------
+# display-name:     MiniMessage formatted name shown in the GUI.
+# display-material: Bukkit Material used to represent the crate in the GUI.
+# total-rolls:      How many rewards are rolled from the pool on opening.
+# player-picks:     How many of the rolled rewards the player may select.
+#                   If equal to or greater than total-rolls, all rewards
+#                   are given directly. Otherwise a selection GUI is shown
+#                   where the player may confirm with fewer than this many picks.
+#
+# pool:
+#   Each entry is a reward the player can receive.
+#   display-name:     MiniMessage formatted name shown in the selection GUI.
+#   display-material: Bukkit Material used to represent the reward in the GUI.
+#   type:             ITEM — gives the player a physical item.
+#   chance:           Relative weight in the pool. Higher = more frequent.
+#                     Percentage shown in the crate lore is calculated from
+#                     this value relative to the total pool weight.
+#   amount:           Stack size of the item given. Defaults to 1.
+#   lore:             Optional list of MiniMessage formatted lore lines on the item.
+#   enchantments:     Optional map of enchantment key to level (e.g. sharpness: 5).
+# =============================================================
+
+crates:
+
+  # ───────────────────────────────────────────
+  # Common Crate
+  # ───────────────────────────────────────────
+  common_crate:
+    display-name: "<white>Common Crate"
+    display-material: CHEST
+    total-rolls: 1
+    player-picks: 1
+    pool:
+      bread:
+        display-name: "<white>Bread"
+        display-material: BREAD
+        type: ITEM
+        chance: 50.0
+      iron_ingot:
+        display-name: "<white>Iron Ingot"
+        display-material: IRON_INGOT
+        type: ITEM
+        chance: 30.0
+      iron_sword:
+        display-name: "<white>Iron Sword"
+        display-material: IRON_SWORD
+        type: ITEM
+        chance: 20.0
+
+  # ───────────────────────────────────────────
+  # Legendary Crate
+  # ───────────────────────────────────────────
+  legendary_crate:
+    display-name: "<gold>Legendary Crate"
+    display-material: DIAMOND_BLOCK
+    total-rolls: 5
+    player-picks: 2
+    pool:
+      diamond:
+        display-name: "<aqua>Diamond"
+        display-material: DIAMOND
+        type: ITEM
+        amount: 5
+        chance: 40.0
+      sharp_sword:
+        display-name: "<aqua>Blade of Legends"
+        display-material: DIAMOND_SWORD
+        type: ITEM
+        amount: 1
+        chance: 30.0
+        lore:
+          - "<gray>Forged in the depths of legend."
+          - "<dark_gray>Handle with care."
+        enchantments:
+          sharpness: 5
+          unbreaking: 3
+          looting: 2
+      netherite_ingot:
+        display-name: "<light_purple>Netherite Ingot"
+        display-material: NETHERITE_INGOT
+        type: ITEM
+        amount: 1
+        chance: 10.0

@@ -9,11 +9,12 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Represents a single type of fish that can be caught through the fishing system.
+ * Represents a single entry in the fishing loot table.
  *
- * <p>Each fish defines its identity, appearance, and a set of optional restrictions
- * that control when and where it can appear in the loot pool. All restriction fields
- * are optional — omitting them means no restriction applies for that dimension.</p>
+ * <p>An entry is either a {@link LootEntryType#ITEM} (a standard fish or item) or a
+ * {@link LootEntryType#CRATE_KEY} (a Sylphian Crates key delivered via the CratesAPI).
+ * Item-type entries carry a material, display name, and description. Crate key entries
+ * carry only a {@code keyId} — display and material fields will be null.</p>
  *
  * <h2>Restriction Dimensions</h2>
  * <ul>
@@ -37,26 +38,30 @@ import java.util.Random;
  * @see LootService
  * @see LootTableConfigLoader
  */
-public record LootEntry(String id, Material material, String displayName, String description, Rarity rarity, int weight,
-                        List<Biome> biomes, double minWeight, double maxWeight, Integer minY, Integer maxY,
-                        Long minTime, Long maxTime) {
+public record LootEntry(String id, LootEntryType type, String keyId,
+                        Material material, String displayName, String description,
+                        Rarity rarity, int weight, List<Biome> biomes,
+                        double minWeight, double maxWeight,
+                        Integer minY, Integer maxY, Long minTime, Long maxTime) {
 
     /**
      * Constructs a new LootEntry.
      *
-     * @param id          unique identifier for the fish
-     * @param material    the item material to use
-     * @param displayName the MiniMessage formatted name displayed to players
-     * @param description the MiniMessage formatted lore description
-     * @param rarity      the fish rarity
+     * @param id          unique identifier for the entry
+     * @param type        the reward type — determines how the catch is delivered
+     * @param keyId       the crate key ID to give; only populated when type is {@link LootEntryType#CRATE_KEY}
+     * @param material    the item material to use; only populated when type is {@link LootEntryType#ITEM}
+     * @param displayName the MiniMessage formatted name displayed to players; only populated when type is {@link LootEntryType#ITEM}
+     * @param description the MiniMessage formatted lore description; only populated when type is {@link LootEntryType#ITEM}
+     * @param rarity      the entry rarity
      * @param weight      relative weight in the weighted loot pool
-     * @param biomes      list of biomes where this fish can be caught, empty for no restriction
+     * @param biomes      list of biomes where this entry can be caught, empty for no restriction
      * @param minWeight   minimum physical catch weight in kg
      * @param maxWeight   maximum physical catch weight in kg
-     * @param minY        minimum Y coordinate to catch this fish, or null for no restriction
-     * @param maxY        maximum Y coordinate to catch this fish, or null for no restriction
-     * @param minTime     minimum world time in ticks to catch this fish, or null for no restriction
-     * @param maxTime     maximum world time in ticks to catch this fish, or null for no restriction
+     * @param minY        minimum Y coordinate to catch this entry, or null for no restriction
+     * @param maxY        maximum Y coordinate to catch this entry, or null for no restriction
+     * @param minTime     minimum world time in ticks to catch this entry, or null for no restriction
+     * @param maxTime     maximum world time in ticks to catch this entry, or null for no restriction
      */
     public LootEntry {
     }

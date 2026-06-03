@@ -5,6 +5,7 @@ import net.kyori.adventure.title.Title;
 import net.sylphian.minecraft.fishing.config.ConfigLoader;
 import net.sylphian.minecraft.fishing.config.RarityCatchEffects;
 import net.sylphian.minecraft.fishing.fish.CatchResult;
+import net.sylphian.minecraft.fishing.fish.Rarity;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 
@@ -34,21 +35,20 @@ public class CatchEffectService {
     }
 
     /**
-     * Applies all configured catch effects for the given catch result.
+     * Applies all configured catch effects for the given catch.
      *
      * @param player   the player who caught the fish
-     * @param result   the catch result containing rarity and fish info
+     * @param rarity   the rarity of the catch
+     * @param fishId   the ID of the caught entry, used in broadcast messages
      * @param location the location of the fishing hook
      */
-    public void apply(Player player, CatchResult result, Location location) {
-        if (result.rarity() == null) return;
-
-        RarityCatchEffects effects = config.getRarityCatchEffects(result.rarity());
+    public void apply(Player player, Rarity rarity, String fishId, Location location) {
+        RarityCatchEffects effects = config.getRarityCatchEffects(rarity);
 
         applySound(player, effects.sound());
         applyParticles(location, effects.particle());
         applyTitle(player, effects.title());
-        applyBroadcast(player, result, effects.broadcast());
+        applyBroadcast(player, fishId, effects.broadcast());
     }
 
     /**
@@ -120,16 +120,15 @@ public class CatchEffectService {
      * Supports {player} and {fish} placeholders.
      *
      * @param player    the catching player
-     * @param result    the catch result
+     * @param fishId    the ID of the caught entry
      * @param broadcast the broadcast config, or null if disabled
      */
-    private void applyBroadcast(Player player, CatchResult result,
-                                RarityCatchEffects.BroadcastConfig broadcast) {
+    private void applyBroadcast(Player player, String fishId, RarityCatchEffects.BroadcastConfig broadcast) {
         if (broadcast == null) return;
 
         String message = broadcast.message()
                 .replace("{player}", player.getName())
-                .replace("{fish}", result.fishId());
+                .replace("{fish}", fishId);
 
         Bukkit.broadcast(MINI.deserialize(message));
     }

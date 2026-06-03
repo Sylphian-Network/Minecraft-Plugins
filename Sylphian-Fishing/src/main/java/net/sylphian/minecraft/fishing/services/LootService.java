@@ -202,8 +202,8 @@ public class LootService {
      */
     private CatchResult buildCatchResult(LootEntry fish) {
         double weight = fish.rollWeight(random);
-        ItemStack itemStack = buildItemStack(fish, weight);
-        return new CatchResult(fish.id(), fish.rarity(), weight, itemStack);
+        ItemStack itemStack = fish.type() == LootEntryType.ITEM ? buildItemStack(fish, weight) : null;
+        return new CatchResult(weight, itemStack, fish);
     }
 
     /**
@@ -231,7 +231,8 @@ public class LootService {
     }
 
     /**
-     * Builds the ItemStack for the caught fish, setting its name and lore.
+     * Builds the ItemStack for an {@link LootEntryType#ITEM} entry.
+     * Must not be called for {@link LootEntryType#CRATE_KEY} entries.
      *
      * @param fish         the fish entry
      * @param caughtWeight the rolled weight of the fish

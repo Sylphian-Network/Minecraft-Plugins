@@ -137,9 +137,7 @@ public class SylphianFishingCommand implements BasicCommand {
         }
 
         Location effectLocation = resolveEffectLocation(player);
-        CatchResult result = new CatchResult("test", rarity, 1.0, new ItemStack(Material.COD));
-
-        catchEffectService.apply(player, result, effectLocation);
+        catchEffectService.apply(player, rarity, rarity.getId().toLowerCase(), effectLocation);
         player.sendMessage(MINI.deserialize("Triggered effects for rarity: " + rarity.getDisplayName()));
     }
 

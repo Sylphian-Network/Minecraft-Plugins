@@ -1,0 +1,18 @@
+# =============================================================
+# Sylphian Crates - Key Configuration
+# =============================================================
+#
+# Fields:
+# -------
+# material:     Bukkit Material used for the physical key item.
+# display-name: MiniMessage formatted name shown on the item.
+# lore:         List of MiniMessage formatted lore lines shown on the item.
+# opens:        The crate ID this key unlocks, as defined in crates.yml.
+# =============================================================
+keys:
+  legendary_key:
+    material: TRIPWIRE_HOOK
+    display-name: "<gold>Legendary Key"
+    lore:
+      - "<gray>Opens a Legendary Crate."
+    opens: legendary_crate

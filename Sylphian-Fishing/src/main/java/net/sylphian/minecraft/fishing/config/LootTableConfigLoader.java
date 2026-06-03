@@ -1,6 +1,7 @@
 package net.sylphian.minecraft.fishing.config;
 
 import net.sylphian.minecraft.fishing.fish.LootEntry;
+import net.sylphian.minecraft.fishing.fish.LootEntryType;
 import net.sylphian.minecraft.fishing.fish.Rarity;
 import net.sylphian.minecraft.fishing.services.LootService;
 import org.bukkit.Material;
@@ -50,6 +51,16 @@ import java.util.logging.Logger;
  *   <dt>{@code min-time} / {@code max-time}</dt>
  *   <dd>Optional world time range in ticks (0–24000). Supports overnight ranges
  *       where {@code min-time} is greater than {@code max-time}.</dd>
+ *
+ *   <dt>{@code type}</dt>
+ *   <dd>Optional. {@code ITEM} (default) builds a standard item from {@code material}.
+ *       {@code CRATE_KEY} delivers a Sylphian Crates key to the player via the CratesAPI.
+ *       When set to {@code CRATE_KEY}, the {@code material}, {@code display-name}, and
+ *       {@code description} fields are ignored.</dd>
+ *
+ *   <dt>{@code key-id}</dt>
+ *   <dd>Required when {@code type} is {@code CRATE_KEY}. Must match a key ID defined
+ *       in Sylphian-Crates' {@code keys.yml}. Entry is skipped if absent.</dd>
  * </dl>
  *
  * @see LootEntry
@@ -78,38 +89,60 @@ public class LootTableConfigLoader {
      */
     public List<LootEntry> loadEntries() {
         List<LootEntry> entries = new ArrayList<>();
-        ConfigurationSection fishSection = lootTableConfig.getConfigurationSection("entries");
+        ConfigurationSection section = lootTableConfig.getConfigurationSection("entries");
 
-        if (fishSection == null) {
+        if (section == null) {
             logger.warning("No 'entries' section found in loot_table.yml — no entries will be registered.");
             return entries;
         }
 
-        for (String key : fishSection.getKeys(false)) {
-            ConfigurationSection section = fishSection.getConfigurationSection(key);
-            if (section == null) continue;
+        for (String key : section.getKeys(false)) {
+            ConfigurationSection entrySection = section.getConfigurationSection(key);
+            if (entrySection == null) continue;
 
-            Material material   = Material.valueOf(section.getString("material", "COD"));
-            String displayName  = section.getString("display-name", key);
-            String description  = section.getString("description", "");
-            String rarityId = section.getString("rarity", "COMMON");
+            LootEntryType type;
+            try {
+                type = LootEntryType.valueOf(entrySection.getString("type", "ITEM").toUpperCase());
+            } catch (IllegalArgumentException e) {
+                logger.warning("Unknown type for entry '" + key + "' — defaulting to ITEM.");
+                type = LootEntryType.ITEM;
+            }
+
+            String keyId = null;
+            Material material = null;
+            String displayName = null;
+            String description = null;
+
+            if (type == LootEntryType.CRATE_KEY) {
+                keyId = entrySection.getString("key-id");
+                if (keyId == null) {
+                    logger.warning("Entry '" + key + "' is type CRATE_KEY but missing 'key-id' — skipping.");
+                    continue;
+                }
+            } else {
+                material    = Material.valueOf(entrySection.getString("material", "COD").toUpperCase());
+                displayName = entrySection.getString("display-name", key);
+                description = entrySection.getString("description", "");
+            }
+
+            String rarityId = entrySection.getString("rarity", "COMMON");
             Rarity rarity = Rarity.getById(rarityId);
             if (rarity == null) {
-                logger.warning("Unknown rarity '" + rarityId + "' for entry '" + key + "' - skipping.");
+                logger.warning("Unknown rarity '" + rarityId + "' for entry '" + key + "' — skipping.");
                 continue;
             }
-            int weight          = section.getInt("weight", 10);
-            double minWeight    = section.getDouble("min-weight", 0.5);
-            double maxWeight    = section.getDouble("max-weight", 3.0);
-            List<Biome> biomes  = parseBiomes(section);
 
-            // Y and time restrictions are optional — absence means no restriction
-            Integer minY = section.contains("min-y") ? section.getInt("min-y") : null;
-            Integer maxY = section.contains("max-y") ? section.getInt("max-y") : null;
-            Long minTime = section.contains("min-time") ? section.getLong("min-time") : null;
-            Long maxTime = section.contains("max-time") ? section.getLong("max-time") : null;
+            int weight       = entrySection.getInt("weight", 10);
+            double minWeight = entrySection.getDouble("min-weight", 0.0);
+            double maxWeight = entrySection.getDouble("max-weight", 0.0);
+            List<Biome> biomes = parseBiomes(entrySection);
 
-            entries.add(new LootEntry(key, material, displayName, description,
+            Integer minY = entrySection.contains("min-y") ? entrySection.getInt("min-y") : null;
+            Integer maxY = entrySection.contains("max-y") ? entrySection.getInt("max-y") : null;
+            Long minTime = entrySection.contains("min-time") ? entrySection.getLong("min-time") : null;
+            Long maxTime = entrySection.contains("max-time") ? entrySection.getLong("max-time") : null;
+
+            entries.add(new LootEntry(key, type, keyId, material, displayName, description,
                     rarity, weight, biomes, minWeight, maxWeight, minY, maxY, minTime, maxTime));
         }
 

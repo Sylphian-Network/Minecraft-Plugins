@@ -5,6 +5,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.fishing.db.models.FishEncyclopaediaModel;
 import net.sylphian.minecraft.fishing.db.repositories.FishEncyclopaediaRepository;
 import net.sylphian.minecraft.fishing.fish.LootEntry;
+import net.sylphian.minecraft.fishing.fish.LootEntryType;
 import net.sylphian.minecraft.fishing.util.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -38,12 +39,14 @@ public class EncyclopaediaMenu {
     /**
      * Constructs a new EncyclopaediaMenu.
      *
-     * @param entries all available fish in the plugin
+     * @param entries     all available loot entries; non-{@link LootEntryType#ITEM} entries are excluded
      * @param repository  repository for player catch data
      * @param plugin      the plugin instance
      */
     public EncyclopaediaMenu(List<LootEntry> entries, FishEncyclopaediaRepository repository, JavaPlugin plugin) {
-        this.entries = entries;
+        this.entries = entries.stream()
+                .filter(e -> e.type() == LootEntryType.ITEM)
+                .toList();
         this.repository = repository;
         this.plugin = plugin;
     }
@@ -263,9 +266,11 @@ public class EncyclopaediaMenu {
     /**
      * Reloads the menu with an updated list of fish entries.
      *
-     * @param fishEntries the updated list of all available fish
+     * @param entries all available loot entries; non-{@link LootEntryType#ITEM} entries are excluded
      */
-    public void reload(List<LootEntry> fishEntries) {
-        this.entries = fishEntries;
+    public void reload(List<LootEntry> entries) {
+        this.entries = entries.stream()
+                .filter(e -> e.type() == LootEntryType.ITEM)
+                .toList();
     }
 }
