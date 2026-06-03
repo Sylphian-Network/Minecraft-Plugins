@@ -41,7 +41,7 @@ import java.util.Random;
  * <p>Usage: {@code /sylphian-fishing <subcommand>}</p>
  *
  * <ul>
- *   <li>{@code reload} — reloads config.yml and fish.yml without restarting</li>
+ *   <li>{@code reload} — reloads config.yml and loot_table.yml without restarting</li>
  *   <li>{@code test-effect <rarity>} — triggers rarity catch effects at the player's target location</li>
  *   <li>{@code test-fishing <count> [biome] [weather] [y] [time]} — simulates fishing catches and prints distribution</li>
  *   <li>{@code give-bait <bait-id> [amount]} — gives the executing player a bait item</li>

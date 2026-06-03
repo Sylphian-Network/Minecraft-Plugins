@@ -1,6 +1,6 @@
 package net.sylphian.minecraft.fishing.config;
 
-import net.sylphian.minecraft.fishing.fish.FishEntry;
+import net.sylphian.minecraft.fishing.fish.LootEntry;
 import net.sylphian.minecraft.fishing.fish.Rarity;
 import net.sylphian.minecraft.fishing.services.LootService;
 import org.bukkit.Material;
@@ -17,9 +17,9 @@ import java.util.Objects;
 import java.util.logging.Logger;
 
 /**
- * Loads and parses fish definitions from {@code fish.yml}.
+ * Loads and parses fish definitions from {@code loot_table.yml}.
  *
- * <p>Each entry in the {@code fish} section supports the following fields:</p>
+ * <p>Each entry in the {@code entries} section supports the following fields:</p>
  *
  * <dl>
  *   <dt>{@code material} <i>(required)</i></dt>
@@ -52,36 +52,36 @@ import java.util.logging.Logger;
  *       where {@code min-time} is greater than {@code max-time}.</dd>
  * </dl>
  *
- * @see net.sylphian.minecraft.fishing.fish.FishEntry
+ * @see LootEntry
  * @see LootService
  */
-public class FishConfigLoader {
+public class LootTableConfigLoader {
 
-    private final FileConfiguration fishConfig;
+    private final FileConfiguration lootTableConfig;
     private final Logger logger;
 
     /**
-     * Constructs a new FishConfigLoader.
+     * Constructs a new LootTableConfigLoader.
      *
-     * @param fishConfig the configuration containing fish definitions
+     * @param lootTableConfig the configuration containing fish definitions
      */
-    public FishConfigLoader(FileConfiguration fishConfig, Logger logger) {
-        this.fishConfig = fishConfig;
+    public LootTableConfigLoader(FileConfiguration lootTableConfig, Logger logger) {
+        this.lootTableConfig = lootTableConfig;
         this.logger = logger;
     }
 
     /**
-     * Parses all fish entries from the configuration.
+     * Parses all loot table entries from the configuration.
      *
-     * @return a list of parsed FishEntry objects
-     * @throws IllegalArgumentException if a fish has an undefined rarity
+     * @return a list of parsed LootEntry objects
+     * @throws IllegalArgumentException if an entry has an undefined rarity
      */
-    public List<FishEntry> loadFish() {
-        List<FishEntry> entries = new ArrayList<>();
-        ConfigurationSection fishSection = fishConfig.getConfigurationSection("fish");
+    public List<LootEntry> loadEntries() {
+        List<LootEntry> entries = new ArrayList<>();
+        ConfigurationSection fishSection = lootTableConfig.getConfigurationSection("entries");
 
         if (fishSection == null) {
-            logger.warning("No 'fish' section found in fish.yml — no fish will be registered.");
+            logger.warning("No 'entries' section found in loot_table.yml — no entries will be registered.");
             return entries;
         }
 
@@ -95,7 +95,7 @@ public class FishConfigLoader {
             String rarityId = section.getString("rarity", "COMMON");
             Rarity rarity = Rarity.getById(rarityId);
             if (rarity == null) {
-                logger.warning("Unknown rarity '" + rarityId + "' for fish '" + key + "' - skipping.");
+                logger.warning("Unknown rarity '" + rarityId + "' for entry '" + key + "' - skipping.");
                 continue;
             }
             int weight          = section.getInt("weight", 10);
@@ -109,16 +109,16 @@ public class FishConfigLoader {
             Long minTime = section.contains("min-time") ? section.getLong("min-time") : null;
             Long maxTime = section.contains("max-time") ? section.getLong("max-time") : null;
 
-            entries.add(new FishEntry(key, material, displayName, description,
+            entries.add(new LootEntry(key, material, displayName, description,
                     rarity, weight, biomes, minWeight, maxWeight, minY, maxY, minTime, maxTime));
         }
 
-        logger.info("Fish loading complete [" + entries.size() + "] fish(s) registered.");
+        logger.info("Loot table loading complete [" + entries.size() + "] entries registered.");
         return entries;
     }
 
     /**
-     * Parses the biome restrictions for a fish.
+     * Parses the biome restrictions for a loot entry.
      * If "ALL" is specified, the fish can be caught anywhere.
      *
      * @param section the configuration section for a specific fish

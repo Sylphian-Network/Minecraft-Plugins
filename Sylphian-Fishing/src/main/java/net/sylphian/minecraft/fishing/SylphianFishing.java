@@ -7,15 +7,12 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.sylphian.minecraft.database.DatabaseService;
 import net.sylphian.minecraft.fishing.commands.EncyclopaediaCommand;
 import net.sylphian.minecraft.fishing.commands.SylphianFishingCommand;
-import net.sylphian.minecraft.fishing.config.BaitConfig;
-import net.sylphian.minecraft.fishing.config.BaitConfigLoader;
-import net.sylphian.minecraft.fishing.config.FishConfigLoader;
-import net.sylphian.minecraft.fishing.config.ConfigLoader;
+import net.sylphian.minecraft.fishing.config.*;
 import net.sylphian.minecraft.fishing.db.migrations.Migration001CreateFishEncyclopaedia;
 import net.sylphian.minecraft.fishing.db.repositories.FishEncyclopaediaRepository;
 import net.sylphian.minecraft.fishing.listeners.BaitListener;
 import net.sylphian.minecraft.fishing.services.*;
-import net.sylphian.minecraft.fishing.fish.FishEntry;
+import net.sylphian.minecraft.fishing.fish.LootEntry;
 import net.sylphian.minecraft.fishing.gui.EncyclopaediaMenu;
 import net.sylphian.minecraft.fishing.listeners.EncyclopaediaListener;
 import net.sylphian.minecraft.fishing.listeners.FishingListener;
@@ -50,7 +47,7 @@ public class SylphianFishing extends JavaPlugin {
 
     private BaitListener baitListener;
 
-    private File fishFile;
+    private File lootTableFile;
     private File baitFile;
 
     /**
@@ -60,7 +57,7 @@ public class SylphianFishing extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        saveResource("fish.yml", false);
+        saveResource("loot_table.yml", false);
         saveResource("baits.yml", false);
 
         // Register database migrations for the fishing encyclopaedia
@@ -71,9 +68,9 @@ public class SylphianFishing extends JavaPlugin {
 
         ConfigLoader configLoader = new ConfigLoader(getConfig(), getLogger());
 
-        this.fishFile = new File(getDataFolder(), "fish.yml");
-        FileConfiguration fishConfig = YamlConfiguration.loadConfiguration(fishFile);
-        List<FishEntry> fish = new FishConfigLoader(fishConfig, getLogger()).loadFish();
+        this.lootTableFile = new File(getDataFolder(), "loot_table.yml");
+        FileConfiguration lootTableFile = YamlConfiguration.loadConfiguration(this.lootTableFile);
+        List<LootEntry> lootTableEntries = new LootTableConfigLoader(lootTableFile, getLogger()).loadEntries();
 
         this.baitFile = new File(getDataFolder(), "baits.yml");
         FileConfiguration baitConfig = YamlConfiguration.loadConfiguration(baitFile);
@@ -84,7 +81,7 @@ public class SylphianFishing extends JavaPlugin {
         this.baitZoneService = new BaitZoneService(baits);
         this.baitZoneService.start(this);
         this.catchEffectService = new CatchEffectService(configLoader, getLogger());
-        this.lootService = new LootService(fish, configLoader);
+        this.lootService = new LootService(lootTableEntries, configLoader);
         this.biteTimerService = new BiteTimerService(configLoader, lootService, baitZoneService, getLogger());
 
         this.baitListener = new BaitListener(baitZoneService, this);
@@ -104,7 +101,7 @@ public class SylphianFishing extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EncyclopaediaListener(), this);
         getServer().getPluginManager().registerEvents(new SuperFishEnchantmentListener(mutationService), this);
 
-        this.encyclopaediaMenu = new EncyclopaediaMenu(fish, encyclopaediaRepository, this);
+        this.encyclopaediaMenu = new EncyclopaediaMenu(lootTableEntries, encyclopaediaRepository, this);
 
         getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
             Commands commands = event.registrar();
@@ -128,7 +125,7 @@ public class SylphianFishing extends JavaPlugin {
     }
 
     /**
-     * Reloads config.yml and fish.yml from disk and pushes the updated
+     * Reloads config.yml and loot_table.yml from disk and pushes the updated
      * configuration into all dependent services without a restart.
      * If parsing fails, the existing configuration is kept and the error
      * is logged to console.
@@ -139,20 +136,20 @@ public class SylphianFishing extends JavaPlugin {
     public void reload(CommandSender sender) {
         try {
             reloadConfig();
-            FileConfiguration fishConfig = YamlConfiguration.loadConfiguration(fishFile);
+            FileConfiguration fishConfig = YamlConfiguration.loadConfiguration(lootTableFile);
             FileConfiguration baitConfig = YamlConfiguration.loadConfiguration(baitFile);
 
             ConfigLoader newConfig = new ConfigLoader(getConfig(), getLogger());
-            List<FishEntry> newFish = new FishConfigLoader(fishConfig, getLogger()).loadFish();
+            List<LootEntry> newLootTableEntries = new LootTableConfigLoader(fishConfig, getLogger()).loadEntries();
             Map<String, BaitConfig> newBaits = new BaitConfigLoader(baitConfig, getLogger()).loadBaits();
 
-            lootService.reload(newConfig, newFish);
+            lootService.reload(newConfig, newLootTableEntries);
             catchEffectService.reload(newConfig);
             mutationService.reload(newConfig);
             biteTimerService.reload(newConfig);
             baitZoneService.reload(newBaits);
 
-            encyclopaediaMenu.reload(newFish);
+            encyclopaediaMenu.reload(newLootTableEntries);
 
             getLogger().info("Configuration reloaded successfully.");
             if (sender != null) {

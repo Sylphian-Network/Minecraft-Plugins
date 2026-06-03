@@ -1,6 +1,6 @@
 package net.sylphian.minecraft.fishing.fish;
 
-import net.sylphian.minecraft.fishing.config.FishConfigLoader;
+import net.sylphian.minecraft.fishing.config.LootTableConfigLoader;
 import net.sylphian.minecraft.fishing.services.LootService;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
@@ -35,14 +35,14 @@ import java.util.Random;
  * the fish is catchable from dusk through to morning.</p>
  *
  * @see LootService
- * @see FishConfigLoader
+ * @see LootTableConfigLoader
  */
-public record FishEntry(String id, Material material, String displayName, String description, Rarity rarity, int weight,
+public record LootEntry(String id, Material material, String displayName, String description, Rarity rarity, int weight,
                         List<Biome> biomes, double minWeight, double maxWeight, Integer minY, Integer maxY,
                         Long minTime, Long maxTime) {
 
     /**
-     * Constructs a new FishEntry.
+     * Constructs a new LootEntry.
      *
      * @param id          unique identifier for the fish
      * @param material    the item material to use
@@ -58,7 +58,7 @@ public record FishEntry(String id, Material material, String displayName, String
      * @param minTime     minimum world time in ticks to catch this fish, or null for no restriction
      * @param maxTime     maximum world time in ticks to catch this fish, or null for no restriction
      */
-    public FishEntry {
+    public LootEntry {
     }
 
     /**

@@ -2,11 +2,8 @@ package net.sylphian.minecraft.fishing.services;
 
 import net.sylphian.minecraft.fishing.config.BaitConfig;
 import net.sylphian.minecraft.fishing.config.ConfigLoader;
-import net.sylphian.minecraft.fishing.fish.CatchResult;
-import net.sylphian.minecraft.fishing.fish.FishEntry;
-import net.sylphian.minecraft.fishing.fish.Rarity;
+import net.sylphian.minecraft.fishing.fish.*;
 import net.sylphian.minecraft.fishing.util.ItemBuilder;
-import net.sylphian.minecraft.fishing.fish.WeatherCondition;
 import org.bukkit.block.Biome;
 import org.bukkit.inventory.ItemStack;
 
@@ -36,13 +33,13 @@ import java.util.stream.Collectors;
  * applies a multiplier to each rarity's base chance. Multipliers are loaded from
  * {@code config.yml} and clamped to a maximum of {@code 1.0}.</p>
  *
- * @see net.sylphian.minecraft.fishing.fish.FishEntry
+ * @see LootEntry
  * @see net.sylphian.minecraft.fishing.fish.Rarity
  * @see WeatherCondition
  */
 public class LootService {
 
-    private Map<Rarity, List<FishEntry>> poolsByRarity;
+    private Map<Rarity, List<LootEntry>> poolsByRarity;
     private ConfigLoader config;
     private final Random random = new Random();
 
@@ -52,9 +49,9 @@ public class LootService {
      * @param allFish the list of all available fish entries
      * @param config  the configuration loader for retrieving multipliers
      */
-    public LootService(List<FishEntry> allFish, ConfigLoader config) {
+    public LootService(List<LootEntry> allFish, ConfigLoader config) {
         this.poolsByRarity = allFish.stream()
-                .collect(Collectors.groupingBy(FishEntry::rarity));
+                .collect(Collectors.groupingBy(LootEntry::rarity));
         this.config = config;
     }
 
@@ -93,7 +90,7 @@ public class LootService {
      * @throws IllegalStateException if no fish are configured for the given context
      */
     public CatchResult rollCatch(Biome biome, WeatherCondition weather, double hookY, long worldTime, List<BaitConfig> baitBonuses) {
-        List<FishEntry> eligiblePool = poolsByRarity.values().stream()
+        List<LootEntry> eligiblePool = poolsByRarity.values().stream()
                 .flatMap(List::stream)
                 .filter(f -> f.appliesToBiome(biome))
                 .filter(f -> f.appliesToY(hookY))
@@ -103,12 +100,12 @@ public class LootService {
         if (eligiblePool.isEmpty()) {
             throw new IllegalStateException("No fish configured for biome: " + biome.getKey().value()
                     + " at Y: " + (int) hookY + " at time: " + worldTime
-                    + " - check fish.yml has fish covering this biome, height, and time.");
+                    + " - check loot_table.yml has fish covering this biome, height, and time.");
         }
 
         Rarity rolledRarity = rollRarity(weather, baitBonuses);
 
-        List<FishEntry> rarityPool = eligiblePool.stream()
+        List<LootEntry> rarityPool = eligiblePool.stream()
                 .filter(f -> f.rarity().equals(rolledRarity))
                 .toList();
 
@@ -154,7 +151,7 @@ public class LootService {
      * @param weather the current weather condition
      * @return the selected fish entry
      */
-    private FishEntry weightedPickByRarity(List<FishEntry> pool, WeatherCondition weather) {
+    private LootEntry weightedPickByRarity(List<LootEntry> pool, WeatherCondition weather) {
         // Weight each fish by its rarity's effective chance
         double totalWeight = pool.stream()
                 .mapToDouble(f -> {
@@ -167,7 +164,7 @@ public class LootService {
         double roll = random.nextDouble() * totalWeight;
         double cursor = 0;
 
-        for (FishEntry fish : pool) {
+        for (LootEntry fish : pool) {
             double chance = fish.rarity().getChance();
             double multiplier = config.getWeatherMultiplier(weather, fish.rarity());
             cursor += Math.min(1.0, chance * multiplier);
@@ -183,13 +180,13 @@ public class LootService {
      * @param pool the list of fish entries to pick from
      * @return the selected fish entry
      */
-    private FishEntry weightedPick(List<FishEntry> pool) {
-        int totalWeight = pool.stream().mapToInt(FishEntry::weight).sum();
+    private LootEntry weightedPick(List<LootEntry> pool) {
+        int totalWeight = pool.stream().mapToInt(LootEntry::weight).sum();
         int roll = random.nextInt(totalWeight);
         int cursor = 0;
 
         // Iterate through the pool and accumulate weights until the roll is matched
-        for (FishEntry fish : pool) {
+        for (LootEntry fish : pool) {
             cursor += fish.weight();
             if (roll < cursor) return fish;
         }
@@ -203,7 +200,7 @@ public class LootService {
      * @param fish the fish that was caught
      * @return the complete catch result
      */
-    private CatchResult buildCatchResult(FishEntry fish) {
+    private CatchResult buildCatchResult(LootEntry fish) {
         double weight = fish.rollWeight(random);
         ItemStack itemStack = buildItemStack(fish, weight);
         return new CatchResult(fish.id(), fish.rarity(), weight, itemStack);
@@ -240,7 +237,7 @@ public class LootService {
      * @param caughtWeight the rolled weight of the fish
      * @return the built ItemStack
      */
-    private ItemStack buildItemStack(FishEntry fish, double caughtWeight) {
+    private ItemStack buildItemStack(LootEntry fish, double caughtWeight) {
         return new ItemBuilder(fish.material())
                 .name(fish.displayName())
                 .loreStrings(buildLore(fish, caughtWeight))
@@ -254,7 +251,7 @@ public class LootService {
      * @param caughtWeight the rolled weight of the fish
      * @return a list of lore strings
      */
-    private List<String> buildLore(FishEntry fish, double caughtWeight) {
+    private List<String> buildLore(LootEntry fish, double caughtWeight) {
         List<String> lore = new ArrayList<>();
 
         if (!fish.description().isEmpty()) {
@@ -275,9 +272,9 @@ public class LootService {
      * @param config  the new configuration loader
      * @param allFish the updated list of all fish entries
      */
-    public void reload(ConfigLoader config, List<FishEntry> allFish) {
+    public void reload(ConfigLoader config, List<LootEntry> allFish) {
         this.config = config;
         this.poolsByRarity = allFish.stream()
-                .collect(Collectors.groupingBy(FishEntry::rarity));
+                .collect(Collectors.groupingBy(LootEntry::rarity));
     }
 }

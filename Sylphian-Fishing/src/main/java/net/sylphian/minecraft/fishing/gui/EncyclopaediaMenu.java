@@ -4,7 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.fishing.db.models.FishEncyclopaediaModel;
 import net.sylphian.minecraft.fishing.db.repositories.FishEncyclopaediaRepository;
-import net.sylphian.minecraft.fishing.fish.FishEntry;
+import net.sylphian.minecraft.fishing.fish.LootEntry;
 import net.sylphian.minecraft.fishing.util.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -31,19 +31,19 @@ public class EncyclopaediaMenu {
 
     private static final MiniMessage MINI = MiniMessage.miniMessage();
 
-    private List<FishEntry> fishEntries;
+    private List<LootEntry> entries;
     private final FishEncyclopaediaRepository repository;
     private final JavaPlugin plugin;
 
     /**
      * Constructs a new EncyclopaediaMenu.
      *
-     * @param fishEntries all available fish in the plugin
+     * @param entries all available fish in the plugin
      * @param repository  repository for player catch data
      * @param plugin      the plugin instance
      */
-    public EncyclopaediaMenu(List<FishEntry> fishEntries, FishEncyclopaediaRepository repository, JavaPlugin plugin) {
-        this.fishEntries = fishEntries;
+    public EncyclopaediaMenu(List<LootEntry> entries, FishEncyclopaediaRepository repository, JavaPlugin plugin) {
+        this.entries = entries;
         this.repository = repository;
         this.plugin = plugin;
     }
@@ -92,17 +92,17 @@ public class EncyclopaediaMenu {
         fillBottomRow(inventory);
 
         int start = page * PAGE_SIZE;
-        int end = Math.min(start + PAGE_SIZE, fishEntries.size());
+        int end = Math.min(start + PAGE_SIZE, entries.size());
 
         // Fill the inventory with fish entries for the current page
         for (int i = start; i < end; i++) {
-            FishEntry fish = fishEntries.get(i);
+            LootEntry entry = entries.get(i);
 
-            // Check if the player has caught this fish before
-            boolean unlocked = discovered.containsKey(fish.id());
+            // Check if the player has caught this entry before
+            boolean unlocked = discovered.containsKey(entry.id());
 
-            // Show fish info if unlocked, otherwise show as unknown
-            inventory.setItem(i - start, unlocked ? createUnlockedFish(fish, discovered) : createUnknownFish());
+            // Show entry info if unlocked, otherwise show as unknown
+            inventory.setItem(i - start, unlocked ? createUnlockedFish(entry, discovered) : createUnknownFish());
         }
 
         // Navigation and info items
@@ -133,7 +133,7 @@ public class EncyclopaediaMenu {
                 .build();
     }
 
-    private ItemStack createUnlockedFish(FishEntry fish, Map<String, FishEncyclopaediaModel> discovered) {
+    private ItemStack createUnlockedFish(LootEntry fish, Map<String, FishEncyclopaediaModel> discovered) {
         List<String> lore = new ArrayList<>(Arrays.asList(fish.description().split("\n")));
 
         FishEncyclopaediaModel model = discovered.get(fish.id());
@@ -182,7 +182,7 @@ public class EncyclopaediaMenu {
      * @param fish the fish entry to format
      * @return a string such as "Below Y 60", "Above Y -64", or "Y -64 to 20"
      */
-    private String formatYRestriction(FishEntry fish) {
+    private String formatYRestriction(LootEntry fish) {
         if (fish.minY() != null && fish.maxY() != null) {
             return "Y " + fish.minY() + " to " + fish.maxY();
         } else if (fish.minY() != null) {
@@ -199,7 +199,7 @@ public class EncyclopaediaMenu {
      * @param fish the fish entry to format
      * @return a string such as "18:00 – 06:00" or "After 12:00"
      */
-    private String formatTimeRestriction(FishEntry fish) {
+    private String formatTimeRestriction(LootEntry fish) {
         if (fish.minTime() != null && fish.maxTime() != null) {
             return ticksToTime(fish.minTime()) + " – " + ticksToTime(fish.maxTime());
         } else if (fish.minTime() != null) {
@@ -246,7 +246,7 @@ public class EncyclopaediaMenu {
     private ItemStack createInfoItem(int discovered) {
         return new ItemBuilder(Material.BOOK)
                 .name("<aqua>Fishing Progress")
-                .lore("<gray>Discovered: <white>" + discovered + "/" + fishEntries.size())
+                .lore("<gray>Discovered: <white>" + discovered + "/" + entries.size())
                 .build();
     }
 
@@ -254,7 +254,7 @@ public class EncyclopaediaMenu {
         return Math.max(
                 0,
                 (int) Math.ceil(
-                        (double) fishEntries.size()
+                        (double) entries.size()
                                 / PAGE_SIZE
                 ) - 1
         );
@@ -265,7 +265,7 @@ public class EncyclopaediaMenu {
      *
      * @param fishEntries the updated list of all available fish
      */
-    public void reload(List<FishEntry> fishEntries) {
-        this.fishEntries = fishEntries;
+    public void reload(List<LootEntry> fishEntries) {
+        this.entries = fishEntries;
     }
 }
