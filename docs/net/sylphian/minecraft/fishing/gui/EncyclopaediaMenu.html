@@ -96,7 +96,7 @@ and building the inventory with appropriate items and lore.</div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.List,net.sylphian.minecraft.fishing.db.repositories.FishEncyclopaediaRepository,org.bukkit.plugin.java.JavaPlugin)" class="member-name-link">EncyclopaediaMenu</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a>&gt;&nbsp;fishEntries,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.List,net.sylphian.minecraft.fishing.db.repositories.FishEncyclopaediaRepository,org.bukkit.plugin.java.JavaPlugin)" class="member-name-link">EncyclopaediaMenu</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../fish/LootEntry.html" title="class in net.sylphian.minecraft.fishing.fish">LootEntry</a>&gt;&nbsp;entries,
  <a href="../db/repositories/FishEncyclopaediaRepository.html" title="class in net.sylphian.minecraft.fishing.db.repositories">FishEncyclopaediaRepository</a>&nbsp;repository,
  org.bukkit.plugin.java.JavaPlugin&nbsp;plugin)</code></div>
 <div class="col-last even-row-color">
@@ -123,7 +123,7 @@ and building the inventory with appropriate items and lore.</div>
 <div class="block">Opens the encyclopaedia GUI for a player on a specific page.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reload(java.util.List)" class="member-name-link">reload</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a>&gt;&nbsp;fishEntries)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reload(java.util.List)" class="member-name-link">reload</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../fish/LootEntry.html" title="class in net.sylphian.minecraft.fishing.fish">LootEntry</a>&gt;&nbsp;entries)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Reloads the menu with an updated list of fish entries.</div>
 </div>
@@ -148,13 +148,13 @@ and building the inventory with appropriate items and lore.</div>
 <section class="detail" id="&lt;init&gt;(java.util.List,net.sylphian.minecraft.fishing.db.repositories.FishEncyclopaediaRepository,org.bukkit.plugin.java.JavaPlugin)">
 <h3>EncyclopaediaMenu</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">EncyclopaediaMenu</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a>&gt;&nbsp;fishEntries,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">EncyclopaediaMenu</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../fish/LootEntry.html" title="class in net.sylphian.minecraft.fishing.fish">LootEntry</a>&gt;&nbsp;entries,
  <a href="../db/repositories/FishEncyclopaediaRepository.html" title="class in net.sylphian.minecraft.fishing.db.repositories">FishEncyclopaediaRepository</a>&nbsp;repository,
  org.bukkit.plugin.java.JavaPlugin&nbsp;plugin)</span></div>
 <div class="block">Constructs a new EncyclopaediaMenu.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>fishEntries</code> - all available fish in the plugin</dd>
+<dd><code>entries</code> - all available loot entries; non-<a href="../fish/LootEntryType.html#ITEM"><code>LootEntryType.ITEM</code></a> entries are excluded</dd>
 <dd><code>repository</code> - repository for player catch data</dd>
 <dd><code>plugin</code> - the plugin instance</dd>
 </dl>
@@ -189,11 +189,11 @@ Fetches player catch data from the database asynchronously.</div>
 <section class="detail" id="reload(java.util.List)">
 <h3>reload</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">reload</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a>&gt;&nbsp;fishEntries)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">reload</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../fish/LootEntry.html" title="class in net.sylphian.minecraft.fishing.fish">LootEntry</a>&gt;&nbsp;entries)</span></div>
 <div class="block">Reloads the menu with an updated list of fish entries.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>fishEntries</code> - the updated list of all available fish</dd>
+<dd><code>entries</code> - all available loot entries; non-<a href="../fish/LootEntryType.html#ITEM"><code>LootEntryType.ITEM</code></a> entries are excluded</dd>
 </dl>
 </div>
 </section>

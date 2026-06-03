@@ -116,6 +116,46 @@ of the fish they caught.</div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Loads and manages plugin configuration.</div>
 </div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="net/sylphian/minecraft/crates/config/CrateConfig.html" title="class in net.sylphian.minecraft.crates.config">CrateConfig</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab4">
+<div class="block">Immutable definition of a crate and its reward pool.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/crates/config/CrateConfigLoader.html" title="class in net.sylphian.minecraft.crates.config">CrateConfigLoader</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Loads and parses crate definitions from <code>crates.yml</code>.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/crates/key/CrateKey.html" title="class in net.sylphian.minecraft.crates.key">CrateKey</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Utility class for creating physical crate key items and reading their identity.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="net/sylphian/minecraft/crates/api/CratesAPI.html" title="interface in net.sylphian.minecraft.crates.api">CratesAPI</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="block">Public API for Sylphian-Crates.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/crates/api/CratesAPIImpl.html" title="class in net.sylphian.minecraft.crates.api">CratesAPIImpl</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Default implementation of <a href="net/sylphian/minecraft/crates/api/CratesAPI.html" title="interface in net.sylphian.minecraft.crates.api"><code>CratesAPI</code></a>.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/crates/command/CratesCommand.html" title="class in net.sylphian.minecraft.crates.command">CratesCommand</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Opens the crates GUI for the executing player.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/crates/service/CrateService.html" title="class in net.sylphian.minecraft.crates.service">CrateService</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Service responsible for rolling and granting crate rewards.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/crates/gui/CratesGUI.html" title="class in net.sylphian.minecraft.crates.gui">CratesGUI</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Builds and opens the main crates GUI for a player.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/crates/gui/CratesGUIHolder.html" title="class in net.sylphian.minecraft.crates.gui">CratesGUIHolder</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Custom <code>InventoryHolder</code> for the crates GUI.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/crates/listener/CratesListener.html" title="class in net.sylphian.minecraft.crates.listener">CratesListener</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Handles all inventory events for the crates and reward selection GUIs.</div>
+</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/database/DatabaseService.html" title="class in net.sylphian.minecraft.database">DatabaseService</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Core service layer providing database access and migration management.</div>
@@ -136,33 +176,25 @@ of the fish they caught.</div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Manages the generation and display of the fish encyclopaedia GUI.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/config/FishConfigLoader.html" title="class in net.sylphian.minecraft.fishing.config">FishConfigLoader</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/services/mutation/FishContext.html" title="class in net.sylphian.minecraft.fishing.services.mutation">FishContext</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Loads and parses fish definitions from <code>fish.yml</code>.</div>
-</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/services/mutation/FishContext.html" title="class in net.sylphian.minecraft.fishing.services.mutation">FishContext</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Contextual information for a fish catch.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="net/sylphian/minecraft/fishing/db/dao/FishEncyclopaediaDao.html" title="interface in net.sylphian.minecraft.fishing.db.dao">FishEncyclopaediaDao</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="net/sylphian/minecraft/fishing/db/dao/FishEncyclopaediaDao.html" title="interface in net.sylphian.minecraft.fishing.db.dao">FishEncyclopaediaDao</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Data Access Object for the fish_encyclopaedia table.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="net/sylphian/minecraft/fishing/db/dao/FishEncyclopaediaDao.FishEncyclopaediaRow.html" title="class in net.sylphian.minecraft.fishing.db.dao">FishEncyclopaediaDao.FishEncyclopaediaRow</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab4">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab4"><a href="net/sylphian/minecraft/fishing/db/dao/FishEncyclopaediaDao.FishEncyclopaediaRow.html" title="class in net.sylphian.minecraft.fishing.db.dao">FishEncyclopaediaDao.FishEncyclopaediaRow</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab4">
 <div class="block">Represents a raw row from the fish_encyclopaedia table.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab4"><a href="net/sylphian/minecraft/fishing/db/models/FishEncyclopaediaModel.html" title="class in net.sylphian.minecraft.fishing.db.models">FishEncyclopaediaModel</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab4">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="net/sylphian/minecraft/fishing/db/models/FishEncyclopaediaModel.html" title="class in net.sylphian.minecraft.fishing.db.models">FishEncyclopaediaModel</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab4">
 <div class="block">Data model representing a player's entry in the fish encyclopaedia.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/db/repositories/FishEncyclopaediaRepository.html" title="class in net.sylphian.minecraft.fishing.db.repositories">FishEncyclopaediaRepository</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/db/repositories/FishEncyclopaediaRepository.html" title="class in net.sylphian.minecraft.fishing.db.repositories">FishEncyclopaediaRepository</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Implementation of IFishEncyclopaediaRepository using JDBI.</div>
-</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab4"><a href="net/sylphian/minecraft/fishing/fish/FishEntry.html" title="class in net.sylphian.minecraft.fishing.fish">FishEntry</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab4">
-<div class="block">Represents a single type of fish that can be caught through the fishing system.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/sidebar/FishingContributor.html" title="class in net.sylphian.minecraft.fishing.sidebar">FishingContributor</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
@@ -192,13 +224,37 @@ of the fish they caught.</div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Interface for session data persistence operations.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/util/ItemBuilder.html" title="class in net.sylphian.minecraft.fishing.util">ItemBuilder</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/crates/util/ItemBuilder.html" title="class in net.sylphian.minecraft.crates.util">ItemBuilder</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Utility class for building ItemStacks with fluent API.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/services/LootService.html" title="class in net.sylphian.minecraft.fishing.services">LootService</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/util/ItemBuilder.html" title="class in net.sylphian.minecraft.fishing.util">ItemBuilder</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Utility class for building ItemStacks with fluent API.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab4"><a href="net/sylphian/minecraft/crates/config/KeyConfig.html" title="class in net.sylphian.minecraft.crates.config">KeyConfig</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab4">
+<div class="block">Immutable definition of a physical crate key item.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/crates/config/KeyConfigLoader.html" title="class in net.sylphian.minecraft.crates.config">KeyConfigLoader</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Loads and parses key definitions from <code>keys.yml</code>.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab4"><a href="net/sylphian/minecraft/fishing/fish/LootEntry.html" title="class in net.sylphian.minecraft.fishing.fish">LootEntry</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab4">
+<div class="block">Represents a single entry in the fishing loot table.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab3"><a href="net/sylphian/minecraft/fishing/fish/LootEntryType.html" title="enum class in net.sylphian.minecraft.fishing.fish">LootEntryType</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab3">
+<div class="block">Defines the types of entries that can appear in the fishing loot table.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/services/LootService.html" title="class in net.sylphian.minecraft.fishing.services">LootService</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Manages the loot rolling logic for the fishing system.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/config/LootTableConfigLoader.html" title="class in net.sylphian.minecraft.fishing.config">LootTableConfigLoader</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Loads and parses fish definitions from <code>loot_table.yml</code>.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/verify/paper/util/MessageUtils.html" title="class in net.sylphian.verify.paper.util">MessageUtils</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
@@ -318,6 +374,23 @@ specific rarity is caught.</div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab4">
 <div class="block">Title shown to the catching player.</div>
 </div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="net/sylphian/minecraft/crates/config/RewardEntry.html" title="class in net.sylphian.minecraft.crates.config">RewardEntry</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab4">
+<div class="block">Immutable definition of a single reward entry in a crate's reward pool.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/crates/gui/RewardSelectionGUI.html" title="class in net.sylphian.minecraft.crates.gui">RewardSelectionGUI</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">GUI shown when a player must pick from multiple rolled rewards.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/crates/gui/RewardSelectionGUIHolder.html" title="class in net.sylphian.minecraft.crates.gui">RewardSelectionGUIHolder</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Holder used to identify reward selection inventories in events
+and carry the rolled rewards for click handling.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab3"><a href="net/sylphian/minecraft/crates/config/RewardType.html" title="enum class in net.sylphian.minecraft.crates.config">RewardType</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab3">
+<div class="block">Defines the types of rewards that can be granted when a crate is opened.</div>
+</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="net/sylphian/minecraft/scoreboard/config/ScoreboardConfig.html" title="class in net.sylphian.minecraft.scoreboard.config">ScoreboardConfig</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab4">
 <div class="block">Immutable configuration for the Sylphian Scoreboard sidebar appearance.</div>
@@ -365,6 +438,14 @@ specific rarity is caught.</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/services/mutation/impl/SuperFishMutation.html" title="class in net.sylphian.minecraft.fishing.services.mutation.impl">SuperFishMutation</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A mutation that applies the Super Fish enchantment to a caught fish.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/crates/SylphianCrates.html" title="class in net.sylphian.minecraft.crates">SylphianCrates</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Main plugin class for Sylphian-Crates.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/crates/command/SylphianCratesCommand.html" title="class in net.sylphian.minecraft.crates.command">SylphianCratesCommand</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Root administrative command for Sylphian-Crates.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/database/SylphianDatabase.html" title="class in net.sylphian.minecraft.database">SylphianDatabase</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">

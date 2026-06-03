@@ -57,7 +57,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(java.lang.String,java.lang.String,org.bukkit.Material,int,int,java.lang.String,double,java.util.Map)" tabindex="0">BaitConfig(String, String, Material, int, int, String, double, Map)</a></li>
+<li><a href="#%3Cinit%3E(java.lang.String,java.lang.String,org.bukkit.Material,int,int,java.lang.String,double,double,java.util.Map)" tabindex="0">BaitConfig(String, String, Material, int, int, String, double, double, Map)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -73,6 +73,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#durationSeconds()" tabindex="0">durationSeconds()</a></li>
 <li><a href="#particle()" tabindex="0">particle()</a></li>
 <li><a href="#biteTimerMultiplier()" tabindex="0">biteTimerMultiplier()</a></li>
+<li><a href="#mutationChanceMultiplier()" tabindex="0">mutationChanceMultiplier()</a></li>
 <li><a href="#rarityMultipliers()" tabindex="0">rarityMultipliers()</a></li>
 </ol>
 </li>
@@ -98,11 +99,12 @@ loadScripts(document, 'script');</script>
 <dd><code><span id="param-durationSeconds">durationSeconds</span></code> - how long the zone persists after landing</dd>
 <dd><code><span id="param-particle">particle</span></code> - Bukkit Particle enum name rendered on the zone ring</dd>
 <dd><code><span id="param-biteTimerMultiplier">biteTimerMultiplier</span></code> - multiplier applied to the calculated bite delay (below 1.0 = faster)</dd>
+<dd><code><span id="param-mutationChanceMultiplier">mutationChanceMultiplier</span></code> - multiplier applied to all mutation base chances inside the zone</dd>
 <dd><code><span id="param-rarityMultipliers">rarityMultipliers</span></code> - per-rarity catch chance multipliers applied inside the zone</dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
-<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">BaitConfig</span>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;displayName, org.bukkit.Material&nbsp;material, int&nbsp;radius, int&nbsp;durationSeconds, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;particle, double&nbsp;biteTimerMultiplier, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;&nbsp;rarityMultipliers)
+<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">BaitConfig</span>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;displayName, org.bukkit.Material&nbsp;material, int&nbsp;radius, int&nbsp;durationSeconds, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;particle, double&nbsp;biteTimerMultiplier, double&nbsp;mutationChanceMultiplier, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;&nbsp;rarityMultipliers)
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">Record</a></span></div>
 <div class="block">Immutable configuration for a single bait type.
 
@@ -120,13 +122,14 @@ bonuses applied to any player whose hook lands within the zone.</p></div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,java.lang.String,org.bukkit.Material,int,int,java.lang.String,double,java.util.Map)" class="member-name-link">BaitConfig</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,java.lang.String,org.bukkit.Material,int,int,java.lang.String,double,double,java.util.Map)" class="member-name-link">BaitConfig</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;displayName,
  org.bukkit.Material&nbsp;material,
  int&nbsp;radius,
  int&nbsp;durationSeconds,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;particle,
  double&nbsp;biteTimerMultiplier,
+ double&nbsp;mutationChanceMultiplier,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;&nbsp;rarityMultipliers)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates an instance of a <code>BaitConfig</code> record class.</div>
@@ -186,24 +189,29 @@ bonuses applied to any player whose hook lands within the zone.</p></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <a href="#param-material"><code>material</code></a> record component.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#particle()" class="member-name-link">particle</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mutationChanceMultiplier()" class="member-name-link">mutationChanceMultiplier</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the value of the <a href="#param-mutationChanceMultiplier"><code>mutationChanceMultiplier</code></a> record component.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#particle()" class="member-name-link">particle</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <a href="#param-particle"><code>particle</code></a> record component.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#radius()" class="member-name-link">radius</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#radius()" class="member-name-link">radius</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <a href="#param-radius"><code>radius</code></a> record component.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rarityMultipliers()" class="member-name-link">rarityMultipliers</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rarityMultipliers()" class="member-name-link">rarityMultipliers</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <a href="#param-rarityMultipliers"><code>rarityMultipliers</code></a> record component.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a string representation of this record class.</div>
 </div>
 </div>
@@ -224,7 +232,7 @@ bonuses applied to any player whose hook lands within the zone.</p></div>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(java.lang.String,java.lang.String,org.bukkit.Material,int,int,java.lang.String,double,java.util.Map)">
+<section class="detail" id="&lt;init&gt;(java.lang.String,java.lang.String,org.bukkit.Material,int,int,java.lang.String,double,double,java.util.Map)">
 <h3>BaitConfig</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">BaitConfig</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
@@ -234,6 +242,7 @@ bonuses applied to any player whose hook lands within the zone.</p></div>
  int&nbsp;durationSeconds,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;particle,
  double&nbsp;biteTimerMultiplier,
+ double&nbsp;mutationChanceMultiplier,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;&nbsp;rarityMultipliers)</span></div>
 <div class="block">Creates an instance of a <code>BaitConfig</code> record class.</div>
 <dl class="notes">
@@ -245,6 +254,7 @@ bonuses applied to any player whose hook lands within the zone.</p></div>
 <dd><code>durationSeconds</code> - the value for the <a href="#param-durationSeconds"><code>durationSeconds</code></a> record component</dd>
 <dd><code>particle</code> - the value for the <a href="#param-particle"><code>particle</code></a> record component</dd>
 <dd><code>biteTimerMultiplier</code> - the value for the <a href="#param-biteTimerMultiplier"><code>biteTimerMultiplier</code></a> record component</dd>
+<dd><code>mutationChanceMultiplier</code> - the value for the <a href="#param-mutationChanceMultiplier"><code>mutationChanceMultiplier</code></a> record component</dd>
 <dd><code>rarityMultipliers</code> - the value for the <a href="#param-rarityMultipliers"><code>rarityMultipliers</code></a> record component</dd>
 </dl>
 </div>
@@ -409,6 +419,19 @@ bonuses applied to any player whose hook lands within the zone.</p></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the value of the <a href="#param-biteTimerMultiplier"><code>biteTimerMultiplier</code></a> record component</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="mutationChanceMultiplier()">
+<h3>mutationChanceMultiplier</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">mutationChanceMultiplier</span>()</div>
+<div class="block">Returns the value of the <a href="#param-mutationChanceMultiplier"><code>mutationChanceMultiplier</code></a> record component.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the value of the <a href="#param-mutationChanceMultiplier"><code>mutationChanceMultiplier</code></a> record component</dd>
 </dl>
 </div>
 </section>

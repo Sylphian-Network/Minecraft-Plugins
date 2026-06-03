@@ -57,7 +57,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(net.sylphian.minecraft.fishing.fish.Rarity,org.bukkit.block.Biome,org.bukkit.entity.Player)" tabindex="0">FishContext(Rarity, Biome, Player)</a></li>
+<li><a href="#%3Cinit%3E(net.sylphian.minecraft.fishing.fish.Rarity,org.bukkit.block.Biome,org.bukkit.entity.Player,double)" tabindex="0">FishContext(Rarity, Biome, Player, double)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -65,6 +65,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#getRarity()" tabindex="0">getRarity()</a></li>
 <li><a href="#getBiome()" tabindex="0">getBiome()</a></li>
 <li><a href="#getPlayer()" tabindex="0">getPlayer()</a></li>
+<li><a href="#getMutationChanceMultiplier()" tabindex="0">getMutationChanceMultiplier()</a></li>
 </ol>
 </li>
 </ol>
@@ -97,9 +98,10 @@ rarity of the fish, the biome, or the player who caught it.</div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.sylphian.minecraft.fishing.fish.Rarity,org.bukkit.block.Biome,org.bukkit.entity.Player)" class="member-name-link">FishContext</a><wbr>(<a href="../../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a>&nbsp;rarity,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.sylphian.minecraft.fishing.fish.Rarity,org.bukkit.block.Biome,org.bukkit.entity.Player,double)" class="member-name-link">FishContext</a><wbr>(<a href="../../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a>&nbsp;rarity,
  org.bukkit.block.Biome&nbsp;biome,
- org.bukkit.entity.Player&nbsp;player)</code></div>
+ org.bukkit.entity.Player&nbsp;player,
+ double&nbsp;mutationChanceMultiplier)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Constructs a new FishContext.</div>
 </div>
@@ -120,12 +122,17 @@ rarity of the fish, the biome, or the player who caught it.</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.bukkit.block.Biome</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBiome()" class="member-name-link">getBiome</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.bukkit.entity.Player</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPlayer()" class="member-name-link">getPlayer</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRarity()" class="member-name-link">getRarity</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMutationChanceMultiplier()" class="member-name-link">getMutationChanceMultiplier</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the combined bait multiplier to apply to mutation base chances.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.bukkit.entity.Player</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPlayer()" class="member-name-link">getPlayer</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRarity()" class="member-name-link">getRarity</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -144,18 +151,20 @@ rarity of the fish, the biome, or the player who caught it.</div>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(net.sylphian.minecraft.fishing.fish.Rarity,org.bukkit.block.Biome,org.bukkit.entity.Player)">
+<section class="detail" id="&lt;init&gt;(net.sylphian.minecraft.fishing.fish.Rarity,org.bukkit.block.Biome,org.bukkit.entity.Player,double)">
 <h3>FishContext</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">FishContext</span><wbr><span class="parameters">(<a href="../../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a>&nbsp;rarity,
  org.bukkit.block.Biome&nbsp;biome,
- org.bukkit.entity.Player&nbsp;player)</span></div>
+ org.bukkit.entity.Player&nbsp;player,
+ double&nbsp;mutationChanceMultiplier)</span></div>
 <div class="block">Constructs a new FishContext.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>rarity</code> - the rarity of the caught fish</dd>
 <dd><code>biome</code> - the biome where the fish was caught</dd>
 <dd><code>player</code> - the player who caught the fish</dd>
+<dd><code>mutationChanceMultiplier</code> - combined bait multiplier applied to all mutation base chances</dd>
 </dl>
 </div>
 </section>
@@ -189,6 +198,19 @@ rarity of the fish, the biome, or the player who caught it.</div>
 <h3>getPlayer</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">org.bukkit.entity.Player</span>&nbsp;<span class="element-name">getPlayer</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getMutationChanceMultiplier()">
+<h3>getMutationChanceMultiplier</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getMutationChanceMultiplier</span>()</div>
+<div class="block">Returns the combined bait multiplier to apply to mutation base chances.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the mutation chance multiplier</dd>
+</dl>
 </div>
 </section>
 </li>

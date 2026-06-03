@@ -1,3 +1,12 @@
+net.sylphian.minecraft.crates
+net.sylphian.minecraft.crates.api
+net.sylphian.minecraft.crates.command
+net.sylphian.minecraft.crates.config
+net.sylphian.minecraft.crates.gui
+net.sylphian.minecraft.crates.key
+net.sylphian.minecraft.crates.listener
+net.sylphian.minecraft.crates.service
+net.sylphian.minecraft.crates.util
 net.sylphian.minecraft.database
 net.sylphian.minecraft.database.migrations
 net.sylphian.minecraft.fishing

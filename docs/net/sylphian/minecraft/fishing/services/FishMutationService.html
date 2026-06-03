@@ -200,7 +200,8 @@ based on configuration and catch context.</div>
  org.bukkit.inventory.ItemStack&nbsp;item,
  <a href="mutation/FishContext.html" title="class in net.sylphian.minecraft.fishing.services.mutation">FishContext</a>&nbsp;context)</span></div>
 <div class="block">Attempts to apply all registered and enabled mutations to a caught fish.
-Each mutation has a chance to occur, which is modified by the fish's rarity.</div>
+Each mutation's chance is modified by the fish's rarity multiplier and
+any active bait zone mutation multipliers from the catch context.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>player</code> - the player who caught the fish</dd>

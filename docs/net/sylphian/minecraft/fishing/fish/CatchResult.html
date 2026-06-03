@@ -57,18 +57,19 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(java.lang.String,net.sylphian.minecraft.fishing.fish.Rarity,double,org.bukkit.inventory.ItemStack)" tabindex="0">CatchResult(String, Rarity, double, ItemStack)</a></li>
+<li><a href="#%3Cinit%3E(double,org.bukkit.inventory.ItemStack,net.sylphian.minecraft.fishing.fish.LootEntry)" tabindex="0">CatchResult(double, ItemStack, LootEntry)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
+<li><a href="#fishId()" tabindex="0">fishId()</a></li>
+<li><a href="#rarity()" tabindex="0">rarity()</a></li>
 <li><a href="#toString()" tabindex="0">toString()</a></li>
 <li><a href="#hashCode()" tabindex="0">hashCode()</a></li>
 <li><a href="#equals(java.lang.Object)" tabindex="0">equals(Object)</a></li>
-<li><a href="#fishId()" tabindex="0">fishId()</a></li>
-<li><a href="#rarity()" tabindex="0">rarity()</a></li>
 <li><a href="#weight()" tabindex="0">weight()</a></li>
 <li><a href="#itemStack()" tabindex="0">itemStack()</a></li>
+<li><a href="#entry()" tabindex="0">entry()</a></li>
 </ol>
 </li>
 </ol>
@@ -86,19 +87,16 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>Record Components:</dt>
-<dd><code><span id="param-fishId">fishId</span></code> - the unique ID of the caught fish</dd>
-<dd><code><span id="param-rarity">rarity</span></code> - the rarity of the caught fish</dd>
-<dd><code><span id="param-weight">weight</span></code> - the rolled weight of the fish in kilograms</dd>
-<dd><code><span id="param-itemStack">itemStack</span></code> - the physical item stack representing the fish</dd>
+<dd><code><span id="param-weight">weight</span></code> - the rolled physical weight in kilograms</dd>
+<dd><code><span id="param-itemStack">itemStack</span></code> - the built item for <a href="LootEntryType.html#ITEM"><code>LootEntryType.ITEM</code></a> entries;
+                 <code>null</code> for <a href="LootEntryType.html#CRATE_KEY"><code>LootEntryType.CRATE_KEY</code></a> entries</dd>
+<dd><code><span id="param-entry">entry</span></code> - the originating loot entry</dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
-<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">CatchResult</span>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fishId, <a href="Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a>&nbsp;rarity, double&nbsp;weight, org.bukkit.inventory.ItemStack&nbsp;itemStack)
+<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">CatchResult</span>(double&nbsp;weight, org.bukkit.inventory.ItemStack&nbsp;itemStack, <a href="LootEntry.html" title="class in net.sylphian.minecraft.fishing.fish">LootEntry</a>&nbsp;entry)
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">Record</a></span></div>
-<div class="block">Represents the result of a fishing catch attempt.
-Carries the fish ID, rolled weight, rarity, and built ItemStack
-so that all downstream systems (encyclopaedia, loot display,
-mutation) operate on the same rolled values.</div>
+<div class="block">Represents the result of a fishing catch attempt.</div>
 </div>
 </section>
 <section class="summary">
@@ -111,10 +109,9 @@ mutation) operate on the same rolled values.</div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,net.sylphian.minecraft.fishing.fish.Rarity,double,org.bukkit.inventory.ItemStack)" class="member-name-link">CatchResult</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fishId,
- <a href="Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a>&nbsp;rarity,
- double&nbsp;weight,
- org.bukkit.inventory.ItemStack&nbsp;itemStack)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(double,org.bukkit.inventory.ItemStack,net.sylphian.minecraft.fishing.fish.LootEntry)" class="member-name-link">CatchResult</a><wbr>(double&nbsp;weight,
+ org.bukkit.inventory.ItemStack&nbsp;itemStack,
+ <a href="LootEntry.html" title="class in net.sylphian.minecraft.fishing.fish">LootEntry</a>&nbsp;entry)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates an instance of a <code>CatchResult</code> record class.</div>
 </div>
@@ -132,39 +129,44 @@ mutation) operate on the same rolled values.</div>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="LootEntry.html" title="class in net.sylphian.minecraft.fishing.fish">LootEntry</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#entry()" class="member-name-link">entry</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the value of the <a href="#param-entry"><code>entry</code></a> record component.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fishId()" class="member-name-link">fishId</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of the <a href="#param-fishId"><code>fishId</code></a> record component.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fishId()" class="member-name-link">fishId</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the unique ID of the caught entry.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a hash code value for this object.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.bukkit.inventory.ItemStack</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#itemStack()" class="member-name-link">itemStack</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.bukkit.inventory.ItemStack</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#itemStack()" class="member-name-link">itemStack</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <a href="#param-itemStack"><code>itemStack</code></a> record component.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rarity()" class="member-name-link">rarity</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of the <a href="#param-rarity"><code>rarity</code></a> record component.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rarity()" class="member-name-link">rarity</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the rarity of the caught entry.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a string representation of this record class.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#weight()" class="member-name-link">weight</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#weight()" class="member-name-link">weight</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <a href="#param-weight"><code>weight</code></a> record component.</div>
 </div>
 </div>
@@ -185,20 +187,18 @@ mutation) operate on the same rolled values.</div>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(java.lang.String,net.sylphian.minecraft.fishing.fish.Rarity,double,org.bukkit.inventory.ItemStack)">
+<section class="detail" id="&lt;init&gt;(double,org.bukkit.inventory.ItemStack,net.sylphian.minecraft.fishing.fish.LootEntry)">
 <h3>CatchResult</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CatchResult</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fishId,
- <a href="Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a>&nbsp;rarity,
- double&nbsp;weight,
- org.bukkit.inventory.ItemStack&nbsp;itemStack)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CatchResult</span><wbr><span class="parameters">(double&nbsp;weight,
+ org.bukkit.inventory.ItemStack&nbsp;itemStack,
+ <a href="LootEntry.html" title="class in net.sylphian.minecraft.fishing.fish">LootEntry</a>&nbsp;entry)</span></div>
 <div class="block">Creates an instance of a <code>CatchResult</code> record class.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>fishId</code> - the value for the <a href="#param-fishId"><code>fishId</code></a> record component</dd>
-<dd><code>rarity</code> - the value for the <a href="#param-rarity"><code>rarity</code></a> record component</dd>
 <dd><code>weight</code> - the value for the <a href="#param-weight"><code>weight</code></a> record component</dd>
 <dd><code>itemStack</code> - the value for the <a href="#param-itemStack"><code>itemStack</code></a> record component</dd>
+<dd><code>entry</code> - the value for the <a href="#param-entry"><code>entry</code></a> record component</dd>
 </dl>
 </div>
 </section>
@@ -211,6 +211,32 @@ mutation) operate on the same rolled values.</div>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="fishId()">
+<h3>fishId</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">fishId</span>()</div>
+<div class="block">Returns the unique ID of the caught entry. Convenience accessor for <a href="LootEntry.html#id()"><code>LootEntry.id()</code></a>.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the entry ID</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="rarity()">
+<h3>rarity</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a></span>&nbsp;<span class="element-name">rarity</span>()</div>
+<div class="block">Returns the rarity of the caught entry. Convenience accessor for <a href="LootEntry.html#rarity()"><code>LootEntry.rarity()</code></a>.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the entry rarity</dd>
+</dl>
+</div>
+</section>
+</li>
 <li>
 <section class="detail" id="toString()">
 <h3>toString</h3>
@@ -259,32 +285,6 @@ mutation) operate on the same rolled values.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="fishId()">
-<h3>fishId</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">fishId</span>()</div>
-<div class="block">Returns the value of the <a href="#param-fishId"><code>fishId</code></a> record component.</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>the value of the <a href="#param-fishId"><code>fishId</code></a> record component</dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="rarity()">
-<h3>rarity</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a></span>&nbsp;<span class="element-name">rarity</span>()</div>
-<div class="block">Returns the value of the <a href="#param-rarity"><code>rarity</code></a> record component.</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>the value of the <a href="#param-rarity"><code>rarity</code></a> record component</dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
 <section class="detail" id="weight()">
 <h3>weight</h3>
 <div class="horizontal-scroll">
@@ -306,6 +306,19 @@ mutation) operate on the same rolled values.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the value of the <a href="#param-itemStack"><code>itemStack</code></a> record component</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="entry()">
+<h3>entry</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="LootEntry.html" title="class in net.sylphian.minecraft.fishing.fish">LootEntry</a></span>&nbsp;<span class="element-name">entry</span>()</div>
+<div class="block">Returns the value of the <a href="#param-entry"><code>entry</code></a> record component.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the value of the <a href="#param-entry"><code>entry</code></a> record component</dd>
 </dl>
 </div>
 </section>
