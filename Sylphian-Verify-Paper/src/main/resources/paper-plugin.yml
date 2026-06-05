@@ -1,6 +1,6 @@
 name: Sylphian-Verify-Paper
 version: '${version}'
-main: net.sylphian.verify.paper.VerifyPaper
+main: net.sylphian.minecraft.verify.VerifyPaper
 api-version: '26.1.2'
 authors:
   - QuackieMackie
