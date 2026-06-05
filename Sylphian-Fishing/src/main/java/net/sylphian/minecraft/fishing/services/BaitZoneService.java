@@ -126,6 +126,19 @@ public class BaitZoneService {
         return List.copyOf(byType.values());
     }
 
+    /**
+     * Returns the combined bite timer multiplier for all active zones at the given location.
+     * Each zone's multiplier is multiplied together. Returns {@code 1.0} if no zones are active.
+     *
+     * @param location the location to check
+     * @return the combined multiplier to apply to the bite wait time
+     */
+    public double getBiteTimerMultiplier(Location location) {
+        return getZonesAt(location).stream()
+                .mapToDouble(z -> z.config().biteTimerMultiplier())
+                .reduce(1.0, (a, b) -> a * b);
+    }
+
     private void renderAndExpire() {
         Iterator<BaitZone> it = activeZones.iterator();
         while (it.hasNext()) {
