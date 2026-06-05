@@ -57,8 +57,14 @@ public class SylphianFishing extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        saveResource("loot_table.yml", false);
-        saveResource("baits.yml", false);
+        if (getResource("loot_table.yml") != null && !new File(getDataFolder(), "loot_table.yml").exists()) {
+            saveResource("loot_table.yml", false);
+            getLogger().warning("No loot_table.yml found. Generating a default loot_table config file.");
+        }
+        if (getResource("baits.yml") != null && !new File(getDataFolder(), "baits.yml").exists()) {
+            saveResource("baits.yml", false);
+            getLogger().warning("No baits.yml found. Generating a default baits config file.");
+        }
 
         // Register database migrations for the fishing encyclopaedia
         DatabaseService.registerMigrations(List.of(

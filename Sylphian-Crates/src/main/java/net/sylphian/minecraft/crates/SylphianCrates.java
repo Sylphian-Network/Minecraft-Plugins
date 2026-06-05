@@ -36,8 +36,14 @@ public final class SylphianCrates extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        saveResource("keys.yml", false);
-        saveResource("crates.yml", false);
+        if (getResource("keys.yml") != null && !new File(getDataFolder(), "keys.yml").exists()) {
+            saveResource("keys.yml", false);
+            getLogger().warning("No keys.yml found. Generating a default keys config file.");
+        }
+        if (getResource("crates.yml") != null && !new File(getDataFolder(), "crates.yml").exists()) {
+            saveResource("crates.yml", false);
+            getLogger().warning("No crates.yml found. Generating a default crates config file.");
+        }
 
         keys = new KeyConfigLoader(YamlConfiguration.loadConfiguration(new File(getDataFolder(), "keys.yml")), getLogger()).loadKeys();
         crates = new CrateConfigLoader(YamlConfiguration.loadConfiguration(new File(getDataFolder(), "crates.yml")), getLogger()).loadCrates();
