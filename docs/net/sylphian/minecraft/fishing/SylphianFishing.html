@@ -65,6 +65,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#onEnable()" tabindex="0">onEnable()</a></li>
 <li><a href="#onDisable()" tabindex="0">onDisable()</a></li>
 <li><a href="#reload(org.bukkit.command.CommandSender)" tabindex="0">reload(CommandSender)</a></li>
+<li><a href="#getLootService()" tabindex="0">getLootService()</a></li>
+<li><a href="#getBaitZoneService()" tabindex="0">getBaitZoneService()</a></li>
 </ol>
 </li>
 </ol>
@@ -121,6 +123,12 @@ registering listeners and commands, and managing the plugin lifecycle.</div>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="services/BaitZoneService.html" title="class in net.sylphian.minecraft.fishing.services">BaitZoneService</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBaitZoneService()" class="member-name-link">getBaitZoneService</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="services/LootService.html" title="class in net.sylphian.minecraft.fishing.services">LootService</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLootService()" class="member-name-link">getLootService</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onDisable()" class="member-name-link">onDisable</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -224,6 +232,30 @@ is logged to console.</div>
 <dt>Parameters:</dt>
 <dd><code>sender</code> - the command sender to notify of success or failure,
               or null if called internally</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getLootService()">
+<h3>getLootService</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="services/LootService.html" title="class in net.sylphian.minecraft.fishing.services">LootService</a></span>&nbsp;<span class="element-name">getLootService</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the loot service</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getBaitZoneService()">
+<h3>getBaitZoneService</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="services/BaitZoneService.html" title="class in net.sylphian.minecraft.fishing.services">BaitZoneService</a></span>&nbsp;<span class="element-name">getBaitZoneService</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the bait zone service</dd>
 </dl>
 </div>
 </section>

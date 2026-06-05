@@ -62,7 +62,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(java.lang.String,net.sylphian.minecraft.fishing.fish.LootEntryType,java.lang.String,org.bukkit.Material,java.lang.String,java.lang.String,net.sylphian.minecraft.fishing.fish.Rarity,int,java.util.List,double,double,java.lang.Integer,java.lang.Integer,java.lang.Long,java.lang.Long)" tabindex="0">LootEntry(String, LootEntryType, String, Material, String, String, Rarity, int, List, double, double, Integer, Integer, Long, Long)</a></li>
+<li><a href="#%3Cinit%3E(java.lang.String,java.lang.String,org.bukkit.Material,java.lang.String,java.lang.String,net.sylphian.minecraft.fishing.fish.Rarity,int,java.util.List,double,double,java.lang.Integer,java.lang.Integer,java.lang.Long,java.lang.Long)" tabindex="0">LootEntry(String, String, Material, String, String, Rarity, int, List, double, double, Integer, Integer, Long, Long)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -78,8 +78,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#hashCode()" tabindex="0">hashCode()</a></li>
 <li><a href="#equals(java.lang.Object)" tabindex="0">equals(Object)</a></li>
 <li><a href="#id()" tabindex="0">id()</a></li>
-<li><a href="#type()" tabindex="0">type()</a></li>
-<li><a href="#keyId()" tabindex="0">keyId()</a></li>
+<li><a href="#externalItemId()" tabindex="0">externalItemId()</a></li>
 <li><a href="#material()" tabindex="0">material()</a></li>
 <li><a href="#displayName()" tabindex="0">displayName()</a></li>
 <li><a href="#description()" tabindex="0">description()</a></li>
@@ -109,14 +108,13 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <hr>
 <div class="horizontal-scroll">
-<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">LootEntry</span>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id, <a href="LootEntryType.html" title="enum class in net.sylphian.minecraft.fishing.fish">LootEntryType</a>&nbsp;type, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;keyId, org.bukkit.Material&nbsp;material, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;displayName, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;description, <a href="Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a>&nbsp;rarity, int&nbsp;weight, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;org.bukkit.block.Biome&gt;&nbsp;biomes, double&nbsp;minWeight, double&nbsp;maxWeight, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;minY, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;maxY, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;minTime, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;maxTime)
+<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">LootEntry</span>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;externalItemId, org.bukkit.Material&nbsp;material, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;displayName, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;description, <a href="Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a>&nbsp;rarity, int&nbsp;weight, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;org.bukkit.block.Biome&gt;&nbsp;biomes, double&nbsp;minWeight, double&nbsp;maxWeight, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;minY, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;maxY, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;minTime, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;maxTime)
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">Record</a></span></div>
 <div class="block">Represents a single entry in the fishing loot table.
 
-<p>An entry is either a <a href="LootEntryType.html#ITEM"><code>LootEntryType.ITEM</code></a> (a standard fish or item) or a
-<a href="LootEntryType.html#CRATE_KEY"><code>LootEntryType.CRATE_KEY</code></a> (a Sylphian Crates key delivered via the CratesAPI).
-Item-type entries carry a material, display name, and description. Crate key entries
-carry only a <code>keyId</code> — display and material fields will be null.</p>
+<p>Entries are either standard fish (material, display name, and description are populated)
+or cross-plugin external items resolved via the <a href="../../core/item/ItemRegistry.html" title="class in net.sylphian.minecraft.core.item"><code>ItemRegistry</code></a>
+(<code>externalItemId</code> is non-null, material and display fields will be null).</p>
 
 <h2 id="restriction-dimensions-heading">Restriction Dimensions</h2>
 <ul>
@@ -157,9 +155,8 @@ the fish is catchable from dusk through to morning.</p></div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,net.sylphian.minecraft.fishing.fish.LootEntryType,java.lang.String,org.bukkit.Material,java.lang.String,java.lang.String,net.sylphian.minecraft.fishing.fish.Rarity,int,java.util.List,double,double,java.lang.Integer,java.lang.Integer,java.lang.Long,java.lang.Long)" class="member-name-link">LootEntry</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
- <a href="LootEntryType.html" title="enum class in net.sylphian.minecraft.fishing.fish">LootEntryType</a>&nbsp;type,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;keyId,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,java.lang.String,org.bukkit.Material,java.lang.String,java.lang.String,net.sylphian.minecraft.fishing.fish.Rarity,int,java.util.List,double,double,java.lang.Integer,java.lang.Integer,java.lang.Long,java.lang.Long)" class="member-name-link">LootEntry</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;externalItemId,
  org.bukkit.Material&nbsp;material,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;displayName,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;description,
@@ -224,35 +221,35 @@ the fish is catchable from dusk through to morning.</p></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#externalItemId()" class="member-name-link">externalItemId</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the value of the <code>externalItemId</code> record component.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a hash code value for this object.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasTimeRestriction()" class="member-name-link">hasTimeRestriction</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasTimeRestriction()" class="member-name-link">hasTimeRestriction</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns true if this fish has a time of day restriction configured.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasYRestriction()" class="member-name-link">hasYRestriction</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasYRestriction()" class="member-name-link">hasYRestriction</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns true if this fish has a Y coordinate restriction configured.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#id()" class="member-name-link">id</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#id()" class="member-name-link">id</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <code>id</code> record component.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isGlobal()" class="member-name-link">isGlobal</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns true if this fish has no biome restriction.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#keyId()" class="member-name-link">keyId</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isGlobal()" class="member-name-link">isGlobal</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of the <code>keyId</code> record component.</div>
+<div class="block">Returns true if this fish has no biome restriction.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.bukkit.Material</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#material()" class="member-name-link">material</a>()</code></div>
@@ -304,14 +301,9 @@ the fish is catchable from dusk through to morning.</p></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a string representation of this record class.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="LootEntryType.html" title="enum class in net.sylphian.minecraft.fishing.fish">LootEntryType</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#type()" class="member-name-link">type</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#weight()" class="member-name-link">weight</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of the <code>type</code> record component.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#weight()" class="member-name-link">weight</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <code>weight</code> record component.</div>
 </div>
 </div>
@@ -332,12 +324,11 @@ the fish is catchable from dusk through to morning.</p></div>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(java.lang.String,net.sylphian.minecraft.fishing.fish.LootEntryType,java.lang.String,org.bukkit.Material,java.lang.String,java.lang.String,net.sylphian.minecraft.fishing.fish.Rarity,int,java.util.List,double,double,java.lang.Integer,java.lang.Integer,java.lang.Long,java.lang.Long)">
+<section class="detail" id="&lt;init&gt;(java.lang.String,java.lang.String,org.bukkit.Material,java.lang.String,java.lang.String,net.sylphian.minecraft.fishing.fish.Rarity,int,java.util.List,double,double,java.lang.Integer,java.lang.Integer,java.lang.Long,java.lang.Long)">
 <h3>LootEntry</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">LootEntry</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
- <a href="LootEntryType.html" title="enum class in net.sylphian.minecraft.fishing.fish">LootEntryType</a>&nbsp;type,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;keyId,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;externalItemId,
  org.bukkit.Material&nbsp;material,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;displayName,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;description,
@@ -354,11 +345,12 @@ the fish is catchable from dusk through to morning.</p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>id</code> - unique identifier for the entry</dd>
-<dd><code>type</code> - the reward type — determines how the catch is delivered</dd>
-<dd><code>keyId</code> - the crate key ID to give; only populated when type is <a href="LootEntryType.html#CRATE_KEY"><code>LootEntryType.CRATE_KEY</code></a></dd>
-<dd><code>material</code> - the item material to use; only populated when type is <a href="LootEntryType.html#ITEM"><code>LootEntryType.ITEM</code></a></dd>
-<dd><code>displayName</code> - the MiniMessage formatted name displayed to players; only populated when type is <a href="LootEntryType.html#ITEM"><code>LootEntryType.ITEM</code></a></dd>
-<dd><code>description</code> - the MiniMessage formatted lore description; only populated when type is <a href="LootEntryType.html#ITEM"><code>LootEntryType.ITEM</code></a></dd>
+<dd><code>externalItemId</code> - namespaced item ID resolved via the ItemRegistry
+                      (e.g. <code>"sylphian-crates:legendary_key"</code>);
+                      null for standard fish entries</dd>
+<dd><code>material</code> - the item material to use; null for external item entries</dd>
+<dd><code>displayName</code> - the MiniMessage formatted name displayed to players; null for external item entries</dd>
+<dd><code>description</code> - the MiniMessage formatted lore description; null for external item entries</dd>
 <dd><code>rarity</code> - the entry rarity</dd>
 <dd><code>weight</code> - relative weight in the weighted loot pool</dd>
 <dd><code>biomes</code> - list of biomes where this entry can be caught, empty for no restriction</dd>
@@ -540,27 +532,14 @@ e.g. minTime: 18000, maxTime: 6000 means dusk through to morning.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="type()">
-<h3>type</h3>
+<section class="detail" id="externalItemId()">
+<h3>externalItemId</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="LootEntryType.html" title="enum class in net.sylphian.minecraft.fishing.fish">LootEntryType</a></span>&nbsp;<span class="element-name">type</span>()</div>
-<div class="block">Returns the value of the <code>type</code> record component.</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">externalItemId</span>()</div>
+<div class="block">Returns the value of the <code>externalItemId</code> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the value of the <code>type</code> record component</dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="keyId()">
-<h3>keyId</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">keyId</span>()</div>
-<div class="block">Returns the value of the <code>keyId</code> record component.</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>the value of the <code>keyId</code> record component</dd>
+<dd>the value of the <code>externalItemId</code> record component</dd>
 </dl>
 </div>
 </section>

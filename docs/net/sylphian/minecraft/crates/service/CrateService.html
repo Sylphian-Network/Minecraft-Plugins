@@ -123,7 +123,7 @@ to or greater than <code>totalRolls</code>, all rolled rewards are granted immed
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.bukkit.inventory.ItemStack</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#buildItem(net.sylphian.minecraft.crates.config.RewardEntry)" class="member-name-link">buildItem</a><wbr>(<a href="../config/RewardEntry.html" title="class in net.sylphian.minecraft.crates.config">RewardEntry</a>&nbsp;reward)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Builds the full ItemStack for a reward, including name, lore, amount and enchantments.</div>
+<div class="block">Builds the ItemStack for a reward.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#giveAll(org.bukkit.entity.Player,java.util.List)" class="member-name-link">giveAll</a><wbr>(org.bukkit.entity.Player&nbsp;player,
@@ -199,8 +199,7 @@ Uses weighted random selection — entries with higher chances appear more frequ
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">giveReward</span><wbr><span class="parameters">(org.bukkit.entity.Player&nbsp;player,
  <a href="../config/RewardEntry.html" title="class in net.sylphian.minecraft.crates.config">RewardEntry</a>&nbsp;reward)</span></div>
 <div class="block">Grants a single reward to the player.
-For <a href="../config/RewardType.html#ITEM"><code>RewardType.ITEM</code></a> rewards, the item is added to the player's inventory
-or dropped at their feet if full.</div>
+The item is added to the player's inventory, or dropped at their feet if full.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>player</code> - the player to reward</dd>
@@ -231,7 +230,12 @@ exceeds <a href="../config/CrateConfig.html#totalRolls()"><code>CrateConfig.tota
 <h3>buildItem</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">org.bukkit.inventory.ItemStack</span>&nbsp;<span class="element-name">buildItem</span><wbr><span class="parameters">(<a href="../config/RewardEntry.html" title="class in net.sylphian.minecraft.crates.config">RewardEntry</a>&nbsp;reward)</span></div>
-<div class="block">Builds the full ItemStack for a reward, including name, lore, amount and enchantments.</div>
+<div class="block">Builds the ItemStack for a reward.
+For external item rewards, the item is resolved from the <a href="../../core/item/ItemRegistry.html" title="class in net.sylphian.minecraft.core.item"><code>ItemRegistry</code></a>
+and cloned with the configured amount applied. Falls back to a named paper
+placeholder if the registry lookup fails.
+For standard rewards, the item is built from the display material, name,
+lore, and enchantments.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>reward</code> - the reward to build an item for</dd>

@@ -85,8 +85,11 @@ loadScripts(document, 'script');</script>
 <p>Each entry in the <code>entries</code> section supports the following fields:</p>
 
 <dl>
-  <dt><code>material</code> <i>(required)</i></dt>
-  <dd>Bukkit Material name for the dropped item.</dd>
+  <dt><code>item</code> <i>(required)</i></dt>
+  <dd>Either a Bukkit Material name for a standard fish entry (e.g. <code>COD</code>),
+      or a namespaced item ID for a cross-plugin item resolved via the item registry
+      (e.g. <code>"sylphian-crates:legendary_key"</code>). The presence of a colon
+      distinguishes the two — material names never contain one.</dd>
 
   <dt><code>display-name</code> <i>(required)</i></dt>
   <dd>MiniMessage formatted name shown to the player.</dd>
@@ -112,18 +115,7 @@ loadScripts(document, 'script');</script>
 
   <dt><code>min-time</code> / <code>max-time</code></dt>
   <dd>Optional world time range in ticks (0–24000). Supports overnight ranges
-      where <code>min-time</code> is greater than <code>max-time</code>.</dd>
-
-  <dt><code>type</code></dt>
-  <dd>Optional. <code>ITEM</code> (default) builds a standard item from <code>material</code>.
-      <code>CRATE_KEY</code> delivers a Sylphian Crates key to the player via the CratesAPI.
-      When set to <code>CRATE_KEY</code>, the <code>material</code>, <code>display-name</code>, and
-      <code>description</code> fields are ignored.</dd>
-
-  <dt><code>key-id</code></dt>
-  <dd>Required when <code>type</code> is <code>CRATE_KEY</code>. Must match a key ID defined
-      in Sylphian-Crates' <code>keys.yml</code>. Entry is skipped if absent.</dd>
-</dl></div>
+      where <code>min-time</code> is greater than <code>max-time</code>.</dd></div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>

@@ -57,7 +57,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(java.lang.String,net.sylphian.minecraft.crates.config.RewardType,double,java.lang.String,org.bukkit.Material,int,java.util.List,java.util.Map)" tabindex="0">RewardEntry(String, RewardType, double, String, Material, int, List, Map)</a></li>
+<li><a href="#%3Cinit%3E(java.lang.String,java.lang.String,net.sylphian.minecraft.crates.config.RewardType,double,java.lang.String,org.bukkit.Material,int,java.util.List,java.util.Map)" tabindex="0">RewardEntry(String, String, RewardType, double, String, Material, int, List, Map)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -67,6 +67,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#hashCode()" tabindex="0">hashCode()</a></li>
 <li><a href="#equals(java.lang.Object)" tabindex="0">equals(Object)</a></li>
 <li><a href="#id()" tabindex="0">id()</a></li>
+<li><a href="#externalItemId()" tabindex="0">externalItemId()</a></li>
 <li><a href="#type()" tabindex="0">type()</a></li>
 <li><a href="#chance()" tabindex="0">chance()</a></li>
 <li><a href="#displayName()" tabindex="0">displayName()</a></li>
@@ -92,17 +93,22 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Record Components:</dt>
 <dd><code><span id="param-id">id</span></code> - unique identifier within the crate's pool</dd>
+<dd><code><span id="param-externalItemId">externalItemId</span></code> - namespaced item ID resolved via the ItemRegistry
+                       (e.g. <code>"sylphian-fishing:bait/ocean_bait"</code>);
+                       null for standard ITEM rewards</dd>
 <dd><code><span id="param-type">type</span></code> - the reward type — determines how it is granted</dd>
 <dd><code><span id="param-chance">chance</span></code> - relative weight in the pool; higher = more frequent</dd>
-<dd><code><span id="param-displayName">displayName</span></code> - MiniMessage formatted name shown in selection GUIs</dd>
-<dd><code><span id="param-displayMaterial">displayMaterial</span></code> - material used to represent this reward in GUIs</dd>
+<dd><code><span id="param-displayName">displayName</span></code> - MiniMessage formatted name shown in selection GUIs;
+                       null for external item rewards</dd>
+<dd><code><span id="param-displayMaterial">displayMaterial</span></code> - material used to represent this reward in GUIs;
+                       null for external item rewards</dd>
 <dd><code><span id="param-amount">amount</span></code> - stack size of the item given to the player</dd>
 <dd><code><span id="param-lore">lore</span></code> - MiniMessage formatted lore lines shown on the item</dd>
 <dd><code><span id="param-enchantments">enchantments</span></code> - map of enchantment key to level applied to the item</dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
-<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">RewardEntry</span>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id, <a href="RewardType.html" title="enum class in net.sylphian.minecraft.crates.config">RewardType</a>&nbsp;type, double&nbsp;chance, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;displayName, org.bukkit.Material&nbsp;displayMaterial, int&nbsp;amount, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;lore, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;enchantments)
+<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">RewardEntry</span>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id, @Nullable <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;externalItemId, <a href="RewardType.html" title="enum class in net.sylphian.minecraft.crates.config">RewardType</a>&nbsp;type, double&nbsp;chance, @Nullable <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;displayName, @Nullable org.bukkit.Material&nbsp;displayMaterial, int&nbsp;amount, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;lore, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;enchantments)
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">Record</a></span></div>
 <div class="block">Immutable definition of a single reward entry in a crate's reward pool.
 
@@ -120,7 +126,8 @@ with higher chances appear more often relative to others in the same pool.</p></
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,net.sylphian.minecraft.crates.config.RewardType,double,java.lang.String,org.bukkit.Material,int,java.util.List,java.util.Map)" class="member-name-link">RewardEntry</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,java.lang.String,net.sylphian.minecraft.crates.config.RewardType,double,java.lang.String,org.bukkit.Material,int,java.util.List,java.util.Map)" class="member-name-link">RewardEntry</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;externalItemId,
  <a href="RewardType.html" title="enum class in net.sylphian.minecraft.crates.config">RewardType</a>&nbsp;type,
  double&nbsp;chance,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;displayName,
@@ -175,35 +182,40 @@ with higher chances appear more often relative to others in the same pool.</p></
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="RewardEntry.html" title="class in net.sylphian.minecraft.crates.config">RewardEntry</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fromSection(java.lang.String,org.bukkit.configuration.ConfigurationSection)" class="member-name-link">fromSection</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#externalItemId()" class="member-name-link">externalItemId</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the value of the <a href="#param-externalItemId"><code>externalItemId</code></a> record component.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="RewardEntry.html" title="class in net.sylphian.minecraft.crates.config">RewardEntry</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fromSection(java.lang.String,org.bukkit.configuration.ConfigurationSection)" class="member-name-link">fromSection</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
  org.bukkit.configuration.ConfigurationSection&nbsp;sec)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Parses a RewardEntry from a configuration section.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a hash code value for this object.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#id()" class="member-name-link">id</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#id()" class="member-name-link">id</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <a href="#param-id"><code>id</code></a> record component.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#lore()" class="member-name-link">lore</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#lore()" class="member-name-link">lore</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <a href="#param-lore"><code>lore</code></a> record component.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a string representation of this record class.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="RewardType.html" title="enum class in net.sylphian.minecraft.crates.config">RewardType</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#type()" class="member-name-link">type</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="RewardType.html" title="enum class in net.sylphian.minecraft.crates.config">RewardType</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#type()" class="member-name-link">type</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <a href="#param-type"><code>type</code></a> record component.</div>
 </div>
 </div>
@@ -224,13 +236,17 @@ with higher chances appear more often relative to others in the same pool.</p></
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(java.lang.String,net.sylphian.minecraft.crates.config.RewardType,double,java.lang.String,org.bukkit.Material,int,java.util.List,java.util.Map)">
+<section class="detail" id="&lt;init&gt;(java.lang.String,java.lang.String,net.sylphian.minecraft.crates.config.RewardType,double,java.lang.String,org.bukkit.Material,int,java.util.List,java.util.Map)">
 <h3>RewardEntry</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">RewardEntry</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
+ @Nullable
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;externalItemId,
  <a href="RewardType.html" title="enum class in net.sylphian.minecraft.crates.config">RewardType</a>&nbsp;type,
  double&nbsp;chance,
+ @Nullable
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;displayName,
+ @Nullable
  org.bukkit.Material&nbsp;displayMaterial,
  int&nbsp;amount,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;lore,
@@ -239,6 +255,7 @@ with higher chances appear more often relative to others in the same pool.</p></
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>id</code> - the value for the <a href="#param-id"><code>id</code></a> record component</dd>
+<dd><code>externalItemId</code> - the value for the <a href="#param-externalItemId"><code>externalItemId</code></a> record component</dd>
 <dd><code>type</code> - the value for the <a href="#param-type"><code>type</code></a> record component</dd>
 <dd><code>chance</code> - the value for the <a href="#param-chance"><code>chance</code></a> record component</dd>
 <dd><code>displayName</code> - the value for the <a href="#param-displayName"><code>displayName</code></a> record component</dd>
@@ -336,6 +353,20 @@ with higher chances appear more often relative to others in the same pool.</p></
 </section>
 </li>
 <li>
+<section class="detail" id="externalItemId()">
+<h3>externalItemId</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@Nullable
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">externalItemId</span>()</div>
+<div class="block">Returns the value of the <a href="#param-externalItemId"><code>externalItemId</code></a> record component.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the value of the <a href="#param-externalItemId"><code>externalItemId</code></a> record component</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="type()">
 <h3>type</h3>
 <div class="horizontal-scroll">
@@ -365,7 +396,8 @@ with higher chances appear more often relative to others in the same pool.</p></
 <section class="detail" id="displayName()">
 <h3>displayName</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">displayName</span>()</div>
+<div class="member-signature"><span class="annotations">@Nullable
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">displayName</span>()</div>
 <div class="block">Returns the value of the <a href="#param-displayName"><code>displayName</code></a> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -378,7 +410,8 @@ with higher chances appear more often relative to others in the same pool.</p></
 <section class="detail" id="displayMaterial()">
 <h3>displayMaterial</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">org.bukkit.Material</span>&nbsp;<span class="element-name">displayMaterial</span>()</div>
+<div class="member-signature"><span class="annotations">@Nullable
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">org.bukkit.Material</span>&nbsp;<span class="element-name">displayMaterial</span>()</div>
 <div class="block">Returns the value of the <a href="#param-displayMaterial"><code>displayMaterial</code></a> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>

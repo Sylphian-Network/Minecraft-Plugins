@@ -70,7 +70,11 @@ loadScripts(document, 'script');</script>
 <li><a href="#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.fish.WeatherCondition,double,long)" tabindex="0">rollCatch(Biome, WeatherCondition, double, long)</a></li>
 <li><a href="#rollCatch(org.bukkit.block.Biome,net.sylphian.minecraft.fishing.fish.WeatherCondition,double,long,java.util.List)" tabindex="0">rollCatch(Biome, WeatherCondition, double, long, List)</a></li>
 <li><a href="#peekRarity(net.sylphian.minecraft.fishing.fish.WeatherCondition)" tabindex="0">peekRarity(WeatherCondition)</a></li>
+<li><a href="#buildItemStack(net.sylphian.minecraft.fishing.fish.LootEntry,double)" tabindex="0">buildItemStack(LootEntry, double)</a></li>
 <li><a href="#reload(net.sylphian.minecraft.fishing.config.ConfigLoader,java.util.List)" tabindex="0">reload(ConfigLoader, List)</a></li>
+<li><a href="#getEntry(java.lang.String)" tabindex="0">getEntry(String)</a></li>
+<li><a href="#getItemEntryIds()" tabindex="0">getItemEntryIds()</a></li>
+<li><a href="#buildItemStack(net.sylphian.minecraft.fishing.fish.LootEntry)" tabindex="0">buildItemStack(LootEntry)</a></li>
 </ol>
 </li>
 </ol>
@@ -150,6 +154,27 @@ applies a multiplier to each rarity's base chance. Multipliers are loaded from
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.bukkit.inventory.ItemStack</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#buildItemStack(net.sylphian.minecraft.fishing.fish.LootEntry)" class="member-name-link">buildItemStack</a><wbr>(<a href="../fish/LootEntry.html" title="class in net.sylphian.minecraft.fishing.fish">LootEntry</a>&nbsp;entry)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Builds the display ItemStack for the given entry with no catch weight.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.bukkit.inventory.ItemStack</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#buildItemStack(net.sylphian.minecraft.fishing.fish.LootEntry,double)" class="member-name-link">buildItemStack</a><wbr>(<a href="../fish/LootEntry.html" title="class in net.sylphian.minecraft.fishing.fish">LootEntry</a>&nbsp;fish,
+ double&nbsp;caughtWeight)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Builds the ItemStack for a standard fish entry.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../fish/LootEntry.html" title="class in net.sylphian.minecraft.fishing.fish">LootEntry</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEntry(java.lang.String)" class="member-name-link">getEntry</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the loot entry with the given ID, or empty if not found.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getItemEntryIds()" class="member-name-link">getItemEntryIds</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns all IDs of standard fish entries (those without an external item ID).</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#peekRarity(net.sylphian.minecraft.fishing.fish.WeatherCondition)" class="member-name-link">peekRarity</a><wbr>(<a href="../fish/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.fish">WeatherCondition</a>&nbsp;weather)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -293,6 +318,24 @@ The actual catch rolls rarity again independently.</div>
 </section>
 </li>
 <li>
+<section class="detail" id="buildItemStack(net.sylphian.minecraft.fishing.fish.LootEntry,double)">
+<h3>buildItemStack</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">org.bukkit.inventory.ItemStack</span>&nbsp;<span class="element-name">buildItemStack</span><wbr><span class="parameters">(<a href="../fish/LootEntry.html" title="class in net.sylphian.minecraft.fishing.fish">LootEntry</a>&nbsp;fish,
+ double&nbsp;caughtWeight)</span></div>
+<div class="block">Builds the ItemStack for a standard fish entry.
+Must not be called for external item entries (<a href="../fish/LootEntry.html#externalItemId()"><code>LootEntry.externalItemId()</code></a> non-null).</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>fish</code> - the fish entry</dd>
+<dd><code>caughtWeight</code> - the rolled weight of the fish</dd>
+<dt>Returns:</dt>
+<dd>the built ItemStack</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="reload(net.sylphian.minecraft.fishing.config.ConfigLoader,java.util.List)">
 <h3>reload</h3>
 <div class="horizontal-scroll">
@@ -304,6 +347,52 @@ Rebuilds the internal rarity pool from the new fish list.</div>
 <dt>Parameters:</dt>
 <dd><code>config</code> - the new configuration loader</dd>
 <dd><code>allFish</code> - the updated list of all fish entries</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getEntry(java.lang.String)">
+<h3>getEntry</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../fish/LootEntry.html" title="class in net.sylphian.minecraft.fishing.fish">LootEntry</a>&gt;</span>&nbsp;<span class="element-name">getEntry</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</span></div>
+<div class="block">Returns the loot entry with the given ID, or empty if not found.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>id</code> - the entry ID to look up</dd>
+<dt>Returns:</dt>
+<dd>the matching LootEntry, or empty</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getItemEntryIds()">
+<h3>getItemEntryIds</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">getItemEntryIds</span>()</div>
+<div class="block">Returns all IDs of standard fish entries (those without an external item ID).
+Used by <a href="../item/FishingItemProvider.html" title="class in net.sylphian.minecraft.fishing.item"><code>FishingItemProvider</code></a> to expose
+available fish items to the cross-plugin item registry.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the set of standard fish entry IDs</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="buildItemStack(net.sylphian.minecraft.fishing.fish.LootEntry)">
+<h3>buildItemStack</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">org.bukkit.inventory.ItemStack</span>&nbsp;<span class="element-name">buildItemStack</span><wbr><span class="parameters">(<a href="../fish/LootEntry.html" title="class in net.sylphian.minecraft.fishing.fish">LootEntry</a>&nbsp;entry)</span></div>
+<div class="block">Builds the display ItemStack for the given entry with no catch weight.
+Intended for item registry lookups rather than active catch delivery.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>entry</code> - the loot entry to build</dd>
+<dt>Returns:</dt>
+<dd>the built ItemStack</dd>
 </dl>
 </div>
 </section>
