@@ -30,8 +30,6 @@ public class EncyclopaediaMenu {
 
     private static final int PAGE_SIZE = 45;
 
-    private static final MiniMessage MINI = MiniMessage.miniMessage();
-
     private List<LootEntry> entries;
     private final FishEncyclopaediaRepository repository;
     private final JavaPlugin plugin;
@@ -87,7 +85,7 @@ public class EncyclopaediaMenu {
         Inventory inventory = Bukkit.createInventory(
                 new EncyclopaediaHolder(this, page),
                 54,
-                MINI.deserialize(
+                MiniMessage.miniMessage().deserialize(
                         "<aqua>Fishing Encyclopaedia"
                 )
         );
