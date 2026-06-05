@@ -66,6 +66,9 @@ public class BiteTimerService {
         double biteTimerMult = baitZoneService.getBiteTimerMultiplier(hook.getLocation());
         delay = Math.max(20, (int) (delay * biteTimerMult));
 
+        hook.setApplyLure(false);
+        hook.setSkyInfluenced(false);
+        hook.setRainInfluenced(false);
 
         hook.setWaitTime(delay, delay);
         hook.setLureTime(lureDelay, lureDelay);
