@@ -5,7 +5,6 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.fishing.db.models.FishEncyclopaediaModel;
 import net.sylphian.minecraft.fishing.db.repositories.FishEncyclopaediaRepository;
 import net.sylphian.minecraft.fishing.fish.LootEntry;
-import net.sylphian.minecraft.fishing.fish.LootEntryType;
 import net.sylphian.minecraft.core.util.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -37,13 +36,13 @@ public class EncyclopaediaMenu {
     /**
      * Constructs a new EncyclopaediaMenu.
      *
-     * @param entries     all available loot entries; non-{@link LootEntryType#ITEM} entries are excluded
+     * @param entries     all available loot entries; external item entries are excluded
      * @param repository  repository for player catch data
      * @param plugin      the plugin instance
      */
     public EncyclopaediaMenu(List<LootEntry> entries, FishEncyclopaediaRepository repository, JavaPlugin plugin) {
         this.entries = entries.stream()
-                .filter(e -> e.type() == LootEntryType.ITEM)
+                .filter(e -> e.externalItemId() == null)
                 .toList();
         this.repository = repository;
         this.plugin = plugin;
@@ -268,7 +267,7 @@ public class EncyclopaediaMenu {
      */
     public void reload(List<LootEntry> entries) {
         this.entries = entries.stream()
-                .filter(e -> e.type() == LootEntryType.ITEM)
+                .filter(e -> e.externalItemId() == null)
                 .toList();
     }
 }

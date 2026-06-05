@@ -15,7 +15,11 @@
 # pool:
 #   Each entry is a reward the player can receive.
 #   display-name:     MiniMessage formatted name shown in the selection GUI.
-#   display-material: Bukkit Material used to represent the reward in the GUI.
+#   display-material: Bukkit Material used to represent the reward in the GUI
+#   item:             Optional. Namespaced item ID resolved via the cross-plugin item
+#                     registry (e.g. "sylphian-fishing:bait/ocean_bait"). When present,
+#                     display-name and display-material are not required — the registry
+#                     item provides all visual information.
 #   type:             ITEM — gives the player a physical item.
 #   chance:           Relative weight in the pool. Higher = more frequent.
 #                     Percentage shown in the crate lore is calculated from
@@ -86,3 +90,7 @@ crates:
         type: ITEM
         amount: 1
         chance: 10.0
+      ocean_bait:
+        item: sylphian-fishing:bait/ocean_bait
+        chance: 15.0
+        amount: 2

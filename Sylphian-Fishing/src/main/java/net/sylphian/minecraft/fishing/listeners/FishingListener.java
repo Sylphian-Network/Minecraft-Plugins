@@ -1,9 +1,8 @@
 package net.sylphian.minecraft.fishing.listeners;
 
-import net.sylphian.minecraft.crates.api.CratesAPI;
+import net.sylphian.minecraft.core.item.ItemRegistry;
 import net.sylphian.minecraft.fishing.db.api.IFishEncyclopaediaRepository;
 import net.sylphian.minecraft.fishing.fish.CatchResult;
-import net.sylphian.minecraft.fishing.fish.LootEntryType;
 import net.sylphian.minecraft.fishing.fish.WeatherCondition;
 import net.sylphian.minecraft.fishing.services.*;
 import net.sylphian.minecraft.fishing.config.BaitConfig;
@@ -22,7 +21,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -112,9 +111,9 @@ public class FishingListener implements Listener {
      * Handles a successful catch — rolls loot, applies mutations, triggers rarity effects,
      * and records the catch to the database.
      *
-     * <p>For {@link LootEntryType#CRATE_KEY} entries the caught item entity is removed and
-     * the key is delivered directly to the player via the CratesAPI. For
-     * {@link LootEntryType#ITEM} entries the caught item is replaced with the rolled loot.</p>
+     * <p>For external item entries the caught item is replaced with the item resolved from
+     * the {@link ItemRegistry}. For standard fish entries the caught item is replaced with
+     * the built fish ItemStack.</p>
      *
      * @param event the fishing event in the CAUGHT_FISH state
      */
@@ -136,13 +135,13 @@ public class FishingListener implements Listener {
 
         CatchResult result = lootService.rollCatch(biome, weather, hookLocation.getY(), world.getTime(), baitBonuses);
 
-        if (result.entry().type() == LootEntryType.CRATE_KEY) {
-            RegisteredServiceProvider<CratesAPI> provider = plugin.getServer().getServicesManager().getRegistration(CratesAPI.class);
-            if (provider != null) {
-                caughtItem.setItemStack(provider.getProvider().buildKey(result.entry().keyId()));
+        if (result.entry().externalItemId() != null) {
+            java.util.Optional<ItemStack> externalItem = ItemRegistry.get(result.entry().externalItemId());
+            if (externalItem.isPresent()) {
+                caughtItem.setItemStack(externalItem.get());
             } else {
-                plugin.getLogger().warning("CratesAPI unavailable: could not give key '"
-                        + result.entry().keyId() + "' to " + event.getPlayer().getName());
+                plugin.getLogger().warning("Could not resolve external item '"
+                        + result.entry().externalItemId() + "' — removing caught item.");
                 caughtItem.remove();
             }
         } else {

@@ -1,7 +1,6 @@
 package net.sylphian.minecraft.fishing.config;
 
 import net.sylphian.minecraft.fishing.fish.LootEntry;
-import net.sylphian.minecraft.fishing.fish.LootEntryType;
 import net.sylphian.minecraft.fishing.fish.Rarity;
 import net.sylphian.minecraft.fishing.services.LootService;
 import org.bukkit.Material;
@@ -23,8 +22,11 @@ import java.util.logging.Logger;
  * <p>Each entry in the {@code entries} section supports the following fields:</p>
  *
  * <dl>
- *   <dt>{@code material} <i>(required)</i></dt>
- *   <dd>Bukkit Material name for the dropped item.</dd>
+ *   <dt>{@code item} <i>(required)</i></dt>
+ *   <dd>Either a Bukkit Material name for a standard fish entry (e.g. {@code COD}),
+ *       or a namespaced item ID for a cross-plugin item resolved via the item registry
+ *       (e.g. {@code "sylphian-crates:legendary_key"}). The presence of a colon
+ *       distinguishes the two — material names never contain one.</dd>
  *
  *   <dt>{@code display-name} <i>(required)</i></dt>
  *   <dd>MiniMessage formatted name shown to the player.</dd>
@@ -51,17 +53,6 @@ import java.util.logging.Logger;
  *   <dt>{@code min-time} / {@code max-time}</dt>
  *   <dd>Optional world time range in ticks (0–24000). Supports overnight ranges
  *       where {@code min-time} is greater than {@code max-time}.</dd>
- *
- *   <dt>{@code type}</dt>
- *   <dd>Optional. {@code ITEM} (default) builds a standard item from {@code material}.
- *       {@code CRATE_KEY} delivers a Sylphian Crates key to the player via the CratesAPI.
- *       When set to {@code CRATE_KEY}, the {@code material}, {@code display-name}, and
- *       {@code description} fields are ignored.</dd>
- *
- *   <dt>{@code key-id}</dt>
- *   <dd>Required when {@code type} is {@code CRATE_KEY}. Must match a key ID defined
- *       in Sylphian-Crates' {@code keys.yml}. Entry is skipped if absent.</dd>
- * </dl>
  *
  * @see LootEntry
  * @see LootService
@@ -100,27 +91,26 @@ public class LootTableConfigLoader {
             ConfigurationSection entrySection = section.getConfigurationSection(key);
             if (entrySection == null) continue;
 
-            LootEntryType type;
-            try {
-                type = LootEntryType.valueOf(entrySection.getString("type", "ITEM").toUpperCase());
-            } catch (IllegalArgumentException e) {
-                logger.warning("Unknown type for entry '" + key + "' — defaulting to ITEM.");
-                type = LootEntryType.ITEM;
+            String itemValue = entrySection.getString("item");
+            if (itemValue == null) {
+                logger.warning("Entry '" + key + "' is missing 'item' — skipping.");
+                continue;
             }
 
-            String keyId = null;
+            String externalItemId = null;
             Material material = null;
             String displayName = null;
             String description = null;
 
-            if (type == LootEntryType.CRATE_KEY) {
-                keyId = entrySection.getString("key-id");
-                if (keyId == null) {
-                    logger.warning("Entry '" + key + "' is type CRATE_KEY but missing 'key-id' — skipping.");
+            if (itemValue.contains(":")) {
+                externalItemId = itemValue;
+            } else {
+                try {
+                    material = Material.valueOf(itemValue.toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    logger.warning("Unknown material '" + itemValue + "' for entry '" + key + "' — skipping.");
                     continue;
                 }
-            } else {
-                material    = Material.valueOf(entrySection.getString("material", "COD").toUpperCase());
                 displayName = entrySection.getString("display-name", key);
                 description = entrySection.getString("description", "");
             }
@@ -142,7 +132,7 @@ public class LootTableConfigLoader {
             Long minTime = entrySection.contains("min-time") ? entrySection.getLong("min-time") : null;
             Long maxTime = entrySection.contains("max-time") ? entrySection.getLong("max-time") : null;
 
-            entries.add(new LootEntry(key, type, keyId, material, displayName, description,
+            entries.add(new LootEntry(key, externalItemId, material, displayName, description,
                     rarity, weight, biomes, minWeight, maxWeight, minY, maxY, minTime, maxTime));
         }
 

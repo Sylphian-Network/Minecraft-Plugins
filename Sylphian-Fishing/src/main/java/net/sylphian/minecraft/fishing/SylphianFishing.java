@@ -4,8 +4,10 @@ import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.sylphian.minecraft.core.item.ItemRegistry;
 import net.sylphian.minecraft.database.DatabaseService;
 import net.sylphian.minecraft.fishing.commands.EncyclopaediaCommand;
+import net.sylphian.minecraft.fishing.item.FishingItemProvider;
 import net.sylphian.minecraft.fishing.commands.SylphianFishingCommand;
 import net.sylphian.minecraft.fishing.config.*;
 import net.sylphian.minecraft.fishing.db.migrations.Migration001CreateFishEncyclopaedia;
@@ -90,6 +92,8 @@ public class SylphianFishing extends JavaPlugin {
         this.lootService = new LootService(lootTableEntries, configLoader);
         this.biteTimerService = new BiteTimerService(configLoader, lootService, baitZoneService, getLogger());
 
+        ItemRegistry.register(new FishingItemProvider(this));
+
         this.baitListener = new BaitListener(baitZoneService, this);
         baitListener.start(this);
 
@@ -124,6 +128,7 @@ public class SylphianFishing extends JavaPlugin {
      */
     @Override
     public void onDisable() {
+        ItemRegistry.unregister("sylphian-fishing");
         baitZoneService.shutdown();
         baitListener.shutdown();
         Rarity.clear();
@@ -168,4 +173,10 @@ public class SylphianFishing extends JavaPlugin {
             }
         }
     }
+
+    /** @return the loot service */
+    public LootService getLootService() { return lootService; }
+
+    /** @return the bait zone service */
+    public BaitZoneService getBaitZoneService() { return baitZoneService; }
 }

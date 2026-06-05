@@ -4,19 +4,18 @@ import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.sylphian.minecraft.crates.api.CratesAPI;
-import net.sylphian.minecraft.crates.api.CratesAPIImpl;
+import net.sylphian.minecraft.core.item.ItemRegistry;
 import net.sylphian.minecraft.crates.command.CratesCommand;
 import net.sylphian.minecraft.crates.command.SylphianCratesCommand;
 import net.sylphian.minecraft.crates.config.CrateConfig;
 import net.sylphian.minecraft.crates.config.CrateConfigLoader;
 import net.sylphian.minecraft.crates.config.KeyConfig;
 import net.sylphian.minecraft.crates.config.KeyConfigLoader;
+import net.sylphian.minecraft.crates.item.CratesItemProvider;
 import net.sylphian.minecraft.crates.listener.CratesListener;
 import net.sylphian.minecraft.crates.service.CrateService;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -25,8 +24,8 @@ import java.util.Map;
 /**
  * Main plugin class for Sylphian-Crates.
  *
- * <p>Loads key and crate configurations, registers the {@link CratesAPI}
- * with Bukkit's services manager so external plugins can access it,
+ * <p>Loads key and crate configurations, registers a {@link net.sylphian.minecraft.core.item.ItemProvider}
+ * with the cross-plugin {@link net.sylphian.minecraft.core.item.ItemRegistry},
  * and wires up all GUI event listeners.</p>
  */
 public final class SylphianCrates extends JavaPlugin {
@@ -50,7 +49,7 @@ public final class SylphianCrates extends JavaPlugin {
 
         CrateService crateService = new CrateService();
 
-        getServer().getServicesManager().register(CratesAPI.class, new CratesAPIImpl(keys, this), this, ServicePriority.Normal);
+        ItemRegistry.register(new CratesItemProvider(this));
 
         getServer().getPluginManager().registerEvents(new CratesListener(this, crateService), this);
 
@@ -65,6 +64,7 @@ public final class SylphianCrates extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        ItemRegistry.unregister("sylphian-crates");
         getLogger().info("Sylphian Crates disabled!");
     }
 

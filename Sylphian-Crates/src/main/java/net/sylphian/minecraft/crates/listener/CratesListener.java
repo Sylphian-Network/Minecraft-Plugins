@@ -1,5 +1,6 @@
 package net.sylphian.minecraft.crates.listener;
 
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.crates.SylphianCrates;
 import net.sylphian.minecraft.crates.config.CrateConfig;
 import net.sylphian.minecraft.crates.config.KeyConfig;
@@ -235,7 +236,10 @@ public class CratesListener implements Listener {
 
         for (RewardEntry reward : crate.pool()) {
             double percent = (reward.chance() / totalWeight) * 100;
-            lore.add(String.format("<dark_aqua> • %s <gray>(%.1f%%)", reward.displayName(), percent));
+            String name = reward.externalItemId() != null
+                    ? getDisplayName(crateService.buildItem(reward))
+                    : reward.displayName();
+            lore.add(String.format("<dark_aqua> • %s <gray>(%.1f%%)", name, percent));
         }
 
         ItemStack display = new ItemBuilder(crate.displayMaterial())
@@ -261,5 +265,19 @@ public class CratesListener implements Listener {
         } else {
             RewardSelectionGUI.open(player, rolled, crate.playerPicks(), crateService);
         }
+    }
+
+    /**
+     * Extracts the display name from an ItemStack's meta as a MiniMessage string.
+     * Falls back to the item's translation key if no display name is set.
+     *
+     * @param item the item to read the name from
+     * @return the MiniMessage display name string
+     */
+    private String getDisplayName(ItemStack item) {
+        if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
+            return MiniMessage.miniMessage().serialize(item.getItemMeta().displayName());
+        }
+        return "<white>" + item.getType().name();
     }
 }

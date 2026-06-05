@@ -8,3 +8,9 @@ load: POSTWORLD
 
 authors: [QuackieMackie]
 website: https://sylphian.net
+
+dependencies:
+  server:
+    Sylphian-Core:
+      load: BEFORE
+      required: true

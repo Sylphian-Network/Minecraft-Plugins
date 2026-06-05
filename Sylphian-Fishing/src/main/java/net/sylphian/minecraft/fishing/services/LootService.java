@@ -202,7 +202,7 @@ public class LootService {
      */
     private CatchResult buildCatchResult(LootEntry fish) {
         double weight = fish.rollWeight(random);
-        ItemStack itemStack = fish.type() == LootEntryType.ITEM ? buildItemStack(fish, weight) : null;
+        ItemStack itemStack = fish.externalItemId() == null ? buildItemStack(fish, weight) : null;
         return new CatchResult(weight, itemStack, fish);
     }
 
@@ -231,14 +231,14 @@ public class LootService {
     }
 
     /**
-     * Builds the ItemStack for an {@link LootEntryType#ITEM} entry.
-     * Must not be called for {@link LootEntryType#CRATE_KEY} entries.
+     * Builds the ItemStack for a standard fish entry.
+     * Must not be called for external item entries ({@link LootEntry#externalItemId()} non-null).
      *
      * @param fish         the fish entry
      * @param caughtWeight the rolled weight of the fish
      * @return the built ItemStack
      */
-    private ItemStack buildItemStack(LootEntry fish, double caughtWeight) {
+    public ItemStack buildItemStack(LootEntry fish, double caughtWeight) {
         return new ItemBuilder(fish.material())
                 .name(fish.displayName())
                 .loreStrings(buildLore(fish, caughtWeight))
@@ -277,5 +277,44 @@ public class LootService {
         this.config = config;
         this.poolsByRarity = allFish.stream()
                 .collect(Collectors.groupingBy(LootEntry::rarity));
+    }
+
+    /**
+     * Returns the loot entry with the given ID, or empty if not found.
+     *
+     * @param id the entry ID to look up
+     * @return the matching LootEntry, or empty
+     */
+    public Optional<LootEntry> getEntry(String id) {
+        return poolsByRarity.values().stream()
+                .flatMap(List::stream)
+                .filter(e -> e.id().equals(id))
+                .findFirst();
+    }
+
+    /**
+     * Returns all IDs of standard fish entries (those without an external item ID).
+     * Used by {@link net.sylphian.minecraft.fishing.item.FishingItemProvider} to expose
+     * available fish items to the cross-plugin item registry.
+     *
+     * @return the set of standard fish entry IDs
+     */
+    public Set<String> getItemEntryIds() {
+        return poolsByRarity.values().stream()
+                .flatMap(List::stream)
+                .filter(e -> e.externalItemId() == null)
+                .map(LootEntry::id)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Builds the display ItemStack for the given entry with no catch weight.
+     * Intended for item registry lookups rather than active catch delivery.
+     *
+     * @param entry the loot entry to build
+     * @return the built ItemStack
+     */
+    public ItemStack buildItemStack(LootEntry entry) {
+        return buildItemStack(entry, 0.0);
     }
 }

@@ -10,13 +10,16 @@
 #
 # Fields:
 # -------
-# material:     Bukkit Material name for the item dropped.
-#               See: https://jd.papermc.io/paper/26.1.2/org/bukkit/Material.html
+# item:         Either a Bukkit Material name for a standard fish entry (e.g. COD),
+#               or a namespaced cross-plugin item ID (e.g. sylphian-crates:legendary_key).
+#               A colon in the value distinguishes the two — material names never contain one.
+#               When item is a namespaced ID, display-name and description are not required.
+#               See materials: https://jd.papermc.io/paper/26.1.2/org/bukkit/Material.html
 #
-# display-name: MiniMessage formatted name shown to players.
+# display-name: MiniMessage formatted name shown to players. Required for standard fish.
 #               See: https://docs.advntr.dev/minimessage/format.html
 #
-# description:  MiniMessage lore text. Use \n for line breaks.
+# description:  MiniMessage lore text. Use \n for line breaks. Required for standard fish.
 #
 # rarity:       Must match a key in config.yml rarities section.
 #               e.g. COMMON, UNCOMMON, RARE, EPIC, LEGENDARY, MYTHIC
@@ -27,17 +30,18 @@
 #
 # min-weight:   Minimum physical catch weight in kg.
 # max-weight:   Maximum physical catch weight in kg.
+#               Not meaningful for cross-plugin items — set to 0.0.
 #
-# biomes:       Biomes where this fish can appear. Use "ALL" for no
+# biomes:       Biomes where this entry can appear. Use "ALL" for no
 #               restriction, or list Minecraft biome names.
 #               See: https://minecraft.wiki/w/Biome#Biome_IDs
 #
-# min-y:        (Optional) Minimum Y coordinate for this fish to appear.
-# max-y:        (Optional) Maximum Y coordinate for this fish to appear.
+# min-y:        (Optional) Minimum Y coordinate for this entry to appear.
+# max-y:        (Optional) Maximum Y coordinate for this entry to appear.
 #               Omitting both means no height restriction.
 #
-# min-time:     (Optional) Minimum world time in ticks for this fish to appear.
-# max-time:     (Optional) Maximum world time in ticks for this fish to appear.
+# min-time:     (Optional) Minimum world time in ticks for this entry to appear.
+# max-time:     (Optional) Maximum world time in ticks for this entry to appear.
 #               Supports overnight wrap-around — if min-time is greater than
 #               max-time, the window crosses midnight. For example:
 #                 min-time: 13000, max-time: 1000  →  night only
@@ -52,13 +56,6 @@
 #   18000 = 00:00  Midnight
 #   23000 = 05:00  Late Night
 #
-# type:             (Optional) ITEM (default) gives a standard item built from material.
-#                   CRATE_KEY delivers a Sylphian Crates key directly to the player's
-#                   inventory. When using CRATE_KEY, material, display-name, and
-#                   description are not required and will be ignored.
-#
-# key-id:           Required when type is CRATE_KEY. Must match a key ID defined
-#                   in Sylphian-Crates' keys.yml.
 # =============================================================
 
 entries:
@@ -69,8 +66,7 @@ entries:
   # =============================================================
 
   legendary_key:
-    type: CRATE_KEY
-    key-id: legendary_key
+    item: sylphian-crates:legendary_key
     rarity: LEGENDARY
     weight: 1
     biomes: ALL
@@ -80,7 +76,7 @@ entries:
   # ───────────────────────────────────────────
 
   common_cod:
-    material: COD
+    item: COD
     display-name: "<white>Common Cod"
     description: "<gray>A reliable catch, found in most waters."
     rarity: COMMON
@@ -90,7 +86,7 @@ entries:
     biomes: ALL
 
   river_salmon:
-    material: SALMON
+    item: SALMON
     display-name: "<white>River Salmon"
     description: "<gray>Fights hard against the current."
     rarity: COMMON
@@ -100,7 +96,7 @@ entries:
     biomes: ALL
 
   electric_puffer:
-    material: PUFFERFISH
+    item: PUFFERFISH
     display-name: "<yellow>⚡ Electric Puffer"
     description: "<gray>Crackles with a strange energy.\n<yellow>Handle with care."
     rarity: RARE
@@ -110,7 +106,7 @@ entries:
     biomes: ALL
 
   starlight_koi:
-    material: TROPICAL_FISH
+    item: TROPICAL_FISH
     display-name: "<gradient:white:aqua>✦ Starlight Koi</gradient>"
     description: "<gray>Its scales shine brighter beneath the night sky."
     rarity: EPIC
@@ -126,7 +122,7 @@ entries:
   # ───────────────────────────────────────────
 
   pearlscale_tuna:
-    material: COD
+    item: COD
     display-name: "<white>Pearlscale Tuna"
     description: "<gray>Fast swimmers of warm ocean currents."
     rarity: COMMON
@@ -139,7 +135,7 @@ entries:
     max-y: 60
 
   reef_glider:
-    material: TROPICAL_FISH
+    item: TROPICAL_FISH
     display-name: "<light_purple>Reef Glider"
     description: "<gray>Drifts elegantly above coral reefs."
     rarity: COMMON
@@ -154,7 +150,7 @@ entries:
     max-time: 12000  # 18:00
 
   coral_butterfly:
-    material: TROPICAL_FISH
+    item: TROPICAL_FISH
     display-name: "<gradient:aqua:pink>Coral Butterfly</gradient>"
     description: "<gray>Its fins resemble delicate reef petals."
     rarity: UNCOMMON
@@ -166,7 +162,7 @@ entries:
     max-y: 55
 
   moonlit_jelly:
-    material: SLIME_BALL
+    item: SLIME_BALL
     display-name: "<aqua>☾ Moonlit Jelly"
     description: "<gray>Glows softly under the midnight tide."
     rarity: RARE
@@ -181,7 +177,7 @@ entries:
     max-time: 2000   # 08:00
 
   phantom_mackerel:
-    material: COD
+    item: COD
     display-name: "<gray>Phantom Mackerel"
     description: "<gray>Nearly invisible beneath moonlit waves."
     rarity: RARE
@@ -196,7 +192,7 @@ entries:
     max-time: 1000   # 07:00
 
   tidehunter_shark:
-    material: SALMON
+    item: SALMON
     display-name: "<dark_aqua>Tidehunter Shark"
     description: "<gray>A ruthless hunter of shallow coastlines."
     rarity: EPIC
@@ -209,7 +205,7 @@ entries:
     max-y: 50
 
   driftwood_grouper:
-    material: COD
+    item: COD
     display-name: "<gold>Driftwood Grouper"
     description: "<gray>Masters of camouflage among floating debris."
     rarity: COMMON
@@ -222,7 +218,7 @@ entries:
     max-y: 64
 
   stonejaw_bass:
-    material: COD
+    item: COD
     display-name: "<gray>Stonejaw Bass"
     description: "<gray>Known for crushing shells with ease."
     rarity: COMMON
@@ -239,7 +235,7 @@ entries:
   # ───────────────────────────────────────────
 
   heart_of_the_deep:
-    material: HEART_OF_THE_SEA
+    item: HEART_OF_THE_SEA
     display-name: "<gradient:dark_purple:light_purple>❤ Heart of the Deep</gradient>"
     description: "<gray>Pulled from the darkest trench.\nFew have ever seen one."
     rarity: LEGENDARY
@@ -253,7 +249,7 @@ entries:
     max-y: 30
 
   trench_maw:
-    material: PUFFERFISH
+    item: PUFFERFISH
     display-name: "<dark_blue>☠ Trench Maw"
     description: "<gray>An abyssal predator with endless hunger."
     rarity: EPIC
@@ -266,7 +262,7 @@ entries:
     max-y: 20
 
   abyssal_guardian:
-    material: PRISMARINE_CRYSTALS
+    item: PRISMARINE_CRYSTALS
     display-name: "<gradient:dark_aqua:blue>Abyssal Guardian</gradient>"
     description: "<gray>Ancient ocean magic pulses within it."
     rarity: LEGENDARY
@@ -278,7 +274,7 @@ entries:
     max-y: 10
 
   leviathan_relic:
-    material: NAUTILUS_SHELL
+    item: NAUTILUS_SHELL
     display-name: "<gradient:dark_blue:gold>Leviathan Relic</gradient>"
     description: "<gray>A fragment said to come from an ancient beast."
     rarity: LEGENDARY
@@ -291,7 +287,7 @@ entries:
     max-y: 15
 
   prismfin:
-    material: PRISMARINE_SHARD
+    item: PRISMARINE_SHARD
     display-name: "<gradient:aqua:light_purple>Prismfin</gradient>"
     description: "<gray>Its scales refract every color of the sea."
     rarity: EPIC
@@ -308,7 +304,7 @@ entries:
   # ───────────────────────────────────────────
 
   crystal_carp:
-    material: TROPICAL_FISH
+    item: TROPICAL_FISH
     display-name: "<aqua>❄ Crystal Carp"
     description: "<gray>Cold to the touch and clear as ice."
     rarity: UNCOMMON
@@ -321,7 +317,7 @@ entries:
       - SNOWY_TAIGA
 
   glacier_eel:
-    material: SALMON
+    item: SALMON
     display-name: "<blue>Glacier Eel"
     description: "<gray>Moves silently beneath frozen lakes."
     rarity: RARE
@@ -334,7 +330,7 @@ entries:
     max-y: 62
 
   aurora_kelpfin:
-    material: TROPICAL_FISH
+    item: TROPICAL_FISH
     display-name: "<gradient:aqua:white>Aurora Kelpfin</gradient>"
     description: "<gray>Its scales ripple with polar colors."
     rarity: EPIC
@@ -349,7 +345,7 @@ entries:
     max-time: 3000   # 09:00
 
   frostbite_perch:
-    material: COD
+    item: COD
     display-name: "<aqua>Frostbite Perch"
     description: "<gray>Its touch numbs exposed skin."
     rarity: UNCOMMON
@@ -361,7 +357,7 @@ entries:
       - FROZEN_RIVER
 
   cloudscale_char:
-    material: SALMON
+    item: SALMON
     display-name: "<aqua>Cloudscale Char"
     description: "<gray>Its scales reflect the sky above."
     rarity: RARE
@@ -376,7 +372,7 @@ entries:
     max-time: 11000  # 17:00
 
   permafrost_pike:
-    material: SALMON
+    item: SALMON
     display-name: "<gradient:aqua:white>Permafrost Pike</gradient>"
     description: "<gray>Frozen solid and somehow still alive."
     rarity: EPIC
@@ -393,7 +389,7 @@ entries:
   # ───────────────────────────────────────────
 
   mossback_catfish:
-    material: COD
+    item: COD
     display-name: "<green>Mossback Catfish"
     description: "<gray>Covered in slick moss and river algae."
     rarity: COMMON
@@ -405,7 +401,7 @@ entries:
       - SWAMP
 
   willow_whisker:
-    material: SALMON
+    item: SALMON
     display-name: "<dark_green>Willow Whisker"
     description: "<gray>Often found beneath hanging willow roots."
     rarity: UNCOMMON
@@ -417,7 +413,7 @@ entries:
       - MANGROVE_SWAMP
 
   thunder_trout:
-    material: COD
+    item: COD
     display-name: "<yellow>⚡ Thunder Trout"
     description: "<gray>Leaps from rivers during heavy storms."
     rarity: RARE
@@ -429,7 +425,7 @@ entries:
       - STONY_SHORE
 
   mangrove_snapper:
-    material: COD
+    item: COD
     display-name: "<green>Mangrove Snapper"
     description: "<gray>Thrives among tangled roots and muddy waters."
     rarity: COMMON
@@ -441,7 +437,7 @@ entries:
       - SWAMP
 
   bog_lurker:
-    material: PUFFERFISH
+    item: PUFFERFISH
     display-name: "<dark_green>Bog Lurker"
     description: "<gray>Its glowing eyes peer through swamp fog."
     rarity: RARE
@@ -455,7 +451,7 @@ entries:
     max-time: 2000   # 08:00
 
   ancient_mudskipper:
-    material: COD
+    item: COD
     display-name: "<gold>Ancient Mudskipper"
     description: "<gray>A relic species from forgotten wetlands."
     rarity: EPIC
@@ -466,7 +462,7 @@ entries:
       - MANGROVE_SWAMP
 
   emerald_scale_barbel:
-    material: SALMON
+    item: SALMON
     display-name: "<green>Emerald Scale Barbel"
     description: "<gray>A prized river fish with jewel-like scales."
     rarity: UNCOMMON
@@ -478,7 +474,7 @@ entries:
       - RIVER
 
   swamp_serpent:
-    material: SALMON
+    item: SALMON
     display-name: "<dark_green>Swamp Serpent"
     description: "<gray>Long and sinuous, it coils through the reeds."
     rarity: RARE
@@ -494,7 +490,7 @@ entries:
   # ───────────────────────────────────────────
 
   sunscale_koi:
-    material: TROPICAL_FISH
+    item: TROPICAL_FISH
     display-name: "<gold>☀ Sunscale Koi"
     description: "<gray>Its scales shimmer like a summer sunrise."
     rarity: UNCOMMON
@@ -509,7 +505,7 @@ entries:
     max-time: 8000   # 14:00
 
   jungle_darter:
-    material: TROPICAL_FISH
+    item: TROPICAL_FISH
     display-name: "<green>Jungle Darter"
     description: "<gray>Too quick for most predators to catch."
     rarity: COMMON
@@ -521,7 +517,7 @@ entries:
       - BAMBOO_JUNGLE
 
   vinefang_eel:
-    material: SALMON
+    item: SALMON
     display-name: "<dark_green>Vinefang Eel"
     description: "<gray>Slithers through submerged jungle roots."
     rarity: RARE
@@ -532,7 +528,7 @@ entries:
       - JUNGLE
 
   parrotfish_prime:
-    material: TROPICAL_FISH
+    item: TROPICAL_FISH
     display-name: "<gradient:red:yellow>Parrotfish Prime</gradient>"
     description: "<gray>A brilliantly colored reef dweller."
     rarity: UNCOMMON
@@ -544,7 +540,7 @@ entries:
       - JUNGLE
 
   canopy_leaper:
-    material: TROPICAL_FISH
+    item: TROPICAL_FISH
     display-name: "<green>Canopy Leaper"
     description: "<gray>Known to leap from the water to catch insects\nhanging from low branches."
     rarity: UNCOMMON
@@ -560,7 +556,7 @@ entries:
   # ───────────────────────────────────────────
 
   dune_skipper:
-    material: COD
+    item: COD
     display-name: "<yellow>Dune Skipper"
     description: "<gray>Burrows beneath desert oasis sands."
     rarity: COMMON
@@ -571,7 +567,7 @@ entries:
       - DESERT
 
   mirage_minnow:
-    material: TROPICAL_FISH
+    item: TROPICAL_FISH
     display-name: "<gold>Mirage Minnow"
     description: "<gray>Seems to vanish when viewed directly."
     rarity: RARE
@@ -582,7 +578,7 @@ entries:
       - DESERT
 
   cactus_spine_pike:
-    material: SALMON
+    item: SALMON
     display-name: "<green>Cactus Spine Pike"
     description: "<gray>Its fins are sharp as desert thorns."
     rarity: UNCOMMON
@@ -594,7 +590,7 @@ entries:
       - BADLANDS
 
   emberfin:
-    material: TROPICAL_FISH
+    item: TROPICAL_FISH
     display-name: "<red>🔥 Emberfin"
     description: "<gray>Warm to the touch despite the water around it."
     rarity: RARE
@@ -606,7 +602,7 @@ entries:
       - WOODED_BADLANDS
 
   oasis_barracuda:
-    material: COD
+    item: COD
     display-name: "<yellow>Oasis Barracuda"
     description: "<gray>An aggressive hunter of scarce desert waters."
     rarity: EPIC
@@ -622,7 +618,7 @@ entries:
   # ───────────────────────────────────────────
 
   taiga_grayling:
-    material: COD
+    item: COD
     display-name: "<gray>Taiga Grayling"
     description: "<gray>Prefers the cold shade of pine forests."
     rarity: COMMON
@@ -634,7 +630,7 @@ entries:
       - OLD_GROWTH_PINE_TAIGA
 
   pinewater_salmon:
-    material: SALMON
+    item: SALMON
     display-name: "<green>Pinewater Salmon"
     description: "<gray>Strong migrators of icy forest streams."
     rarity: COMMON
@@ -646,7 +642,7 @@ entries:
       - SNOWY_TAIGA
 
   skyfin_trout:
-    material: COD
+    item: COD
     display-name: "<white>Skyfin Trout"
     description: "<gray>Found only in high mountain lakes."
     rarity: UNCOMMON
@@ -659,7 +655,7 @@ entries:
     min-y: 80
 
   peak_drifter:
-    material: SALMON
+    item: SALMON
     display-name: "<white>Peak Drifter"
     description: "<gray>Survives in thin air and icy meltwater pools."
     rarity: RARE
@@ -677,7 +673,7 @@ entries:
   # ───────────────────────────────────────────
 
   bloomtail_guppy:
-    material: TROPICAL_FISH
+    item: TROPICAL_FISH
     display-name: "<light_purple>Bloomtail Guppy"
     description: "<gray>Seen darting between flower petals and ponds."
     rarity: COMMON
@@ -689,7 +685,7 @@ entries:
       - MEADOW
 
   meadow_koi:
-    material: TROPICAL_FISH
+    item: TROPICAL_FISH
     display-name: "<yellow>Meadow Koi"
     description: "<gray>A peaceful fish from crystal-clear streams."
     rarity: UNCOMMON
@@ -701,7 +697,7 @@ entries:
       - CHERRY_GROVE
 
   cherry_blossom_betta:
-    material: TROPICAL_FISH
+    item: TROPICAL_FISH
     display-name: "<gradient:pink:white>Cherry Blossom Betta</gradient>"
     description: "<gray>Petal-like fins drift elegantly through the water."
     rarity: RARE
@@ -712,7 +708,7 @@ entries:
       - CHERRY_GROVE
 
   gilded_dace:
-    material: TROPICAL_FISH
+    item: TROPICAL_FISH
     display-name: "<gold>Gilded Dace"
     description: "<gray>Shimmers like sunlight through forest canopy."
     rarity: UNCOMMON
@@ -729,7 +725,7 @@ entries:
   # ───────────────────────────────────────────
 
   obsidian_sturgeon:
-    material: COD
+    item: COD
     display-name: "<dark_gray>Obsidian Sturgeon"
     description: "<gray>Its hide is rough as volcanic glass."
     rarity: EPIC
@@ -741,7 +737,7 @@ entries:
       - SOUL_SAND_VALLEY
 
   soulscale_ray:
-    material: PHANTOM_MEMBRANE
+    item: PHANTOM_MEMBRANE
     display-name: "<dark_purple>☠ Soulscale Ray"
     description: "<gray>It glides through lava seas like a spirit."
     rarity: LEGENDARY
@@ -753,7 +749,7 @@ entries:
       - NETHER_WASTES
 
   lavafang_perch:
-    material: SALMON
+    item: SALMON
     display-name: "<red>Lavafang Perch"
     description: "<gray>Its bite can melt weak fishing lines."
     rarity: EPIC
@@ -765,7 +761,7 @@ entries:
       - BASALT_DELTAS
 
   warped_guppy:
-    material: TROPICAL_FISH
+    item: TROPICAL_FISH
     display-name: "<aqua>Warped Guppy"
     description: "<gray>A bizarre fish twisted by Nether energy."
     rarity: UNCOMMON
@@ -776,7 +772,7 @@ entries:
       - WARPED_FOREST
 
   crimson_angler:
-    material: PUFFERFISH
+    item: PUFFERFISH
     display-name: "<dark_red>Crimson Angler"
     description: "<gray>Its glowing lure attracts prey in the Nether dark."
     rarity: EPIC
@@ -787,7 +783,7 @@ entries:
       - CRIMSON_FOREST
 
   ashen_drifter:
-    material: COD
+    item: COD
     display-name: "<gray>Ashen Drifter"
     description: "<gray>Coated in soot, it survives on ember motes."
     rarity: UNCOMMON
@@ -803,7 +799,7 @@ entries:
   # ───────────────────────────────────────────
 
   sirens_bloom:
-    material: GLOW_BERRIES
+    item: GLOW_BERRIES
     display-name: "<light_purple>✿ Siren's Bloom</light_purple>"
     description: "<gray>A glowing aquatic plant often mistaken for a fish."
     rarity: EPIC
@@ -816,7 +812,7 @@ entries:
     max-y: 20
 
   caveblind_tetra:
-    material: TROPICAL_FISH
+    item: TROPICAL_FISH
     display-name: "<gray>Caveblind Tetra"
     description: "<gray>Adapted to the endless dark underground."
     rarity: COMMON
@@ -830,7 +826,7 @@ entries:
     max-y: 30
 
   dripstone_crusher:
-    material: COD
+    item: COD
     display-name: "<dark_gray>Dripstone Crusher"
     description: "<gray>Its armored skull can crack solid stone."
     rarity: RARE
@@ -843,7 +839,7 @@ entries:
     max-y: 20
 
   glowcap_floater:
-    material: TROPICAL_FISH
+    item: TROPICAL_FISH
     display-name: "<green>Glowcap Floater"
     description: "<gray>Feeds on bioluminescent fungi.\nIts belly glows faintly in the dark."
     rarity: UNCOMMON
@@ -856,7 +852,7 @@ entries:
     max-y: 10
 
   echofin:
-    material: SCULK
+    item: SCULK
     display-name: "<dark_aqua>Echofin"
     description: "<gray>It reacts to the faintest vibrations underground."
     rarity: LEGENDARY
@@ -869,7 +865,7 @@ entries:
     max-y: -20
 
   wardens_bane_eel:
-    material: SCULK_VEIN
+    item: SCULK_VEIN
     display-name: "<dark_blue>Warden's Bane Eel"
     description: "<gray>Even Wardens avoid its chilling presence."
     rarity: MYTHIC
@@ -882,7 +878,7 @@ entries:
     max-y: -30
 
   abyssal_crawler:
-    material: SPIDER_EYE
+    item: SPIDER_EYE
     display-name: "<dark_red>Abyssal Crawler"
     description: "<gray>Eight-legged and somehow aquatic.\nBest not to ask questions."
     rarity: EPIC
@@ -900,7 +896,7 @@ entries:
   # ───────────────────────────────────────────
 
   voidscale_serpent:
-    material: ENDER_EYE
+    item: ENDER_EYE
     display-name: "<dark_purple>☄ Voidscale Serpent"
     description: "<gray>Whispers echo from its endless black eyes."
     rarity: MYTHIC
@@ -912,7 +908,7 @@ entries:
       - END_HIGHLANDS
 
   void_drifter:
-    material: ENDER_PEARL
+    item: ENDER_PEARL
     display-name: "<dark_purple>Void Drifter"
     description: "<gray>Teleports short distances when startled.\nAlmost impossible to hook."
     rarity: LEGENDARY
@@ -924,7 +920,7 @@ entries:
       - END_MIDLANDS
 
   endmire_leech:
-    material: PHANTOM_MEMBRANE
+    item: PHANTOM_MEMBRANE
     display-name: "<gray>Endmire Leech"
     description: "<gray>Latches onto Endermen and drains their energy."
     rarity: EPIC

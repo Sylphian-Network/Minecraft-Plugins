@@ -18,6 +18,9 @@ dependencies:
     Sylphian-Scoreboard:
       load: BEFORE
       required: true
+    Sylphian-Core:
+      load: BEFORE
+      required: true
     Sylphian-Crates:
       load: BEFORE
       required: false

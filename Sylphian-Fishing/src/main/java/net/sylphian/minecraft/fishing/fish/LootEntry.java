@@ -11,10 +11,9 @@ import java.util.Random;
 /**
  * Represents a single entry in the fishing loot table.
  *
- * <p>An entry is either a {@link LootEntryType#ITEM} (a standard fish or item) or a
- * {@link LootEntryType#CRATE_KEY} (a Sylphian Crates key delivered via the CratesAPI).
- * Item-type entries carry a material, display name, and description. Crate key entries
- * carry only a {@code keyId} — display and material fields will be null.</p>
+ * <p>Entries are either standard fish (material, display name, and description are populated)
+ * or cross-plugin external items resolved via the {@link net.sylphian.minecraft.core.item.ItemRegistry}
+ * ({@link #externalItemId} is non-null, material and display fields will be null).</p>
  *
  * <h2>Restriction Dimensions</h2>
  * <ul>
@@ -38,7 +37,7 @@ import java.util.Random;
  * @see LootService
  * @see LootTableConfigLoader
  */
-public record LootEntry(String id, LootEntryType type, String keyId,
+public record LootEntry(String id, String externalItemId,
                         Material material, String displayName, String description,
                         Rarity rarity, int weight, List<Biome> biomes,
                         double minWeight, double maxWeight,
@@ -47,12 +46,13 @@ public record LootEntry(String id, LootEntryType type, String keyId,
     /**
      * Constructs a new LootEntry.
      *
-     * @param id          unique identifier for the entry
-     * @param type        the reward type — determines how the catch is delivered
-     * @param keyId       the crate key ID to give; only populated when type is {@link LootEntryType#CRATE_KEY}
-     * @param material    the item material to use; only populated when type is {@link LootEntryType#ITEM}
-     * @param displayName the MiniMessage formatted name displayed to players; only populated when type is {@link LootEntryType#ITEM}
-     * @param description the MiniMessage formatted lore description; only populated when type is {@link LootEntryType#ITEM}
+     * @param id             unique identifier for the entry
+     * @param externalItemId namespaced item ID resolved via the ItemRegistry
+     *                       (e.g. {@code "sylphian-crates:legendary_key"});
+     *                       null for standard fish entries
+     * @param material    the item material to use; null for external item entries
+     * @param displayName the MiniMessage formatted name displayed to players; null for external item entries
+     * @param description the MiniMessage formatted lore description; null for external item entries
      * @param rarity      the entry rarity
      * @param weight      relative weight in the weighted loot pool
      * @param biomes      list of biomes where this entry can be caught, empty for no restriction

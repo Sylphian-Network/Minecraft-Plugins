@@ -3,6 +3,7 @@ package net.sylphian.minecraft.crates.config;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,20 +15,26 @@ import java.util.Map;
  * with higher chances appear more often relative to others in the same pool.</p>
  *
  * @param id              unique identifier within the crate's pool
+ * @param externalItemId  namespaced item ID resolved via the ItemRegistry
+ *                        (e.g. {@code "sylphian-fishing:bait/ocean_bait"});
+ *                        null for standard ITEM rewards
  * @param type            the reward type — determines how it is granted
  * @param chance          relative weight in the pool; higher = more frequent
- * @param displayName     MiniMessage formatted name shown in selection GUIs
- * @param displayMaterial material used to represent this reward in GUIs
+ * @param displayName     MiniMessage formatted name shown in selection GUIs;
+ *                        null for external item rewards
+ * @param displayMaterial material used to represent this reward in GUIs;
+ *                        null for external item rewards
  * @param amount          stack size of the item given to the player
  * @param lore            MiniMessage formatted lore lines shown on the item
  * @param enchantments    map of enchantment key to level applied to the item
  */
 public record RewardEntry(
         String id,
+        @Nullable String externalItemId,
         RewardType type,
         double chance,
-        String displayName,
-        Material displayMaterial,
+        @Nullable String displayName,
+        @Nullable Material displayMaterial,
         int amount,
         List<String> lore,
         Map<String, Integer> enchantments
@@ -49,11 +56,18 @@ public record RewardEntry(
             return null;
         }
 
-        Material displayMaterial;
-        try {
-            displayMaterial = Material.valueOf(sec.getString("display-material", "PAPER").toUpperCase());
-        } catch (IllegalArgumentException e) {
-            displayMaterial = Material.PAPER;
+        String externalItemId = sec.getString("item", null);
+
+        String displayName = null;
+        Material displayMaterial = null;
+
+        if (externalItemId == null) {
+            try {
+                displayMaterial = Material.valueOf(sec.getString("display-material", "PAPER").toUpperCase());
+            } catch (IllegalArgumentException e) {
+                displayMaterial = Material.PAPER;
+            }
+            displayName = sec.getString("display-name", "<white>" + id);
         }
 
         Map<String, Integer> enchantments = new HashMap<>();
@@ -66,9 +80,10 @@ public record RewardEntry(
 
         return new RewardEntry(
                 id,
+                externalItemId,
                 type,
                 sec.getDouble("chance", 1.0),
-                sec.getString("display-name", "<white>" + id),
+                displayName,
                 displayMaterial,
                 sec.getInt("amount", 1),
                 sec.getStringList("lore"),

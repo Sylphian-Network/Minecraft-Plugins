@@ -1,14 +1,16 @@
 package net.sylphian.minecraft.crates.service;
 
+import net.sylphian.minecraft.core.item.ItemRegistry;
 import net.sylphian.minecraft.crates.config.CrateConfig;
 import net.sylphian.minecraft.crates.config.RewardEntry;
-import net.sylphian.minecraft.crates.config.RewardType;
 import net.sylphian.minecraft.core.util.ItemBuilder;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 /**
@@ -61,8 +63,7 @@ public class CrateService {
 
     /**
      * Grants a single reward to the player.
-     * For {@link RewardType#ITEM} rewards, the item is added to the player's inventory
-     * or dropped at their feet if full.
+     * The item is added to the player's inventory, or dropped at their feet if full.
      *
      * @param player the player to reward
      * @param reward the reward to grant
@@ -86,12 +87,28 @@ public class CrateService {
     }
 
     /**
-     * Builds the full ItemStack for a reward, including name, lore, amount and enchantments.
+     * Builds the ItemStack for a reward.
+     * For external item rewards, the item is resolved from the {@link ItemRegistry}
+     * and cloned with the configured amount applied. Falls back to a named paper
+     * placeholder if the registry lookup fails.
+     * For standard rewards, the item is built from the display material, name,
+     * lore, and enchantments.
      *
      * @param reward the reward to build an item for
      * @return the built ItemStack
      */
     public ItemStack buildItem(RewardEntry reward) {
+        if (reward.externalItemId() != null) {
+            Optional<ItemStack> registryItem = ItemRegistry.get(reward.externalItemId());
+            if (registryItem.isPresent()) {
+                ItemStack copy = registryItem.get().clone();
+                copy.setAmount(reward.amount());
+                return copy;
+            }
+            return new ItemBuilder(Material.PAPER)
+                    .name("<red>Missing: " + reward.externalItemId())
+                    .build();
+        }
         ItemBuilder builder = new ItemBuilder(reward.displayMaterial())
                 .name(reward.displayName())
                 .amount(reward.amount());
