@@ -18,12 +18,50 @@
 #
 # duration:              How long the zone persists in seconds.
 #
-# particle:              Bukkit Particle enum name used for the ring display.
+# particle:              Bukkit Particle enum name used for the zone ring.
 #                        See: https://jd.papermc.io/paper/26.1.2/org/bukkit/Particle.html
+#
+# particle-data:         Required for particles that have a DataType. Omit for data-free
+#                        particles. If a particle requires data but none is provided, it
+#                        falls back to BUBBLE. The following types are supported:
+#
+#   DUST:
+#     particle-data:
+#       color: { r: 0, g: 170, b: 230 }
+#       size: 1.5
+#
+#   DUST_COLOR_TRANSITION:
+#     particle-data:
+#       from-color: { r: 0, g: 170, b: 230 }
+#       to-color:   { r: 0, g: 80,  b: 200 }
+#       size: 1.5
+#
+#   ENTITY_EFFECT / FLASH / TINTED_LEAVES  (Color):
+#     particle-data:
+#       color: { r: 255, g: 0, b: 0 }
+#       # Optional alpha (0-255, defaults to 255):
+#       # color: { a: 200, r: 255, g: 0, b: 0 }
+#
+#   BLOCK / FALLING_DUST / DUST_PILLAR / BLOCK_CRUMBLE / BLOCK_MARKER  (BlockData):
+#     particle-data:
+#       material: SAND
+#
+#   DRAGON_BREATH (power) / SCULK_CHARGE (angle in radians)  (Float):
+#     particle-data:
+#       value: 0.5
+#
+#   SHRIEK  (Integer delay):
+#     particle-data:
+#       value: 0
+#
+#   Not supported (fall back to BUBBLE): ITEM, VIBRATION, TRAIL, EFFECT, INSTANT_EFFECT
 #
 # bite-timer-multiplier: Multiplier applied to the calculated bite delay for
 #                        any player fishing inside the zone.
 #                        Below 1.0 = faster bites. e.g. 0.6 = 40% faster.
+#
+# mutation-chance-multiplier: Multiplier applied to all mutation base chances
+#                        inside the zone.
 #
 # rarity-multipliers:    Per-rarity catch chance multipliers applied inside
 #                        the zone, stacked on top of weather multipliers.
@@ -32,38 +70,206 @@
 
 baits:
 
+  # ───────────────────────────────────────────
+  # Ocean Bait
+  # General-purpose bait suited to open water.
+  # Boosts rare and epic fish, mild bite speed.
+  # ───────────────────────────────────────────
   ocean_bait:
     display-name: "<aqua>🪱 Ocean Bait"
     material: SLIME_BALL
     radius: 8
     duration: 300
-    particle: BUBBLE
+    particle: DUST
+    particle-data:
+      color: { r: 0, g: 170, b: 230 }
+      size: 1.5
     bite-timer-multiplier: 0.8
     mutation-chance-multiplier: 1.5
     rarity-multipliers:
       RARE: 1.3
       EPIC: 1.5
 
+  # ───────────────────────────────────────────
+  # Storm Bait
+  # Thrives in bad weather. Very fast bites and
+  # significantly boosts rare+ catch chances.
+  # ───────────────────────────────────────────
   storm_bait:
     display-name: "<yellow>⚡ Storm Bait"
     material: GLOWSTONE_DUST
     radius: 10
     duration: 180
-    particle: ELECTRIC_SPARK
+    particle: DUST
+    particle-data:
+      color: { r: 255, g: 210, b: 40 }
+      size: 2.0
     bite-timer-multiplier: 0.5
+    mutation-chance-multiplier: 1.0
     rarity-multipliers:
       RARE: 1.5
       EPIC: 2.0
       LEGENDARY: 1.5
 
+  # ───────────────────────────────────────────
+  # Deep Lure
+  # Specialist bait for deep water. Greatly
+  # boosts legendary and mythic catch chances.
+  # ───────────────────────────────────────────
   deep_lure:
     display-name: "<dark_aqua>🎣 Deep Lure"
     material: PRISMARINE_SHARD
     radius: 6
     duration: 240
-    particle: CHERRY_LEAVES
+    particle: DUST
+    particle-data:
+      color: { r: 80, g: 0, b: 200 }
+      size: 1.3
     bite-timer-multiplier: 0.9
+    mutation-chance-multiplier: 2.0
     rarity-multipliers:
       EPIC: 1.8
       LEGENDARY: 2.0
       MYTHIC: 1.5
+
+  # ───────────────────────────────────────────
+  # Night Lure
+  # Most effective after dark. Boosts fish that
+  # only surface at night.
+  # ───────────────────────────────────────────
+  night_lure:
+    display-name: "<dark_purple>☾ Night Lure"
+    material: PHANTOM_MEMBRANE
+    radius: 7
+    duration: 270
+    particle: SOUL
+    bite-timer-multiplier: 0.85
+    mutation-chance-multiplier: 1.3
+    rarity-multipliers:
+      UNCOMMON: 1.2
+      RARE: 1.4
+      EPIC: 1.3
+
+  # ───────────────────────────────────────────
+  # Cave Bait
+  # Drawn from sculk, designed for underground
+  # fishing. Boosts cave and deep dark fish.
+  # ───────────────────────────────────────────
+  cave_bait:
+    display-name: "<dark_green>🕳 Cave Bait"
+    material: SCULK
+    radius: 5
+    duration: 210
+    particle: SCULK_SOUL
+    bite-timer-multiplier: 1.0
+    mutation-chance-multiplier: 1.8
+    rarity-multipliers:
+      RARE: 1.5
+      EPIC: 2.0
+      LEGENDARY: 1.2
+
+  # ───────────────────────────────────────────
+  # Nether Bait
+  # Infused with blaze fire. Only attracts fish
+  # native to the Nether.
+  # ───────────────────────────────────────────
+  nether_bait:
+    display-name: "<red>🔥 Nether Bait"
+    material: BLAZE_POWDER
+    radius: 7
+    duration: 200
+    particle: SOUL_FIRE_FLAME
+    bite-timer-multiplier: 0.75
+    mutation-chance-multiplier: 1.2
+    rarity-multipliers:
+      UNCOMMON: 1.3
+      RARE: 1.6
+      EPIC: 1.8
+
+  # ───────────────────────────────────────────
+  # Jungle Bait
+  # Brewed from tropical flora. Attracts exotic
+  # jungle and warm-water species.
+  # ───────────────────────────────────────────
+  jungle_bait:
+    display-name: "<green>🌿 Jungle Bait"
+    material: BAMBOO
+    radius: 8
+    duration: 240
+    particle: SPORE_BLOSSOM_AIR
+    bite-timer-multiplier: 0.9
+    mutation-chance-multiplier: 1.4
+    rarity-multipliers:
+      COMMON: 0.7
+      UNCOMMON: 1.5
+      RARE: 1.4
+
+  # ───────────────────────────────────────────
+  # Arctic Bait
+  # Flash-frozen bait for cold and frozen waters.
+  # ───────────────────────────────────────────
+  arctic_bait:
+    display-name: "<aqua>❄ Arctic Bait"
+    material: SNOWBALL
+    radius: 7
+    duration: 220
+    particle: SNOWFLAKE
+    bite-timer-multiplier: 1.1
+    mutation-chance-multiplier: 1.2
+    rarity-multipliers:
+      UNCOMMON: 1.3
+      RARE: 1.5
+      EPIC: 1.4
+
+  # ───────────────────────────────────────────
+  # Mutation Bait
+  # No rarity advantage — entirely focused on
+  # triggering mutations on whatever is caught.
+  # ───────────────────────────────────────────
+  mutation_bait:
+    display-name: "<light_purple>✦ Mutation Bait"
+    material: FERMENTED_SPIDER_EYE
+    radius: 6
+    duration: 180
+    particle: ENCHANT
+    bite-timer-multiplier: 1.0
+    mutation-chance-multiplier: 5.0
+
+  # ───────────────────────────────────────────
+  # Void Lure
+  # Crafted from End materials. Exclusively
+  # attracts End and void-dwelling fish.
+  # ───────────────────────────────────────────
+  void_lure:
+    display-name: "<dark_purple>☄ Void Lure"
+    material: ENDER_PEARL
+    radius: 6
+    duration: 200
+    particle: REVERSE_PORTAL
+    bite-timer-multiplier: 1.2
+    mutation-chance-multiplier: 2.5
+    rarity-multipliers:
+      EPIC: 1.5
+      LEGENDARY: 2.5
+      MYTHIC: 2.0
+
+  # ───────────────────────────────────────────
+  # Legendary Lure
+  # Extremely rare and expensive. Dramatically
+  # shifts the pool toward legendary and mythic.
+  # ───────────────────────────────────────────
+  legendary_lure:
+    display-name: "<gold>✦ Legendary Lure"
+    material: HEART_OF_THE_SEA
+    radius: 12
+    duration: 120
+    particle: TOTEM_OF_UNDYING
+    bite-timer-multiplier: 0.6
+    mutation-chance-multiplier: 3.0
+    rarity-multipliers:
+      COMMON: 0.3
+      UNCOMMON: 0.5
+      RARE: 0.8
+      EPIC: 2.0
+      LEGENDARY: 4.0
+      MYTHIC: 3.0

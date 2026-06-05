@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.fishing.config.BaitConfig;
 import net.sylphian.minecraft.fishing.services.bait.BaitZone;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Display;
@@ -163,16 +164,28 @@ public class BaitZoneService {
             particle = Particle.BUBBLE;
         }
 
-        double radius = zone.config().radius();
+        Object data = zone.config().particleData();
+
+        if (data == null && particle.getDataType() != Void.class) {
+            particle = Particle.BUBBLE;
+        }
+
+        double radius        = zone.config().radius();
         double circumference = 2 * Math.PI * radius;
-        int points = (int) Math.ceil(circumference / 0.4);
-        double angleStep = (2 * Math.PI) / points;
+        int    points        = (int) Math.ceil(circumference / 0.4);
+        double angleStep     = (2 * Math.PI) / points;
 
         for (int i = 0; i < points; i++) {
             double angle = i * angleStep;
             double x = centre.getX() + radius * Math.cos(angle);
             double z = centre.getZ() + radius * Math.sin(angle);
-            centre.getWorld().spawnParticle(particle, x, centre.getY() + 0.1, z, 1, 0, 0, 0, 0);
+            double y = centre.getY() + 0.1;
+
+            if (data != null) {
+                centre.getWorld().spawnParticle(particle, x, y, z, 1, 0, 0, 0, 0, data);
+            } else {
+                centre.getWorld().spawnParticle(particle, x, y, z, 1, 0, 0, 0, 0);
+            }
         }
     }
 
