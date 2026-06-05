@@ -3,7 +3,7 @@ package net.sylphian.minecraft.fishing.services;
 import net.sylphian.minecraft.fishing.config.BaitConfig;
 import net.sylphian.minecraft.fishing.config.ConfigLoader;
 import net.sylphian.minecraft.fishing.fish.*;
-import net.sylphian.minecraft.fishing.util.ItemBuilder;
+import net.sylphian.minecraft.core.util.ItemBuilder;
 import org.bukkit.block.Biome;
 import org.bukkit.inventory.ItemStack;
 

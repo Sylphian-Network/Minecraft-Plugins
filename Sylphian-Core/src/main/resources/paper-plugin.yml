@@ -1,0 +1,10 @@
+name: Sylphian-Core
+prefix: Sylphian-Core
+version: '${version}'
+
+main: net.sylphian.minecraft.core.SylphianCore
+api-version: '26.1.2'
+load: POSTWORLD
+
+authors: [QuackieMackie]
+website: https://sylphian.net

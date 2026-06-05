@@ -1,7 +1,5 @@
-
 dependencies {
     compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
-    compileOnly(project(":Sylphian-Core"))
 }
 
 tasks {

@@ -10,7 +10,7 @@ import net.sylphian.minecraft.crates.gui.RewardSelectionGUI;
 import net.sylphian.minecraft.crates.gui.RewardSelectionGUIHolder;
 import net.sylphian.minecraft.crates.key.CrateKey;
 import net.sylphian.minecraft.crates.service.CrateService;
-import net.sylphian.minecraft.crates.util.ItemBuilder;
+import net.sylphian.minecraft.core.util.ItemBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

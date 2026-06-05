@@ -6,7 +6,7 @@ import net.sylphian.minecraft.fishing.db.models.FishEncyclopaediaModel;
 import net.sylphian.minecraft.fishing.db.repositories.FishEncyclopaediaRepository;
 import net.sylphian.minecraft.fishing.fish.LootEntry;
 import net.sylphian.minecraft.fishing.fish.LootEntryType;
-import net.sylphian.minecraft.fishing.util.ItemBuilder;
+import net.sylphian.minecraft.core.util.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;

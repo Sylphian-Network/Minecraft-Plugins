@@ -2,6 +2,7 @@ rootProject.name = "Minecraft-Plugins"
 
 include("Sylphian-Database")
 include("Sylphian-Scoreboard")
+include("Sylphian-Core")
 include("Sylphian-Crates")
 include("Sylphian-Profile")
 include("Sylphian-Fishing")

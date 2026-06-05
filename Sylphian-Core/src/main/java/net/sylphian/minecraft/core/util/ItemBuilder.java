@@ -1,4 +1,4 @@
-package net.sylphian.minecraft.crates.util;
+package net.sylphian.minecraft.core.util;
 
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
