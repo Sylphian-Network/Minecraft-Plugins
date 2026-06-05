@@ -8,22 +8,18 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.fishing.SylphianFishing;
-import net.sylphian.minecraft.fishing.config.BaitConfig;
 import net.sylphian.minecraft.fishing.fish.CatchResult;
 import net.sylphian.minecraft.fishing.fish.Rarity;
 import net.sylphian.minecraft.fishing.fish.WeatherCondition;
-import net.sylphian.minecraft.fishing.services.BaitZoneService;
 import net.sylphian.minecraft.fishing.services.CatchEffectService;
 import net.sylphian.minecraft.fishing.services.FishMutationService;
 import net.sylphian.minecraft.fishing.services.LootService;
-import net.sylphian.minecraft.fishing.services.bait.BaitItem;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +39,6 @@ import java.util.Random;
  *   <li>{@code reload} — reloads config.yml and loot_table.yml without restarting</li>
  *   <li>{@code test-effect <rarity>} — triggers rarity catch effects at the player's target location</li>
  *   <li>{@code test-fishing <count> [biome] [weather] [y] [time]} — simulates fishing catches and prints distribution</li>
- *   <li>{@code give-bait <bait-id> [amount]} — gives the executing player a bait item</li>
  * </ul>
  */
 public class SylphianFishingCommand implements BasicCommand {
@@ -55,7 +50,6 @@ public class SylphianFishingCommand implements BasicCommand {
     private final CatchEffectService catchEffectService;
     private final LootService lootService;
     private final FishMutationService mutationService;
-    private final BaitZoneService baitZoneService;
     private final Random random = new Random();
 
     /**
@@ -65,16 +59,13 @@ public class SylphianFishingCommand implements BasicCommand {
      * @param catchEffectService the service used to apply rarity catch effects
      * @param lootService        the loot service used for fishing simulations
      * @param mutationService    the mutation service used for simulation statistics
-     * @param baitZoneService the service used to look up bait configs and provide tab completion
      */
     public SylphianFishingCommand(SylphianFishing plugin, CatchEffectService catchEffectService,
-                                  LootService lootService, FishMutationService mutationService,
-                                  BaitZoneService baitZoneService) {
+                                  LootService lootService, FishMutationService mutationService) {
         this.plugin = plugin;
         this.catchEffectService = catchEffectService;
         this.lootService = lootService;
         this.mutationService = mutationService;
-        this.baitZoneService = baitZoneService;
     }
 
     /**
@@ -96,7 +87,6 @@ public class SylphianFishingCommand implements BasicCommand {
             case "reload"       -> handleReload(sender);
             case "test-effect"  -> handleTestEffect(sender, args);
             case "test-fishing" -> handleTestFishing(sender, args);
-            case "give-bait"    -> handleGiveBait(sender, args);
             default             -> sendUsage(sender);
         }
     }
@@ -316,51 +306,6 @@ public class SylphianFishingCommand implements BasicCommand {
     }
 
     /**
-     * Gives the executing player a bait item of the specified type and amount.
-     *
-     * @param sender the command sender (must be a player)
-     * @param args   full args array; args[1] is the bait ID, args[2] is the optional amount
-     */
-    private void handleGiveBait(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player player)) {
-            sender.sendMessage(Component.text("This subcommand can only be used by a player.", NamedTextColor.RED));
-            return;
-        }
-
-        if (args.length < 2) {
-            sender.sendMessage(Component.text("Usage: /sylphian-fishing give-bait <bait-id> [amount]", NamedTextColor.RED));
-            return;
-        }
-
-        BaitConfig config = baitZoneService.getBaitConfig(args[1]);
-        if (config == null) {
-            sender.sendMessage(Component.text("Unknown bait '" + args[1] + "'. Valid baits: "
-                    + baitZoneService.getBaitIds(), NamedTextColor.RED));
-            return;
-        }
-
-        int amount = 1;
-        if (args.length >= 3) {
-            try {
-                amount = Integer.parseInt(args[2]);
-                if (amount < 1 || amount > 64) {
-                    sender.sendMessage(Component.text("Amount must be between 1 and 64.", NamedTextColor.RED));
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                sender.sendMessage(Component.text("Invalid amount: " + args[2], NamedTextColor.RED));
-                return;
-            }
-        }
-
-        ItemStack baitItem = BaitItem.create(config, plugin);
-        baitItem.setAmount(amount);
-        player.getInventory().addItem(baitItem);
-        player.sendMessage(MINI.deserialize(
-                "<gray>Given <white>" + amount + "x " + config.displayName() + "<gray>."));
-    }
-
-    /**
      * Sends usage information listing all available subcommands.
      *
      * @param sender the command sender to notify
@@ -370,7 +315,6 @@ public class SylphianFishingCommand implements BasicCommand {
         sender.sendMessage(Component.text("  /sylphian-fishing reload", NamedTextColor.RED));
         sender.sendMessage(Component.text("  /sylphian-fishing test-effect <rarity>", NamedTextColor.RED));
         sender.sendMessage(Component.text("  /sylphian-fishing test-fishing <count> [biome] [weather] [y] [time]", NamedTextColor.RED));
-        sender.sendMessage(Component.text("  /sylphian-fishing give-bait <bait-id> [amount]", NamedTextColor.RED));
     }
 
     /**
@@ -383,7 +327,7 @@ public class SylphianFishingCommand implements BasicCommand {
     @Override
     public @NotNull Collection<String> suggest(@NotNull CommandSourceStack stack, @NotNull String[] args) {
         if (args.length <= 1) {
-            return List.of("reload", "test-effect", "test-fishing", "give-bait");
+            return List.of("reload", "test-effect", "test-fishing");
         }
 
         return switch (args[0].toLowerCase()) {
@@ -399,12 +343,6 @@ public class SylphianFishingCommand implements BasicCommand {
                         .map(w -> w.name().toLowerCase()).toList();
                 case 5 -> List.of("-59", "-30", "0", "30", "62", "100", "150", "200");
                 case 6 -> List.of("0", "1000", "6000", "12000", "13000", "18000", "23000");
-                default -> List.of();
-            };
-
-            case "give-bait" -> switch (args.length) {
-                case 2 -> baitZoneService.getBaitIds().stream().toList();
-                case 3 -> List.of("1", "4", "8", "16", "32", "64");
                 default -> List.of();
             };
 

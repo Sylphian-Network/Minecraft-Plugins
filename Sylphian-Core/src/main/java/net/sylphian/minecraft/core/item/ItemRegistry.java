@@ -108,6 +108,23 @@ public final class ItemRegistry {
         return provider != null ? provider.itemIds() : Set.of();
     }
 
+    /**
+     * Returns every namespaced item ID across all registered providers,
+     * in the form {@code "namespace:item-id"}.
+     * Useful for tab completion and admin tooling.
+     *
+     * @return the full set of registered namespaced item IDs
+     */
+    public static Set<String> allNamespacedIds() {
+        Set<String> result = new java.util.LinkedHashSet<>();
+        for (java.util.Map.Entry<String, ItemProvider> entry : providers.entrySet()) {
+            for (String id : entry.getValue().itemIds()) {
+                result.add(entry.getKey() + ":" + id);
+            }
+        }
+        return result;
+    }
+
     private static void warn(String message) {
         if (logger != null) logger.warning("[ItemRegistry] " + message);
     }

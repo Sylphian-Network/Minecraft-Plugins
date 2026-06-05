@@ -24,11 +24,3 @@ dependencies:
     Sylphian-Crates:
       load: BEFORE
       required: false
-
-commands:
-  sylphian-fishing:
-    description: Administrative commands for Sylphian Fishing.
-    usage: /sylphian-fishing <reload|test-effect|test-fishing>
-  encyclopaedia:
-    description: Track your fishing discoveries and collection progress.
-    usage: /encyclopaedia

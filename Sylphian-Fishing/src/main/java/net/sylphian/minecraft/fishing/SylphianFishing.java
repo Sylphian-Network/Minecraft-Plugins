@@ -116,7 +116,7 @@ public class SylphianFishing extends JavaPlugin {
         getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
             Commands commands = event.registrar();
 
-            commands.register("sylphian-fishing", new SylphianFishingCommand(this, catchEffectService, lootService, mutationService, baitZoneService));
+            commands.register("sylphian-fishing", new SylphianFishingCommand(this, catchEffectService, lootService, mutationService));
             commands.register("encyclopaedia", new EncyclopaediaCommand(encyclopaediaMenu));
         });
 
