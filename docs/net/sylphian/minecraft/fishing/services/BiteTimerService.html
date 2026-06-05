@@ -81,15 +81,18 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">BiteTimerService</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Service responsible for overriding the vanilla fishing bite timer.
+<div class="block">Service responsible for overriding the vanilla fishing timers.
 
-<p>Calculates a custom wait time based on a pre-rolled rarity estimate
-and the current weather condition, then applies it directly to the
-<code>FishHook</code> entity. Rarer fish take longer to bite; storms speed
-up the process.</p>
+<p>On cast, calculates a custom wait time (how long until a fish appears) and lure
+time (how long the fish nibbles before biting), both based on a pre-rolled rarity
+estimate and — for wait time — the current weather condition. Rarer fish take longer
+to appear and longer to commit to the bite.</p>
 
-<p>The pre-rolled rarity is used only for timing — the actual catch
-rolls independently when the fish bites.</p></div>
+<p>Vanilla lure enchantment influence, sky influence, and rain influence are disabled
+so the calculated values are applied exactly as configured.</p>
+
+<p>The pre-rolled rarity is used only for timing — the actual catch rolls
+independently when the fish bites.</p></div>
 </div>
 </section>
 <section class="summary">
@@ -127,7 +130,7 @@ rolls independently when the fish bites.</p></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#applyBiteTimer(org.bukkit.entity.FishHook,org.bukkit.entity.Player)" class="member-name-link">applyBiteTimer</a><wbr>(org.bukkit.entity.FishHook&nbsp;hook,
  org.bukkit.entity.Player&nbsp;player)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Calculates and applies a custom bite delay to the given fishing hook.</div>
+<div class="block">Calculates and applies custom wait and lure times to the given fishing hook.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reload(net.sylphian.minecraft.fishing.config.ConfigLoader)" class="member-name-link">reload</a><wbr>(<a href="../config/ConfigLoader.html" title="class in net.sylphian.minecraft.fishing.config">ConfigLoader</a>&nbsp;config)</code></div>
@@ -184,11 +187,12 @@ rolls independently when the fish bites.</p></div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">applyBiteTimer</span><wbr><span class="parameters">(org.bukkit.entity.FishHook&nbsp;hook,
  org.bukkit.entity.Player&nbsp;player)</span></div>
-<div class="block">Calculates and applies a custom bite delay to the given fishing hook.
-Called on <code>PlayerFishEvent.State.FISHING</code>.</div>
+<div class="block">Calculates and applies custom wait and lure times to the given fishing hook.
+Disables vanilla lure enchantment, sky, and rain influences so the configured
+values are applied exactly. Called on <code>PlayerFishEvent.State.FISHING</code>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>hook</code> - the fishing hook to apply the delay to</dd>
+<dd><code>hook</code> - the fishing hook to apply the timers to</dd>
 <dd><code>player</code> - the player who cast the hook</dd>
 </dl>
 </div>

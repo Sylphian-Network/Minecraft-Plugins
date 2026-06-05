@@ -161,7 +161,7 @@ lore line to the item's existing lore.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/services/BiteTimerService.html#applyBiteTimer(org.bukkit.entity.FishHook,org.bukkit.entity.Player)" class="member-name-link">applyBiteTimer(FishHook, Player)</a> - Method in class net.sylphian.minecraft.fishing.services.<a href="net/sylphian/minecraft/fishing/services/BiteTimerService.html" title="class in net.sylphian.minecraft.fishing.services">BiteTimerService</a></dt>
 <dd>
-<div class="block">Calculates and applies a custom bite delay to the given fishing hook.</div>
+<div class="block">Calculates and applies custom wait and lure times to the given fishing hook.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/services/FishMutationService.html#applyMutations(org.bukkit.entity.Player,org.bukkit.inventory.ItemStack,net.sylphian.minecraft.fishing.services.mutation.FishContext)" class="member-name-link">applyMutations(Player, ItemStack, FishContext)</a> - Method in class net.sylphian.minecraft.fishing.services.<a href="net/sylphian/minecraft/fishing/services/FishMutationService.html" title="class in net.sylphian.minecraft.fishing.services">FishMutationService</a></dt>
 <dd>
@@ -253,9 +253,9 @@ to indicate it has been selected by the player.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/config/BiteTimerConfig.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.config">BiteTimerConfig</a> - Record Class in <a href="net/sylphian/minecraft/fishing/config/package-summary.html">net.sylphian.minecraft.fishing.config</a></dt>
 <dd>
-<div class="block">Immutable configuration for the custom bite timer system.</div>
+<div class="block">Immutable configuration for the custom fishing timer system.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/fishing/config/BiteTimerConfig.html#%3Cinit%3E(int,int,java.util.Map,java.util.Map)" class="member-name-link">BiteTimerConfig(int, int, Map, Map)</a> - Constructor for record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BiteTimerConfig.html" title="class in net.sylphian.minecraft.fishing.config">BiteTimerConfig</a></dt>
+<dt><a href="net/sylphian/minecraft/fishing/config/BiteTimerConfig.html#%3Cinit%3E(int,int,java.util.Map,java.util.Map,int,int,java.util.Map)" class="member-name-link">BiteTimerConfig(int, int, Map, Map, int, int, Map)</a> - Constructor for record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BiteTimerConfig.html" title="class in net.sylphian.minecraft.fishing.config">BiteTimerConfig</a></dt>
 <dd>
 <div class="block">Creates an instance of a <code>BiteTimerConfig</code> record class.</div>
 </dd>
@@ -265,7 +265,7 @@ to indicate it has been selected by the player.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/services/BiteTimerService.html" class="type-name-link" title="class in net.sylphian.minecraft.fishing.services">BiteTimerService</a> - Class in <a href="net/sylphian/minecraft/fishing/services/package-summary.html">net.sylphian.minecraft.fishing.services</a></dt>
 <dd>
-<div class="block">Service responsible for overriding the vanilla fishing bite timer.</div>
+<div class="block">Service responsible for overriding the vanilla fishing timers.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/services/BiteTimerService.html#%3Cinit%3E(net.sylphian.minecraft.fishing.config.ConfigLoader,net.sylphian.minecraft.fishing.services.LootService,net.sylphian.minecraft.fishing.services.BaitZoneService,java.util.logging.Logger)" class="member-name-link">BiteTimerService(ConfigLoader, LootService, BaitZoneService, Logger)</a> - Constructor for class net.sylphian.minecraft.fishing.services.<a href="net/sylphian/minecraft/fishing/services/BiteTimerService.html" title="class in net.sylphian.minecraft.fishing.services">BiteTimerService</a></dt>
 <dd>
@@ -370,6 +370,10 @@ to indicate it has been selected by the player.</div>
 <dt><a href="net/sylphian/minecraft/fishing/config/BiteTimerConfig.html#calculate(net.sylphian.minecraft.fishing.fish.Rarity,net.sylphian.minecraft.fishing.fish.WeatherCondition,java.util.Random)" class="member-name-link">calculate(Rarity, WeatherCondition, Random)</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BiteTimerConfig.html" title="class in net.sylphian.minecraft.fishing.config">BiteTimerConfig</a></dt>
 <dd>
 <div class="block">Calculates the final bite delay in ticks for the given rarity and weather.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/config/BiteTimerConfig.html#calculateLureTime(net.sylphian.minecraft.fishing.fish.Rarity,java.util.Random)" class="member-name-link">calculateLureTime(Rarity, Random)</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BiteTimerConfig.html" title="class in net.sylphian.minecraft.fishing.config">BiteTimerConfig</a></dt>
+<dd>
+<div class="block">Calculates the lure time in ticks for the given rarity.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/crates/command/CratesCommand.html#canUse(org.bukkit.command.CommandSender)" class="member-name-link">canUse(CommandSender)</a> - Method in class net.sylphian.minecraft.crates.command.<a href="net/sylphian/minecraft/crates/command/CratesCommand.html" title="class in net.sylphian.minecraft.crates.command">CratesCommand</a></dt>
 <dd>
@@ -1184,7 +1188,13 @@ online player scoreboards.</div>
 <dt><a href="net/sylphian/minecraft/fishing/services/mutation/FishContext.html#getBiome()" class="member-name-link">getBiome()</a> - Method in class net.sylphian.minecraft.fishing.services.mutation.<a href="net/sylphian/minecraft/fishing/services/mutation/FishContext.html" title="class in net.sylphian.minecraft.fishing.services.mutation">FishContext</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/fishing/config/ConfigLoader.html#getBiteTimerConfig()" class="member-name-link">getBiteTimerConfig()</a> - Method in class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/ConfigLoader.html" title="class in net.sylphian.minecraft.fishing.config">ConfigLoader</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Returns the loaded bite and lure timer configuration.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/services/BaitZoneService.html#getBiteTimerMultiplier(org.bukkit.Location)" class="member-name-link">getBiteTimerMultiplier(Location)</a> - Method in class net.sylphian.minecraft.fishing.services.<a href="net/sylphian/minecraft/fishing/services/BaitZoneService.html" title="class in net.sylphian.minecraft.fishing.services">BaitZoneService</a></dt>
+<dd>
+<div class="block">Returns the combined bite timer multiplier for all active zones at the given location.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/Rarity.html#getById(java.lang.String)" class="member-name-link">getById(String)</a> - Static method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a></dt>
 <dd>
 <div class="block">Retrieves a rarity by its ID.</div>
@@ -1888,6 +1898,18 @@ position relative to others.</div>
 <dt><a href="net/sylphian/minecraft/fishing/util/ItemBuilder.html#loreStrings(java.util.List)" class="member-name-link">loreStrings(List)</a> - Method in class net.sylphian.minecraft.fishing.util.<a href="net/sylphian/minecraft/fishing/util/ItemBuilder.html" title="class in net.sylphian.minecraft.fishing.util">ItemBuilder</a></dt>
 <dd>
 <div class="block">Sets the lore of the item using a list of MiniMessage strings.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/config/BiteTimerConfig.html#lureBaseMax()" class="member-name-link">lureBaseMax()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BiteTimerConfig.html" title="class in net.sylphian.minecraft.fishing.config">BiteTimerConfig</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/config/BiteTimerConfig.html#param-lureBaseMax"><code>lureBaseMax</code></a> record component.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/config/BiteTimerConfig.html#lureBaseMin()" class="member-name-link">lureBaseMin()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BiteTimerConfig.html" title="class in net.sylphian.minecraft.fishing.config">BiteTimerConfig</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/config/BiteTimerConfig.html#param-lureBaseMin"><code>lureBaseMin</code></a> record component.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/fishing/config/BiteTimerConfig.html#lureRarityModifiers()" class="member-name-link">lureRarityModifiers()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/BiteTimerConfig.html" title="class in net.sylphian.minecraft.fishing.config">BiteTimerConfig</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/config/BiteTimerConfig.html#param-lureRarityModifiers"><code>lureRarityModifiers</code></a> record component.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:M">M</h2>

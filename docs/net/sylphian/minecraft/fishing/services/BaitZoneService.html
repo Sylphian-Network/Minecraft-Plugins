@@ -68,6 +68,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#getBaitConfig(java.lang.String)" tabindex="0">getBaitConfig(String)</a></li>
 <li><a href="#createZone(org.bukkit.Location,net.sylphian.minecraft.fishing.config.BaitConfig)" tabindex="0">createZone(Location, BaitConfig)</a></li>
 <li><a href="#getZonesAt(org.bukkit.Location)" tabindex="0">getZonesAt(Location)</a></li>
+<li><a href="#getBiteTimerMultiplier(org.bukkit.Location)" tabindex="0">getBiteTimerMultiplier(Location)</a></li>
 <li><a href="#getBaitIds()" tabindex="0">getBaitIds()</a></li>
 </ol>
 </li>
@@ -136,24 +137,29 @@ the fish pool) so no other class needs to hold or reload it separately.</p></div
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns all registered bait IDs.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="bait/BaitZone.html" title="class in net.sylphian.minecraft.fishing.services.bait">BaitZone</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getZonesAt(org.bukkit.Location)" class="member-name-link">getZonesAt</a><wbr>(org.bukkit.Location&nbsp;location)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBiteTimerMultiplier(org.bukkit.Location)" class="member-name-link">getBiteTimerMultiplier</a><wbr>(org.bukkit.Location&nbsp;location)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the combined bite timer multiplier for all active zones at the given location.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="bait/BaitZone.html" title="class in net.sylphian.minecraft.fishing.services.bait">BaitZone</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getZonesAt(org.bukkit.Location)" class="member-name-link">getZonesAt</a><wbr>(org.bukkit.Location&nbsp;location)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns at most one active zone per bait type whose radius contains the given location.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reload(java.util.Map)" class="member-name-link">reload</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>, <a href="../config/BaitConfig.html" title="class in net.sylphian.minecraft.fishing.config">BaitConfig</a>&gt;&nbsp;baits)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reload(java.util.Map)" class="member-name-link">reload</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>, <a href="../config/BaitConfig.html" title="class in net.sylphian.minecraft.fishing.config">BaitConfig</a>&gt;&nbsp;baits)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Reloads the bait configuration map.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#shutdown()" class="member-name-link">shutdown</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#shutdown()" class="member-name-link">shutdown</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Cancels all tasks and removes all active zones and their display entities.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#start(org.bukkit.plugin.java.JavaPlugin)" class="member-name-link">start</a><wbr>(org.bukkit.plugin.java.JavaPlugin&nbsp;plugin)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#start(org.bukkit.plugin.java.JavaPlugin)" class="member-name-link">start</a><wbr>(org.bukkit.plugin.java.JavaPlugin&nbsp;plugin)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Starts the rendering and label update tasks.</div>
 </div>
 </div>
@@ -273,6 +279,22 @@ If multiple zones of the same type overlap, only the first (oldest) is included.
 <dd><code>location</code> - the location to check</dd>
 <dt>Returns:</dt>
 <dd>a list of matching BaitZones with no duplicate bait types, empty if none</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getBiteTimerMultiplier(org.bukkit.Location)">
+<h3>getBiteTimerMultiplier</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getBiteTimerMultiplier</span><wbr><span class="parameters">(org.bukkit.Location&nbsp;location)</span></div>
+<div class="block">Returns the combined bite timer multiplier for all active zones at the given location.
+Each zone's multiplier is multiplied together. Returns <code>1.0</code> if no zones are active.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>location</code> - the location to check</dd>
+<dt>Returns:</dt>
+<dd>the combined multiplier to apply to the bite wait time</dd>
 </dl>
 </div>
 </section>

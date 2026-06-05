@@ -57,12 +57,13 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(int,int,java.util.Map,java.util.Map)" tabindex="0">BiteTimerConfig(int, int, Map, Map)</a></li>
+<li><a href="#%3Cinit%3E(int,int,java.util.Map,java.util.Map,int,int,java.util.Map)" tabindex="0">BiteTimerConfig(int, int, Map, Map, int, int, Map)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#calculate(net.sylphian.minecraft.fishing.fish.Rarity,net.sylphian.minecraft.fishing.fish.WeatherCondition,java.util.Random)" tabindex="0">calculate(Rarity, WeatherCondition, Random)</a></li>
+<li><a href="#calculateLureTime(net.sylphian.minecraft.fishing.fish.Rarity,java.util.Random)" tabindex="0">calculateLureTime(Rarity, Random)</a></li>
 <li><a href="#toString()" tabindex="0">toString()</a></li>
 <li><a href="#hashCode()" tabindex="0">hashCode()</a></li>
 <li><a href="#equals(java.lang.Object)" tabindex="0">equals(Object)</a></li>
@@ -70,6 +71,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#baseMax()" tabindex="0">baseMax()</a></li>
 <li><a href="#rarityModifiers()" tabindex="0">rarityModifiers()</a></li>
 <li><a href="#weatherModifiers()" tabindex="0">weatherModifiers()</a></li>
+<li><a href="#lureBaseMin()" tabindex="0">lureBaseMin()</a></li>
+<li><a href="#lureBaseMax()" tabindex="0">lureBaseMax()</a></li>
+<li><a href="#lureRarityModifiers()" tabindex="0">lureRarityModifiers()</a></li>
 </ol>
 </li>
 </ol>
@@ -87,19 +91,24 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>Record Components:</dt>
-<dd><code><span id="param-baseMin">baseMin</span></code> - minimum bite delay in ticks</dd>
-<dd><code><span id="param-baseMax">baseMax</span></code> - maximum bite delay in ticks</dd>
-<dd><code><span id="param-rarityModifiers">rarityModifiers</span></code> - multipliers per rarity — higher rarity = longer wait</dd>
-<dd><code><span id="param-weatherModifiers">weatherModifiers</span></code> - multipliers per weather — rain reduces wait time</dd>
+<dd><code><span id="param-baseMin">baseMin</span></code> - minimum wait delay in ticks before a fish appears</dd>
+<dd><code><span id="param-baseMax">baseMax</span></code> - maximum wait delay in ticks before a fish appears</dd>
+<dd><code><span id="param-rarityModifiers">rarityModifiers</span></code> - wait time multipliers per rarity — higher rarity = longer wait</dd>
+<dd><code><span id="param-weatherModifiers">weatherModifiers</span></code> - wait time multipliers per weather — rain reduces wait time</dd>
+<dd><code><span id="param-lureBaseMin">lureBaseMin</span></code> - minimum lure time in ticks before the fish bites</dd>
+<dd><code><span id="param-lureBaseMax">lureBaseMax</span></code> - maximum lure time in ticks before the fish bites</dd>
+<dd><code><span id="param-lureRarityModifiers">lureRarityModifiers</span></code> - lure time multipliers per rarity — higher rarity = longer nibble</dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
-<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">BiteTimerConfig</span>(int&nbsp;baseMin, int&nbsp;baseMax, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;&nbsp;rarityModifiers, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="../fish/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.fish">WeatherCondition</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;&nbsp;weatherModifiers)
+<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">BiteTimerConfig</span>(int&nbsp;baseMin, int&nbsp;baseMax, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;&nbsp;rarityModifiers, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="../fish/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.fish">WeatherCondition</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;&nbsp;weatherModifiers, int&nbsp;lureBaseMin, int&nbsp;lureBaseMax, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;&nbsp;lureRarityModifiers)
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">Record</a></span></div>
-<div class="block">Immutable configuration for the custom bite timer system.
+<div class="block">Immutable configuration for the custom fishing timer system.
 
-<p>Controls how long a player waits for a fish to bite based on
-the rolled rarity and current weather condition.</p></div>
+<p>Controls how long a player waits for a fish to appear (<a href="#calculate(net.sylphian.minecraft.fishing.fish.Rarity,net.sylphian.minecraft.fishing.fish.WeatherCondition,java.util.Random)"><code>calculate(Rarity, WeatherCondition, Random)</code></a>)
+and how long it nibbles before biting (<a href="#calculateLureTime(net.sylphian.minecraft.fishing.fish.Rarity,java.util.Random)"><code>calculateLureTime(Rarity, Random)</code></a>),
+both driven by the pre-rolled rarity. Wait time is also affected by weather;
+lure time is not.</p></div>
 </div>
 </section>
 <section class="summary">
@@ -112,10 +121,13 @@ the rolled rarity and current weather condition.</p></div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,int,java.util.Map,java.util.Map)" class="member-name-link">BiteTimerConfig</a><wbr>(int&nbsp;baseMin,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,int,java.util.Map,java.util.Map,int,int,java.util.Map)" class="member-name-link">BiteTimerConfig</a><wbr>(int&nbsp;baseMin,
  int&nbsp;baseMax,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;&nbsp;rarityModifiers,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="../fish/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.fish">WeatherCondition</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;&nbsp;weatherModifiers)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="../fish/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.fish">WeatherCondition</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;&nbsp;weatherModifiers,
+ int&nbsp;lureBaseMin,
+ int&nbsp;lureBaseMax,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;&nbsp;lureRarityModifiers)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates an instance of a <code>BiteTimerConfig</code> record class.</div>
 </div>
@@ -150,15 +162,36 @@ the rolled rarity and current weather condition.</p></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Calculates the final bite delay in ticks for the given rarity and weather.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#calculateLureTime(net.sylphian.minecraft.fishing.fish.Rarity,java.util.Random)" class="member-name-link">calculateLureTime</a><wbr>(<a href="../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a>&nbsp;rarity,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Random.html" title="class or interface in java.util" class="external-link">Random</a>&nbsp;random)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Calculates the lure time in ticks for the given rarity.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a hash code value for this object.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#lureBaseMax()" class="member-name-link">lureBaseMax</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the value of the <a href="#param-lureBaseMax"><code>lureBaseMax</code></a> record component.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#lureBaseMin()" class="member-name-link">lureBaseMin</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the value of the <a href="#param-lureBaseMin"><code>lureBaseMin</code></a> record component.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#lureRarityModifiers()" class="member-name-link">lureRarityModifiers</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the value of the <a href="#param-lureRarityModifiers"><code>lureRarityModifiers</code></a> record component.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rarityModifiers()" class="member-name-link">rarityModifiers</a>()</code></div>
@@ -193,13 +226,16 @@ the rolled rarity and current weather condition.</p></div>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,java.util.Map,java.util.Map)">
+<section class="detail" id="&lt;init&gt;(int,int,java.util.Map,java.util.Map,int,int,java.util.Map)">
 <h3>BiteTimerConfig</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">BiteTimerConfig</span><wbr><span class="parameters">(int&nbsp;baseMin,
  int&nbsp;baseMax,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;&nbsp;rarityModifiers,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="../fish/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.fish">WeatherCondition</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;&nbsp;weatherModifiers)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="../fish/WeatherCondition.html" title="enum class in net.sylphian.minecraft.fishing.fish">WeatherCondition</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;&nbsp;weatherModifiers,
+ int&nbsp;lureBaseMin,
+ int&nbsp;lureBaseMax,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;&nbsp;lureRarityModifiers)</span></div>
 <div class="block">Creates an instance of a <code>BiteTimerConfig</code> record class.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -207,6 +243,9 @@ the rolled rarity and current weather condition.</p></div>
 <dd><code>baseMax</code> - the value for the <a href="#param-baseMax"><code>baseMax</code></a> record component</dd>
 <dd><code>rarityModifiers</code> - the value for the <a href="#param-rarityModifiers"><code>rarityModifiers</code></a> record component</dd>
 <dd><code>weatherModifiers</code> - the value for the <a href="#param-weatherModifiers"><code>weatherModifiers</code></a> record component</dd>
+<dd><code>lureBaseMin</code> - the value for the <a href="#param-lureBaseMin"><code>lureBaseMin</code></a> record component</dd>
+<dd><code>lureBaseMax</code> - the value for the <a href="#param-lureBaseMax"><code>lureBaseMax</code></a> record component</dd>
+<dd><code>lureRarityModifiers</code> - the value for the <a href="#param-lureRarityModifiers"><code>lureRarityModifiers</code></a> record component</dd>
 </dl>
 </div>
 </section>
@@ -236,6 +275,25 @@ within the resulting range.</div>
 <dd><code>random</code> - the random source</dd>
 <dt>Returns:</dt>
 <dd>the calculated bite delay in ticks</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="calculateLureTime(net.sylphian.minecraft.fishing.fish.Rarity,java.util.Random)">
+<h3>calculateLureTime</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">calculateLureTime</span><wbr><span class="parameters">(<a href="../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a>&nbsp;rarity,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Random.html" title="class or interface in java.util" class="external-link">Random</a>&nbsp;random)</span></div>
+<div class="block">Calculates the lure time in ticks for the given rarity.
+Lure time controls how long the fish nibbles before biting once it appears.
+Weather does not influence this phase.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>rarity</code> - the rolled rarity for this catch</dd>
+<dd><code>random</code> - the random source</dd>
+<dt>Returns:</dt>
+<dd>the calculated lure time in ticks</dd>
 </dl>
 </div>
 </section>
@@ -335,6 +393,45 @@ within the resulting range.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the value of the <a href="#param-weatherModifiers"><code>weatherModifiers</code></a> record component</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="lureBaseMin()">
+<h3>lureBaseMin</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">lureBaseMin</span>()</div>
+<div class="block">Returns the value of the <a href="#param-lureBaseMin"><code>lureBaseMin</code></a> record component.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the value of the <a href="#param-lureBaseMin"><code>lureBaseMin</code></a> record component</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="lureBaseMax()">
+<h3>lureBaseMax</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">lureBaseMax</span>()</div>
+<div class="block">Returns the value of the <a href="#param-lureBaseMax"><code>lureBaseMax</code></a> record component.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the value of the <a href="#param-lureBaseMax"><code>lureBaseMax</code></a> record component</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="lureRarityModifiers()">
+<h3>lureRarityModifiers</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="../fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</span>&nbsp;<span class="element-name">lureRarityModifiers</span>()</div>
+<div class="block">Returns the value of the <a href="#param-lureRarityModifiers"><code>lureRarityModifiers</code></a> record component.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the value of the <a href="#param-lureRarityModifiers"><code>lureRarityModifiers</code></a> record component</dd>
 </dl>
 </div>
 </section>
