@@ -1,6 +1,5 @@
 package net.sylphian.minecraft.fishing.services;
 
-import net.sylphian.minecraft.fishing.services.bait.BaitZone;
 import net.sylphian.minecraft.fishing.config.BiteTimerConfig;
 import net.sylphian.minecraft.fishing.config.ConfigLoader;
 import net.sylphian.minecraft.fishing.fish.Rarity;
@@ -8,20 +7,22 @@ import net.sylphian.minecraft.fishing.fish.WeatherCondition;
 import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 
-import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 
 /**
- * Service responsible for overriding the vanilla fishing bite timer.
+ * Service responsible for overriding the vanilla fishing timers.
  *
- * <p>Calculates a custom wait time based on a pre-rolled rarity estimate
- * and the current weather condition, then applies it directly to the
- * {@link FishHook} entity. Rarer fish take longer to bite; storms speed
- * up the process.</p>
+ * <p>On cast, calculates a custom wait time (how long until a fish appears) and lure
+ * time (how long the fish nibbles before biting), both based on a pre-rolled rarity
+ * estimate and — for wait time — the current weather condition. Rarer fish take longer
+ * to appear and longer to commit to the bite.</p>
  *
- * <p>The pre-rolled rarity is used only for timing — the actual catch
- * rolls independently when the fish bites.</p>
+ * <p>Vanilla lure enchantment influence, sky influence, and rain influence are disabled
+ * so the calculated values are applied exactly as configured.</p>
+ *
+ * <p>The pre-rolled rarity is used only for timing — the actual catch rolls
+ * independently when the fish bites.</p>
  */
 public class BiteTimerService {
 
@@ -47,10 +48,11 @@ public class BiteTimerService {
     }
 
     /**
-     * Calculates and applies a custom bite delay to the given fishing hook.
-     * Called on {@link org.bukkit.event.player.PlayerFishEvent.State#FISHING}.
+     * Calculates and applies custom wait and lure times to the given fishing hook.
+     * Disables vanilla lure enchantment, sky, and rain influences so the configured
+     * values are applied exactly. Called on {@link org.bukkit.event.player.PlayerFishEvent.State#FISHING}.
      *
-     * @param hook   the fishing hook to apply the delay to
+     * @param hook   the fishing hook to apply the timers to
      * @param player the player who cast the hook
      */
     public void applyBiteTimer(FishHook hook, Player player) {
@@ -59,16 +61,18 @@ public class BiteTimerService {
 
         BiteTimerConfig timerConfig = config.getBiteTimerConfig();
         int delay = timerConfig.calculate(preRolledRarity, weather, random);
+        int lureDelay = timerConfig.calculateLureTime(preRolledRarity, random);
 
-        delay = Math.max(20, (int) (delay * baitZoneService.getBiteTimerMultiplier(hook.getLocation())));
+        double biteTimerMult = baitZoneService.getBiteTimerMultiplier(hook.getLocation());
+        delay = Math.max(20, (int) (delay * biteTimerMult));
 
 
-        hook.setMinWaitTime(delay);
-        hook.setMaxWaitTime(delay);
+        hook.setWaitTime(delay, delay);
+        hook.setLureTime(lureDelay, lureDelay);
 
-        logger.fine("Bite timer set to " + delay + " ticks for "
-                + preRolledRarity.getId() + " rarity in " + weather.name()
-                + (!zones.isEmpty() ? " (baits: " + zones.stream().map(z -> z.config().id()).collect(java.util.stream.Collectors.joining(", ")) + ")" : ""));
+        logger.fine("Bite timer set to " + delay + " ticks (bait mult: " + biteTimerMult
+                + "), lure time " + lureDelay + " ticks for "
+                + preRolledRarity.getId() + " rarity in " + weather.name());
     }
 
     /**

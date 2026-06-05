@@ -106,20 +106,22 @@ public class ConfigLoader {
     }
 
     /**
-     * Loads the bite timer configuration, falling back to sensible defaults
-     * if the section is missing.
+     * Loads the bite and lure timer configuration from the {@code bite-timer} section,
+     * falling back to sensible defaults if the section is missing.
      *
-     * @param section the configuration section containing bite timer settings
+     * @param section the {@code bite-timer} configuration section
      */
     private void loadBiteTimer(ConfigurationSection section) {
         if (section == null) {
-            // Sensible defaults if section is missing
-            biteTimerConfig = new BiteTimerConfig(100, 600, Map.of(), Map.of());
+            biteTimerConfig = new BiteTimerConfig(100, 600, Map.of(), Map.of(), 20, 80, Map.of());
             return;
         }
 
         int baseMin = section.getInt("base-min", 100);
         int baseMax = section.getInt("base-max", 600);
+
+        int lureBaseMin = 20;
+        int lureBaseMax = 80;
 
         Map<Rarity, Double> rarityModifiers = new HashMap<>();
         ConfigurationSection raritySection = section.getConfigurationSection("rarity-modifiers");
@@ -128,6 +130,23 @@ public class ConfigLoader {
                 Rarity rarity = Rarity.getById(key);
                 if (rarity != null) {
                     rarityModifiers.put(rarity, raritySection.getDouble(key, 1.0));
+                }
+            }
+        }
+
+        Map<Rarity, Double> lureRarityModifiers = new HashMap<>();
+        ConfigurationSection lureSection = section.getConfigurationSection("lure-timer");
+        if (lureSection != null) {
+            lureBaseMin = lureSection.getInt("base-min", 20);
+            lureBaseMax = lureSection.getInt("base-max", 80);
+
+            ConfigurationSection lureRaritySection = lureSection.getConfigurationSection("rarity-modifiers");
+            if (lureRaritySection != null) {
+                for (String key : lureRaritySection.getKeys(false)) {
+                    Rarity rarity = Rarity.getById(key);
+                    if (rarity != null) {
+                        lureRarityModifiers.put(rarity, lureRaritySection.getDouble(key, 1.0));
+                    }
                 }
             }
         }
@@ -141,7 +160,7 @@ public class ConfigLoader {
             }
         }
 
-        biteTimerConfig = new BiteTimerConfig(baseMin, baseMax, rarityModifiers, weatherModifiers);
+        biteTimerConfig = new BiteTimerConfig(baseMin, baseMax, rarityModifiers, weatherModifiers, lureBaseMin, lureBaseMax, lureRarityModifiers);
     }
 
     /**
@@ -168,6 +187,11 @@ public class ConfigLoader {
                 .getOrDefault(rarity.getId(), 1.0);
     }
 
+    /**
+     * Returns the loaded bite and lure timer configuration.
+     *
+     * @return the BiteTimerConfig
+     */
     public BiteTimerConfig getBiteTimerConfig() { return biteTimerConfig; }
 
     /**

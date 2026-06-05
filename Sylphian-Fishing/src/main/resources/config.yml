@@ -247,12 +247,14 @@ weather-modifiers:
 # =============================================================
 # Bite Timer
 # =============================================================
-# Controls how long a player waits for a fish to bite after casting.
-# The final delay is calculated as:
+# Controls how long a player waits for a fish to appear after casting,
+# and how long the fish nibbles before biting once it appears.
 #
+# Wait time formula:
 #   delay = random value between base-min and base-max
 #           × rarity modifier for the pre-rolled rarity
 #           × weather modifier for current weather
+#           × bait zone multiplier (if inside an active zone)
 #
 # The pre-rolled rarity is an estimate used only for timing — the
 # actual catch is rolled independently when the fish bites, so the
@@ -263,13 +265,18 @@ weather-modifiers:
 #
 # rarity-modifiers:
 #   Multiplies the base delay for the pre-rolled rarity.
-#   Rarer fish take longer to bite, building anticipation.
+#   Rarer fish take longer to appear, building anticipation.
 #   1.0 = no change, 2.0 = twice as long, 0.5 = half as long.
 #
 # weather-modifiers:
 #   Multiplies the delay based on current weather.
 #   Values below 1.0 reduce the wait (faster bites).
 #   Values above 1.0 increase it (slower bites).
+#
+# lure-timer:
+#   Controls how long the fish nibbles before committing to the bite.
+#   Not affected by weather or bait zones — only rarity.
+#   Rarity modifiers follow the same rules as above.
 # =============================================================
 
 bite-timer:
@@ -289,6 +296,17 @@ bite-timer:
     RAIN:         0.75   # 25% faster — rain attracts fish to the surface
     THUNDERSTORM: 0.5    # 50% faster — storms drive fish into a frenzy
 
+  lure-timer:
+    base-min: 20   # 1 second  — fastest nibble
+    base-max: 80   # 4 seconds — slowest base nibble before modifiers
+
+    rarity-modifiers:
+      COMMON: 1.0
+      UNCOMMON: 1.3
+      RARE: 1.6
+      EPIC: 2.0
+      LEGENDARY: 2.5
+      MYTHIC: 3.0
 
 # =============================================================
 # Mutations
