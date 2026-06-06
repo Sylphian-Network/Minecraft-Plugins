@@ -54,13 +54,7 @@ public class PlayerListener implements Listener {
             }
         } catch (Exception e) {
             plugin.getLogger().log(Level.SEVERE, "Error checking verification for " + event.getName(), e);
-            
-            // Optionally track failures as 'strikes' to prevent API spam during outages
-            if (plugin.getVerifyConfig().getBoolean("strike_on_api_failure", true)) {
-                plugin.getVerifyManager().addStrike(uuid);
-            }
-            
-            // Fail closed by default if the API check crashes
+            // Fail closed by default if the API check crashes.
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, MessageUtils.buildErrorMessage(plugin.getVerifyConfig()));
         }
     }

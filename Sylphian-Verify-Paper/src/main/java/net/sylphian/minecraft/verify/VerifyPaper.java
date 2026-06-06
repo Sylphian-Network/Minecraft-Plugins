@@ -12,11 +12,17 @@ import net.sylphian.minecraft.verify.listener.PlayerListener;
 import net.sylphian.minecraft.verify.listener.VerifyPluginMessageListener;
 import net.sylphian.minecraft.verify.manager.VerifyManager;
 import net.sylphian.minecraft.verify.model.PlayerIdentity;
+import net.sylphian.minecraft.verify.model.VerificationResult;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.time.Instant;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 /**
  * Main plugin class for Sylphian-Verify-Paper.
@@ -60,6 +66,7 @@ public class VerifyPaper extends JavaPlugin {
             this.verifyManager = new VerifyManager(service, config);
 
             getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+            startVerificationTask();
             getLogger().info("Sylphian-Verify-Paper enabled in STANDALONE mode");
         } else {
             // In proxy mode, we wait for data from Velocity
@@ -82,6 +89,46 @@ public class VerifyPaper extends JavaPlugin {
      */
     public FileConfiguration getVerifyConfig() {
         return getConfig();
+    }
+
+    /**
+     * Starts a periodic task that batch-checks the verification status of all online players.
+     * If a player is no longer verified, they are kicked from the server.
+     * Runs asynchronously on Bukkit's scheduler. Kicks are dispatched back to the main thread.
+     * Only called in STANDALONE mode.
+     */
+    private void startVerificationTask() {
+        int interval = getConfig().getInt("verification_interval_minutes", 10);
+        if (interval <= 0) {
+            getLogger().info("Periodic verification task is disabled (interval <= 0).");
+            return;
+        }
+
+        long intervalTicks = interval * 60L * 20L;
+        getLogger().info("Scheduling periodic verification task every " + interval + " minute(s).");
+
+        getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
+            Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
+            if (onlinePlayers.isEmpty()) return;
+
+            List<UUID> uuids = onlinePlayers.stream()
+                    .map(Player::getUniqueId)
+                    .collect(Collectors.toList());
+
+            verifyManager.checkPeriodicBatch(uuids).thenAccept(results -> {
+                for (Player player : onlinePlayers) {
+                    if (!player.isOnline()) continue;
+
+                    UUID uuid = player.getUniqueId();
+                    VerificationResult result = results.get(uuid);
+                    if (result == null || result.allowed()) continue;
+
+                    getLogger().warning("Player " + player.getName() + " (" + uuid + ") failed periodic verification. Disconnecting.");
+                    // Kicks must happen on the main thread
+                    getServer().getScheduler().runTask(this, () -> player.kick(result.kickMessage()));
+                }
+            });
+        }, intervalTicks, intervalTicks);
     }
 
     /**

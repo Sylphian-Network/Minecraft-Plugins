@@ -7,6 +7,7 @@ api_key: ""
 api_base_url: "http://localhost"
 
 # Verification behaviour — only used in standalone mode
+verification_interval_minutes: 10
 max_strikes: 3
 attempt_expiry_minutes: 30
 cooldown_minutes: 15

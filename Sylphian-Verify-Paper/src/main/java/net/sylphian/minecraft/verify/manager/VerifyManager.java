@@ -3,11 +3,15 @@ package net.sylphian.minecraft.verify.manager;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import net.sylphian.minecraft.verify.api.VerifyService;
+import net.sylphian.minecraft.verify.api.model.VerificationResponse;
 import org.bukkit.configuration.file.FileConfiguration;
 import net.sylphian.minecraft.verify.model.PlayerIdentity;
 import net.sylphian.minecraft.verify.model.VerificationResult;
 import net.sylphian.minecraft.verify.util.MessageUtils;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -154,5 +158,65 @@ public class VerifyManager {
      */
     public void resetStrikes(UUID uuid) {
         strikes.invalidate(uuid);
+    }
+
+    /**
+     * Performs a batch re-verification check for multiple online players.
+     * Used by the periodic task in {@link net.sylphian.minecraft.verify.VerifyPaper}.
+     *
+     * @param uuids the collection of player UUIDs to check
+     * @return a future containing a map of results per player
+     */
+    public CompletableFuture<Map<UUID, VerificationResult>> checkPeriodicBatch(Collection<UUID> uuids) {
+        if (uuids == null || uuids.isEmpty()) {
+            return CompletableFuture.completedFuture(Map.of());
+        }
+
+        return verifyService.checkVerificationBatch(uuids)
+                .handle((responses, ex) -> {
+                    Map<UUID, VerificationResult> results = new HashMap<>();
+
+                    // Handle batch API failure — fail open with strike tracking
+                    if (ex != null || responses == null || responses.isEmpty()) {
+                        for (UUID uuid : uuids) {
+                            if (config.getBoolean("strike_on_api_failure", true)) {
+                                if (addStrike(uuid)) {
+                                    resetStrikes(uuid);
+                                    results.put(uuid, VerificationResult.denied(
+                                            MessageUtils.buildReverificationFailureMessage(config), null));
+                                    continue;
+                                }
+                            }
+                            results.put(uuid, VerificationResult.allowed(null));
+                        }
+                        return results;
+                    }
+
+                    // Process each player from the batch response
+                    for (UUID uuid : uuids) {
+                        VerificationResponse response = responses.get(uuid.toString());
+                        if (response == null) {
+                            // Not in response — assume status unchanged
+                            results.put(uuid, VerificationResult.allowed(null));
+                            continue;
+                        }
+
+                        PlayerIdentity identity = PlayerIdentity.from(response, uuid);
+                        if (response.isAllowed()) {
+                            resetStrikes(uuid);
+                            results.put(uuid, VerificationResult.allowed(identity));
+                        } else {
+                            // Enforce kick only after multiple failed checks
+                            if (addStrike(uuid)) {
+                                resetStrikes(uuid);
+                                results.put(uuid, VerificationResult.denied(
+                                        MessageUtils.buildReverificationFailureMessage(config), identity));
+                            } else {
+                                results.put(uuid, VerificationResult.allowed(identity));
+                            }
+                        }
+                    }
+                    return results;
+                });
     }
 }
