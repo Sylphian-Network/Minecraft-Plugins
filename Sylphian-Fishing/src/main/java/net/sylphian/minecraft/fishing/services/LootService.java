@@ -4,8 +4,10 @@ import net.sylphian.minecraft.fishing.config.BaitConfig;
 import net.sylphian.minecraft.fishing.config.ConfigLoader;
 import net.sylphian.minecraft.fishing.fish.*;
 import net.sylphian.minecraft.core.util.ItemBuilder;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Biome;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -231,7 +233,15 @@ public class LootService {
     }
 
     /**
+     * The PDC key stamped on every built fish ItemStack so other plugins can identify
+     * it as a Sylphian-Fishing item. The value is the fish's entry ID, e.g. {@code "fish/common_cod"}.
+     * Other plugins (e.g. Sylphian-Cooking) use this to match ingredients in recipes.
+     */
+    public static final NamespacedKey ITEM_ID_KEY = new NamespacedKey("sylphian-fishing", "item_id");
+
+    /**
      * Builds the ItemStack for a standard fish entry.
+     * Stamps {@link #ITEM_ID_KEY} into the item's PDC so other plugins can identify it.
      * Must not be called for external item entries ({@link LootEntry#externalItemId()} non-null).
      *
      * @param fish         the fish entry
@@ -239,10 +249,14 @@ public class LootService {
      * @return the built ItemStack
      */
     public ItemStack buildItemStack(LootEntry fish, double caughtWeight) {
-        return new ItemBuilder(fish.material())
+        ItemStack item = new ItemBuilder(fish.material())
                 .name(fish.displayName())
                 .loreStrings(buildLore(fish, caughtWeight))
                 .build();
+        item.editMeta(meta ->
+                meta.getPersistentDataContainer().set(ITEM_ID_KEY, PersistentDataType.STRING, "fish/" + fish.id())
+        );
+        return item;
     }
 
     /**
