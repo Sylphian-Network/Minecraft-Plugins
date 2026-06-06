@@ -151,7 +151,7 @@ public class CookingStationGui {
 
         String fuelLore;
         if (state.getFuelRemaining() > 0) {
-            fuelLore = "<red>Fuel: " + state.getFuelRemaining() + " ticks";
+            fuelLore = "<red>Fuel: " + formatTicks(state.getFuelRemaining());
         } else if (state.getFuel() != null && !state.getFuel().getType().isAir()) {
             fuelLore = "<gray>Fuel: ready to ignite";
         } else {
@@ -162,6 +162,13 @@ public class CookingStationGui {
                 .name("<gold>Progress")
                 .lore("<yellow>" + bar + " " + percent + "%", fuelLore)
                 .build();
+    }
+
+    private static String formatTicks(int ticks) {
+        int seconds = ticks / 20;
+        int minutes = seconds / 60;
+        int remainingSeconds = seconds % 60;
+        return minutes > 0 ? minutes + "m " + remainingSeconds + "s" : remainingSeconds + "s";
     }
 
     /** Builds a Unicode block progress bar of the given length. */
