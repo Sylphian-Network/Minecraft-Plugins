@@ -28,4 +28,4 @@ sidebar:
     enabled: true
     lines:
       - "<dark_aqua>┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄"
-      - "<dark_gray>⬡ <aqua>play.sylphian.net"
+      - "<gradient:aqua:white>mc.sylphian.net</gradient>"
