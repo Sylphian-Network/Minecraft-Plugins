@@ -166,6 +166,6 @@ public class SidebarService {
     }
 
     private static String fakeEntry(int slot) {
-        return "§" + Integer.toHexString(slot);
+        return "__sb_" + slot + "__";
     }
 }
