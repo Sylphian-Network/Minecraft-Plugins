@@ -1,0 +1,34 @@
+# =============================================================
+# Sylphian Cooking - General Configuration
+# =============================================================
+#
+# fuels:
+#   A map of Bukkit Material names to burn time in ticks.
+#   1 tick = 0.05 seconds. 20 ticks = 1 second.
+#   Reference: https://minecraft.wiki/w/Smelting#Fuel
+#
+# =============================================================
+
+fuels:
+  COAL: 1600
+  CHARCOAL: 1600
+  BLAZE_ROD: 2400
+  COAL_BLOCK: 16000
+  OAK_LOG: 300
+  SPRUCE_LOG: 300
+  BIRCH_LOG: 300
+  JUNGLE_LOG: 300
+  ACACIA_LOG: 300
+  DARK_OAK_LOG: 300
+  MANGROVE_LOG: 300
+  CHERRY_LOG: 300
+  OAK_PLANKS: 300
+  SPRUCE_PLANKS: 300
+  BIRCH_PLANKS: 300
+  JUNGLE_PLANKS: 300
+  ACACIA_PLANKS: 300
+  DARK_OAK_PLANKS: 300
+  BLAZE_POWDER: 1200
+  LAVA_BUCKET: 20000
+  DRIED_KELP_BLOCK: 4000
+  BAMBOO: 50

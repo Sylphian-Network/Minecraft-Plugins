@@ -1,0 +1,75 @@
+# =============================================================
+# Sylphian Cooking - Recipe Definitions
+# =============================================================
+#
+# Each entry under 'recipes' defines a cooking recipe.
+#
+# Fields:
+# -------
+# ingredients:  A list of 1–5 ingredient specifications.
+#               Each entry is either:
+#                 - A plain Bukkit Material name (e.g. POTATO), for vanilla items.
+#                 - A namespaced item ID (e.g. sylphian-fishing:fish/common_cod),
+#                   for custom items registered via Sylphian-Core's ItemRegistry.
+#                   The plugin that owns the item must stamp a PDC key
+#                   matching its namespace and item ID on the ItemStack.
+#               Order does not matter — ingredients are matched as a multiset.
+#
+# cook-time:    How long the recipe takes in ticks (20 ticks = 1 second).
+#
+# output:
+#   item:         Bukkit Material name for the output item.
+#   display-name: MiniMessage formatted display name.
+#   description:  MiniMessage lore text. Use \n for line breaks.
+#   amount:       Stack size of the output (default: 1).
+#
+# custom-model-data: (Optional) Float value passed to the item's CustomModelData
+#                   component for resource pack model overrides.
+#
+# =============================================================
+
+recipes:
+  chips:
+    ingredients:
+      - POTATO
+    cook-time: 200
+    output:
+      item: BAKED_POTATO
+      display-name: "<yellow>Chips"
+      description: "<gray>Crispy, golden, and delicious."
+      amount: 2
+      custom-model-data: 1001.0
+  fish_and_chips:
+    ingredients:
+      - sylphian-fishing:fish/common_cod
+      - sylphian-cooking:chips
+    cook-time: 200
+    output:
+      item: COOKED_COD
+      display-name: "<yellow>Fish and Chips"
+      description: "<gray>Crispy, golden, and delicious."
+      amount: 1
+      custom-model-data: 1001.0
+  ice_lolly:
+    ingredients:
+      - ICE
+      - RED_DYE
+      - YELLOW_DYE
+      - GREEN_DYE
+      - STICK
+    cook-time: 200
+    output:
+      item: BAKED_POTATO
+      display-name: "<yellow>Ice Lolly"
+      amount: 4
+      custom-model-data: 1002.0
+  kelp_on_a_stick:
+    ingredients:
+      - stick
+      - KELP
+    cook-time: 200
+    output:
+      item: DRIED_KELP
+      display-name: "<green>Kelp on a Stick"
+      amount: 1
+      custom-model-data: 1001.0

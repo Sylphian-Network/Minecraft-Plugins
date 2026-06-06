@@ -1,0 +1,16 @@
+name: Sylphian-Cooking
+prefix: Sylphian-Cooking
+version: '${version}'
+
+main: net.sylphian.minecraft.cooking.SylphianCooking
+api-version: '26.1.2'
+load: POSTWORLD
+
+authors: [QuackieMackie]
+website: https://sylphian.net
+
+dependencies:
+  server:
+    Sylphian-Core:
+      load: BEFORE
+      required: true
