@@ -391,6 +391,7 @@ public class CookingStationService {
         CookingStationState state = stations.get(location);
         if (state == null) return;
         mutation.accept(state);
+        refreshViewers(location, state);
     }
 
     /**
