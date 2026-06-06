@@ -1,0 +1,19 @@
+#-------------------------------------------------------------------------------#
+#               Qodana analysis is configured by qodana.yaml file               #
+#             https://www.jetbrains.com/help/qodana/qodana-yaml.html            #
+#-------------------------------------------------------------------------------#
+#################################################################################
+#              WARNING: Do not store sensitive information in this file,        #
+#               as its contents will be included in the Qodana report.          #
+#################################################################################
+version: "1.0"
+
+profile:
+  name: qodana.recommended
+
+exclude:
+  - name: UnstableApiUsage
+
+projectJDK: "25"
+
+linter: jetbrains/qodana-jvm-community:2026.1
