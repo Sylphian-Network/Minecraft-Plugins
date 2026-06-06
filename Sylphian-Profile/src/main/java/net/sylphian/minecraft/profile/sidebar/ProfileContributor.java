@@ -48,8 +48,8 @@ public class ProfileContributor extends AbstractSidebarContributor {
         String playtime = formatPlaytime(totalSeconds);
 
         return List.of(
-                new SidebarLine(MINI.deserialize("<dark_gray>Welcome <gray>" + profile.forumUsername() + "!")),
-                new SidebarLine(MINI.deserialize("<dark_gray>Playtime: <gray>" + playtime))
+                SidebarLine.of("<dark_gray>Welcome <gray>" + profile.forumUsername() + "!"),
+                SidebarLine.of("<dark_gray>Playtime: <gray>" + playtime)
         );
     }
 

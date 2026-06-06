@@ -67,16 +67,16 @@ public class FishingContributor extends AbstractSidebarContributor {
         };
 
         List<SidebarLine> lines = new ArrayList<>();
-        lines.add(new SidebarLine(MINI.deserialize("<gray>🎣 Fishing")));
-        lines.add(new SidebarLine(MINI.deserialize("<dark_gray>Biome: <gray>" + biome)));
-        lines.add(new SidebarLine(MINI.deserialize("<dark_gray>Weather: <gray>" + weatherIcon)));
-        lines.add(new SidebarLine(MINI.deserialize("<dark_gray>Elapsed: <gray>" + time)));
+        lines.add(SidebarLine.of("<gray>🎣 Fishing"));
+        lines.add(SidebarLine.of("<dark_gray>Biome: <gray>" + biome));
+        lines.add(SidebarLine.of("<dark_gray>Weather: <gray>" + weatherIcon));
+        lines.add(SidebarLine.of("<dark_gray>Elapsed: <gray>" + time));
 
         List<BaitZone> zones = baitZoneService.getZonesAt(hook.getLocation());
         if (!zones.isEmpty()) {
-            lines.add(new SidebarLine(MINI.deserialize("<gray>Active Baits")));
+            lines.add(SidebarLine.of("<gray>Active Baits"));
             for (BaitZone zone : zones) {
-                lines.add(new SidebarLine(MINI.deserialize("<dark_gray>• <gray>" + zone.config().displayName())));
+                lines.add(SidebarLine.of("<dark_gray>• <gray>" + zone.config().displayName()));
             }
         }
 
