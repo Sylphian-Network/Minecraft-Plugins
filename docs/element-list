@@ -1,3 +1,11 @@
+net.sylphian.minecraft.cooking
+net.sylphian.minecraft.cooking.commands
+net.sylphian.minecraft.cooking.config
+net.sylphian.minecraft.cooking.gui
+net.sylphian.minecraft.cooking.item
+net.sylphian.minecraft.cooking.listener
+net.sylphian.minecraft.cooking.recipe
+net.sylphian.minecraft.cooking.station
 net.sylphian.minecraft.core
 net.sylphian.minecraft.core.command
 net.sylphian.minecraft.core.item

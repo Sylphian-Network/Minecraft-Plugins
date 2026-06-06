@@ -65,6 +65,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#checkPlayer(java.util.UUID,java.lang.String)" tabindex="0">checkPlayer(UUID, String)</a></li>
 <li><a href="#addStrike(java.util.UUID)" tabindex="0">addStrike(UUID)</a></li>
 <li><a href="#resetStrikes(java.util.UUID)" tabindex="0">resetStrikes(UUID)</a></li>
+<li><a href="#checkPeriodicBatch(java.util.Collection)" tabindex="0">checkPeriodicBatch(Collection)</a></li>
 </ol>
 </li>
 </ol>
@@ -120,15 +121,20 @@ Uses Caffeine caches to track login attempts and enforce security policies defin
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Records a 'strike' (technical failure) for a player and checks if the limit is reached.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a><wbr>&lt;<a href="../model/VerificationResult.html" title="class in net.sylphian.minecraft.verify.model">VerificationResult</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#checkPlayer(java.util.UUID,java.lang.String)" class="member-name-link">checkPlayer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;ip)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>, <a href="../model/VerificationResult.html" title="class in net.sylphian.minecraft.verify.model">VerificationResult</a>&gt;&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#checkPeriodicBatch(java.util.Collection)" class="member-name-link">checkPeriodicBatch</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&gt;&nbsp;uuids)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Performs a batch re-verification check for multiple online players.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a><wbr>&lt;<a href="../model/VerificationResult.html" title="class in net.sylphian.minecraft.verify.model">VerificationResult</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#checkPlayer(java.util.UUID,java.lang.String)" class="member-name-link">checkPlayer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;ip)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Performs a verification check for a player, considering rate limits and cooldowns.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resetStrikes(java.util.UUID)" class="member-name-link">resetStrikes</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resetStrikes(java.util.UUID)" class="member-name-link">resetStrikes</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Resets the strike counter for a player.</div>
 </div>
 </div>
@@ -212,6 +218,22 @@ Uses Caffeine caches to track login attempts and enforce security policies defin
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>uuid</code> - the player's UUID</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="checkPeriodicBatch(java.util.Collection)">
+<h3>checkPeriodicBatch</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>, <a href="../model/VerificationResult.html" title="class in net.sylphian.minecraft.verify.model">VerificationResult</a>&gt;&gt;</span>&nbsp;<span class="element-name">checkPeriodicBatch</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&gt;&nbsp;uuids)</span></div>
+<div class="block">Performs a batch re-verification check for multiple online players.
+Used by the periodic task in <a href="../VerifyPaper.html" title="class in net.sylphian.minecraft.verify"><code>VerifyPaper</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>uuids</code> - the collection of player UUIDs to check</dd>
+<dt>Returns:</dt>
+<dd>a future containing a map of results per player</dd>
 </dl>
 </div>
 </section>
