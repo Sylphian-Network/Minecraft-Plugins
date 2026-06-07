@@ -3,6 +3,7 @@ package net.sylphian.minecraft.crates.gui;
 import net.sylphian.minecraft.crates.config.RewardEntry;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.jspecify.annotations.NonNull;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -78,7 +79,7 @@ public class RewardSelectionGUIHolder implements InventoryHolder {
     public int getConfirmSlot() { return inventory.getSize() - 5; }
 
     @Override
-    public Inventory getInventory() { return inventory; }
+    public @NonNull Inventory getInventory() { return inventory; }
 
     /**
      * Sets the backing inventory for this holder.

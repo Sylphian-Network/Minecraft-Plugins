@@ -4,6 +4,7 @@ import net.sylphian.minecraft.crates.config.CrateConfig;
 import net.sylphian.minecraft.crates.config.KeyConfig;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.jspecify.annotations.NonNull;
 
 import javax.annotation.Nullable;
 
@@ -54,7 +55,7 @@ public class CratesGUIHolder implements InventoryHolder {
     }
 
     @Override
-    public Inventory getInventory() { return inventory; }
+    public @NonNull Inventory getInventory() { return inventory; }
 
     /**
      * Sets the backing inventory for this holder.

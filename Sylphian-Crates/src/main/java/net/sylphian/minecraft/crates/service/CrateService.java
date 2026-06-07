@@ -16,11 +16,9 @@ import java.util.Random;
 /**
  * Service responsible for rolling and granting crate rewards.
  *
- * <p>On opening, the service rolls {@link CrateConfig#totalRolls()} rewards
- * from the crate's weighted pool. If {@link CrateConfig#playerPicks()} is
- * less than {@code totalRolls}, the caller is responsible for presenting the
- * rolled rewards to the player for selection. If {@code playerPicks} is equal
- * to or greater than {@code totalRolls}, all rolled rewards are granted immediately.</p>
+ * <p>Provides weighted random rolling via {@link #rollRewards} and {@link #rollOne},
+ * item building, and reward granting. The caller is responsible for determining
+ * how rolled rewards are presented based on the crate's {@link net.sylphian.minecraft.crates.config.OpeningStyle}.</p>
  */
 public class CrateService {
 
@@ -30,6 +28,23 @@ public class CrateService {
      * Constructs a new CrateService.
      */
     public CrateService() {
+    }
+
+    /**
+     * Rolls a single reward from the crate's weighted pool.
+     *
+     * @param crate the crate to roll from
+     * @return the rolled RewardEntry
+     */
+    public RewardEntry rollOne(CrateConfig crate) {
+        double totalWeight = crate.pool().stream().mapToDouble(RewardEntry::chance).sum();
+        double roll = random.nextDouble() * totalWeight;
+        double cursor = 0;
+        for (RewardEntry entry : crate.pool()) {
+            cursor += entry.chance();
+            if (roll <= cursor) return entry;
+        }
+        return crate.pool().get(crate.pool().size() - 1);
     }
 
     /**

@@ -54,6 +54,15 @@ public class CrateConfigLoader {
                 displayMaterial = Material.CHEST;
             }
 
+            OpeningStyle openingStyle;
+            try {
+                openingStyle = OpeningStyle.valueOf(
+                        crateSection.getString("opening-style", "SELECTION").toUpperCase());
+            } catch (IllegalArgumentException e) {
+                logger.warning("Crate '" + id + "' has an invalid opening-style — defaulting to SELECTION.");
+                openingStyle = OpeningStyle.SELECTION;
+            }
+
             List<RewardEntry> pool = parsePool(id, crateSection.getConfigurationSection("pool"));
             if (pool.isEmpty()) {
                 logger.warning("Crate '" + id + "' has an empty reward pool — skipping.");
@@ -66,6 +75,7 @@ public class CrateConfigLoader {
                     displayMaterial,
                     crateSection.getInt("total-rolls", 1),
                     crateSection.getInt("player-picks", 1),
+                    openingStyle,
                     pool
             ));
         }

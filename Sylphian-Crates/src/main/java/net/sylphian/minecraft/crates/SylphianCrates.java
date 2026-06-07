@@ -33,6 +33,19 @@ public final class SylphianCrates extends JavaPlugin {
     private Map<String, KeyConfig> keys;
     private Map<String, CrateConfig> crates;
 
+    //TODO: Be able to configure different reward sequences for different crates.
+    // For example:
+    // common_crate:
+    //  reward_sequence: ROTATION | COLORFUL_SELECTION | SELECTION
+    // .
+    // Each reward sequence would be a different way of presenting the rewards to the player.
+    // - SELECTION would be no reward sequence, the `Sylphian-Crates/src/main/java/net/sylphian/minecraft/crates/gui/RewardSelectionGUI.java`
+    //   would be used directly.
+    // - ROTATION would be a rotation of the items in the pool. it would spin items in the pool and keep picking items for the player.
+    // - COLORFUL would be a miss match of coloured glass panes, you'd be able to select different coloured glass panes and get random rewards.
+    // .
+    // Some of these might step on the toes of options `total-rolls`, and `player-picks`, but it could still make it work.
+
     @Override
     public void onEnable() {
         if (getResource("keys.yml") != null && !new File(getDataFolder(), "keys.yml").exists()) {
