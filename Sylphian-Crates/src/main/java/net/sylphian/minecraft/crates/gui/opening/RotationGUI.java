@@ -66,7 +66,7 @@ public class RotationGUI {
         Inventory inv = Bukkit.createInventory(holder, 36, title);
         holder.setInventory(inv);
 
-        fillDecorative(inv);
+        fillDecorative(inv, rolledRewards.size());
         updateCounter(inv, 1, rolledRewards.size());
 
         player.openInventory(inv);
@@ -144,19 +144,23 @@ public class RotationGUI {
         }
     }
 
-    private static void fillDecorative(Inventory inv) {
+    private static void fillDecorative(Inventory inv, int totalSpins) {
         ItemStack filler = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build();
         ItemStack winSlot = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE)
                 .name("<dark_gray>Win Slot")
                 .build();
+
         for (int i = 0; i < 9; i++) {
             if (i != COUNTER_SLOT) inv.setItem(i, filler);
         }
         for (int i = 18; i < 27; i++) {
             inv.setItem(i, filler);
         }
-        for (int i = 27; i < 36; i++) {
-            inv.setItem(i, winSlot);
+
+        int startOffset = (9 - Math.min(totalSpins, 9)) / 2;
+        for (int i = 0; i < 9; i++) {
+            boolean isWinSlot = i >= startOffset && i < startOffset + totalSpins;
+            inv.setItem(27 + i, isWinSlot ? winSlot : filler);
         }
     }
 
@@ -167,10 +171,12 @@ public class RotationGUI {
     }
 
     private static void updateWonRow(Inventory inv, RotationGUIHolder holder, CrateService crateService) {
+        int totalSpins = holder.getRolledRewards().size();
+        int startOffset = (9 - Math.min(totalSpins, 9)) / 2;
         int wonIndex = holder.getCurrentSpin() - 1;
         if (wonIndex < 0 || wonIndex > 8) return;
         RewardEntry won = holder.getRolledRewards().get(wonIndex);
-        inv.setItem(27 + wonIndex, crateService.buildItem(won));
+        inv.setItem(27 + startOffset + wonIndex, crateService.buildItem(won));
     }
 
     /**
