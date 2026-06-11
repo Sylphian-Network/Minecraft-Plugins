@@ -5,6 +5,10 @@ dependencies {
 }
 
 tasks {
+    jar {
+        archiveVersion.set("")
+    }
+
     processResources {
         val props = mapOf("version" to version )
         filesMatching("paper-plugin.yml") {

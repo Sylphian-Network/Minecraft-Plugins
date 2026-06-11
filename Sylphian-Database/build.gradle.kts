@@ -14,6 +14,7 @@ dependencies {
 tasks {
     shadowJar {
         archiveClassifier.set("")
+        archiveVersion.set("")
     }
 
     build {

@@ -16,6 +16,7 @@ tasks {
     shadowJar {
         dependsOn(":Sylphian-Database:shadowJar")
         archiveClassifier.set("")
+        archiveVersion.set("")
     }
 
     build {
