@@ -13,6 +13,10 @@ dependencies {
 }
 
 tasks {
+    jar {
+        enabled = false
+    }
+
     shadowJar {
         dependsOn(":Sylphian-Database:shadowJar")
         archiveClassifier.set("")
