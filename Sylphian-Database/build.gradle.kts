@@ -12,8 +12,13 @@ dependencies {
 }
 
 tasks {
+    jar {
+        enabled = false
+    }
+
     shadowJar {
         archiveClassifier.set("")
+        archiveVersion.set("")
     }
 
     build {

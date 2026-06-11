@@ -7,9 +7,17 @@ name: Qodana
 on:
   workflow_dispatch:
   pull_request:
+    paths:
+      - '**.java'
+      - '**.gradle.kts'
+      - 'gradle/**'
   push:
     branches:
       - master
+    paths:
+      - '**.java'
+      - '**.gradle.kts'
+      - 'gradle/**'
 
 jobs:
   qodana:

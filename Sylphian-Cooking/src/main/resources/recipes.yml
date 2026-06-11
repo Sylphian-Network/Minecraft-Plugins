@@ -29,6 +29,11 @@
 # =============================================================
 
 recipes:
+
+  # ===========================================================
+  # Custom Recipes
+  # ===========================================================
+
   chips:
     ingredients:
       - POTATO
@@ -39,6 +44,7 @@ recipes:
       description: "<gray>Crispy, golden, and delicious."
       amount: 2
       custom-model-data: 1001.0
+
   fish_and_chips:
     ingredients:
       - sylphian-fishing:fish/common_cod
@@ -50,6 +56,7 @@ recipes:
       description: "<gray>Crispy, golden, and delicious."
       amount: 1
       custom-model-data: 1001.0
+
   ice_lolly:
     ingredients:
       - ICE
@@ -63,9 +70,10 @@ recipes:
       display-name: "<yellow>Ice Lolly"
       amount: 4
       custom-model-data: 1002.0
+
   kelp_on_a_stick:
     ingredients:
-      - stick
+      - STICK
       - KELP
     cook-time: 200
     output:
@@ -73,3 +81,176 @@ recipes:
       display-name: "<green>Kelp on a Stick"
       amount: 1
       custom-model-data: 1001.0
+
+  # ===========================================================
+  # Food
+  # ===========================================================
+
+  cooked_cod:
+    ingredients:
+      - COD
+    cook-time: 200
+    output:
+      item: COOKED_COD
+
+  cooked_salmon:
+    ingredients:
+      - SALMON
+    cook-time: 200
+    output:
+      item: COOKED_SALMON
+
+  cooked_beef:
+    ingredients:
+      - BEEF
+    cook-time: 200
+    output:
+      item: COOKED_BEEF
+
+  cooked_porkchop:
+    ingredients:
+      - PORKCHOP
+    cook-time: 200
+    output:
+      item: COOKED_PORKCHOP
+
+  cooked_chicken:
+    ingredients:
+      - CHICKEN
+    cook-time: 200
+    output:
+      item: COOKED_CHICKEN
+
+  cooked_mutton:
+    ingredients:
+      - MUTTON
+    cook-time: 200
+    output:
+      item: COOKED_MUTTON
+
+  cooked_rabbit:
+    ingredients:
+      - RABBIT
+    cook-time: 200
+    output:
+      item: COOKED_RABBIT
+
+  baked_potato:
+    ingredients:
+      - POTATO
+    cook-time: 200
+    output:
+      item: BAKED_POTATO
+
+  dried_kelp:
+    ingredients:
+      - KELP
+    cook-time: 200
+    output:
+      item: DRIED_KELP
+
+  # ===========================================================
+  # Materials
+  # ===========================================================
+
+  iron_ingot:
+    ingredients:
+      - RAW_IRON
+    cook-time: 200
+    output:
+      item: IRON_INGOT
+
+  gold_ingot:
+    ingredients:
+      - RAW_GOLD
+    cook-time: 200
+    output:
+      item: GOLD_INGOT
+
+  copper_ingot:
+    ingredients:
+      - RAW_COPPER
+    cook-time: 200
+    output:
+      item: COPPER_INGOT
+
+  netherite_scrap:
+    ingredients:
+      - ANCIENT_DEBRIS
+    cook-time: 400
+    output:
+      item: NETHERITE_SCRAP
+
+  glass:
+    ingredients:
+      - SAND
+    cook-time: 200
+    output:
+      item: GLASS
+
+  stone:
+    ingredients:
+      - COBBLESTONE
+    cook-time: 200
+    output:
+      item: STONE
+
+  # ===========================================================
+  # Charcoal
+  # ===========================================================
+
+  charcoal_from_oak:
+    ingredients:
+      - OAK_LOG
+    cook-time: 200
+    output:
+      item: CHARCOAL
+
+  charcoal_from_spruce:
+    ingredients:
+      - SPRUCE_LOG
+    cook-time: 200
+    output:
+      item: CHARCOAL
+
+  charcoal_from_birch:
+    ingredients:
+      - BIRCH_LOG
+    cook-time: 200
+    output:
+      item: CHARCOAL
+
+  charcoal_from_jungle:
+    ingredients:
+      - JUNGLE_LOG
+    cook-time: 200
+    output:
+      item: CHARCOAL
+
+  charcoal_from_acacia:
+    ingredients:
+      - ACACIA_LOG
+    cook-time: 200
+    output:
+      item: CHARCOAL
+
+  charcoal_from_dark_oak:
+    ingredients:
+      - DARK_OAK_LOG
+    cook-time: 200
+    output:
+      item: CHARCOAL
+
+  charcoal_from_mangrove:
+    ingredients:
+      - MANGROVE_LOG
+    cook-time: 200
+    output:
+      item: CHARCOAL
+
+  charcoal_from_cherry:
+    ingredients:
+      - CHERRY_LOG
+    cook-time: 200
+    output:
+      item: CHARCOAL

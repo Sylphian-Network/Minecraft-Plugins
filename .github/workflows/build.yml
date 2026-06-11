@@ -3,8 +3,16 @@ name: Build
 on:
   push:
     branches: [ master ]
+    paths:
+      - '**.java'
+      - '**.gradle.kts'
+      - 'gradle/**'
   pull_request:
     branches: [ master ]
+    paths:
+      - '**.java'
+      - '**.gradle.kts'
+      - 'gradle/**'
 
 jobs:
   build:
@@ -25,5 +33,5 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
 
-      - name: Build
+      - name: Build plugin jars
         run: ./gradlew build
