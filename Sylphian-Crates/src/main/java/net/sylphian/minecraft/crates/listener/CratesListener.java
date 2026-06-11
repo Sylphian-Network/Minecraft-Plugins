@@ -5,10 +5,8 @@ import net.sylphian.minecraft.crates.SylphianCrates;
 import net.sylphian.minecraft.crates.config.CrateConfig;
 import net.sylphian.minecraft.crates.config.KeyConfig;
 import net.sylphian.minecraft.crates.config.RewardEntry;
-import net.sylphian.minecraft.crates.gui.CratesGUI;
-import net.sylphian.minecraft.crates.gui.CratesGUIHolder;
-import net.sylphian.minecraft.crates.gui.RewardSelectionGUI;
-import net.sylphian.minecraft.crates.gui.RewardSelectionGUIHolder;
+import net.sylphian.minecraft.crates.gui.*;
+import net.sylphian.minecraft.crates.gui.opening.*;
 import net.sylphian.minecraft.crates.key.CrateKey;
 import net.sylphian.minecraft.crates.service.CrateService;
 import net.sylphian.minecraft.core.util.ItemBuilder;
@@ -19,6 +17,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -70,6 +69,16 @@ public class CratesListener implements Listener {
 
         if (event.getInventory().getHolder() instanceof RewardSelectionGUIHolder holder) {
             handleSelectionClick(event, player, holder);
+            return;
+        }
+
+        if (event.getInventory().getHolder() instanceof RotationGUIHolder) {
+            event.setCancelled(true);
+            return;
+        }
+
+        if (event.getInventory().getHolder() instanceof ColorfulGUIHolder colorfulHolder) {
+            handleColorfulClick(event, player, colorfulHolder);
         }
     }
 
@@ -81,7 +90,9 @@ public class CratesListener implements Listener {
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
         if (!(event.getInventory().getHolder() instanceof CratesGUIHolder)
-                && !(event.getInventory().getHolder() instanceof RewardSelectionGUIHolder)) return;
+                && !(event.getInventory().getHolder() instanceof RewardSelectionGUIHolder)
+                && !(event.getInventory().getHolder() instanceof RotationGUIHolder)
+                && !(event.getInventory().getHolder() instanceof ColorfulGUIHolder)) return;
 
         int guiSize = event.getInventory().getSize();
         boolean touchesTopInventory = event.getRawSlots().stream().anyMatch(s -> s < guiSize);
@@ -96,16 +107,25 @@ public class CratesListener implements Listener {
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         if (!(event.getPlayer() instanceof Player player)) return;
-        if (!(event.getInventory().getHolder() instanceof CratesGUIHolder holder)) return;
 
-        KeyConfig stagedKey = holder.getStagedKey();
-        if (stagedKey == null) return;
+        InventoryHolder invHolder = event.getInventory().getHolder();
 
-        ItemStack keyItem = CrateKey.create(stagedKey, plugin);
-        player.getInventory().addItem(keyItem).values()
-                .forEach(leftover -> player.getWorld().dropItemNaturally(player.getLocation(), leftover));
+        if (invHolder instanceof CratesGUIHolder cratesHolder) {
+            KeyConfig stagedKey = cratesHolder.getStagedKey();
+            if (stagedKey == null) return;
+            ItemStack keyItem = CrateKey.create(stagedKey, plugin);
+            player.getInventory().addItem(keyItem).values()
+                    .forEach(leftover -> player.getWorld().dropItemNaturally(player.getLocation(), leftover));
+            cratesHolder.clearStaged();
+            return;
+        }
 
-        holder.clearStaged();
+        if (invHolder instanceof RotationGUIHolder rotationHolder) {
+            rotationHolder.cancelAnimation();
+            if (!rotationHolder.isAllSpinsComplete()) {
+                rotationHolder.getRolledRewards().forEach(r -> crateService.giveReward(player, r));
+            }
+        }
     }
 
     /**
@@ -168,7 +188,8 @@ public class CratesListener implements Listener {
         }
 
         if (slot == CratesGUI.CRATE_SLOT && holder.getStagedCrate() != null) {
-            CrateConfig crate = holder.getStagedCrate();
+            String crateId = holder.getStagedCrate().id();
+            CrateConfig crate = plugin.getCrates().getOrDefault(crateId, holder.getStagedCrate());
             holder.clearStaged();
             CratesGUI.restoreKeySlot(event.getInventory());
             CratesGUI.restoreCrateSlot(event.getInventory());
@@ -220,6 +241,35 @@ public class CratesListener implements Listener {
     }
 
     /**
+     * Handles a pane click in the colorful opening GUI.
+     * Each click rolls a reward from the pool, grants it immediately, and
+     * reveals the reward item in the clicked slot.
+     * When picks are exhausted, the GUI closes after a brief delay.
+     *
+     * @param event  the click event
+     * @param player the player who clicked
+     * @param colorfulHolder the GUI holder tracking slot assignments and remaining picks
+     */
+    private void handleColorfulClick(InventoryClickEvent event, Player player, ColorfulGUIHolder colorfulHolder) {
+        event.setCancelled(true);
+
+        int slot = event.getRawSlot();
+        if (slot < 0 || slot >= event.getInventory().getSize()) return;
+        if (colorfulHolder.isRevealed(slot)) return;
+
+        colorfulHolder.markRevealed(slot);
+        colorfulHolder.decrementPicks();
+
+        RewardEntry reward = crateService.rollOne(colorfulHolder.getCrate());
+        event.getInventory().setItem(slot, crateService.buildItem(reward));
+        crateService.giveReward(player, reward);
+
+        if (colorfulHolder.isDone()) {
+            plugin.getServer().getScheduler().runTaskLater(plugin, () -> player.closeInventory(), 20L);
+        }
+    }
+
+    /**
      * Populates the crate slot with the crate's display item.
      * Lore includes all rewards from the pool with their percentage chances.
      *
@@ -251,19 +301,29 @@ public class CratesListener implements Listener {
     }
 
     /**
-     * Rolls rewards and either grants them all or opens the selection GUI
-     * depending on the crate's {@code playerPicks} setting.
+     * Opens the crate using the configured {@link net.sylphian.minecraft.crates.config.OpeningStyle}.
+     * Rewards are rolled and presented differently depending on the style —
+     * SELECTION uses a pick GUI, ROTATION plays a slot-machine animation,
+     * and COLORFUL lets the player reveal panes for instant rewards.
      *
      * @param player the player opening the crate
      * @param crate  the crate being opened
      */
     private void openCrate(Player player, CrateConfig crate) {
-        List<RewardEntry> rolled = crateService.rollRewards(crate);
-
-        if (crate.playerPicks() >= crate.totalRolls()) {
-            crateService.giveAll(player, rolled);
-        } else {
-            RewardSelectionGUI.open(player, rolled, crate.playerPicks(), crateService);
+        switch (crate.openingStyle()) {
+            case SELECTION -> {
+                List<RewardEntry> rolled = crateService.rollRewards(crate);
+                if (crate.playerPicks() >= crate.totalRolls()) {
+                    crateService.giveAll(player, rolled);
+                } else {
+                    RewardSelectionGUI.open(player, rolled, crate.playerPicks(), crateService);
+                }
+            }
+            case ROTATION -> {
+                List<RewardEntry> rolled = crateService.rollRewards(crate);
+                RotationGUI.open(player, crate, rolled, crateService, plugin);
+            }
+            case COLORFUL -> ColorfulGUI.open(player, crate, crate.playerPicks());
         }
     }
 

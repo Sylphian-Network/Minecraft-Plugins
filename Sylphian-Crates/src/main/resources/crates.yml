@@ -12,6 +12,15 @@
 #                   are given directly. Otherwise a selection GUI is shown
 #                   where the player may confirm with fewer than this many picks.
 #
+# opening-style: How the crate opening is presented to the player.
+#                SELECTION — rolled rewards shown in a pick GUI directly.
+#                ROTATION  — slot machine animation; one spin per roll, chained sequentially.
+#                            playerPicks is not used for this style.
+#                COLORFUL  — 27 glass panes hide the rewards. totalRolls sets how many
+#                            panes contain rewards; playerPicks sets how many the player
+#                            may reveal. Clicking any pane counts as a pick.
+#                Defaults to SELECTION if omitted.
+#
 # pool:
 #   Each entry is a reward the player can receive.
 #   display-name:     MiniMessage formatted name shown in the selection GUI.
@@ -39,6 +48,7 @@ crates:
     display-material: CHEST
     total-rolls: 1
     player-picks: 1
+    opening-style: SELECTION
     pool:
       bread:
         display-name: "<white>Bread"
@@ -64,6 +74,7 @@ crates:
     display-material: DIAMOND_BLOCK
     total-rolls: 5
     player-picks: 2
+    opening-style: ROTATION
     pool:
       diamond:
         display-name: "<aqua>Diamond"
