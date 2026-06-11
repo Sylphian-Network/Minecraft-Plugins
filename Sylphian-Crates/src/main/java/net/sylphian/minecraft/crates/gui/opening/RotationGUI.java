@@ -1,4 +1,4 @@
-package net.sylphian.minecraft.crates.gui;
+package net.sylphian.minecraft.crates.gui.opening;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;

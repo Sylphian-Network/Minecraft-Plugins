@@ -1,4 +1,4 @@
-package net.sylphian.minecraft.crates.gui;
+package net.sylphian.minecraft.crates.gui.opening;
 
 import net.sylphian.minecraft.crates.config.CrateConfig;
 import org.bukkit.inventory.Inventory;

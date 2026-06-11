@@ -6,6 +6,7 @@ import net.sylphian.minecraft.crates.config.CrateConfig;
 import net.sylphian.minecraft.crates.config.KeyConfig;
 import net.sylphian.minecraft.crates.config.RewardEntry;
 import net.sylphian.minecraft.crates.gui.*;
+import net.sylphian.minecraft.crates.gui.opening.*;
 import net.sylphian.minecraft.crates.key.CrateKey;
 import net.sylphian.minecraft.crates.service.CrateService;
 import net.sylphian.minecraft.core.util.ItemBuilder;
