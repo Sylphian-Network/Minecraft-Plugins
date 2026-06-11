@@ -62,6 +62,7 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
+<li><a href="#rollOne(net.sylphian.minecraft.crates.config.CrateConfig)" tabindex="0">rollOne(CrateConfig)</a></li>
 <li><a href="#rollRewards(net.sylphian.minecraft.crates.config.CrateConfig)" tabindex="0">rollRewards(CrateConfig)</a></li>
 <li><a href="#giveReward(org.bukkit.entity.Player,net.sylphian.minecraft.crates.config.RewardEntry)" tabindex="0">giveReward(Player, RewardEntry)</a></li>
 <li><a href="#giveAll(org.bukkit.entity.Player,java.util.List)" tabindex="0">giveAll(Player, List)</a></li>
@@ -85,11 +86,9 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Service responsible for rolling and granting crate rewards.
 
-<p>On opening, the service rolls <a href="../config/CrateConfig.html#totalRolls()"><code>CrateConfig.totalRolls()</code></a> rewards
-from the crate's weighted pool. If <a href="../config/CrateConfig.html#playerPicks()"><code>CrateConfig.playerPicks()</code></a> is
-less than <code>totalRolls</code>, the caller is responsible for presenting the
-rolled rewards to the player for selection. If <code>playerPicks</code> is equal
-to or greater than <code>totalRolls</code>, all rolled rewards are granted immediately.</p></div>
+<p>Provides weighted random rolling via <a href="#rollRewards(net.sylphian.minecraft.crates.config.CrateConfig)"><code>rollRewards(CrateConfig)</code></a> and <a href="#rollOne(net.sylphian.minecraft.crates.config.CrateConfig)"><code>rollOne(CrateConfig)</code></a>,
+item building, and reward granting. The caller is responsible for determining
+how rolled rewards are presented based on the crate's <a href="../config/OpeningStyle.html" title="enum class in net.sylphian.minecraft.crates.config"><code>OpeningStyle</code></a>.</p></div>
 </div>
 </section>
 <section class="summary">
@@ -137,9 +136,14 @@ to or greater than <code>totalRolls</code>, all rolled rewards are granted immed
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Grants a single reward to the player.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../config/RewardEntry.html" title="class in net.sylphian.minecraft.crates.config">RewardEntry</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rollRewards(net.sylphian.minecraft.crates.config.CrateConfig)" class="member-name-link">rollRewards</a><wbr>(<a href="../config/CrateConfig.html" title="class in net.sylphian.minecraft.crates.config">CrateConfig</a>&nbsp;crate)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../config/RewardEntry.html" title="class in net.sylphian.minecraft.crates.config">RewardEntry</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rollOne(net.sylphian.minecraft.crates.config.CrateConfig)" class="member-name-link">rollOne</a><wbr>(<a href="../config/CrateConfig.html" title="class in net.sylphian.minecraft.crates.config">CrateConfig</a>&nbsp;crate)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Rolls a single reward from the crate's weighted pool.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../config/RewardEntry.html" title="class in net.sylphian.minecraft.crates.config">RewardEntry</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rollRewards(net.sylphian.minecraft.crates.config.CrateConfig)" class="member-name-link">rollRewards</a><wbr>(<a href="../config/CrateConfig.html" title="class in net.sylphian.minecraft.crates.config">CrateConfig</a>&nbsp;crate)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Rolls rewards from the crate's pool according to <a href="../config/CrateConfig.html#totalRolls()"><code>CrateConfig.totalRolls()</code></a>.</div>
 </div>
 </div>
@@ -176,6 +180,21 @@ to or greater than <code>totalRolls</code>, all rolled rewards are granted immed
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="rollOne(net.sylphian.minecraft.crates.config.CrateConfig)">
+<h3>rollOne</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../config/RewardEntry.html" title="class in net.sylphian.minecraft.crates.config">RewardEntry</a></span>&nbsp;<span class="element-name">rollOne</span><wbr><span class="parameters">(<a href="../config/CrateConfig.html" title="class in net.sylphian.minecraft.crates.config">CrateConfig</a>&nbsp;crate)</span></div>
+<div class="block">Rolls a single reward from the crate's weighted pool.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>crate</code> - the crate to roll from</dd>
+<dt>Returns:</dt>
+<dd>the rolled RewardEntry</dd>
+</dl>
+</div>
+</section>
+</li>
 <li>
 <section class="detail" id="rollRewards(net.sylphian.minecraft.crates.config.CrateConfig)">
 <h3>rollRewards</h3>

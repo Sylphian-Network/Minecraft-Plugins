@@ -14,6 +14,7 @@ net.sylphian.minecraft.crates
 net.sylphian.minecraft.crates.command
 net.sylphian.minecraft.crates.config
 net.sylphian.minecraft.crates.gui
+net.sylphian.minecraft.crates.gui.opening
 net.sylphian.minecraft.crates.item
 net.sylphian.minecraft.crates.key
 net.sylphian.minecraft.crates.listener

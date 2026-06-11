@@ -57,7 +57,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(java.lang.String,java.lang.String,org.bukkit.Material,int,int,java.util.List)" tabindex="0">CrateConfig(String, String, Material, int, int, List)</a></li>
+<li><a href="#%3Cinit%3E(java.lang.String,java.lang.String,org.bukkit.Material,int,int,net.sylphian.minecraft.crates.config.OpeningStyle,java.util.List)" tabindex="0">CrateConfig(String, String, Material, int, int, OpeningStyle, List)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -70,6 +70,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#displayMaterial()" tabindex="0">displayMaterial()</a></li>
 <li><a href="#totalRolls()" tabindex="0">totalRolls()</a></li>
 <li><a href="#playerPicks()" tabindex="0">playerPicks()</a></li>
+<li><a href="#openingStyle()" tabindex="0">openingStyle()</a></li>
 <li><a href="#pool()" tabindex="0">pool()</a></li>
 </ol>
 </li>
@@ -92,22 +93,19 @@ loadScripts(document, 'script');</script>
 <dd><code><span id="param-displayName">displayName</span></code> - MiniMessage formatted name shown in the GUI</dd>
 <dd><code><span id="param-displayMaterial">displayMaterial</span></code> - material used to represent the crate in the GUI</dd>
 <dd><code><span id="param-totalRolls">totalRolls</span></code> - how many rewards are rolled from the pool on opening</dd>
-<dd><code><span id="param-playerPicks">playerPicks</span></code> - how many of the rolled rewards the player may select;
-                       players may confirm with fewer than this number</dd>
+<dd><code><span id="param-playerPicks">playerPicks</span></code> - how many rewards or pane clicks the player is given</dd>
+<dd><code><span id="param-openingStyle">openingStyle</span></code> - how the opening sequence is presented to the player</dd>
 <dd><code><span id="param-pool">pool</span></code> - the weighted reward pool to roll from</dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
-<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">CrateConfig</span>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;displayName, org.bukkit.Material&nbsp;displayMaterial, int&nbsp;totalRolls, int&nbsp;playerPicks, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="RewardEntry.html" title="class in net.sylphian.minecraft.crates.config">RewardEntry</a>&gt;&nbsp;pool)
+<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">CrateConfig</span>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;displayName, org.bukkit.Material&nbsp;displayMaterial, int&nbsp;totalRolls, int&nbsp;playerPicks, <a href="OpeningStyle.html" title="enum class in net.sylphian.minecraft.crates.config">OpeningStyle</a>&nbsp;openingStyle, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="RewardEntry.html" title="class in net.sylphian.minecraft.crates.config">RewardEntry</a>&gt;&nbsp;pool)
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">Record</a></span></div>
 <div class="block">Immutable definition of a crate and its reward pool.
 
-<p>When opened, the crate rolls <code>totalRolls</code> rewards from the pool
-using weighted random selection. The player then receives or picks
-<code>playerPicks</code> of those rolled rewards.</p>
-
-<p>If <code>playerPicks</code> is equal to or greater than <code>totalRolls</code>,
-all rolled rewards are given directly. Otherwise a selection GUI is shown.</p></div>
+<p>The <a href="OpeningStyle.html" title="enum class in net.sylphian.minecraft.crates.config"><code>OpeningStyle</code></a> controls how rewards are presented when the crate is
+opened. <code>totalRolls</code> and <code>playerPicks</code> are interpreted differently
+per style — see <a href="OpeningStyle.html" title="enum class in net.sylphian.minecraft.crates.config"><code>OpeningStyle</code></a> for details.</p></div>
 </div>
 </section>
 <section class="summary">
@@ -120,11 +118,12 @@ all rolled rewards are given directly. Otherwise a selection GUI is shown.</p></
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,java.lang.String,org.bukkit.Material,int,int,java.util.List)" class="member-name-link">CrateConfig</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,java.lang.String,org.bukkit.Material,int,int,net.sylphian.minecraft.crates.config.OpeningStyle,java.util.List)" class="member-name-link">CrateConfig</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;displayName,
  org.bukkit.Material&nbsp;displayMaterial,
  int&nbsp;totalRolls,
  int&nbsp;playerPicks,
+ <a href="OpeningStyle.html" title="enum class in net.sylphian.minecraft.crates.config">OpeningStyle</a>&nbsp;openingStyle,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="RewardEntry.html" title="class in net.sylphian.minecraft.crates.config">RewardEntry</a>&gt;&nbsp;pool)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates an instance of a <code>CrateConfig</code> record class.</div>
@@ -168,24 +167,29 @@ all rolled rewards are given directly. Otherwise a selection GUI is shown.</p></
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <a href="#param-id"><code>id</code></a> record component.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playerPicks()" class="member-name-link">playerPicks</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="OpeningStyle.html" title="enum class in net.sylphian.minecraft.crates.config">OpeningStyle</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#openingStyle()" class="member-name-link">openingStyle</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of the <a href="#param-playerPicks"><code>playerPicks</code></a> record component.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="RewardEntry.html" title="class in net.sylphian.minecraft.crates.config">RewardEntry</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#pool()" class="member-name-link">pool</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of the <a href="#param-pool"><code>pool</code></a> record component.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns a string representation of this record class.</div>
+<div class="block">Returns the value of the <a href="#param-openingStyle"><code>openingStyle</code></a> record component.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#totalRolls()" class="member-name-link">totalRolls</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playerPicks()" class="member-name-link">playerPicks</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the value of the <a href="#param-playerPicks"><code>playerPicks</code></a> record component.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="RewardEntry.html" title="class in net.sylphian.minecraft.crates.config">RewardEntry</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#pool()" class="member-name-link">pool</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the value of the <a href="#param-pool"><code>pool</code></a> record component.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns a string representation of this record class.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#totalRolls()" class="member-name-link">totalRolls</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <a href="#param-totalRolls"><code>totalRolls</code></a> record component.</div>
 </div>
 </div>
@@ -206,7 +210,7 @@ all rolled rewards are given directly. Otherwise a selection GUI is shown.</p></
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(java.lang.String,java.lang.String,org.bukkit.Material,int,int,java.util.List)">
+<section class="detail" id="&lt;init&gt;(java.lang.String,java.lang.String,org.bukkit.Material,int,int,net.sylphian.minecraft.crates.config.OpeningStyle,java.util.List)">
 <h3>CrateConfig</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CrateConfig</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
@@ -214,6 +218,7 @@ all rolled rewards are given directly. Otherwise a selection GUI is shown.</p></
  org.bukkit.Material&nbsp;displayMaterial,
  int&nbsp;totalRolls,
  int&nbsp;playerPicks,
+ <a href="OpeningStyle.html" title="enum class in net.sylphian.minecraft.crates.config">OpeningStyle</a>&nbsp;openingStyle,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="RewardEntry.html" title="class in net.sylphian.minecraft.crates.config">RewardEntry</a>&gt;&nbsp;pool)</span></div>
 <div class="block">Creates an instance of a <code>CrateConfig</code> record class.</div>
 <dl class="notes">
@@ -223,6 +228,7 @@ all rolled rewards are given directly. Otherwise a selection GUI is shown.</p></
 <dd><code>displayMaterial</code> - the value for the <a href="#param-displayMaterial"><code>displayMaterial</code></a> record component</dd>
 <dd><code>totalRolls</code> - the value for the <a href="#param-totalRolls"><code>totalRolls</code></a> record component</dd>
 <dd><code>playerPicks</code> - the value for the <a href="#param-playerPicks"><code>playerPicks</code></a> record component</dd>
+<dd><code>openingStyle</code> - the value for the <a href="#param-openingStyle"><code>openingStyle</code></a> record component</dd>
 <dd><code>pool</code> - the value for the <a href="#param-pool"><code>pool</code></a> record component</dd>
 </dl>
 </div>
@@ -344,6 +350,19 @@ all rolled rewards are given directly. Otherwise a selection GUI is shown.</p></
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the value of the <a href="#param-playerPicks"><code>playerPicks</code></a> record component</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="openingStyle()">
+<h3>openingStyle</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="OpeningStyle.html" title="enum class in net.sylphian.minecraft.crates.config">OpeningStyle</a></span>&nbsp;<span class="element-name">openingStyle</span>()</div>
+<div class="block">Returns the value of the <a href="#param-openingStyle"><code>openingStyle</code></a> record component.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the value of the <a href="#param-openingStyle"><code>openingStyle</code></a> record component</dd>
 </dl>
 </div>
 </section>
