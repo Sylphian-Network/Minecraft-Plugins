@@ -6,8 +6,10 @@ import org.bukkit.inventory.ItemStack;
  * Represents the result of a fishing catch attempt.
  *
  * @param weight    the rolled physical weight in kilograms
- * @param itemStack the built item for {@link LootEntryType#ITEM} entries;
- *                  {@code null} for {@link LootEntryType#CRATE_KEY} entries
+ * @param itemStack the built ItemStack for standard fish entries where
+ *                  {@link LootEntry#externalItemId()} is null; {@code null} for
+ *                  external item entries, which are resolved directly from the
+ *                  {@link net.sylphian.minecraft.core.item.ItemRegistry} at grant time
  * @param entry     the originating loot entry
  */
 public record CatchResult(double weight, ItemStack itemStack, LootEntry entry) {

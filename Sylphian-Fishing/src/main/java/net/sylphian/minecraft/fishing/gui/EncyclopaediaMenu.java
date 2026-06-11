@@ -263,7 +263,9 @@ public class EncyclopaediaMenu {
     /**
      * Reloads the menu with an updated list of fish entries.
      *
-     * @param entries all available loot entries; non-{@link LootEntryType#ITEM} entries are excluded
+     * @param entries all available loot entries; entries with a non-null
+     *                {@link LootEntry#externalItemId()} are excluded as they carry no
+     *                display material or name and cannot be rendered in the encyclopaedia
      */
     public void reload(List<LootEntry> entries) {
         this.entries = entries.stream()
