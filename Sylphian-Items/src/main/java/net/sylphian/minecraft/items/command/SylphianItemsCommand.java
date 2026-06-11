@@ -10,7 +10,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Collection;
 import java.util.List;
@@ -41,7 +42,7 @@ public class SylphianItemsCommand implements BasicCommand {
      * @param args  the command arguments
      */
     @Override
-    public void execute(@NotNull CommandSourceStack stack, @NotNull String[] args) {
+    public void execute(@NonNull CommandSourceStack stack, @NonNull String[] args) {
         CommandSender sender = stack.getSender();
 
         if (args.length == 0) {
@@ -49,9 +50,10 @@ public class SylphianItemsCommand implements BasicCommand {
             return;
         }
 
-        switch (args[0].toLowerCase()) {
-            case "give" -> handleGive(sender, args);
-            default     -> sendUsage(sender);
+        if (args[0].equalsIgnoreCase("give")) {
+            handleGive(sender, args);
+        } else {
+            sendUsage(sender);
         }
     }
 
@@ -120,8 +122,10 @@ public class SylphianItemsCommand implements BasicCommand {
      * @return the display name string
      */
     private String getDisplayName(ItemStack item, String itemId) {
-        if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
-            return MiniMessage.miniMessage().serialize(item.getItemMeta().displayName());
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null && meta.hasDisplayName()) {
+            Component name = meta.displayName();
+            if (name != null) return MiniMessage.miniMessage().serialize(name);
         }
         return "<white>" + itemId;
     }
@@ -145,20 +149,18 @@ public class SylphianItemsCommand implements BasicCommand {
      * @return available suggestions for the current argument position
      */
     @Override
-    public @NotNull Collection<String> suggest(@NotNull CommandSourceStack stack, @NotNull String[] args) {
+    public @NonNull Collection<String> suggest(@NonNull CommandSourceStack stack, @NonNull String[] args) {
         if (args.length <= 1) return List.of("give");
 
-        return switch (args[0].toLowerCase()) {
-            case "give" -> switch (args.length) {
-                case 2 -> Bukkit.getOnlinePlayers().stream()
-                        .map(Player::getName)
-                        .toList();
-                case 3 -> ItemRegistry.allNamespacedIds().stream()
-                        .filter(id -> id.startsWith(args[2]))
-                        .toList();
-                case 4 -> List.of("1", "4", "8", "16", "32", "64");
-                default -> List.of();
-            };
+        if (!args[0].equalsIgnoreCase("give")) return List.of();
+        return switch (args.length) {
+            case 2 -> Bukkit.getOnlinePlayers().stream()
+                    .map(Player::getName)
+                    .toList();
+            case 3 -> ItemRegistry.allNamespacedIds().stream()
+                    .filter(id -> id.startsWith(args[2]))
+                    .toList();
+            case 4 -> List.of("1", "4", "8", "16", "32", "64");
             default -> List.of();
         };
     }
@@ -170,7 +172,7 @@ public class SylphianItemsCommand implements BasicCommand {
      * @return true if the sender has {@code sylphian.items.admin}
      */
     @Override
-    public boolean canUse(@NotNull CommandSender sender) {
+    public boolean canUse(@NonNull CommandSender sender) {
         return sender.hasPermission("sylphian.items.admin");
     }
 }
