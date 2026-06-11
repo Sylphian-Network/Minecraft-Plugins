@@ -187,7 +187,8 @@ public class CratesListener implements Listener {
         }
 
         if (slot == CratesGUI.CRATE_SLOT && holder.getStagedCrate() != null) {
-            CrateConfig crate = holder.getStagedCrate();
+            String crateId = holder.getStagedCrate().id();
+            CrateConfig crate = plugin.getCrates().getOrDefault(crateId, holder.getStagedCrate());
             holder.clearStaged();
             CratesGUI.restoreKeySlot(event.getInventory());
             CratesGUI.restoreCrateSlot(event.getInventory());
