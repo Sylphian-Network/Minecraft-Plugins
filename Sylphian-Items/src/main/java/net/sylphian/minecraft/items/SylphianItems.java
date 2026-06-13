@@ -7,7 +7,7 @@ import net.sylphian.minecraft.items.item.ItemRegistry;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * Main plugin class for Sylphian-Core.
+ * Main plugin class for Sylphian-Items.
  *
  * <p>Initialises the cross-plugin {@link ItemRegistry} and registers
  * the {@code /sylphian-items} administrative command.</p>

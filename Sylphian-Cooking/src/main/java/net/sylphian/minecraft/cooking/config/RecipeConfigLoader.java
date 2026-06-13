@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  * <p>Each entry under the top-level {@code recipes} section becomes a
  * {@link CookingRecipe}. Ingredients are parsed as either a plain
  * Bukkit Material name (no colon) or a namespaced item ID (contains
- * a colon), matching the convention used by Sylphian-Core's ItemRegistry.</p>
+ * a colon), matching the convention used by Sylphian-Items ItemRegistry.</p>
  */
 public class RecipeConfigLoader {
 

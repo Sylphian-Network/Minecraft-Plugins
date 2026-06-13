@@ -1,5 +1,5 @@
-name: Sylphian-Core
-prefix: Sylphian-Core
+name: Sylphian-Items
+prefix: Sylphian-Items
 version: '${version}'
 
 main: net.sylphian.minecraft.items.SylphianItems

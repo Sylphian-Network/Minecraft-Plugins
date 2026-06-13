@@ -6,7 +6,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 /**
- * Matches a custom item registered via Sylphian-Core's ItemRegistry by checking
+ * Matches a custom item registered via Sylphian-Items ItemRegistry by checking
  * the PDC key {@code <plugin-namespace>:item_id} stamped on the ItemStack.
  *
  * <p>For example, an ingredient spec for {@code sylphian-fishing:fish/common_cod}

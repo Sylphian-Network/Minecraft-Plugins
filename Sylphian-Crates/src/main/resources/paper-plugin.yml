@@ -11,6 +11,6 @@ website: https://sylphian.net
 
 dependencies:
   server:
-    Sylphian-Core:
+    Sylphian-Items:
       load: BEFORE
       required: true

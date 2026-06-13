@@ -24,7 +24,7 @@ public final class ItemRegistry {
     private ItemRegistry() {}
 
     /**
-     * Sets the logger used for warnings. Call once from Sylphian-Core's onEnable.
+     * Sets the logger used for warnings. Call once from Sylphian-Items onEnable.
      *
      * @param log the logger to use
      */

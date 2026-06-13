@@ -26,7 +26,7 @@ import java.util.Map;
  * Main plugin class for Sylphian-Cooking.
  *
  * <p>Wires together config loading, the cooking station service, event listeners,
- * and the Sylphian-Core item registry on enable; tears everything down on disable.</p>
+ * and the Sylphian-Items item registry on enable; tears everything down on disable.</p>
  */
 public final class SylphianCooking extends JavaPlugin {
 

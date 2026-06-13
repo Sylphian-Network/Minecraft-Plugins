@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Exposes the output items of all cooking recipes to Sylphian-Core's ItemRegistry.
+ * Exposes the output items of all cooking recipes to Sylphian-Items ItemRegistry.
  *
  * <p>Items are addressable as {@code sylphian-cooking:<recipe-id>}, e.g.
  * {@code "sylphian-cooking:fish_and_chips"}.</p>
