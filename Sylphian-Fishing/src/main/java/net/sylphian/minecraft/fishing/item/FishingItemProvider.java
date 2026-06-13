@@ -1,6 +1,6 @@
 package net.sylphian.minecraft.fishing.item;
 
-import net.sylphian.minecraft.core.item.ItemProvider;
+import net.sylphian.minecraft.items.item.ItemProvider;
 import net.sylphian.minecraft.fishing.SylphianFishing;
 import net.sylphian.minecraft.fishing.config.BaitConfig;
 import net.sylphian.minecraft.fishing.fish.LootEntry;

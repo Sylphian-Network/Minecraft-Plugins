@@ -2,7 +2,7 @@ name: Sylphian-Core
 prefix: Sylphian-Core
 version: '${version}'
 
-main: net.sylphian.minecraft.core.SylphianCore
+main: net.sylphian.minecraft.items.SylphianItems
 api-version: '26.1.2'
 load: POSTWORLD
 

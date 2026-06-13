@@ -5,7 +5,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.fishing.db.models.FishEncyclopaediaModel;
 import net.sylphian.minecraft.fishing.db.repositories.FishEncyclopaediaRepository;
 import net.sylphian.minecraft.fishing.fish.LootEntry;
-import net.sylphian.minecraft.core.util.ItemBuilder;
+import net.sylphian.minecraft.items.util.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;

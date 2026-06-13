@@ -1,9 +1,9 @@
 package net.sylphian.minecraft.crates.service;
 
-import net.sylphian.minecraft.core.item.ItemRegistry;
+import net.sylphian.minecraft.items.item.ItemRegistry;
 import net.sylphian.minecraft.crates.config.CrateConfig;
 import net.sylphian.minecraft.crates.config.RewardEntry;
-import net.sylphian.minecraft.core.util.ItemBuilder;
+import net.sylphian.minecraft.items.util.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 public class VerifyPaper extends JavaPlugin {
     /** Singleton instance of the plugin. */
     private static VerifyPaper instance;
-    /** Manager handling the core verification logic. */
+    /** Manager handling the items verification logic. */
     private VerifyManager verifyManager;
     /** Gson instance for JSON serialization/deserialization. */
     private Gson gson;

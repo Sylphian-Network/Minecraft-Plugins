@@ -11,7 +11,7 @@ import net.sylphian.minecraft.cooking.item.CookingItemProvider;
 import net.sylphian.minecraft.cooking.listener.CookingStationListener;
 import net.sylphian.minecraft.cooking.recipe.CookingRecipe;
 import net.sylphian.minecraft.cooking.station.CookingStationService;
-import net.sylphian.minecraft.core.item.ItemRegistry;
+import net.sylphian.minecraft.items.item.ItemRegistry;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;

@@ -46,7 +46,7 @@ public final class SylphianDatabase extends JavaPlugin {
                 driverClass
             );
 
-            // Register core migrations for the Sylphian-Database plugin itself
+            // Register items migrations for the Sylphian-Database plugin itself
             DatabaseService.registerMigrations(List.of(
             ));
 

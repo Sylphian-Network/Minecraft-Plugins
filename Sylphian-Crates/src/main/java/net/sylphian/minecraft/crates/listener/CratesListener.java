@@ -9,7 +9,7 @@ import net.sylphian.minecraft.crates.gui.*;
 import net.sylphian.minecraft.crates.gui.opening.*;
 import net.sylphian.minecraft.crates.key.CrateKey;
 import net.sylphian.minecraft.crates.service.CrateService;
-import net.sylphian.minecraft.core.util.ItemBuilder;
+import net.sylphian.minecraft.items.util.ItemBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

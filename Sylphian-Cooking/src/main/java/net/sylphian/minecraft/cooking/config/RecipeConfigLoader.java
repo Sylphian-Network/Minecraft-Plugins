@@ -4,7 +4,7 @@ import net.sylphian.minecraft.cooking.recipe.CookingRecipe;
 import net.sylphian.minecraft.cooking.recipe.IngredientSpec;
 import net.sylphian.minecraft.cooking.recipe.MaterialIngredientSpec;
 import net.sylphian.minecraft.cooking.recipe.NamespacedIngredientSpec;
-import net.sylphian.minecraft.core.util.ItemBuilder;
+import net.sylphian.minecraft.items.util.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;

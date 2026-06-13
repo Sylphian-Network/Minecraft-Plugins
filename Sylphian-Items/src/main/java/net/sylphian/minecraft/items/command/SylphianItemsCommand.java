@@ -1,11 +1,11 @@
-package net.sylphian.minecraft.core.command;
+package net.sylphian.minecraft.items.command;
 
 import io.papermc.paper.command.brigadier.BasicCommand;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.sylphian.minecraft.core.item.ItemRegistry;
+import net.sylphian.minecraft.items.item.ItemRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -19,7 +19,7 @@ import java.util.Optional;
 /**
  * Root administrative command for Sylphian Core.
  *
- * <p>Usage: {@code /sylphian-core <subcommand>}</p>
+ * <p>Usage: {@code /sylphian-items <subcommand>}</p>
  *
  * <ul>
  *   <li>{@code give <player> <item-id> [amount]} — gives a player any item registered
@@ -28,9 +28,9 @@ import java.util.Optional;
  *       {@code sylphian-fishing:bait/ocean_bait})</li>
  * </ul>
  *
- * <p>Requires the {@code sylphian.core.admin} permission.</p>
+ * <p>Requires the {@code sylphian.items.admin} permission.</p>
  */
-public class SylphianCoreCommand implements BasicCommand {
+public class SylphianItemsCommand implements BasicCommand {
 
     private static final MiniMessage MINI = MiniMessage.miniMessage();
 
@@ -57,7 +57,7 @@ public class SylphianCoreCommand implements BasicCommand {
 
     /**
      * Gives a player one or more items resolved from the cross-plugin item registry.
-     * Usage: {@code /sylphian-core give <player> <item-id> [amount]}
+     * Usage: {@code /sylphian-items give <player> <item-id> [amount]}
      *
      * @param sender the command sender
      * @param args   the full args array
@@ -65,7 +65,7 @@ public class SylphianCoreCommand implements BasicCommand {
     private void handleGive(CommandSender sender, String[] args) {
         if (args.length < 3) {
             sender.sendMessage(Component.text(
-                    "Usage: /sylphian-core give <player> <item-id> [amount]", NamedTextColor.RED));
+                    "Usage: /sylphian-items give <player> <item-id> [amount]", NamedTextColor.RED));
             return;
         }
 
@@ -133,7 +133,7 @@ public class SylphianCoreCommand implements BasicCommand {
      */
     private void sendUsage(CommandSender sender) {
         sender.sendMessage(Component.text("Usage:", NamedTextColor.RED));
-        sender.sendMessage(Component.text("  /sylphian-core give <player> <item-id> [amount]", NamedTextColor.RED));
+        sender.sendMessage(Component.text("  /sylphian-items give <player> <item-id> [amount]", NamedTextColor.RED));
     }
 
     /**
@@ -167,10 +167,10 @@ public class SylphianCoreCommand implements BasicCommand {
      * Restricts this command to senders with the admin permission.
      *
      * @param sender the command sender
-     * @return true if the sender has {@code sylphian.core.admin}
+     * @return true if the sender has {@code sylphian.items.admin}
      */
     @Override
     public boolean canUse(@NotNull CommandSender sender) {
-        return sender.hasPermission("sylphian.core.admin");
+        return sender.hasPermission("sylphian.items.admin");
     }
 }

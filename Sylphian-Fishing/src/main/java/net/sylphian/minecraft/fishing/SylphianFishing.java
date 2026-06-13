@@ -4,7 +4,7 @@ import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.sylphian.minecraft.core.item.ItemRegistry;
+import net.sylphian.minecraft.items.item.ItemRegistry;
 import net.sylphian.minecraft.database.DatabaseService;
 import net.sylphian.minecraft.fishing.commands.EncyclopaediaCommand;
 import net.sylphian.minecraft.fishing.item.FishingItemProvider;
@@ -34,7 +34,7 @@ import java.util.Map;
 
 /**
  * Main plugin class for Sylphian-Fishing.
- * Responsible for initializing core services (loot, mutations, database),
+ * Responsible for initializing items services (loot, mutations, database),
  * registering listeners and commands, and managing the plugin lifecycle.
  */
 public class SylphianFishing extends JavaPlugin {

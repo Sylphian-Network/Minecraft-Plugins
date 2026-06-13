@@ -1,4 +1,4 @@
-package net.sylphian.minecraft.core.item;
+package net.sylphian.minecraft.items.item;
 
 import org.bukkit.inventory.ItemStack;
 import java.util.Optional;

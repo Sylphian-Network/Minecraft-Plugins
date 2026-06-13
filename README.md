@@ -10,7 +10,7 @@ The project is a Gradle multi-module build targeting **Paper 26.1.2** and **Java
 
 | Module                     | Platform | Description                                                                                                                                                                    |
 |----------------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `Sylphian-Core`            | Paper    | Provides a thread-safe cross-plugin item registry (namespaced provider model), an ItemBuilder utility.                                                                         |
+| `Sylphian-Items`           | Paper    | Provides a thread-safe cross-plugin item registry (namespaced provider model), an ItemBuilder utility.                                                                         |
 | `Sylphian-Crates`          | Paper    | Universal crate system with weighted reward pools and a player pick selection GUI, designed to hook into any other Paper plugin via its API                                    |
 | `Sylphian-Database`        | Paper    | Central database handler and source of truth for all database connections, providing connection pooling and migrations to every plugin that depends on it                      |
 | `Sylphian-Fishing`         | Paper    | Custom fishing system with biome, depth, and time-of-day restrictions, rarity tiers, mutations, bait zones, and a fish encyclopaedia                                           |

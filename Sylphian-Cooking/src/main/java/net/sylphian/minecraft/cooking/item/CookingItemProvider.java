@@ -1,7 +1,7 @@
 package net.sylphian.minecraft.cooking.item;
 
 import net.sylphian.minecraft.cooking.recipe.CookingRecipe;
-import net.sylphian.minecraft.core.item.ItemProvider;
+import net.sylphian.minecraft.items.item.ItemProvider;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;

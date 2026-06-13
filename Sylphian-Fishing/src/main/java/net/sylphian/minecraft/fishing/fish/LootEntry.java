@@ -12,7 +12,7 @@ import java.util.Random;
  * Represents a single entry in the fishing loot table.
  *
  * <p>Entries are either standard fish (material, display name, and description are populated)
- * or cross-plugin external items resolved via the {@link net.sylphian.minecraft.core.item.ItemRegistry}
+ * or cross-plugin external items resolved via the {@link net.sylphian.minecraft.items.item.ItemRegistry}
  * ({@link #externalItemId} is non-null, material and display fields will be null).</p>
  *
  * <h2>Restriction Dimensions</h2>

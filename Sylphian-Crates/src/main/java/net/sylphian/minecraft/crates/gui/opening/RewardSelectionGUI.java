@@ -6,7 +6,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.crates.config.RewardEntry;
 import net.sylphian.minecraft.crates.service.CrateService;
-import net.sylphian.minecraft.core.util.ItemBuilder;
+import net.sylphian.minecraft.items.util.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

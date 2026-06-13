@@ -4,7 +4,7 @@ import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.sylphian.minecraft.core.item.ItemRegistry;
+import net.sylphian.minecraft.items.item.ItemRegistry;
 import net.sylphian.minecraft.crates.command.CratesCommand;
 import net.sylphian.minecraft.crates.command.SylphianCratesCommand;
 import net.sylphian.minecraft.crates.config.CrateConfig;
@@ -24,8 +24,8 @@ import java.util.Map;
 /**
  * Main plugin class for Sylphian-Crates.
  *
- * <p>Loads key and crate configurations, registers a {@link net.sylphian.minecraft.core.item.ItemProvider}
- * with the cross-plugin {@link net.sylphian.minecraft.core.item.ItemRegistry},
+ * <p>Loads key and crate configurations, registers a {@link net.sylphian.minecraft.items.item.ItemProvider}
+ * with the cross-plugin {@link net.sylphian.minecraft.items.item.ItemRegistry},
  * and wires up all GUI event listeners.</p>
  */
 public final class SylphianCrates extends JavaPlugin {

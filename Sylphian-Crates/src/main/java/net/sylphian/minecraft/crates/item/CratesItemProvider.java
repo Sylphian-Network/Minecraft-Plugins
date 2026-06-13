@@ -1,6 +1,6 @@
 package net.sylphian.minecraft.crates.item;
 
-import net.sylphian.minecraft.core.item.ItemProvider;
+import net.sylphian.minecraft.items.item.ItemProvider;
 import net.sylphian.minecraft.crates.SylphianCrates;
 import net.sylphian.minecraft.crates.config.KeyConfig;
 import net.sylphian.minecraft.crates.key.CrateKey;

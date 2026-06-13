@@ -1,7 +1,7 @@
 package net.sylphian.minecraft.fishing.services.bait;
 
 import net.sylphian.minecraft.fishing.config.BaitConfig;
-import net.sylphian.minecraft.core.util.ItemBuilder;
+import net.sylphian.minecraft.items.util.ItemBuilder;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Projectile;
 import org.bukkit.inventory.ItemStack;

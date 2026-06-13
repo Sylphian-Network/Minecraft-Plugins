@@ -1,6 +1,6 @@
 package net.sylphian.minecraft.fishing.listeners;
 
-import net.sylphian.minecraft.core.item.ItemRegistry;
+import net.sylphian.minecraft.items.item.ItemRegistry;
 import net.sylphian.minecraft.fishing.db.api.IFishEncyclopaediaRepository;
 import net.sylphian.minecraft.fishing.fish.CatchResult;
 import net.sylphian.minecraft.fishing.fish.WeatherCondition;
