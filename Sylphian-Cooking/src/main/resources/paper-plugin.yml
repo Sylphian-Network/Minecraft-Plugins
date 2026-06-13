@@ -14,3 +14,8 @@ dependencies:
     Sylphian-Items:
       load: BEFORE
       required: true
+
+permissions:
+  sylphian.cooking.admin:
+    description: Administrative cooking commands (/sylphian-cooking).
+    default: op

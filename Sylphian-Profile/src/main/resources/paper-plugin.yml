@@ -18,7 +18,7 @@ dependencies:
       load: BEFORE
       required: true
 
-commands:
-  playtime:
-    description: View your playtime on the server.
-    usage: /playtime
+permissions:
+  sylphian.profile.playtime:
+    description: View your playtime (/playtime).
+    default: true

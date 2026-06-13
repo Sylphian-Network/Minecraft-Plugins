@@ -8,3 +8,8 @@ load: POSTWORLD
 
 authors: [QuackieMackie]
 website: https://sylphian.net
+
+permissions:
+  sylphian.items.admin:
+    description: Administrative item commands (/sylphian-items).
+    default: op

@@ -24,3 +24,11 @@ dependencies:
     Sylphian-Crates:
       load: BEFORE
       required: false
+
+permissions:
+  sylphian.fishing.admin:
+    description: Administrative fishing commands (/sylphian-fishing).
+    default: op
+  sylphian.fishing.encyclopaedia:
+    description: Open the fish encyclopaedia (/encyclopaedia).
+    default: true

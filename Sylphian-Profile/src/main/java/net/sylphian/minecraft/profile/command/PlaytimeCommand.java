@@ -51,6 +51,17 @@ public class PlaytimeCommand implements BasicCommand {
     }
 
     /**
+     * The permission required to view playtime. Declared in paper-plugin.yml
+     * with {@code default: true}, so all players have it.
+     *
+     * @return the permission node for this command
+     */
+    @Override
+    public String permission() {
+        return "sylphian.profile.playtime";
+    }
+
+    /**
      * Formats and sends the playtime message to a player.
      *
      * @param player       the recipient

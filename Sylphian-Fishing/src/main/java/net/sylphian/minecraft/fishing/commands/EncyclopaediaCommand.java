@@ -39,4 +39,15 @@ public class EncyclopaediaCommand implements BasicCommand {
 
         menu.open(player, 0);
     }
+
+    /**
+     * The permission required to open the encyclopaedia. Declared in
+     * paper-plugin.yml with {@code default: true}, so all players have it.
+     *
+     * @return the permission node for this command
+     */
+    @Override
+    public String permission() {
+        return "sylphian.fishing.encyclopaedia";
+    }
 }

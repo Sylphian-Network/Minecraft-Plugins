@@ -14,3 +14,11 @@ dependencies:
     Sylphian-Items:
       load: BEFORE
       required: true
+
+permissions:
+  sylphian.crates.admin:
+    description: Administrative crate commands (/sylphian-crates).
+    default: op
+  sylphian.crates.open:
+    description: Open crates (/crates).
+    default: true
