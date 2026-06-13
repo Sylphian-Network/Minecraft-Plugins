@@ -39,6 +39,7 @@ jobs:
             Sylphian-Verify-Velocity/build/libs/Sylphian-Verify-Velocity.jar \
             Sylphian-Database/build/libs/Sylphian-Database.jar \
             Sylphian-Items/build/libs/Sylphian-Items.jar \
+            Sylphian-Economy/build/libs/Sylphian-Economy.jar \
             Sylphian-Crates/build/libs/Sylphian-Crates.jar \
             Sylphian-Profile/build/libs/Sylphian-Profile.jar \
             Sylphian-Scoreboard/build/libs/Sylphian-Scoreboard.jar \
