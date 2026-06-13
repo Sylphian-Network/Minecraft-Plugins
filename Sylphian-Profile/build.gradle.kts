@@ -3,7 +3,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
     compileOnly(project(":Sylphian-Database"))
     compileOnly(project(":Sylphian-Scoreboard"))
-    compileOnly("org.jdbi:jdbi3-items:3.47.0")
+    implementation("org.jdbi:jdbi3-core:3.47.0")
     compileOnly("org.jdbi:jdbi3-sqlobject:3.47.0")
 }
 

@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
-    implementation("org.jdbi:jdbi3-items:3.47.0")
+    implementation("org.jdbi:jdbi3-core:3.47.0")
     implementation("org.jdbi:jdbi3-sqlobject:3.47.0")
     implementation("com.zaxxer:HikariCP:6.2.1")
     implementation("org.mariadb.jdbc:mariadb-java-client:3.5.1")
