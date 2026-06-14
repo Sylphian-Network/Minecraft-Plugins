@@ -9,7 +9,9 @@ import net.sylphian.minecraft.profile.db.repositories.PlayerRepository;
 import net.sylphian.minecraft.profile.db.repositories.SessionRepository;
 import net.sylphian.minecraft.profile.listener.ChatListener;
 import net.sylphian.minecraft.profile.listener.ProfileListener;
+import net.sylphian.minecraft.profile.economy.BalanceTracker;
 import net.sylphian.minecraft.profile.service.PlayerService;
+import net.sylphian.minecraft.profile.sidebar.BalanceSupplier;
 import net.sylphian.minecraft.profile.sidebar.ProfileContributor;
 import net.sylphian.minecraft.profile.utils.ProfileManager;
 import net.sylphian.minecraft.profile.utils.VisualManager;
@@ -65,7 +67,14 @@ public final class SylphianProfile extends JavaPlugin {
                         new PlaytimeCommand(playerService, getLogger()))
         );
 
-        SidebarService.registerContributor(new ProfileContributor(profileManager));
+        // Soft dependency: show balances on the sidebar only when Sylphian-Economy is installed.
+        BalanceSupplier balanceSupplier = null;
+        if (getServer().getPluginManager().getPlugin("Sylphian-Economy") != null) {
+            BalanceTracker balanceTracker = new BalanceTracker();
+            getServer().getPluginManager().registerEvents(balanceTracker, this);
+            balanceSupplier = balanceTracker;
+        }
+        SidebarService.registerContributor(new ProfileContributor(profileManager, balanceSupplier));
 
         getLogger().info("Sylphian-Profile initialized.");
     }
