@@ -14,3 +14,14 @@ dependencies:
     Sylphian-Database:
       load: BEFORE
       required: true
+
+permissions:
+  sylphian.economy.balance:
+    description: Check your or another player's balance (/balance).
+    default: true
+  sylphian.economy.pay:
+    description: Send money to another player (/pay).
+    default: true
+  sylphian.economy.admin:
+    description: Administrative economy commands (/economy).
+    default: op
