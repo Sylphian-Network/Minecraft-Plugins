@@ -6,10 +6,6 @@ net.sylphian.minecraft.cooking.item
 net.sylphian.minecraft.cooking.listener
 net.sylphian.minecraft.cooking.recipe
 net.sylphian.minecraft.cooking.station
-net.sylphian.minecraft.core
-net.sylphian.minecraft.core.command
-net.sylphian.minecraft.core.item
-net.sylphian.minecraft.core.util
 net.sylphian.minecraft.crates
 net.sylphian.minecraft.crates.command
 net.sylphian.minecraft.crates.config
@@ -38,6 +34,10 @@ net.sylphian.minecraft.fishing.services.bait
 net.sylphian.minecraft.fishing.services.mutation
 net.sylphian.minecraft.fishing.services.mutation.impl
 net.sylphian.minecraft.fishing.sidebar
+net.sylphian.minecraft.items
+net.sylphian.minecraft.items.command
+net.sylphian.minecraft.items.item
+net.sylphian.minecraft.items.util
 net.sylphian.minecraft.profile
 net.sylphian.minecraft.profile.command
 net.sylphian.minecraft.profile.db.api

@@ -5,7 +5,7 @@
 <title>ItemRegistry (Sylphian Network - Plugin API Documentation)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="description" content="declaration: package: net.sylphian.minecraft.core.item, class: ItemRegistry">
+<meta name="description" content="declaration: package: net.sylphian.minecraft.items.item, class: ItemRegistry">
 <meta name="generator" content="javadoc/ClassWriter">
 <link rel="stylesheet" type="text/css" href="../../../../../resource-files/jquery-ui.min.css">
 <link rel="stylesheet" type="text/css" href="../../../../../resource-files/stylesheet.css">
@@ -39,7 +39,7 @@ loadScripts(document, 'script');</script>
 <div class="sub-nav">
 <div class="nav-content">
 <ol class="sub-nav-list">
-<li><a href="package-summary.html">net.sylphian.minecraft.core.item</a></li>
+<li><a href="package-summary.html">net.sylphian.minecraft.items.item</a></li>
 <li><a href="ItemRegistry.html" class="current-selection">ItemRegistry</a></li>
 </ol>
 <div class="nav-list-search"><input type="text" id="search-input" disabled placeholder="Search documentation (type /)" aria-label="Search in documentation" autocomplete="off" spellcheck="false"><input type="reset" id="reset-search" disabled value="Reset"></div>
@@ -57,7 +57,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#init(java.util.logging.Logger)" tabindex="0">init(Logger)</a></li>
-<li><a href="#register(net.sylphian.minecraft.core.item.ItemProvider)" tabindex="0">register(ItemProvider)</a></li>
+<li><a href="#register(net.sylphian.minecraft.items.item.ItemProvider)" tabindex="0">register(ItemProvider)</a></li>
 <li><a href="#unregister(java.lang.String)" tabindex="0">unregister(String)</a></li>
 <li><a href="#get(java.lang.String)" tabindex="0">get(String)</a></li>
 <li><a href="#exists(java.lang.String)" tabindex="0">exists(String)</a></li>
@@ -73,7 +73,7 @@ loadScripts(document, 'script');</script>
 <h1 title="Class ItemRegistry" class="title">Class ItemRegistry</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">net.sylphian.minecraft.core.item.ItemRegistry</div>
+<div class="inheritance">net.sylphian.minecraft.items.item.ItemRegistry</div>
 </div>
 <section class="class-description" id="class-description">
 <hr>
@@ -82,7 +82,7 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Central registry for cross-plugin custom items.
 
-<p>Plugins register an <a href="ItemProvider.html" title="interface in net.sylphian.minecraft.core.item"><code>ItemProvider</code></a> on enable and unregister on disable.
+<p>Plugins register an <a href="ItemProvider.html" title="interface in net.sylphian.minecraft.items.item"><code>ItemProvider</code></a> on enable and unregister on disable.
 Items are referenced by a namespaced ID in the form <code>namespace:item-id</code>,
 e.g. <code>"sylphian-crates:legendary_key"</code> or <code>"sylphian-fishing:bait/ocean_bait"</code>.</p>
 
@@ -130,7 +130,7 @@ in the form <code>"namespace:item-id"</code>.</div>
 <div class="block">Returns all item IDs registered under the given namespace.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#register(net.sylphian.minecraft.core.item.ItemProvider)" class="member-name-link">register</a><wbr>(<a href="ItemProvider.html" title="interface in net.sylphian.minecraft.core.item">ItemProvider</a>&nbsp;provider)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#register(net.sylphian.minecraft.items.item.ItemProvider)" class="member-name-link">register</a><wbr>(<a href="ItemProvider.html" title="interface in net.sylphian.minecraft.items.item">ItemProvider</a>&nbsp;provider)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Registers an item provider under its declared namespace.</div>
 </div>
@@ -161,7 +161,7 @@ in the form <code>"namespace:item-id"</code>.</div>
 <h3>init</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">init</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.logging/java/util/logging/Logger.html" title="class or interface in java.util.logging" class="external-link">Logger</a>&nbsp;log)</span></div>
-<div class="block">Sets the logger used for warnings. Call once from Sylphian-Core's onEnable.</div>
+<div class="block">Sets the logger used for warnings. Call once from Sylphian-Items onEnable.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>log</code> - the logger to use</dd>
@@ -170,10 +170,10 @@ in the form <code>"namespace:item-id"</code>.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="register(net.sylphian.minecraft.core.item.ItemProvider)">
+<section class="detail" id="register(net.sylphian.minecraft.items.item.ItemProvider)">
 <h3>register</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">register</span><wbr><span class="parameters">(<a href="ItemProvider.html" title="interface in net.sylphian.minecraft.core.item">ItemProvider</a>&nbsp;provider)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">register</span><wbr><span class="parameters">(<a href="ItemProvider.html" title="interface in net.sylphian.minecraft.items.item">ItemProvider</a>&nbsp;provider)</span></div>
 <div class="block">Registers an item provider under its declared namespace.
 Replaces any existing provider with the same namespace.</div>
 <dl class="notes">

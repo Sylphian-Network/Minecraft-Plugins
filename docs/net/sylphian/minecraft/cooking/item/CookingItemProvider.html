@@ -81,14 +81,14 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="../../core/item/ItemProvider.html" title="interface in net.sylphian.minecraft.core.item">ItemProvider</a></code></dd>
+<dd><code><a href="../../items/item/ItemProvider.html" title="interface in net.sylphian.minecraft.items.item">ItemProvider</a></code></dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">CookingItemProvider</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="../../core/item/ItemProvider.html" title="interface in net.sylphian.minecraft.core.item">ItemProvider</a></span></div>
-<div class="block">Exposes the output items of all cooking recipes to Sylphian-Core's ItemRegistry.
+implements <a href="../../items/item/ItemProvider.html" title="interface in net.sylphian.minecraft.items.item">ItemProvider</a></span></div>
+<div class="block">Exposes the output items of all cooking recipes to Sylphian-Items ItemRegistry.
 
 <p>Items are addressable as <code>sylphian-cooking:&lt;recipe-id&gt;</code>, e.g.
 <code>"sylphian-cooking:fish_and_chips"</code>.</p>
@@ -188,12 +188,12 @@ in their own systems (e.g. as crate rewards or further recipe inputs).</p></div>
 <h3>namespace</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">namespace</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../../core/item/ItemProvider.html#namespace()">ItemProvider</a></code></span></div>
+<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../../items/item/ItemProvider.html#namespace()">ItemProvider</a></code></span></div>
 <div class="block">Returns the namespace for this provider, e.g. <code>"sylphian-crates"</code>.
 Must be unique across all registered providers.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../../core/item/ItemProvider.html#namespace()">namespace</a></code>&nbsp;in interface&nbsp;<code><a href="../../core/item/ItemProvider.html" title="interface in net.sylphian.minecraft.core.item">ItemProvider</a></code></dd>
+<dd><code><a href="../../items/item/ItemProvider.html#namespace()">namespace</a></code>&nbsp;in interface&nbsp;<code><a href="../../items/item/ItemProvider.html" title="interface in net.sylphian.minecraft.items.item">ItemProvider</a></code></dd>
 <dt>Returns:</dt>
 <dd>the namespace</dd>
 </dl>
@@ -205,11 +205,11 @@ Must be unique across all registered providers.</div>
 <h3>provide</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;org.bukkit.inventory.ItemStack&gt;</span>&nbsp;<span class="element-name">provide</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;itemId)</span></div>
-<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../../core/item/ItemProvider.html#provide(java.lang.String)">ItemProvider</a></code></span></div>
+<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../../items/item/ItemProvider.html#provide(java.lang.String)">ItemProvider</a></code></span></div>
 <div class="block">Builds the item for the given item ID within this provider's namespace.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../../core/item/ItemProvider.html#provide(java.lang.String)">provide</a></code>&nbsp;in interface&nbsp;<code><a href="../../core/item/ItemProvider.html" title="interface in net.sylphian.minecraft.core.item">ItemProvider</a></code></dd>
+<dd><code><a href="../../items/item/ItemProvider.html#provide(java.lang.String)">provide</a></code>&nbsp;in interface&nbsp;<code><a href="../../items/item/ItemProvider.html" title="interface in net.sylphian.minecraft.items.item">ItemProvider</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>itemId</code> - the item identifier, e.g. <code>"legendary_key"</code></dd>
 <dt>Returns:</dt>
@@ -223,12 +223,12 @@ Must be unique across all registered providers.</div>
 <h3>itemIds</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">itemIds</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../../core/item/ItemProvider.html#itemIds()">ItemProvider</a></code></span></div>
+<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../../items/item/ItemProvider.html#itemIds()">ItemProvider</a></code></span></div>
 <div class="block">Returns all item IDs this provider can build.
 Used for config validation and tab completion.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../../core/item/ItemProvider.html#itemIds()">itemIds</a></code>&nbsp;in interface&nbsp;<code><a href="../../core/item/ItemProvider.html" title="interface in net.sylphian.minecraft.core.item">ItemProvider</a></code></dd>
+<dd><code><a href="../../items/item/ItemProvider.html#itemIds()">itemIds</a></code>&nbsp;in interface&nbsp;<code><a href="../../items/item/ItemProvider.html" title="interface in net.sylphian.minecraft.items.item">ItemProvider</a></code></dd>
 <dt>Returns:</dt>
 <dd>the set of registered item IDs</dd>
 </dl>

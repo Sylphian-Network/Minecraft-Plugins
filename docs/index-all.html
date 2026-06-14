@@ -76,7 +76,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="net/sylphian/minecraft/cooking/station/CookingStationState.html#addViewer(java.util.UUID)" class="member-name-link">addViewer(UUID)</a> - Method in class net.sylphian.minecraft.cooking.station.<a href="net/sylphian/minecraft/cooking/station/CookingStationState.html" title="class in net.sylphian.minecraft.cooking.station">CookingStationState</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/sylphian/minecraft/core/item/ItemRegistry.html#allNamespacedIds()" class="member-name-link">allNamespacedIds()</a> - Static method in class net.sylphian.minecraft.core.item.<a href="net/sylphian/minecraft/core/item/ItemRegistry.html" title="class in net.sylphian.minecraft.core.item">ItemRegistry</a></dt>
+<dt><a href="net/sylphian/minecraft/items/item/ItemRegistry.html#allNamespacedIds()" class="member-name-link">allNamespacedIds()</a> - Static method in class net.sylphian.minecraft.items.item.<a href="net/sylphian/minecraft/items/item/ItemRegistry.html" title="class in net.sylphian.minecraft.items.item">ItemRegistry</a></dt>
 <dd>
 <div class="block">Returns every namespaced item ID across all registered providers,
 in the form <code>"namespace:item-id"</code>.</div>
@@ -101,7 +101,7 @@ in the form <code>"namespace:item-id"</code>.</div>
 <dd>
 <div class="block">Returns the value of the <a href="./net/sylphian/minecraft/crates/config/RewardEntry.html#param-amount"><code>amount</code></a> record component.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/core/util/ItemBuilder.html#amount(int)" class="member-name-link">amount(int)</a> - Method in class net.sylphian.minecraft.core.util.<a href="net/sylphian/minecraft/core/util/ItemBuilder.html" title="class in net.sylphian.minecraft.core.util">ItemBuilder</a></dt>
+<dt><a href="net/sylphian/minecraft/items/util/ItemBuilder.html#amount(int)" class="member-name-link">amount(int)</a> - Method in class net.sylphian.minecraft.items.util.<a href="net/sylphian/minecraft/items/util/ItemBuilder.html" title="class in net.sylphian.minecraft.items.util">ItemBuilder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/verify/api/model/VerificationReason.html#API_ERROR" class="member-name-link">API_ERROR</a> - Enum constant in enum class net.sylphian.minecraft.verify.api.model.<a href="net/sylphian/minecraft/verify/api/model/VerificationReason.html" title="enum class in net.sylphian.minecraft.verify.api.model">VerificationReason</a></dt>
 <dd>
@@ -300,7 +300,7 @@ to indicate it has been selected by the player.</div>
 <dd>
 <div class="block">Access blocked due to too many failed attempts from this identity or IP.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/core/util/ItemBuilder.html#build()" class="member-name-link">build()</a> - Method in class net.sylphian.minecraft.core.util.<a href="net/sylphian/minecraft/core/util/ItemBuilder.html" title="class in net.sylphian.minecraft.core.util">ItemBuilder</a></dt>
+<dt><a href="net/sylphian/minecraft/items/util/ItemBuilder.html#build()" class="member-name-link">build()</a> - Method in class net.sylphian.minecraft.items.util.<a href="net/sylphian/minecraft/items/util/ItemBuilder.html" title="class in net.sylphian.minecraft.items.util">ItemBuilder</a></dt>
 <dd>
 <div class="block">Finalizes the item building process.</div>
 </dd>
@@ -392,10 +392,6 @@ to indicate it has been selected by the player.</div>
 <dd>
 <div class="block">Restricts this command to senders with the admin permission.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/core/command/SylphianCoreCommand.html#canUse(org.bukkit.command.CommandSender)" class="member-name-link">canUse(CommandSender)</a> - Method in class net.sylphian.minecraft.core.command.<a href="net/sylphian/minecraft/core/command/SylphianCoreCommand.html" title="class in net.sylphian.minecraft.core.command">SylphianCoreCommand</a></dt>
-<dd>
-<div class="block">Restricts this command to senders with the admin permission.</div>
-</dd>
 <dt><a href="net/sylphian/minecraft/crates/command/CratesCommand.html#canUse(org.bukkit.command.CommandSender)" class="member-name-link">canUse(CommandSender)</a> - Method in class net.sylphian.minecraft.crates.command.<a href="net/sylphian/minecraft/crates/command/CratesCommand.html" title="class in net.sylphian.minecraft.crates.command">CratesCommand</a></dt>
 <dd>
 <div class="block">Restricts this command to senders with the open permission.</div>
@@ -405,6 +401,10 @@ to indicate it has been selected by the player.</div>
 <div class="block">Restricts this command to senders with the admin permission.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/commands/SylphianFishingCommand.html#canUse(org.bukkit.command.CommandSender)" class="member-name-link">canUse(CommandSender)</a> - Method in class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/SylphianFishingCommand.html" title="class in net.sylphian.minecraft.fishing.commands">SylphianFishingCommand</a></dt>
+<dd>
+<div class="block">Restricts this command to senders with the admin permission.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/items/command/SylphianItemsCommand.html#canUse(org.bukkit.command.CommandSender)" class="member-name-link">canUse(CommandSender)</a> - Method in class net.sylphian.minecraft.items.command.<a href="net/sylphian/minecraft/items/command/SylphianItemsCommand.html" title="class in net.sylphian.minecraft.items.command">SylphianItemsCommand</a></dt>
 <dd>
 <div class="block">Restricts this command to senders with the admin permission.</div>
 </dd>
@@ -582,7 +582,7 @@ online player scoreboards.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/cooking/item/CookingItemProvider.html" class="type-name-link" title="class in net.sylphian.minecraft.cooking.item">CookingItemProvider</a> - Class in <a href="net/sylphian/minecraft/cooking/item/package-summary.html">net.sylphian.minecraft.cooking.item</a></dt>
 <dd>
-<div class="block">Exposes the output items of all cooking recipes to Sylphian-Core's ItemRegistry.</div>
+<div class="block">Exposes the output items of all cooking recipes to Sylphian-Items ItemRegistry.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/cooking/item/CookingItemProvider.html#%3Cinit%3E(java.util.List)" class="member-name-link">CookingItemProvider(List)</a> - Constructor for class net.sylphian.minecraft.cooking.item.<a href="net/sylphian/minecraft/cooking/item/CookingItemProvider.html" title="class in net.sylphian.minecraft.cooking.item">CookingItemProvider</a></dt>
 <dd>
@@ -727,7 +727,7 @@ from the <code>PersistentDataContainer</code> of a block entity (furnace or camp
 <dd>
 <div class="block">Creates a new bait zone centred at the given location.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/core/util/ItemBuilder.html#customModelData(float)" class="member-name-link">customModelData(float)</a> - Method in class net.sylphian.minecraft.core.util.<a href="net/sylphian/minecraft/core/util/ItemBuilder.html" title="class in net.sylphian.minecraft.core.util">ItemBuilder</a></dt>
+<dt><a href="net/sylphian/minecraft/items/util/ItemBuilder.html#customModelData(float)" class="member-name-link">customModelData(float)</a> - Method in class net.sylphian.minecraft.items.util.<a href="net/sylphian/minecraft/items/util/ItemBuilder.html" title="class in net.sylphian.minecraft.items.util">ItemBuilder</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:D">D</h2>
@@ -841,7 +841,7 @@ from the <code>PersistentDataContainer</code> of a block entity (furnace or camp
 <dd>
 <div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/config/MutationConfig.html#param-enabled"><code>enabled</code></a> record component.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/core/util/ItemBuilder.html#enchant(java.lang.String,int)" class="member-name-link">enchant(String, int)</a> - Method in class net.sylphian.minecraft.core.util.<a href="net/sylphian/minecraft/core/util/ItemBuilder.html" title="class in net.sylphian.minecraft.core.util">ItemBuilder</a></dt>
+<dt><a href="net/sylphian/minecraft/items/util/ItemBuilder.html#enchant(java.lang.String,int)" class="member-name-link">enchant(String, int)</a> - Method in class net.sylphian.minecraft.items.util.<a href="net/sylphian/minecraft/items/util/ItemBuilder.html" title="class in net.sylphian.minecraft.items.util">ItemBuilder</a></dt>
 <dd>
 <div class="block">Applies an enchantment to the item by namespaced key.</div>
 </dd>
@@ -1017,10 +1017,6 @@ from the <code>PersistentDataContainer</code> of a block entity (furnace or camp
 <dd>
 <div class="block">Routes execution to the appropriate subcommand handler.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/core/command/SylphianCoreCommand.html#execute(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" class="member-name-link">execute(CommandSourceStack, String[])</a> - Method in class net.sylphian.minecraft.core.command.<a href="net/sylphian/minecraft/core/command/SylphianCoreCommand.html" title="class in net.sylphian.minecraft.core.command">SylphianCoreCommand</a></dt>
-<dd>
-<div class="block">Routes execution to the appropriate subcommand handler.</div>
-</dd>
 <dt><a href="net/sylphian/minecraft/crates/command/CratesCommand.html#execute(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" class="member-name-link">execute(CommandSourceStack, String[])</a> - Method in class net.sylphian.minecraft.crates.command.<a href="net/sylphian/minecraft/crates/command/CratesCommand.html" title="class in net.sylphian.minecraft.crates.command">CratesCommand</a></dt>
 <dd>
 <div class="block">Opens the crates GUI for the executing player.</div>
@@ -1033,6 +1029,10 @@ from the <code>PersistentDataContainer</code> of a block entity (furnace or camp
 <dd>
 <div class="block">Routes execution to the appropriate subcommand handler.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/items/command/SylphianItemsCommand.html#execute(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" class="member-name-link">execute(CommandSourceStack, String[])</a> - Method in class net.sylphian.minecraft.items.command.<a href="net/sylphian/minecraft/items/command/SylphianItemsCommand.html" title="class in net.sylphian.minecraft.items.command">SylphianItemsCommand</a></dt>
+<dd>
+<div class="block">Routes execution to the appropriate subcommand handler.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/commands/EncyclopaediaCommand.html#execute(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" class="member-name-link">execute(CommandSourceStack, String[])</a> - Method in class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/EncyclopaediaCommand.html" title="class in net.sylphian.minecraft.fishing.commands">EncyclopaediaCommand</a></dt>
 <dd>
 <div class="block">Executes the /encyclopaedia command.</div>
@@ -1041,7 +1041,7 @@ from the <code>PersistentDataContainer</code> of a block entity (furnace or camp
 <dd>
 <div class="block">Executes the playtime command.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/core/item/ItemRegistry.html#exists(java.lang.String)" class="member-name-link">exists(String)</a> - Static method in class net.sylphian.minecraft.core.item.<a href="net/sylphian/minecraft/core/item/ItemRegistry.html" title="class in net.sylphian.minecraft.core.item">ItemRegistry</a></dt>
+<dt><a href="net/sylphian/minecraft/items/item/ItemRegistry.html#exists(java.lang.String)" class="member-name-link">exists(String)</a> - Static method in class net.sylphian.minecraft.items.item.<a href="net/sylphian/minecraft/items/item/ItemRegistry.html" title="class in net.sylphian.minecraft.items.item">ItemRegistry</a></dt>
 <dd>
 <div class="block">Returns whether the given namespaced ID resolves to a known item.</div>
 </dd>
@@ -1328,7 +1328,7 @@ from the <code>PersistentDataContainer</code> of a block entity (furnace or camp
 </dl>
 <h2 class="title" id="I:G">G</h2>
 <dl class="index">
-<dt><a href="net/sylphian/minecraft/core/item/ItemRegistry.html#get(java.lang.String)" class="member-name-link">get(String)</a> - Static method in class net.sylphian.minecraft.core.item.<a href="net/sylphian/minecraft/core/item/ItemRegistry.html" title="class in net.sylphian.minecraft.core.item">ItemRegistry</a></dt>
+<dt><a href="net/sylphian/minecraft/items/item/ItemRegistry.html#get(java.lang.String)" class="member-name-link">get(String)</a> - Static method in class net.sylphian.minecraft.items.item.<a href="net/sylphian/minecraft/items/item/ItemRegistry.html" title="class in net.sylphian.minecraft.items.item">ItemRegistry</a></dt>
 <dd>
 <div class="block">Builds and returns the item for the given namespaced ID.</div>
 </dd>
@@ -1904,7 +1904,7 @@ position relative to others.</div>
 <dd>
 <div class="block">Initializes the database connection pool and JDBI instance.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/core/item/ItemRegistry.html#init(java.util.logging.Logger)" class="member-name-link">init(Logger)</a> - Static method in class net.sylphian.minecraft.core.item.<a href="net/sylphian/minecraft/core/item/ItemRegistry.html" title="class in net.sylphian.minecraft.core.item">ItemRegistry</a></dt>
+<dt><a href="net/sylphian/minecraft/items/item/ItemRegistry.html#init(java.util.logging.Logger)" class="member-name-link">init(Logger)</a> - Static method in class net.sylphian.minecraft.items.item.<a href="net/sylphian/minecraft/items/item/ItemRegistry.html" title="class in net.sylphian.minecraft.items.item">ItemRegistry</a></dt>
 <dd>
 <div class="block">Sets the logger used for warnings.</div>
 </dd>
@@ -2015,33 +2015,33 @@ position relative to others.</div>
 <div class="block">The PDC key stamped on every built fish ItemStack so other plugins can identify
 it as a Sylphian-Fishing item.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/core/util/ItemBuilder.html" class="type-name-link" title="class in net.sylphian.minecraft.core.util">ItemBuilder</a> - Class in <a href="net/sylphian/minecraft/core/util/package-summary.html">net.sylphian.minecraft.core.util</a></dt>
+<dt><a href="net/sylphian/minecraft/items/util/ItemBuilder.html" class="type-name-link" title="class in net.sylphian.minecraft.items.util">ItemBuilder</a> - Class in <a href="net/sylphian/minecraft/items/util/package-summary.html">net.sylphian.minecraft.items.util</a></dt>
 <dd>
 <div class="block">Utility class for building ItemStacks with fluent API.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/core/util/ItemBuilder.html#%3Cinit%3E(org.bukkit.Material)" class="member-name-link">ItemBuilder(Material)</a> - Constructor for class net.sylphian.minecraft.core.util.<a href="net/sylphian/minecraft/core/util/ItemBuilder.html" title="class in net.sylphian.minecraft.core.util">ItemBuilder</a></dt>
+<dt><a href="net/sylphian/minecraft/items/util/ItemBuilder.html#%3Cinit%3E(org.bukkit.Material)" class="member-name-link">ItemBuilder(Material)</a> - Constructor for class net.sylphian.minecraft.items.util.<a href="net/sylphian/minecraft/items/util/ItemBuilder.html" title="class in net.sylphian.minecraft.items.util">ItemBuilder</a></dt>
 <dd>
 <div class="block">Constructs a new ItemBuilder for the specified material.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/cooking/item/CookingItemProvider.html#itemIds()" class="member-name-link">itemIds()</a> - Method in class net.sylphian.minecraft.cooking.item.<a href="net/sylphian/minecraft/cooking/item/CookingItemProvider.html" title="class in net.sylphian.minecraft.cooking.item">CookingItemProvider</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/sylphian/minecraft/core/item/ItemProvider.html#itemIds()" class="member-name-link">itemIds()</a> - Method in interface net.sylphian.minecraft.core.item.<a href="net/sylphian/minecraft/core/item/ItemProvider.html" title="interface in net.sylphian.minecraft.core.item">ItemProvider</a></dt>
-<dd>
-<div class="block">Returns all item IDs this provider can build.</div>
-</dd>
 <dt><a href="net/sylphian/minecraft/crates/item/CratesItemProvider.html#itemIds()" class="member-name-link">itemIds()</a> - Method in class net.sylphian.minecraft.crates.item.<a href="net/sylphian/minecraft/crates/item/CratesItemProvider.html" title="class in net.sylphian.minecraft.crates.item">CratesItemProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/fishing/item/FishingItemProvider.html#itemIds()" class="member-name-link">itemIds()</a> - Method in class net.sylphian.minecraft.fishing.item.<a href="net/sylphian/minecraft/fishing/item/FishingItemProvider.html" title="class in net.sylphian.minecraft.fishing.item">FishingItemProvider</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/sylphian/minecraft/core/item/ItemRegistry.html#itemIds(java.lang.String)" class="member-name-link">itemIds(String)</a> - Static method in class net.sylphian.minecraft.core.item.<a href="net/sylphian/minecraft/core/item/ItemRegistry.html" title="class in net.sylphian.minecraft.core.item">ItemRegistry</a></dt>
+<dt><a href="net/sylphian/minecraft/items/item/ItemProvider.html#itemIds()" class="member-name-link">itemIds()</a> - Method in interface net.sylphian.minecraft.items.item.<a href="net/sylphian/minecraft/items/item/ItemProvider.html" title="interface in net.sylphian.minecraft.items.item">ItemProvider</a></dt>
+<dd>
+<div class="block">Returns all item IDs this provider can build.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/items/item/ItemRegistry.html#itemIds(java.lang.String)" class="member-name-link">itemIds(String)</a> - Static method in class net.sylphian.minecraft.items.item.<a href="net/sylphian/minecraft/items/item/ItemRegistry.html" title="class in net.sylphian.minecraft.items.item">ItemRegistry</a></dt>
 <dd>
 <div class="block">Returns all item IDs registered under the given namespace.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/core/item/ItemProvider.html" class="type-name-link" title="interface in net.sylphian.minecraft.core.item">ItemProvider</a> - Interface in <a href="net/sylphian/minecraft/core/item/package-summary.html">net.sylphian.minecraft.core.item</a></dt>
+<dt><a href="net/sylphian/minecraft/items/item/ItemProvider.html" class="type-name-link" title="interface in net.sylphian.minecraft.items.item">ItemProvider</a> - Interface in <a href="net/sylphian/minecraft/items/item/package-summary.html">net.sylphian.minecraft.items.item</a></dt>
 <dd>
 <div class="block">Implemented by any plugin that wants to expose custom items to other plugins.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/core/item/ItemRegistry.html" class="type-name-link" title="class in net.sylphian.minecraft.core.item">ItemRegistry</a> - Class in <a href="net/sylphian/minecraft/core/item/package-summary.html">net.sylphian.minecraft.core.item</a></dt>
+<dt><a href="net/sylphian/minecraft/items/item/ItemRegistry.html" class="type-name-link" title="class in net.sylphian.minecraft.items.item">ItemRegistry</a> - Class in <a href="net/sylphian/minecraft/items/item/package-summary.html">net.sylphian.minecraft.items.item</a></dt>
 <dd>
 <div class="block">Central registry for cross-plugin custom items.</div>
 </dd>
@@ -2178,15 +2178,15 @@ it as a Sylphian-Fishing item.</div>
 <dd>
 <div class="block">Returns the value of the <a href="./net/sylphian/minecraft/crates/config/RewardEntry.html#param-lore"><code>lore</code></a> record component.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/core/util/ItemBuilder.html#lore(java.lang.String...)" class="member-name-link">lore(String...)</a> - Method in class net.sylphian.minecraft.core.util.<a href="net/sylphian/minecraft/core/util/ItemBuilder.html" title="class in net.sylphian.minecraft.core.util">ItemBuilder</a></dt>
+<dt><a href="net/sylphian/minecraft/items/util/ItemBuilder.html#lore(java.lang.String...)" class="member-name-link">lore(String...)</a> - Method in class net.sylphian.minecraft.items.util.<a href="net/sylphian/minecraft/items/util/ItemBuilder.html" title="class in net.sylphian.minecraft.items.util">ItemBuilder</a></dt>
 <dd>
 <div class="block">Sets the lore of the item using multiple MiniMessage strings.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/core/util/ItemBuilder.html#lore(java.util.List)" class="member-name-link">lore(List)</a> - Method in class net.sylphian.minecraft.core.util.<a href="net/sylphian/minecraft/core/util/ItemBuilder.html" title="class in net.sylphian.minecraft.core.util">ItemBuilder</a></dt>
+<dt><a href="net/sylphian/minecraft/items/util/ItemBuilder.html#lore(java.util.List)" class="member-name-link">lore(List)</a> - Method in class net.sylphian.minecraft.items.util.<a href="net/sylphian/minecraft/items/util/ItemBuilder.html" title="class in net.sylphian.minecraft.items.util">ItemBuilder</a></dt>
 <dd>
 <div class="block">Sets the lore of the item using a list of Adventure Components.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/core/util/ItemBuilder.html#loreStrings(java.util.List)" class="member-name-link">loreStrings(List)</a> - Method in class net.sylphian.minecraft.core.util.<a href="net/sylphian/minecraft/core/util/ItemBuilder.html" title="class in net.sylphian.minecraft.core.util">ItemBuilder</a></dt>
+<dt><a href="net/sylphian/minecraft/items/util/ItemBuilder.html#loreStrings(java.util.List)" class="member-name-link">loreStrings(List)</a> - Method in class net.sylphian.minecraft.items.util.<a href="net/sylphian/minecraft/items/util/ItemBuilder.html" title="class in net.sylphian.minecraft.items.util">ItemBuilder</a></dt>
 <dd>
 <div class="block">Sets the lore of the item using a list of MiniMessage strings.</div>
 </dd>
@@ -2360,27 +2360,27 @@ it as a Sylphian-Fishing item.</div>
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/profile/db/migrations/Migration002CreateSessions.html#name()" class="member-name-link">name()</a> - Method in class net.sylphian.minecraft.profile.db.migrations.<a href="net/sylphian/minecraft/profile/db/migrations/Migration002CreateSessions.html" title="class in net.sylphian.minecraft.profile.db.migrations">Migration002CreateSessions</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/sylphian/minecraft/core/util/ItemBuilder.html#name(java.lang.String)" class="member-name-link">name(String)</a> - Method in class net.sylphian.minecraft.core.util.<a href="net/sylphian/minecraft/core/util/ItemBuilder.html" title="class in net.sylphian.minecraft.core.util">ItemBuilder</a></dt>
+<dt><a href="net/sylphian/minecraft/items/util/ItemBuilder.html#name(java.lang.String)" class="member-name-link">name(String)</a> - Method in class net.sylphian.minecraft.items.util.<a href="net/sylphian/minecraft/items/util/ItemBuilder.html" title="class in net.sylphian.minecraft.items.util">ItemBuilder</a></dt>
 <dd>
 <div class="block">Sets the display name of the item using a MiniMessage string.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/core/util/ItemBuilder.html#name(net.kyori.adventure.text.Component)" class="member-name-link">name(Component)</a> - Method in class net.sylphian.minecraft.core.util.<a href="net/sylphian/minecraft/core/util/ItemBuilder.html" title="class in net.sylphian.minecraft.core.util">ItemBuilder</a></dt>
+<dt><a href="net/sylphian/minecraft/items/util/ItemBuilder.html#name(net.kyori.adventure.text.Component)" class="member-name-link">name(Component)</a> - Method in class net.sylphian.minecraft.items.util.<a href="net/sylphian/minecraft/items/util/ItemBuilder.html" title="class in net.sylphian.minecraft.items.util">ItemBuilder</a></dt>
 <dd>
 <div class="block">Sets the display name of the item using an Adventure Component.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/cooking/item/CookingItemProvider.html#namespace()" class="member-name-link">namespace()</a> - Method in class net.sylphian.minecraft.cooking.item.<a href="net/sylphian/minecraft/cooking/item/CookingItemProvider.html" title="class in net.sylphian.minecraft.cooking.item">CookingItemProvider</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/sylphian/minecraft/core/item/ItemProvider.html#namespace()" class="member-name-link">namespace()</a> - Method in interface net.sylphian.minecraft.core.item.<a href="net/sylphian/minecraft/core/item/ItemProvider.html" title="interface in net.sylphian.minecraft.core.item">ItemProvider</a></dt>
-<dd>
-<div class="block">Returns the namespace for this provider, e.g.</div>
-</dd>
 <dt><a href="net/sylphian/minecraft/crates/item/CratesItemProvider.html#namespace()" class="member-name-link">namespace()</a> - Method in class net.sylphian.minecraft.crates.item.<a href="net/sylphian/minecraft/crates/item/CratesItemProvider.html" title="class in net.sylphian.minecraft.crates.item">CratesItemProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/fishing/item/FishingItemProvider.html#namespace()" class="member-name-link">namespace()</a> - Method in class net.sylphian.minecraft.fishing.item.<a href="net/sylphian/minecraft/fishing/item/FishingItemProvider.html" title="class in net.sylphian.minecraft.fishing.item">FishingItemProvider</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/items/item/ItemProvider.html#namespace()" class="member-name-link">namespace()</a> - Method in interface net.sylphian.minecraft.items.item.<a href="net/sylphian/minecraft/items/item/ItemProvider.html" title="interface in net.sylphian.minecraft.items.item">ItemProvider</a></dt>
+<dd>
+<div class="block">Returns the namespace for this provider, e.g.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/cooking/recipe/NamespacedIngredientSpec.html" class="type-name-link" title="class in net.sylphian.minecraft.cooking.recipe">NamespacedIngredientSpec</a> - Class in <a href="net/sylphian/minecraft/cooking/recipe/package-summary.html">net.sylphian.minecraft.cooking.recipe</a></dt>
 <dd>
-<div class="block">Matches a custom item registered via Sylphian-Core's ItemRegistry by checking
+<div class="block">Matches a custom item registered via Sylphian-Items ItemRegistry by checking
 the PDC key <code>&lt;plugin-namespace&gt;:item_id</code> stamped on the ItemStack.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/cooking/recipe/NamespacedIngredientSpec.html#%3Cinit%3E(java.lang.String)" class="member-name-link">NamespacedIngredientSpec(String)</a> - Constructor for class net.sylphian.minecraft.cooking.recipe.<a href="net/sylphian/minecraft/cooking/recipe/NamespacedIngredientSpec.html" title="class in net.sylphian.minecraft.cooking.recipe">NamespacedIngredientSpec</a></dt>
@@ -2415,14 +2415,6 @@ head and the set of player name entries assigned to that team.</div>
 <dt><a href="net/sylphian/minecraft/cooking/recipe/package-summary.html">net.sylphian.minecraft.cooking.recipe</a> - package net.sylphian.minecraft.cooking.recipe</dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/cooking/station/package-summary.html">net.sylphian.minecraft.cooking.station</a> - package net.sylphian.minecraft.cooking.station</dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/sylphian/minecraft/core/package-summary.html">net.sylphian.minecraft.core</a> - package net.sylphian.minecraft.core</dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/sylphian/minecraft/core/command/package-summary.html">net.sylphian.minecraft.core.command</a> - package net.sylphian.minecraft.core.command</dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/sylphian/minecraft/core/item/package-summary.html">net.sylphian.minecraft.core.item</a> - package net.sylphian.minecraft.core.item</dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/sylphian/minecraft/core/util/package-summary.html">net.sylphian.minecraft.core.util</a> - package net.sylphian.minecraft.core.util</dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/crates/package-summary.html">net.sylphian.minecraft.crates</a> - package net.sylphian.minecraft.crates</dt>
 <dd>&nbsp;</dd>
@@ -2479,6 +2471,14 @@ head and the set of player name entries assigned to that team.</div>
 <dt><a href="net/sylphian/minecraft/fishing/services/mutation/impl/package-summary.html">net.sylphian.minecraft.fishing.services.mutation.impl</a> - package net.sylphian.minecraft.fishing.services.mutation.impl</dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/fishing/sidebar/package-summary.html">net.sylphian.minecraft.fishing.sidebar</a> - package net.sylphian.minecraft.fishing.sidebar</dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/items/package-summary.html">net.sylphian.minecraft.items</a> - package net.sylphian.minecraft.items</dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/items/command/package-summary.html">net.sylphian.minecraft.items.command</a> - package net.sylphian.minecraft.items.command</dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/items/item/package-summary.html">net.sylphian.minecraft.items.item</a> - package net.sylphian.minecraft.items.item</dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/items/util/package-summary.html">net.sylphian.minecraft.items.util</a> - package net.sylphian.minecraft.items.util</dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/profile/package-summary.html">net.sylphian.minecraft.profile</a> - package net.sylphian.minecraft.profile</dt>
 <dd>&nbsp;</dd>
@@ -2583,8 +2583,6 @@ head and the set of player name entries assigned to that team.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/cooking/SylphianCooking.html#onDisable()" class="member-name-link">onDisable()</a> - Method in class net.sylphian.minecraft.cooking.<a href="net/sylphian/minecraft/cooking/SylphianCooking.html" title="class in net.sylphian.minecraft.cooking">SylphianCooking</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/sylphian/minecraft/core/SylphianCore.html#onDisable()" class="member-name-link">onDisable()</a> - Method in class net.sylphian.minecraft.core.<a href="net/sylphian/minecraft/core/SylphianCore.html" title="class in net.sylphian.minecraft.core">SylphianCore</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/crates/SylphianCrates.html#onDisable()" class="member-name-link">onDisable()</a> - Method in class net.sylphian.minecraft.crates.<a href="net/sylphian/minecraft/crates/SylphianCrates.html" title="class in net.sylphian.minecraft.crates">SylphianCrates</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/database/SylphianDatabase.html#onDisable()" class="member-name-link">onDisable()</a> - Method in class net.sylphian.minecraft.database.<a href="net/sylphian/minecraft/database/SylphianDatabase.html" title="class in net.sylphian.minecraft.database">SylphianDatabase</a></dt>
@@ -2595,6 +2593,8 @@ head and the set of player name entries assigned to that team.</div>
 <dd>
 <div class="block">Cleans up resources when the plugin is disabled.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/items/SylphianItems.html#onDisable()" class="member-name-link">onDisable()</a> - Method in class net.sylphian.minecraft.items.<a href="net/sylphian/minecraft/items/SylphianItems.html" title="class in net.sylphian.minecraft.items">SylphianItems</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/profile/SylphianProfile.html#onDisable()" class="member-name-link">onDisable()</a> - Method in class net.sylphian.minecraft.profile.<a href="net/sylphian/minecraft/profile/SylphianProfile.html" title="class in net.sylphian.minecraft.profile">SylphianProfile</a></dt>
 <dd>
 <div class="block">Called when the plugin is disabled.</div>
@@ -2607,8 +2607,6 @@ head and the set of player name entries assigned to that team.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/cooking/SylphianCooking.html#onEnable()" class="member-name-link">onEnable()</a> - Method in class net.sylphian.minecraft.cooking.<a href="net/sylphian/minecraft/cooking/SylphianCooking.html" title="class in net.sylphian.minecraft.cooking">SylphianCooking</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/sylphian/minecraft/core/SylphianCore.html#onEnable()" class="member-name-link">onEnable()</a> - Method in class net.sylphian.minecraft.core.<a href="net/sylphian/minecraft/core/SylphianCore.html" title="class in net.sylphian.minecraft.core">SylphianCore</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/crates/SylphianCrates.html#onEnable()" class="member-name-link">onEnable()</a> - Method in class net.sylphian.minecraft.crates.<a href="net/sylphian/minecraft/crates/SylphianCrates.html" title="class in net.sylphian.minecraft.crates">SylphianCrates</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/database/SylphianDatabase.html#onEnable()" class="member-name-link">onEnable()</a> - Method in class net.sylphian.minecraft.database.<a href="net/sylphian/minecraft/database/SylphianDatabase.html" title="class in net.sylphian.minecraft.database">SylphianDatabase</a></dt>
@@ -2620,6 +2618,8 @@ head and the set of player name entries assigned to that team.</div>
 <div class="block">Initializes the plugin, including configuration loading, database migrations,
 service registration, and command/event setup.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/items/SylphianItems.html#onEnable()" class="member-name-link">onEnable()</a> - Method in class net.sylphian.minecraft.items.<a href="net/sylphian/minecraft/items/SylphianItems.html" title="class in net.sylphian.minecraft.items">SylphianItems</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/profile/SylphianProfile.html#onEnable()" class="member-name-link">onEnable()</a> - Method in class net.sylphian.minecraft.profile.<a href="net/sylphian/minecraft/profile/SylphianProfile.html" title="class in net.sylphian.minecraft.profile">SylphianProfile</a></dt>
 <dd>
 <div class="block">Called when the plugin is enabled.</div>
@@ -2795,6 +2795,14 @@ service registration, and command/event setup.</div>
 <dd>
 <div class="block">Rolls a rarity without selecting a fish.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/fishing/commands/EncyclopaediaCommand.html#permission()" class="member-name-link">permission()</a> - Method in class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/EncyclopaediaCommand.html" title="class in net.sylphian.minecraft.fishing.commands">EncyclopaediaCommand</a></dt>
+<dd>
+<div class="block">The permission required to open the encyclopaedia.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/profile/command/PlaytimeCommand.html#permission()" class="member-name-link">permission()</a> - Method in class net.sylphian.minecraft.profile.command.<a href="net/sylphian/minecraft/profile/command/PlaytimeCommand.html" title="class in net.sylphian.minecraft.profile.command">PlaytimeCommand</a></dt>
+<dd>
+<div class="block">The permission required to view playtime.</div>
+</dd>
 <dt><a href="net/sylphian/minecraft/fishing/config/RarityCatchEffects.SoundConfig.html#pitch()" class="member-name-link">pitch()</a> - Method in record class net.sylphian.minecraft.fishing.config.<a href="net/sylphian/minecraft/fishing/config/RarityCatchEffects.SoundConfig.html" title="class in net.sylphian.minecraft.fishing.config">RarityCatchEffects.SoundConfig</a></dt>
 <dd>
 <div class="block">Returns the value of the <a href="./net/sylphian/minecraft/fishing/config/RarityCatchEffects.SoundConfig.html#param-pitch"><code>pitch</code></a> record component.</div>
@@ -2935,14 +2943,14 @@ service registration, and command/event setup.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/cooking/item/CookingItemProvider.html#provide(java.lang.String)" class="member-name-link">provide(String)</a> - Method in class net.sylphian.minecraft.cooking.item.<a href="net/sylphian/minecraft/cooking/item/CookingItemProvider.html" title="class in net.sylphian.minecraft.cooking.item">CookingItemProvider</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/sylphian/minecraft/core/item/ItemProvider.html#provide(java.lang.String)" class="member-name-link">provide(String)</a> - Method in interface net.sylphian.minecraft.core.item.<a href="net/sylphian/minecraft/core/item/ItemProvider.html" title="interface in net.sylphian.minecraft.core.item">ItemProvider</a></dt>
-<dd>
-<div class="block">Builds the item for the given item ID within this provider's namespace.</div>
-</dd>
 <dt><a href="net/sylphian/minecraft/crates/item/CratesItemProvider.html#provide(java.lang.String)" class="member-name-link">provide(String)</a> - Method in class net.sylphian.minecraft.crates.item.<a href="net/sylphian/minecraft/crates/item/CratesItemProvider.html" title="class in net.sylphian.minecraft.crates.item">CratesItemProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/fishing/item/FishingItemProvider.html#provide(java.lang.String)" class="member-name-link">provide(String)</a> - Method in class net.sylphian.minecraft.fishing.item.<a href="net/sylphian/minecraft/fishing/item/FishingItemProvider.html" title="class in net.sylphian.minecraft.fishing.item">FishingItemProvider</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/items/item/ItemProvider.html#provide(java.lang.String)" class="member-name-link">provide(String)</a> - Method in interface net.sylphian.minecraft.items.item.<a href="net/sylphian/minecraft/items/item/ItemProvider.html" title="interface in net.sylphian.minecraft.items.item">ItemProvider</a></dt>
+<dd>
+<div class="block">Builds the item for the given item ID within this provider's namespace.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:Q">Q</h2>
 <dl class="index">
@@ -3050,13 +3058,13 @@ specific rarity is caught.</div>
 <dd>
 <div class="block">Called by the periodic refresh task at the configured update interval.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/core/item/ItemRegistry.html#register(net.sylphian.minecraft.core.item.ItemProvider)" class="member-name-link">register(ItemProvider)</a> - Static method in class net.sylphian.minecraft.core.item.<a href="net/sylphian/minecraft/core/item/ItemRegistry.html" title="class in net.sylphian.minecraft.core.item">ItemRegistry</a></dt>
-<dd>
-<div class="block">Registers an item provider under its declared namespace.</div>
-</dd>
 <dt><a href="net/sylphian/minecraft/fishing/fish/Rarity.html#register(net.sylphian.minecraft.fishing.fish.Rarity)" class="member-name-link">register(Rarity)</a> - Static method in class net.sylphian.minecraft.fishing.fish.<a href="net/sylphian/minecraft/fishing/fish/Rarity.html" title="class in net.sylphian.minecraft.fishing.fish">Rarity</a></dt>
 <dd>
 <div class="block">Registers a rarity in the global registry.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/items/item/ItemRegistry.html#register(net.sylphian.minecraft.items.item.ItemProvider)" class="member-name-link">register(ItemProvider)</a> - Static method in class net.sylphian.minecraft.items.item.<a href="net/sylphian/minecraft/items/item/ItemRegistry.html" title="class in net.sylphian.minecraft.items.item">ItemRegistry</a></dt>
+<dd>
+<div class="block">Registers an item provider under its declared namespace.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/scoreboard/services/SidebarService.html#registerContributor(net.sylphian.minecraft.scoreboard.api.SidebarContributor)" class="member-name-link">registerContributor(SidebarContributor)</a> - Static method in class net.sylphian.minecraft.scoreboard.services.<a href="net/sylphian/minecraft/scoreboard/services/SidebarService.html" title="class in net.sylphian.minecraft.scoreboard.services">SidebarService</a></dt>
 <dd>
@@ -3420,15 +3428,15 @@ to the main scoreboard, and clears all state in both sub-services.</div>
 <dd>
 <div class="block">Provides tab completion for all subcommands.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/core/command/SylphianCoreCommand.html#suggest(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" class="member-name-link">suggest(CommandSourceStack, String[])</a> - Method in class net.sylphian.minecraft.core.command.<a href="net/sylphian/minecraft/core/command/SylphianCoreCommand.html" title="class in net.sylphian.minecraft.core.command">SylphianCoreCommand</a></dt>
-<dd>
-<div class="block">Provides tab completion for all subcommands and their arguments.</div>
-</dd>
 <dt><a href="net/sylphian/minecraft/crates/command/SylphianCratesCommand.html#suggest(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" class="member-name-link">suggest(CommandSourceStack, String[])</a> - Method in class net.sylphian.minecraft.crates.command.<a href="net/sylphian/minecraft/crates/command/SylphianCratesCommand.html" title="class in net.sylphian.minecraft.crates.command">SylphianCratesCommand</a></dt>
 <dd>
 <div class="block">Provides tab completion for all subcommands and their arguments.</div>
 </dd>
 <dt><a href="net/sylphian/minecraft/fishing/commands/SylphianFishingCommand.html#suggest(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" class="member-name-link">suggest(CommandSourceStack, String[])</a> - Method in class net.sylphian.minecraft.fishing.commands.<a href="net/sylphian/minecraft/fishing/commands/SylphianFishingCommand.html" title="class in net.sylphian.minecraft.fishing.commands">SylphianFishingCommand</a></dt>
+<dd>
+<div class="block">Provides tab completion for all subcommands and their arguments.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/items/command/SylphianItemsCommand.html#suggest(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" class="member-name-link">suggest(CommandSourceStack, String[])</a> - Method in class net.sylphian.minecraft.items.command.<a href="net/sylphian/minecraft/items/command/SylphianItemsCommand.html" title="class in net.sylphian.minecraft.items.command">SylphianItemsCommand</a></dt>
 <dd>
 <div class="block">Provides tab completion for all subcommands and their arguments.</div>
 </dd>
@@ -3467,18 +3475,6 @@ from the Paper registry using the key defined in <a href="net/sylphian/minecraft
 <dd>
 <div class="block">Constructs a new SylphianCookingCommand.</div>
 </dd>
-<dt><a href="net/sylphian/minecraft/core/SylphianCore.html" class="type-name-link" title="class in net.sylphian.minecraft.core">SylphianCore</a> - Class in <a href="net/sylphian/minecraft/core/package-summary.html">net.sylphian.minecraft.core</a></dt>
-<dd>
-<div class="block">Main plugin class for Sylphian-Core.</div>
-</dd>
-<dt><a href="net/sylphian/minecraft/core/SylphianCore.html#%3Cinit%3E()" class="member-name-link">SylphianCore()</a> - Constructor for class net.sylphian.minecraft.core.<a href="net/sylphian/minecraft/core/SylphianCore.html" title="class in net.sylphian.minecraft.core">SylphianCore</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/sylphian/minecraft/core/command/SylphianCoreCommand.html" class="type-name-link" title="class in net.sylphian.minecraft.core.command">SylphianCoreCommand</a> - Class in <a href="net/sylphian/minecraft/core/command/package-summary.html">net.sylphian.minecraft.core.command</a></dt>
-<dd>
-<div class="block">Root administrative command for Sylphian Core.</div>
-</dd>
-<dt><a href="net/sylphian/minecraft/core/command/SylphianCoreCommand.html#%3Cinit%3E()" class="member-name-link">SylphianCoreCommand()</a> - Constructor for class net.sylphian.minecraft.core.command.<a href="net/sylphian/minecraft/core/command/SylphianCoreCommand.html" title="class in net.sylphian.minecraft.core.command">SylphianCoreCommand</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/crates/SylphianCrates.html" class="type-name-link" title="class in net.sylphian.minecraft.crates">SylphianCrates</a> - Class in <a href="net/sylphian/minecraft/crates/package-summary.html">net.sylphian.minecraft.crates</a></dt>
 <dd>
 <div class="block">Main plugin class for Sylphian-Crates.</div>
@@ -3519,6 +3515,18 @@ from the Paper registry using the key defined in <a href="net/sylphian/minecraft
 <dd>
 <div class="block">Constructs a new SylphianFishingCommand.</div>
 </dd>
+<dt><a href="net/sylphian/minecraft/items/SylphianItems.html" class="type-name-link" title="class in net.sylphian.minecraft.items">SylphianItems</a> - Class in <a href="net/sylphian/minecraft/items/package-summary.html">net.sylphian.minecraft.items</a></dt>
+<dd>
+<div class="block">Main plugin class for Sylphian-Items.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/items/SylphianItems.html#%3Cinit%3E()" class="member-name-link">SylphianItems()</a> - Constructor for class net.sylphian.minecraft.items.<a href="net/sylphian/minecraft/items/SylphianItems.html" title="class in net.sylphian.minecraft.items">SylphianItems</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/sylphian/minecraft/items/command/SylphianItemsCommand.html" class="type-name-link" title="class in net.sylphian.minecraft.items.command">SylphianItemsCommand</a> - Class in <a href="net/sylphian/minecraft/items/command/package-summary.html">net.sylphian.minecraft.items.command</a></dt>
+<dd>
+<div class="block">Root administrative command for Sylphian Core.</div>
+</dd>
+<dt><a href="net/sylphian/minecraft/items/command/SylphianItemsCommand.html#%3Cinit%3E()" class="member-name-link">SylphianItemsCommand()</a> - Constructor for class net.sylphian.minecraft.items.command.<a href="net/sylphian/minecraft/items/command/SylphianItemsCommand.html" title="class in net.sylphian.minecraft.items.command">SylphianItemsCommand</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/sylphian/minecraft/profile/SylphianProfile.html" class="type-name-link" title="class in net.sylphian.minecraft.profile">SylphianProfile</a> - Class in <a href="net/sylphian/minecraft/profile/package-summary.html">net.sylphian.minecraft.profile</a></dt>
 <dd>
 <div class="block">Main plugin class for Sylphian-Profile.</div>
@@ -3718,7 +3726,7 @@ station state.</div>
 </dl>
 <h2 class="title" id="I:U">U</h2>
 <dl class="index">
-<dt><a href="net/sylphian/minecraft/core/item/ItemRegistry.html#unregister(java.lang.String)" class="member-name-link">unregister(String)</a> - Static method in class net.sylphian.minecraft.core.item.<a href="net/sylphian/minecraft/core/item/ItemRegistry.html" title="class in net.sylphian.minecraft.core.item">ItemRegistry</a></dt>
+<dt><a href="net/sylphian/minecraft/items/item/ItemRegistry.html#unregister(java.lang.String)" class="member-name-link">unregister(String)</a> - Static method in class net.sylphian.minecraft.items.item.<a href="net/sylphian/minecraft/items/item/ItemRegistry.html" title="class in net.sylphian.minecraft.items.item">ItemRegistry</a></dt>
 <dd>
 <div class="block">Unregisters the provider for the given namespace.</div>
 </dd>

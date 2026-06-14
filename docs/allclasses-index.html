@@ -126,7 +126,7 @@ of the fish they caught.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/cooking/item/CookingItemProvider.html" title="class in net.sylphian.minecraft.cooking.item">CookingItemProvider</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Exposes the output items of all cooking recipes to Sylphian-Core's ItemRegistry.</div>
+<div class="block">Exposes the output items of all cooking recipes to Sylphian-Items ItemRegistry.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab4"><a href="net/sylphian/minecraft/cooking/recipe/CookingRecipe.html" title="class in net.sylphian.minecraft.cooking.recipe">CookingRecipe</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab4">
@@ -274,15 +274,15 @@ from the <code>PersistentDataContainer</code> of a block entity (furnace or camp
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Interface for session data persistence operations.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/core/util/ItemBuilder.html" title="class in net.sylphian.minecraft.core.util">ItemBuilder</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/items/util/ItemBuilder.html" title="class in net.sylphian.minecraft.items.util">ItemBuilder</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Utility class for building ItemStacks with fluent API.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="net/sylphian/minecraft/core/item/ItemProvider.html" title="interface in net.sylphian.minecraft.core.item">ItemProvider</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="net/sylphian/minecraft/items/item/ItemProvider.html" title="interface in net.sylphian.minecraft.items.item">ItemProvider</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Implemented by any plugin that wants to expose custom items to other plugins.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/core/item/ItemRegistry.html" title="class in net.sylphian.minecraft.core.item">ItemRegistry</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/items/item/ItemRegistry.html" title="class in net.sylphian.minecraft.items.item">ItemRegistry</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Central registry for cross-plugin custom items.</div>
 </div>
@@ -344,7 +344,7 @@ from the <code>PersistentDataContainer</code> of a block entity (furnace or camp
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/cooking/recipe/NamespacedIngredientSpec.html" title="class in net.sylphian.minecraft.cooking.recipe">NamespacedIngredientSpec</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Matches a custom item registered via Sylphian-Core's ItemRegistry by checking
+<div class="block">Matches a custom item registered via Sylphian-Items ItemRegistry by checking
 the PDC key <code>&lt;plugin-namespace&gt;:item_id</code> stamped on the ItemStack.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/scoreboard/services/NametagService.html" title="class in net.sylphian.minecraft.scoreboard.services">NametagService</a></div>
@@ -520,14 +520,6 @@ and carry the rolled rewards for click handling.</div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Root administrative command for Sylphian-Cooking.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/core/SylphianCore.html" title="class in net.sylphian.minecraft.core">SylphianCore</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Main plugin class for Sylphian-Core.</div>
-</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/core/command/SylphianCoreCommand.html" title="class in net.sylphian.minecraft.core.command">SylphianCoreCommand</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Root administrative command for Sylphian Core.</div>
-</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/crates/SylphianCrates.html" title="class in net.sylphian.minecraft.crates">SylphianCrates</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Main plugin class for Sylphian-Crates.</div>
@@ -551,6 +543,14 @@ and carry the rolled rewards for click handling.</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/fishing/commands/SylphianFishingCommand.html" title="class in net.sylphian.minecraft.fishing.commands">SylphianFishingCommand</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Root administrative command for Sylphian Fishing.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/items/SylphianItems.html" title="class in net.sylphian.minecraft.items">SylphianItems</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Main plugin class for Sylphian-Items.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/items/command/SylphianItemsCommand.html" title="class in net.sylphian.minecraft.items.command">SylphianItemsCommand</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Root administrative command for Sylphian Core.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/sylphian/minecraft/profile/SylphianProfile.html" title="class in net.sylphian.minecraft.profile">SylphianProfile</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
