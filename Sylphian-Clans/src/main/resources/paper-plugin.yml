@@ -1,0 +1,10 @@
+name: Sylphian-Clans
+prefix: Sylphian-Clans
+version: '${version}'
+
+main: net.sylphian.minecraft.clans.SylphianClans
+api-version: '26.1.2'
+load: POSTWORLD
+
+authors: [QuackieMackie]
+website: https://sylphian.net
