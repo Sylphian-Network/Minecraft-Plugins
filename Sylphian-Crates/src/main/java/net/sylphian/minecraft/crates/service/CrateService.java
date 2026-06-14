@@ -3,7 +3,10 @@ package net.sylphian.minecraft.crates.service;
 import net.sylphian.minecraft.items.item.ItemRegistry;
 import net.sylphian.minecraft.crates.config.CrateConfig;
 import net.sylphian.minecraft.crates.config.RewardEntry;
+import net.sylphian.minecraft.crates.config.RewardType;
+import net.sylphian.minecraft.crates.economy.CrateEconomy;
 import net.sylphian.minecraft.items.util.ItemBuilder;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -84,6 +87,12 @@ public class CrateService {
      * @param reward the reward to grant
      */
     public void giveReward(Player player, RewardEntry reward) {
+        if (reward.type() == RewardType.MONEY) {
+            if (Bukkit.getPluginManager().getPlugin("Sylphian-Economy") != null) {
+                CrateEconomy.deposit(player.getUniqueId(), reward.money());
+            }
+            return;
+        }
         ItemStack item = buildItem(reward);
         player.getInventory().addItem(item).values()
                 .forEach(leftover -> player.getWorld().dropItemNaturally(player.getLocation(), leftover));

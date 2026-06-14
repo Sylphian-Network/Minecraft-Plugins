@@ -1,9 +1,13 @@
 package net.sylphian.minecraft.crates.config;
 
+import net.sylphian.minecraft.crates.economy.CrateEconomy;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
 import javax.annotation.Nullable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +31,8 @@ import java.util.Map;
  * @param amount          stack size of the item given to the player
  * @param lore            MiniMessage formatted lore lines shown on the item
  * @param enchantments    map of enchantment key to level applied to the item
+ * @param money           monetary amount deposited for {@link RewardType#MONEY} rewards;
+ *                        zero for all other types
  */
 public record RewardEntry(
         String id,
@@ -37,7 +43,8 @@ public record RewardEntry(
         @Nullable Material displayMaterial,
         int amount,
         List<String> lore,
-        Map<String, Integer> enchantments
+        Map<String, Integer> enchantments,
+        BigDecimal money
 ) {
     /**
      * Parses a RewardEntry from a configuration section.
@@ -60,8 +67,18 @@ public record RewardEntry(
 
         String displayName = null;
         Material displayMaterial = null;
+        BigDecimal money = BigDecimal.ZERO;
 
-        if (externalItemId == null) {
+        if (type == RewardType.MONEY) {
+            money = BigDecimal.valueOf(sec.getDouble("money", 0.0)).setScale(2, RoundingMode.HALF_UP);
+            try {
+                displayMaterial = Material.valueOf(sec.getString("display-material", "GOLD_NUGGET").toUpperCase());
+            } catch (IllegalArgumentException e) {
+                displayMaterial = Material.GOLD_NUGGET;
+            }
+            String symbol = Bukkit.getPluginManager().getPlugin("Sylphian-Economy") != null ? CrateEconomy.currencySymbol() : "$";
+            displayName = sec.getString("display-name", "<gold>" + symbol + money.toPlainString());
+        } else if (externalItemId == null) {
             try {
                 displayMaterial = Material.valueOf(sec.getString("display-material", "PAPER").toUpperCase());
             } catch (IllegalArgumentException e) {
@@ -87,7 +104,8 @@ public record RewardEntry(
                 displayMaterial,
                 sec.getInt("amount", 1),
                 sec.getStringList("lore"),
-                enchantments
+                enchantments,
+                money
         );
     }
 }

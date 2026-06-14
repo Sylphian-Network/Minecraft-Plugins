@@ -1,0 +1,27 @@
+name: Sylphian-Economy
+prefix: Sylphian-Economy
+version: '${version}'
+
+main: net.sylphian.minecraft.economy.SylphianEconomy
+api-version: '26.1.2'
+load: POSTWORLD
+
+authors: [QuackieMackie]
+website: https://sylphian.net
+
+dependencies:
+  server:
+    Sylphian-Database:
+      load: BEFORE
+      required: true
+
+permissions:
+  sylphian.economy.balance:
+    description: Check your or another player's balance (/balance).
+    default: true
+  sylphian.economy.pay:
+    description: Send money to another player (/pay).
+    default: true
+  sylphian.economy.admin:
+    description: Administrative economy commands (/economy).
+    default: op

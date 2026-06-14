@@ -17,6 +17,9 @@ dependencies:
     Sylphian-Scoreboard:
       load: BEFORE
       required: true
+    Sylphian-Economy:
+      load: BEFORE
+      required: false
 
 permissions:
   sylphian.profile.playtime:

@@ -5,8 +5,10 @@ import net.sylphian.minecraft.profile.utils.ProfileManager;
 import net.sylphian.minecraft.scoreboard.api.AbstractSidebarContributor;
 import net.sylphian.minecraft.scoreboard.api.SidebarLine;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.Nullable;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,15 +23,18 @@ public class ProfileContributor extends AbstractSidebarContributor {
     public static final int PRIORITY = 10;
 
     private final ProfileManager profileManager;
+    private final @Nullable BalanceSupplier balanceSupplier;
 
     /**
      * Constructs a new ProfileContributor.
      *
-     * @param profileManager the in-memory profile cache
+     * @param profileManager  the in-memory profile cache
+     * @param balanceSupplier supplies the player's balance line, or null to omit it
      */
-    public ProfileContributor(ProfileManager profileManager) {
+    public ProfileContributor(ProfileManager profileManager, @Nullable BalanceSupplier balanceSupplier) {
         super("sylphian-profile", PRIORITY);
         this.profileManager = profileManager;
+        this.balanceSupplier = balanceSupplier;
     }
 
     /**
@@ -47,10 +52,18 @@ public class ProfileContributor extends AbstractSidebarContributor {
         long totalSeconds = profile.playtime() + (Instant.now().getEpochSecond() - (profile.lastSeen()));
         String playtime = formatPlaytime(totalSeconds);
 
-        return List.of(
-                SidebarLine.of("<dark_gray>Welcome <gray>" + profile.forumUsername() + "!"),
-                SidebarLine.of("<dark_gray>Playtime: <gray>" + playtime)
-        );
+        List<SidebarLine> lines = new ArrayList<>();
+        lines.add(SidebarLine.of("<dark_gray>Welcome <gray>" + profile.forumUsername() + "!"));
+        lines.add(SidebarLine.of("<dark_gray>Playtime: <gray>" + playtime));
+
+        if (balanceSupplier != null) {
+            String balance = balanceSupplier.formattedBalance(player.getUniqueId());
+            if (balance != null) {
+                lines.add(SidebarLine.of("<dark_gray>Balance: <gray>" + balance));
+            }
+        }
+
+        return lines;
     }
 
     /**
