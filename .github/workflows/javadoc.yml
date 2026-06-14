@@ -9,13 +9,23 @@ on:
       - 'build.gradle.kts'
       - '**/build.gradle.kts'
 
+  workflow_dispatch:
+
 permissions:
   contents: write
-  actions: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   javadoc:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout repository
@@ -45,3 +55,15 @@ jobs:
           git add docs/
           git diff --staged --quiet || git commit -m "chore: regenerate Javadoc [skip ci]"
           git push
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: docs
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
