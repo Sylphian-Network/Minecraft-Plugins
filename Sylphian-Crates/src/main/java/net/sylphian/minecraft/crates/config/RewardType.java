@@ -6,4 +6,6 @@ package net.sylphian.minecraft.crates.config;
 public enum RewardType {
     /** Gives the player a physical ItemStack. */
     ITEM,
+    /** Deposits money into the player's balance. Requires Sylphian-Economy; ignored if absent. */
+    MONEY,
 }

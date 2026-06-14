@@ -29,7 +29,14 @@
 #                     registry (e.g. "sylphian-fishing:bait/ocean_bait"). When present,
 #                     display-name and display-material are not required — the registry
 #                     item provides all visual information.
-#   type:             ITEM — gives the player a physical item.
+#   type:             ITEM  — gives the player a physical item.
+#                     MONEY — deposits money into the player's balance. Requires
+#                             Sylphian-Economy; the reward is silently skipped if
+#                             that plugin is not installed.
+#   money:            For MONEY rewards only: the amount deposited (e.g. 250.00).
+#                     If display-name / display-material are omitted, a gold nugget
+#                     named with the configured currency symbol and amount is shown
+#                     in the GUI.
 #   chance:           Relative weight in the pool. Higher = more frequent.
 #                     Percentage shown in the crate lore is calculated from
 #                     this value relative to the total pool weight.
@@ -39,33 +46,6 @@
 # =============================================================
 
 crates:
-
-  # ───────────────────────────────────────────
-  # Common Crate
-  # ───────────────────────────────────────────
-  common_crate:
-    display-name: "<white>Common Crate"
-    display-material: CHEST
-    total-rolls: 1
-    player-picks: 1
-    opening-style: SELECTION
-    pool:
-      bread:
-        display-name: "<white>Bread"
-        display-material: BREAD
-        type: ITEM
-        chance: 50.0
-      iron_ingot:
-        display-name: "<white>Iron Ingot"
-        display-material: IRON_INGOT
-        type: ITEM
-        chance: 30.0
-      iron_sword:
-        display-name: "<white>Iron Sword"
-        display-material: IRON_SWORD
-        type: ITEM
-        chance: 20.0
-
   # ───────────────────────────────────────────
   # Legendary Crate
   # ───────────────────────────────────────────
@@ -105,3 +85,9 @@ crates:
         item: sylphian-fishing:bait/ocean_bait
         chance: 15.0
         amount: 2
+      coins:
+        type: MONEY
+        money: 100.00
+        chance: 25.0
+        display-name: "<gold>♦ x100"
+        display-material: GOLD_NUGGET

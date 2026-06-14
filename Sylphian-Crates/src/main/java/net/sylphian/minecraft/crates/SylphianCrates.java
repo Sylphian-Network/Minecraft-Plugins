@@ -11,6 +11,7 @@ import net.sylphian.minecraft.crates.config.CrateConfig;
 import net.sylphian.minecraft.crates.config.CrateConfigLoader;
 import net.sylphian.minecraft.crates.config.KeyConfig;
 import net.sylphian.minecraft.crates.config.KeyConfigLoader;
+import net.sylphian.minecraft.crates.economy.CrateEconomyReloadListener;
 import net.sylphian.minecraft.crates.item.CratesItemProvider;
 import net.sylphian.minecraft.crates.listener.CratesListener;
 import net.sylphian.minecraft.crates.service.CrateService;
@@ -52,6 +53,10 @@ public final class SylphianCrates extends JavaPlugin {
         ItemRegistry.register(new CratesItemProvider(this));
 
         getServer().getPluginManager().registerEvents(new CratesListener(this, crateService), this);
+
+        if (getServer().getPluginManager().getPlugin("Sylphian-Economy") != null) {
+            getServer().getPluginManager().registerEvents(new CrateEconomyReloadListener(this), this);
+        }
 
         getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
             Commands commands = event.registrar();
