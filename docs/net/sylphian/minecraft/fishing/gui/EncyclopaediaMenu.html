@@ -193,12 +193,9 @@ Fetches player catch data from the database asynchronously.</div>
 <div class="block">Reloads the menu with an updated list of fish entries.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>entries</code> - all available loot entries; non-
-<details class="invalid-tag">
-<summary>invalid reference</summary>
-<pre><code>LootEntryType#ITEM</code></pre>
-</details>
- entries are excluded</dd>
+<dd><code>entries</code> - all available loot entries; entries with a non-null
+               <a href="../fish/LootEntry.html#externalItemId()"><code>LootEntry.externalItemId()</code></a> are excluded as they carry no
+               display material or name and cannot be rendered in the encyclopaedia</dd>
 </dl>
 </div>
 </section>
