@@ -9,6 +9,7 @@ net.sylphian.minecraft.cooking.station
 net.sylphian.minecraft.crates
 net.sylphian.minecraft.crates.command
 net.sylphian.minecraft.crates.config
+net.sylphian.minecraft.crates.economy
 net.sylphian.minecraft.crates.gui
 net.sylphian.minecraft.crates.gui.opening
 net.sylphian.minecraft.crates.item
@@ -17,6 +18,18 @@ net.sylphian.minecraft.crates.listener
 net.sylphian.minecraft.crates.service
 net.sylphian.minecraft.database
 net.sylphian.minecraft.database.migrations
+net.sylphian.minecraft.economy
+net.sylphian.minecraft.economy.api
+net.sylphian.minecraft.economy.command
+net.sylphian.minecraft.economy.db.api
+net.sylphian.minecraft.economy.db.dao
+net.sylphian.minecraft.economy.db.migrations
+net.sylphian.minecraft.economy.db.models
+net.sylphian.minecraft.economy.db.repositories
+net.sylphian.minecraft.economy.event
+net.sylphian.minecraft.economy.listener
+net.sylphian.minecraft.economy.service
+net.sylphian.minecraft.economy.util
 net.sylphian.minecraft.fishing
 net.sylphian.minecraft.fishing.commands
 net.sylphian.minecraft.fishing.config
@@ -45,6 +58,7 @@ net.sylphian.minecraft.profile.db.dao
 net.sylphian.minecraft.profile.db.migrations
 net.sylphian.minecraft.profile.db.models
 net.sylphian.minecraft.profile.db.repositories
+net.sylphian.minecraft.profile.economy
 net.sylphian.minecraft.profile.listener
 net.sylphian.minecraft.profile.service
 net.sylphian.minecraft.profile.sidebar

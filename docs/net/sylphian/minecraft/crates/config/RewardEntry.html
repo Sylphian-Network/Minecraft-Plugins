@@ -57,7 +57,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(java.lang.String,java.lang.String,net.sylphian.minecraft.crates.config.RewardType,double,java.lang.String,org.bukkit.Material,int,java.util.List,java.util.Map)" tabindex="0">RewardEntry(String, String, RewardType, double, String, Material, int, List, Map)</a></li>
+<li><a href="#%3Cinit%3E(java.lang.String,java.lang.String,net.sylphian.minecraft.crates.config.RewardType,double,java.lang.String,org.bukkit.Material,int,java.util.List,java.util.Map,java.math.BigDecimal)" tabindex="0">RewardEntry(String, String, RewardType, double, String, Material, int, List, Map, BigDecimal)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -75,6 +75,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#amount()" tabindex="0">amount()</a></li>
 <li><a href="#lore()" tabindex="0">lore()</a></li>
 <li><a href="#enchantments()" tabindex="0">enchantments()</a></li>
+<li><a href="#money()" tabindex="0">money()</a></li>
 </ol>
 </li>
 </ol>
@@ -105,10 +106,12 @@ loadScripts(document, 'script');</script>
 <dd><code><span id="param-amount">amount</span></code> - stack size of the item given to the player</dd>
 <dd><code><span id="param-lore">lore</span></code> - MiniMessage formatted lore lines shown on the item</dd>
 <dd><code><span id="param-enchantments">enchantments</span></code> - map of enchantment key to level applied to the item</dd>
+<dd><code><span id="param-money">money</span></code> - monetary amount deposited for <a href="RewardType.html#MONEY"><code>RewardType.MONEY</code></a> rewards;
+                       zero for all other types</dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
-<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">RewardEntry</span>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id, @Nullable <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;externalItemId, <a href="RewardType.html" title="enum class in net.sylphian.minecraft.crates.config">RewardType</a>&nbsp;type, double&nbsp;chance, @Nullable <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;displayName, @Nullable org.bukkit.Material&nbsp;displayMaterial, int&nbsp;amount, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;lore, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;enchantments)
+<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">RewardEntry</span>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id, @Nullable <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;externalItemId, <a href="RewardType.html" title="enum class in net.sylphian.minecraft.crates.config">RewardType</a>&nbsp;type, double&nbsp;chance, @Nullable <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;displayName, @Nullable org.bukkit.Material&nbsp;displayMaterial, int&nbsp;amount, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;lore, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;enchantments, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html" title="class or interface in java.math" class="external-link">BigDecimal</a>&nbsp;money)
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">Record</a></span></div>
 <div class="block">Immutable definition of a single reward entry in a crate's reward pool.
 
@@ -126,7 +129,7 @@ with higher chances appear more often relative to others in the same pool.</p></
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,java.lang.String,net.sylphian.minecraft.crates.config.RewardType,double,java.lang.String,org.bukkit.Material,int,java.util.List,java.util.Map)" class="member-name-link">RewardEntry</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,java.lang.String,net.sylphian.minecraft.crates.config.RewardType,double,java.lang.String,org.bukkit.Material,int,java.util.List,java.util.Map,java.math.BigDecimal)" class="member-name-link">RewardEntry</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;externalItemId,
  <a href="RewardType.html" title="enum class in net.sylphian.minecraft.crates.config">RewardType</a>&nbsp;type,
  double&nbsp;chance,
@@ -134,7 +137,8 @@ with higher chances appear more often relative to others in the same pool.</p></
  org.bukkit.Material&nbsp;displayMaterial,
  int&nbsp;amount,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;lore,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;enchantments)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;enchantments,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html" title="class or interface in java.math" class="external-link">BigDecimal</a>&nbsp;money)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates an instance of a <code>RewardEntry</code> record class.</div>
 </div>
@@ -208,14 +212,19 @@ with higher chances appear more often relative to others in the same pool.</p></
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <a href="#param-lore"><code>lore</code></a> record component.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html" title="class or interface in java.math" class="external-link">BigDecimal</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#money()" class="member-name-link">money</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the value of the <a href="#param-money"><code>money</code></a> record component.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a string representation of this record class.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="RewardType.html" title="enum class in net.sylphian.minecraft.crates.config">RewardType</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#type()" class="member-name-link">type</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="RewardType.html" title="enum class in net.sylphian.minecraft.crates.config">RewardType</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#type()" class="member-name-link">type</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <a href="#param-type"><code>type</code></a> record component.</div>
 </div>
 </div>
@@ -236,7 +245,7 @@ with higher chances appear more often relative to others in the same pool.</p></
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(java.lang.String,java.lang.String,net.sylphian.minecraft.crates.config.RewardType,double,java.lang.String,org.bukkit.Material,int,java.util.List,java.util.Map)">
+<section class="detail" id="&lt;init&gt;(java.lang.String,java.lang.String,net.sylphian.minecraft.crates.config.RewardType,double,java.lang.String,org.bukkit.Material,int,java.util.List,java.util.Map,java.math.BigDecimal)">
 <h3>RewardEntry</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">RewardEntry</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
@@ -250,7 +259,8 @@ with higher chances appear more often relative to others in the same pool.</p></
  org.bukkit.Material&nbsp;displayMaterial,
  int&nbsp;amount,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;lore,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;enchantments)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;enchantments,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html" title="class or interface in java.math" class="external-link">BigDecimal</a>&nbsp;money)</span></div>
 <div class="block">Creates an instance of a <code>RewardEntry</code> record class.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -263,6 +273,7 @@ with higher chances appear more often relative to others in the same pool.</p></
 <dd><code>amount</code> - the value for the <a href="#param-amount"><code>amount</code></a> record component</dd>
 <dd><code>lore</code> - the value for the <a href="#param-lore"><code>lore</code></a> record component</dd>
 <dd><code>enchantments</code> - the value for the <a href="#param-enchantments"><code>enchantments</code></a> record component</dd>
+<dd><code>money</code> - the value for the <a href="#param-money"><code>money</code></a> record component</dd>
 </dl>
 </div>
 </section>
@@ -455,6 +466,19 @@ with higher chances appear more often relative to others in the same pool.</p></
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the value of the <a href="#param-enchantments"><code>enchantments</code></a> record component</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="money()">
+<h3>money</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html" title="class or interface in java.math" class="external-link">BigDecimal</a></span>&nbsp;<span class="element-name">money</span>()</div>
+<div class="block">Returns the value of the <a href="#param-money"><code>money</code></a> record component.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the value of the <a href="#param-money"><code>money</code></a> record component</dd>
 </dl>
 </div>
 </section>
