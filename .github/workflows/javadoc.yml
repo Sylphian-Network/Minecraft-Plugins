@@ -48,6 +48,9 @@ jobs:
       - name: Generate Javadoc
         run: ./gradlew combineJavadoc
 
+      - name: Restore CNAME
+        run: echo 'mc-docs.sylphian.net' > docs/CNAME
+
       - name: Commit and push docs
         run: |
           git config user.name "github-actions[bot]"
