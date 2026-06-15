@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Root administrative command for Sylphian Core.
+ * Root administrative command for Sylphian Items.
  *
  * <p>Usage: {@code /sylphian-items <subcommand>}</p>
  *
