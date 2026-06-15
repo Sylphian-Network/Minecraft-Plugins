@@ -65,7 +65,6 @@ loadScripts(document, 'script');</script>
 <li><a href="#cacheProfile(net.sylphian.minecraft.profile.UserProfile)" tabindex="0">cacheProfile(UserProfile)</a></li>
 <li><a href="#getProfile(java.util.UUID)" tabindex="0">getProfile(UUID)</a></li>
 <li><a href="#invalidate(java.util.UUID)" tabindex="0">invalidate(UUID)</a></li>
-<li><a href="#getActiveProfiles()" tabindex="0">getActiveProfiles()</a></li>
 </ol>
 </li>
 </ol>
@@ -119,19 +118,14 @@ accessed from different threads (e.g., async database callbacks or chat events).
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Caches a profile in memory.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>, <a href="../UserProfile.html" title="class in net.sylphian.minecraft.profile">UserProfile</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getActiveProfiles()" class="member-name-link">getActiveProfiles</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../UserProfile.html" title="class in net.sylphian.minecraft.profile">UserProfile</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getProfile(java.util.UUID)" class="member-name-link">getProfile</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets an unmodifiable view of all currently cached profiles.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../UserProfile.html" title="class in net.sylphian.minecraft.profile">UserProfile</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getProfile(java.util.UUID)" class="member-name-link">getProfile</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Retrieves a cached profile by UUID.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#invalidate(java.util.UUID)" class="member-name-link">invalidate</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#invalidate(java.util.UUID)" class="member-name-link">invalidate</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Removes a profile from the cache.</div>
 </div>
 </div>
@@ -204,19 +198,6 @@ accessed from different threads (e.g., async database callbacks or chat events).
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>uuid</code> - the player's UUID</dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="getActiveProfiles()">
-<h3>getActiveProfiles</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>, <a href="../UserProfile.html" title="class in net.sylphian.minecraft.profile">UserProfile</a>&gt;</span>&nbsp;<span class="element-name">getActiveProfiles</span>()</div>
-<div class="block">Gets an unmodifiable view of all currently cached profiles.</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>map of active profiles</dd>
 </dl>
 </div>
 </section>
