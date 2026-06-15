@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.*;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Sub-service responsible for sidebar content.
@@ -26,6 +27,7 @@ import java.util.*;
 public class SidebarService {
 
     private static final int MAX_LINES = 15;
+    private static final Logger LOGGER = Logger.getLogger(SidebarService.class.getName());
 
     private static final TreeMap<Integer, SidebarContributor> contributors = new TreeMap<>();
     private static final Map<String, SidebarContributor> contributorsById = new LinkedHashMap<>();
@@ -54,13 +56,16 @@ public class SidebarService {
      */
     public static void registerContributor(SidebarContributor contributor) {
         if (contributorsById.containsKey(contributor.getId())) {
-            throw new IllegalArgumentException(
-                    "A contributor with ID '" + contributor.getId() + "' is already registered.");
+            LOGGER.warning("Sidebar contributor '" + contributor.getId()
+                    + "' is already registered, skipping duplicate registration.");
+            return;
         }
         if (contributors.containsKey(contributor.getPriority())) {
-            throw new IllegalArgumentException(
-                    "A contributor with priority " + contributor.getPriority() + " is already registered" +
-                            " (conflict with '" + contributors.get(contributor.getPriority()).getId() + "').");
+            LOGGER.warning("Sidebar contributor '" + contributor.getId()
+                    + "' has a duplicate priority " + contributor.getPriority()
+                    + " (conflicts with '" + contributors.get(contributor.getPriority()).getId()
+                    + "'). [Skipping]");
+            return;
         }
         contributorsById.put(contributor.getId(), contributor);
         contributors.put(contributor.getPriority(), contributor);
