@@ -1,11 +1,11 @@
 // Sylphian-Profile
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
+    compileOnly(libs.paper.api)
     compileOnly(project(":Sylphian-Database"))
     compileOnly(project(":Sylphian-Scoreboard"))
     compileOnly(project(":Sylphian-Economy"))
-    compileOnly("org.jdbi:jdbi3-core:3.47.0")
-    compileOnly("org.jdbi:jdbi3-sqlobject:3.47.0")
+    compileOnly(libs.jdbi.core)
+    compileOnly(libs.jdbi.sqlobject)
 }
 
 tasks {

@@ -1,14 +1,14 @@
 // Sylphian-Database
 plugins {
-    id("com.gradleup.shadow") version "9.4.1"
+    alias(libs.plugins.shadow)
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
-    implementation("org.jdbi:jdbi3-core:3.47.0")
-    implementation("org.jdbi:jdbi3-sqlobject:3.47.0")
-    implementation("com.zaxxer:HikariCP:6.2.1")
-    implementation("org.mariadb.jdbc:mariadb-java-client:3.5.1")
+    compileOnly(libs.paper.api)
+    implementation(libs.jdbi.core)
+    implementation(libs.jdbi.sqlobject)
+    implementation(libs.hikari)
+    implementation(libs.mariadb)
 }
 
 tasks {
