@@ -144,10 +144,17 @@ public class SidebarService {
 
     private static List<Component> buildLines(Player player) {
         List<Component> contributorLines = new ArrayList<>();
+        Set<String> exhaustedGroups = new HashSet<>();
         boolean firstSection = true;
+
         for (SidebarContributor contributor : contributors.values()) {
+            String group = contributor.getExclusionGroup();
+            if (group != null && exhaustedGroups.contains(group)) continue;
+
             List<SidebarLine> section = contributor.getLinesFor(player);
             if (section.isEmpty()) continue;
+
+            if (group != null) exhaustedGroups.add(group);
             if (!firstSection) contributorLines.add(Component.empty());
             section.forEach(line -> contributorLines.add(line.content()));
             firstSection = false;

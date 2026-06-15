@@ -36,6 +36,19 @@ public interface SidebarContributor {
     int getPriority();
 
     /**
+     * Returns the exclusion group this contributor belongs to, or {@code null}
+     * for no grouping. Within a group, only the highest-priority contributor
+     * (lowest priority value) that returns non-empty lines is rendered per
+     * refresh — the rest are skipped. Contributors with no group always render
+     * independently.
+     *
+     * @return the exclusion group identifier, or {@code null}
+     */
+    default String getExclusionGroup() {
+        return null;
+    }
+
+    /**
      * Returns the sidebar lines to display for the given player.
      * This is called on every refresh — keep it fast.
      * Return an empty list to hide this contributor's section entirely.

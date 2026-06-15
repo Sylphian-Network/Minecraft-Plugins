@@ -40,6 +40,11 @@ public class FishingContributor extends AbstractSidebarContributor {
         this.baitZoneService = baitZoneService;
     }
 
+    @Override
+    public String getExclusionGroup() {
+        return "activity";
+    }
+
     /**
      * Returns bait zone lines if the player's hook is bobbing in one or more zones.
      * Returns an empty list otherwise, hiding the section.
