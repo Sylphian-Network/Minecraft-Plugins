@@ -137,7 +137,7 @@ to prevent blocking the main Minecraft server thread.</div>
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fishId,
  double&nbsp;weight)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Records or updates a fish catch record.</div>
+<div class="block">Atomically records or updates a fish catch record using an upsert.</div>
 </div>
 </div>
 </div>
@@ -224,8 +224,8 @@ Executes asynchronously on the database executor.</div>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;</span>&nbsp;<span class="element-name">recordCatch</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fishId,
  double&nbsp;weight)</span></div>
-<div class="block">Records or updates a fish catch record.
-This is a fire-and-forget async operation that handles checking for existing records.</div>
+<div class="block">Atomically records or updates a fish catch record using an upsert.
+Executes asynchronously on the database executor.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../api/IFishEncyclopaediaRepository.html#recordCatch(java.util.UUID,java.lang.String,double)">recordCatch</a></code>&nbsp;in interface&nbsp;<code><a href="../api/IFishEncyclopaediaRepository.html" title="interface in net.sylphian.minecraft.fishing.db.api">IFishEncyclopaediaRepository</a></code></dd>

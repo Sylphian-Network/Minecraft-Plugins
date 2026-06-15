@@ -63,7 +63,6 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#onEnable()" tabindex="0">onEnable()</a></li>
-<li><a href="#getInstance()" tabindex="0">getInstance()</a></li>
 <li><a href="#getVerifyConfig()" tabindex="0">getVerifyConfig()</a></li>
 <li><a href="#getVerifyManager()" tabindex="0">getVerifyManager()</a></li>
 <li><a href="#getGson()" tabindex="0">getGson()</a></li>
@@ -120,7 +119,7 @@ PROXY: Receives verification data from the Velocity proxy via plugin messaging.<
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
@@ -131,31 +130,26 @@ PROXY: Receives verification data from the Velocity proxy via plugin messaging.<
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the Gson instance.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="VerifyPaper.html" title="class in net.sylphian.minecraft.verify">VerifyPaper</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getInstance()" class="member-name-link">getInstance</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Gets the singleton instance of the plugin.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.bukkit.configuration.file.FileConfiguration</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getVerifyConfig()" class="member-name-link">getVerifyConfig</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.bukkit.configuration.file.FileConfiguration</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getVerifyConfig()" class="member-name-link">getVerifyConfig</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the plugin configuration.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="manager/VerifyManager.html" title="class in net.sylphian.minecraft.verify.manager">VerifyManager</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getVerifyManager()" class="member-name-link">getVerifyManager</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="manager/VerifyManager.html" title="class in net.sylphian.minecraft.verify.manager">VerifyManager</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getVerifyManager()" class="member-name-link">getVerifyManager</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the verification manager.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onEnable()" class="member-name-link">onEnable</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onEnable()" class="member-name-link">onEnable</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Called when the plugin is enabled.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writePlayerToDatabase(java.util.UUID,net.sylphian.minecraft.verify.model.PlayerIdentity)" class="member-name-link">writePlayerToDatabase</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writePlayerToDatabase(java.util.UUID,net.sylphian.minecraft.verify.model.PlayerIdentity)" class="member-name-link">writePlayerToDatabase</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid,
  <a href="model/PlayerIdentity.html" title="class in net.sylphian.minecraft.verify.model">PlayerIdentity</a>&nbsp;identity)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Writes or updates player identity data in the database.</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Writes or updates player identity data in the database via the ProfileProvider API.</div>
 </div>
 </div>
 </div>
@@ -216,19 +210,6 @@ Initializes the plugin based on the 'standalone' configuration setting.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="getInstance()">
-<h3>getInstance</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="VerifyPaper.html" title="class in net.sylphian.minecraft.verify">VerifyPaper</a></span>&nbsp;<span class="element-name">getInstance</span>()</div>
-<div class="block">Gets the singleton instance of the plugin.</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>the VerifyPaper instance</dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
 <section class="detail" id="getVerifyConfig()">
 <h3>getVerifyConfig</h3>
 <div class="horizontal-scroll">
@@ -273,9 +254,8 @@ Initializes the plugin based on the 'standalone' configuration setting.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">writePlayerToDatabase</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid,
  <a href="model/PlayerIdentity.html" title="class in net.sylphian.minecraft.verify.model">PlayerIdentity</a>&nbsp;identity)</span></div>
-<div class="block">Writes or updates player identity data in the database.
-This is used to ensure the profile table stays in sync with verified forum data.
-Only executes if database support is enabled in the config and required plugins are present.</div>
+<div class="block">Writes or updates player identity data in the database via the ProfileProvider API.
+Only executes if database support is enabled in the config and Sylphian-Profile is loaded.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>uuid</code> - the player's Mojang UUID</dd>

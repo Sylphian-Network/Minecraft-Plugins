@@ -52,6 +52,7 @@ net.sylphian.minecraft.items.command
 net.sylphian.minecraft.items.item
 net.sylphian.minecraft.items.util
 net.sylphian.minecraft.profile
+net.sylphian.minecraft.profile.api
 net.sylphian.minecraft.profile.command
 net.sylphian.minecraft.profile.db.api
 net.sylphian.minecraft.profile.db.dao

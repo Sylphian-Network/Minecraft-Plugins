@@ -92,8 +92,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Main plugin class for Sylphian-Database.
 Responsible for initializing the global database connection pool and managing
 the lifecycle of the DatabaseService. It handles driver loading, configuration,
-and deferred execution of migrations to allow other plugins to register their
-schema changes during their own onEnable.</div>
+and runs its own migrations immediately during onEnable.</div>
 </div>
 </section>
 <section class="summary">
@@ -181,7 +180,7 @@ schema changes during their own onEnable.</div>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onEnable</span>()</div>
 <div class="block">Called when the plugin is enabled.
 Loads configuration, initializes the database connection pool via DatabaseService,
-and schedules a deferred task to run all registered migrations.</div>
+and runs all registered migrations immediately.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>onEnable</code>&nbsp;in interface&nbsp;<code>org.bukkit.plugin.Plugin</code></dd>
