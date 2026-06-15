@@ -39,12 +39,4 @@ public class ProfileManager {
     public void invalidate(UUID uuid) {
         profiles.remove(uuid);
     }
-
-    /**
-     * Gets an unmodifiable view of all currently cached profiles.
-     * @return map of active profiles
-     */
-    public Map<UUID, UserProfile> getActiveProfiles() {
-        return profiles;
-    }
 }
