@@ -1,8 +1,15 @@
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
+    compileOnly(libs.paper.api)
+    compileOnly(project(":Sylphian-Database"))
+    compileOnly(libs.jdbi.core)
+    compileOnly(libs.jdbi.sqlobject)
 }
 
 tasks {
+    jar {
+        archiveVersion.set("")
+    }
+
     processResources {
         val props = mapOf("version" to version )
         filesMatching("paper-plugin.yml") {

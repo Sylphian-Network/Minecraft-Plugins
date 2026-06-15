@@ -1,0 +1,16 @@
+# Maximum number of chunks a single clan may claim.
+max-claims-per-clan: 50
+
+# How long (in seconds) a clan invite remains valid before expiring.
+invite-expiry-seconds: 300
+
+# Permissions granted automatically when a member accepts an invite.
+# GRANT_* permissions are never in this list, only the LEADER may assign those.
+default-member-permissions:
+  - BREAK_BLOCKS
+  - PLACE_BLOCKS
+  - KILL_ANIMALS
+  - KILL_MONSTERS
+  - OPEN_CONTAINERS
+  - USE_DOORS
+  - INTERACT

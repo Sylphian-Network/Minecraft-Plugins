@@ -1,0 +1,37 @@
+package net.sylphian.minecraft.clans.db.migrations;
+
+import net.sylphian.minecraft.database.migrations.Migration;
+import org.jdbi.v3.core.Handle;
+
+/** Migration V2: creates the {@code clan_members} table. */
+public class Migration002CreateClanMembers implements Migration {
+
+    @Override
+    public int version() { return 2; }
+
+    @Override
+    public String name() { return "CreateClanMembers"; }
+
+    @Override
+    public String description() { return "Create clan_members table"; }
+
+    @Override
+    public void up(Handle handle) {
+        // player_uuid is the PK, enforcing one clan per player at the DB level.
+        // ON DELETE CASCADE removes member rows automatically when a clan is deleted.
+        handle.execute("""
+                CREATE TABLE clan_members (
+                    player_uuid CHAR(36) NOT NULL PRIMARY KEY,
+                    clan_id     CHAR(36) NOT NULL,
+                    is_leader   BOOLEAN  NOT NULL DEFAULT FALSE,
+                    joined_at   BIGINT   NOT NULL,
+                    FOREIGN KEY (clan_id) REFERENCES clans(clan_id) ON DELETE CASCADE
+                )
+                """);
+    }
+
+    @Override
+    public void down(Handle handle) {
+        handle.execute("DROP TABLE IF EXISTS clan_members");
+    }
+}
