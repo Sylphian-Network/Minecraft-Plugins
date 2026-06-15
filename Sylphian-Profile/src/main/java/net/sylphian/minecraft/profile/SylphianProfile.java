@@ -65,7 +65,7 @@ public final class SylphianProfile extends JavaPlugin {
         // Register commands using Paper's command lifecycle
         getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event ->
                 event.registrar().register("playtime", "View your playtime on the server.",
-                        new PlaytimeCommand(playerService, getLogger()))
+                        new PlaytimeCommand(playerService, this))
         );
 
         // Soft dependency: show balances on the sidebar only when Sylphian-Economy is installed.

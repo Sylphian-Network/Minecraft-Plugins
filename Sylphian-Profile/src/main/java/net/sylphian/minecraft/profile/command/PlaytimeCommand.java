@@ -6,6 +6,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.sylphian.minecraft.profile.service.PlayerService;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.util.logging.Logger;
 
@@ -15,17 +16,17 @@ import java.util.logging.Logger;
  */
 public class PlaytimeCommand implements BasicCommand {
     private final PlayerService playerService;
-    private final Logger logger;
+    private final Plugin plugin;
 
     /**
      * Constructs a new PlaytimeCommand.
      *
      * @param playerService the player service for playtime lookups
-     * @param logger        the plugin logger for error reporting
+     * @param plugin        the plugin logger for error reporting
      */
-    public PlaytimeCommand(PlayerService playerService, Logger logger) {
+    public PlaytimeCommand(PlayerService playerService, Plugin plugin) {
         this.playerService = playerService;
-        this.logger = logger;
+        this.plugin = plugin;
     }
 
     /**
@@ -43,11 +44,14 @@ public class PlaytimeCommand implements BasicCommand {
         }
 
         // Fetch playtime from database + current session
-        playerService.getTotalPlaytime(player.getUniqueId()).thenAccept(totalPlaytime -> sendPlaytime(player, player.getName(), totalPlaytime)).exceptionally(ex -> {
-            player.sendMessage(Component.text("Failed to retrieve playtime.", NamedTextColor.RED));
-            logger.severe("Failed to retrieve playtime: " + ex.getMessage());
-            return null;
-        });
+        playerService.getTotalPlaytime(player.getUniqueId())
+                .thenAccept(totalPlaytime ->
+                        player.getServer().getScheduler().runTask(plugin, () -> sendPlaytime(player, player.getName(), totalPlaytime)))
+                .exceptionally(ex -> {
+                    player.sendMessage(Component.text("Failed to retrieve playtime.", NamedTextColor.RED));
+                    plugin.getLogger().severe("Failed to retrieve playtime: " + ex.getMessage());
+                    return null;
+                });
     }
 
     /**
