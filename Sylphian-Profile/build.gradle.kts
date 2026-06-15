@@ -4,6 +4,7 @@ dependencies {
     compileOnly(project(":Sylphian-Database"))
     compileOnly(project(":Sylphian-Scoreboard"))
     compileOnly(project(":Sylphian-Economy"))
+    compileOnly(project(":Sylphian-Clans"))
     compileOnly(libs.jdbi.core)
     compileOnly(libs.jdbi.sqlobject)
 }

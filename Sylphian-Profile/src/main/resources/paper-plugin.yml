@@ -20,6 +20,9 @@ dependencies:
     Sylphian-Economy:
       load: BEFORE
       required: false
+    Sylphian-Clans:
+      load: BEFORE
+      required: false
 
 permissions:
   sylphian.profile.playtime:

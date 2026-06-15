@@ -24,6 +24,7 @@ public class ProfileContributor extends AbstractSidebarContributor {
 
     private final ProfileManager profileManager;
     private final @Nullable BalanceSupplier balanceSupplier;
+    private final @Nullable ClanSupplier clanSupplier;
 
     /**
      * Constructs a new ProfileContributor.
@@ -31,10 +32,11 @@ public class ProfileContributor extends AbstractSidebarContributor {
      * @param profileManager  the in-memory profile cache
      * @param balanceSupplier supplies the player's balance line, or null to omit it
      */
-    public ProfileContributor(ProfileManager profileManager, @Nullable BalanceSupplier balanceSupplier) {
+    public ProfileContributor(ProfileManager profileManager, @Nullable BalanceSupplier balanceSupplier, @Nullable ClanSupplier clanSupplier) {
         super("sylphian-profile", PRIORITY);
         this.profileManager = profileManager;
         this.balanceSupplier = balanceSupplier;
+        this.clanSupplier = clanSupplier;
     }
 
     /**
@@ -61,6 +63,13 @@ public class ProfileContributor extends AbstractSidebarContributor {
             String balance = balanceSupplier.formattedBalance(player.getUniqueId());
             if (balance != null) {
                 lines.add(SidebarLine.of("<dark_gray>Balance: <gray>" + balance));
+            }
+        }
+
+        if (clanSupplier != null) {
+            String clan = clanSupplier.formattedClan(player.getUniqueId());
+            if (clan != null) {
+                lines.add(SidebarLine.of("<dark_gray>Clan: <gray>" + clan));
             }
         }
 
