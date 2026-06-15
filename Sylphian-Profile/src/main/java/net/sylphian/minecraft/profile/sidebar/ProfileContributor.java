@@ -53,7 +53,8 @@ public class ProfileContributor extends AbstractSidebarContributor {
         String playtime = formatPlaytime(totalSeconds);
 
         List<SidebarLine> lines = new ArrayList<>();
-        lines.add(SidebarLine.of("<dark_gray>Welcome <gray>" + profile.forumUsername() + "!"));
+        String display = profile.forumUsername() != null ? profile.forumUsername() : profile.mcUsername();
+        lines.add(SidebarLine.of("<dark_gray>Welcome <gray>" + display + "!"));
         lines.add(SidebarLine.of("<dark_gray>Playtime: <gray>" + playtime));
 
         if (balanceSupplier != null) {
