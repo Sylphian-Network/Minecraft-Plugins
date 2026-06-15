@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.logging.Logger;
 
 /**
  * Service responsible for rolling and granting crate rewards.
@@ -24,6 +25,8 @@ import java.util.Random;
  * how rolled rewards are presented based on the crate's {@link net.sylphian.minecraft.crates.config.OpeningStyle}.</p>
  */
 public class CrateService {
+
+    private static final Logger LOGGER = Logger.getLogger(CrateService.class.getName());
 
     private final Random random = new Random();
 
@@ -40,6 +43,10 @@ public class CrateService {
      * @return the rolled RewardEntry
      */
     public RewardEntry rollOne(CrateConfig crate) {
+        if (crate.pool().isEmpty()) {
+            LOGGER.warning("Crate '" + crate.id() + "' has an empty reward pool, cannot roll a reward.");
+            throw new IllegalStateException("Crate '" + crate.id() + "' has an empty reward pool.");
+        }
         double totalWeight = crate.pool().stream().mapToDouble(RewardEntry::chance).sum();
         double roll = random.nextDouble() * totalWeight;
         double cursor = 0;
@@ -58,6 +65,10 @@ public class CrateService {
      * @return the list of rolled RewardEntry objects
      */
     public List<RewardEntry> rollRewards(CrateConfig crate) {
+        if (crate.pool().isEmpty()) {
+            LOGGER.warning("Crate '" + crate.id() + "' has an empty reward pool, returning no rewards.");
+            return List.of();
+        }
         List<RewardEntry> rolled = new ArrayList<>();
         double totalWeight = crate.pool().stream()
                 .mapToDouble(RewardEntry::chance)
