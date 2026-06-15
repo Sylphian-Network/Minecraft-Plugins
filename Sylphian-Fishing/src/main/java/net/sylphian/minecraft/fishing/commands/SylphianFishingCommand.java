@@ -267,7 +267,13 @@ public class SylphianFishingCommand implements BasicCommand {
         double superFishBaseChance = superFishConfig.baseChance();
 
         for (int i = 0; i < count; i++) {
-            CatchResult result = lootService.rollCatch(biome, weather, hookY, worldTime);
+            CatchResult result;
+            try {
+                result = lootService.rollCatch(biome, weather, hookY, worldTime);
+            } catch (IllegalStateException e) {
+                sender.sendMessage(Component.text("No loot configured for this context: " + e.getMessage(), NamedTextColor.RED));
+                return;
+            }
             Rarity r = result.rarity();
             if (r == null) continue;
 
