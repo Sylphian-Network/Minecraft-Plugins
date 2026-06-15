@@ -56,7 +56,7 @@ public final class SylphianEconomy extends JavaPlugin {
             commands.register("balance", "View your or another player's balance.",
                     List.of("bal", "money"), new BalanceCommand(economyService));
             commands.register("pay", "Send money to another online player.",
-                    new PayCommand(economyService));
+                    new PayCommand(economyService, this));
             commands.register("economy", "Administrative economy commands.",
                     new EconomyAdminCommand(economyService, this::reload));
         });

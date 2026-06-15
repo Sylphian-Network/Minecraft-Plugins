@@ -8,6 +8,7 @@ import net.sylphian.minecraft.economy.util.MoneyFormat;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jspecify.annotations.NonNull;
 
 import java.math.BigDecimal;
@@ -19,9 +20,11 @@ public class PayCommand implements BasicCommand {
 
     private static final MiniMessage MINI = MiniMessage.miniMessage();
     private final EconomyAPI economy;
+    private final JavaPlugin plugin;
 
-    public PayCommand(EconomyAPI economy) {
+    public PayCommand(EconomyAPI economy, JavaPlugin plugin) {
         this.economy = economy;
+        this.plugin = plugin;
     }
 
     @Override
@@ -53,17 +56,18 @@ public class PayCommand implements BasicCommand {
             return;
         }
 
-        economy.transfer(payer.getUniqueId(), target.getUniqueId(), amount).thenAccept(success -> {
-            if (success) {
-                String formatted = MoneyFormat.format(amount);
-                payer.sendMessage(MINI.deserialize(
-                        "<green>You paid <gold>" + formatted + "</gold> to " + target.getName() + ".</green>"));
-                target.sendMessage(MINI.deserialize(
-                        "<green>You received <gold>" + formatted + "</gold> from " + payer.getName() + ".</green>"));
-            } else {
-                payer.sendMessage(MINI.deserialize("<red>You don't have enough money for that."));
-            }
-        });
+        economy.transfer(payer.getUniqueId(), target.getUniqueId(), amount).thenAccept(success ->
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    if (success) {
+                        String formatted = MoneyFormat.format(amount);
+                        payer.sendMessage(MINI.deserialize(
+                                "<green>You paid <gold>" + formatted + "</gold> to " + target.getName() + ".</green>"));
+                        target.sendMessage(MINI.deserialize(
+                                "<green>You received <gold>" + formatted + "</gold> from " + payer.getName() + ".</green>"));
+                    } else {
+                        payer.sendMessage(MINI.deserialize("<red>You don't have enough money for that."));
+                    }
+                }));
     }
 
     @Override
