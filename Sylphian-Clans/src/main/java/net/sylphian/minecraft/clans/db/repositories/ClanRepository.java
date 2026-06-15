@@ -40,7 +40,6 @@ public class ClanRepository implements IClanRepository {
                         dao.insertClan(
                                 model.clanId().toString(),
                                 model.name(),
-                                model.tag(),
                                 model.createdAt()
                         )), executor);
     }
@@ -64,13 +63,6 @@ public class ClanRepository implements IClanRepository {
         return CompletableFuture.supplyAsync(() ->
                 jdbi.withExtension(ClanDao.class, dao ->
                         dao.findClanByName(name).map(this::toClanModel)), executor);
-    }
-
-    @Override
-    public CompletableFuture<Optional<ClanModel>> findClanByTag(String tag) {
-        return CompletableFuture.supplyAsync(() ->
-                jdbi.withExtension(ClanDao.class, dao ->
-                        dao.findClanByTag(tag).map(this::toClanModel)), executor);
     }
 
     @Override
@@ -166,7 +158,6 @@ public class ClanRepository implements IClanRepository {
         return new ClanModel(
                 UUID.fromString(row.clanId()),
                 row.name(),
-                row.tag(),
                 row.createdAt()
         );
     }

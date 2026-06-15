@@ -97,30 +97,22 @@ public class ClanService implements ClanAPI {
      *
      * @param leaderUuid the UUID of the founding player
      * @param name       the clan display name (max 32 chars, alphanumeric/hyphens)
-     * @param tag        the clan tag (max 6 chars, alphanumeric)
      * @return a future that completes when the clan is created
-     * @throws IllegalArgumentException if the name or tag is already taken, or fails validation
+     * @throws IllegalArgumentException if the name is already taken or fails validation
      */
-    public CompletableFuture<Void> createClan(UUID leaderUuid, String name, String tag) {
+    public CompletableFuture<Void> createClan(UUID leaderUuid, String name) {
         validateName(name);
-        validateTag(tag);
 
         return clanRepository.findClanByName(name).thenCompose(existing -> {
             if (existing.isPresent()) {
                 return CompletableFuture.failedFuture(
                         new IllegalArgumentException("A clan named '" + name + "' already exists."));
             }
-            return clanRepository.findClanByTag(tag);
-        }).thenCompose(existingTag -> {
-            if (existingTag.isPresent()) {
-                return CompletableFuture.failedFuture(
-                        new IllegalArgumentException("The tag '" + tag + "' is already in use."));
-            }
 
             UUID clanId = UUID.randomUUID();
             long now = Instant.now().getEpochSecond();
 
-            ClanModel clanModel = new ClanModel(clanId, name, tag, now);
+            ClanModel clanModel = new ClanModel(clanId, name, now);
             ClanMemberModel memberModel = new ClanMemberModel(leaderUuid, clanId, true, now);
 
             return clanRepository.insertClan(clanModel)
@@ -134,7 +126,7 @@ public class ClanService implements ClanAPI {
             Throwable cause = ex.getCause() != null ? ex.getCause() : ex;
             String msg = cause.getMessage() != null ? cause.getMessage().toLowerCase() : "";
             if (msg.contains("duplicate") || msg.contains("unique")) {
-                throw new RuntimeException("That name or tag was just taken. Please try again.");
+                throw new RuntimeException("That clan name was just taken. Please try again.");
             }
             throw ex instanceof RuntimeException re ? re : new RuntimeException(cause);
         });
@@ -320,7 +312,6 @@ public class ClanService implements ClanAPI {
                             return new Clan(
                                     model.clanId(),
                                     model.name(),
-                                    model.tag(),
                                     members,
                                     Instant.ofEpochSecond(model.createdAt())
                             );

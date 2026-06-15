@@ -21,7 +21,6 @@ public class Migration001CreateClans implements Migration {
                 CREATE TABLE clans (
                     clan_id    CHAR(36)    NOT NULL PRIMARY KEY,
                     name       VARCHAR(32) NOT NULL UNIQUE,
-                    tag        VARCHAR(6)  NOT NULL UNIQUE,
                     created_at BIGINT      NOT NULL
                 )
                 """);

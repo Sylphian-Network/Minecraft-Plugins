@@ -24,14 +24,12 @@ public interface ClanDao {
      *
      * @param clanId    the clan's UUID as a string
      * @param name      the clan's display name
-     * @param tag       the clan's short tag
      * @param createdAt epoch-second creation timestamp
      */
-    @SqlUpdate("INSERT INTO clans (clan_id, name, tag, created_at) VALUES (:clanId, :name, :tag, :createdAt)")
+    @SqlUpdate("INSERT INTO clans (clan_id, name, created_at) VALUES (:clanId, :name, :createdAt)")
     void insertClan(
             @Bind("clanId") String clanId,
             @Bind("name") String name,
-            @Bind("tag") String tag,
             @Bind("createdAt") long createdAt
     );
 
@@ -47,9 +45,9 @@ public interface ClanDao {
      * Finds a clan by its UUID.
      *
      * @param clanId the clan's UUID as a string
-     * @return a row containing {@code clan_id, name, tag, created_at}, or empty
+     * @return a row containing {@code clan_id, name, created_at}, or empty
      */
-    @SqlQuery("SELECT clan_id, name, tag, created_at FROM clans WHERE clan_id = :clanId")
+    @SqlQuery("SELECT clan_id, name, created_at FROM clans WHERE clan_id = :clanId")
     Optional<ClanRow> findClanById(@Bind("clanId") String clanId);
 
     /**
@@ -58,22 +56,13 @@ public interface ClanDao {
      * @param name the clan name to search for
      * @return a row, or empty if no clan has that name
      */
-    @SqlQuery("SELECT clan_id, name, tag, created_at FROM clans WHERE name = :name")
+    @SqlQuery("SELECT clan_id, name, created_at FROM clans WHERE name = :name")
     Optional<ClanRow> findClanByName(@Bind("name") String name);
-
-    /**
-     * Finds a clan by its tag (case-sensitive).
-     *
-     * @param tag the clan tag to search for
-     * @return a row, or empty if no clan has that tag
-     */
-    @SqlQuery("SELECT clan_id, name, tag, created_at FROM clans WHERE tag = :tag")
-    Optional<ClanRow> findClanByTag(@Bind("tag") String tag);
 
     /**
      * @return all clan rows ordered by name
      */
-    @SqlQuery("SELECT clan_id, name, tag, created_at FROM clans ORDER BY name")
+    @SqlQuery("SELECT clan_id, name, created_at FROM clans ORDER BY name")
     List<ClanRow> findAllClans();
 
     /**
@@ -164,7 +153,7 @@ public interface ClanDao {
     List<String> findPermissionsForPlayer(@Bind("playerUuid") String playerUuid);
 
     /** Raw row from the {@code clans} table. */
-    record ClanRow(String clanId, String name, String tag, long createdAt) {}
+    record ClanRow(String clanId, String name, long createdAt) {}
 
     /** Raw row from the {@code clan_members} table. */
     record MemberRow(String playerUuid, String clanId, boolean isLeader, long joinedAt) {}

@@ -41,19 +41,23 @@ public class ClanCommand implements BasicCommand {
     private final ClanInviteService inviteService;
     private final TerritoryService territoryService;
     private final ClanCache clanCache;
+    private final ClanHomeWarmupManager warmupManager;
 
     /**
      * @param clanService      the clan business logic service
      * @param inviteService    the in-memory invite store
      * @param territoryService the territory claiming service
      * @param clanCache        the in-memory membership cache
+     * @param warmupManager    manages pending home teleport warmups
      */
     public ClanCommand(ClanService clanService, ClanInviteService inviteService,
-                       TerritoryService territoryService, ClanCache clanCache) {
+                       TerritoryService territoryService, ClanCache clanCache,
+                       ClanHomeWarmupManager warmupManager) {
         this.clanService = clanService;
         this.inviteService = inviteService;
         this.territoryService = territoryService;
         this.clanCache = clanCache;
+        this.warmupManager = warmupManager;
     }
 
     @Override
@@ -82,13 +86,16 @@ public class ClanCommand implements BasicCommand {
             case "map"        -> handleMap(player);
             case "info"       -> handleInfo(player, args);
             case "list"       -> handleList(player);
+            case "sethome"    -> handleSetHome(player);
+            case "home"       -> handleHome(player);
+            case "delhome"    -> handleDelHome(player);
             default           -> sendUsage(player);
         }
     }
 
     private void handleCreate(Player player, String[] args) {
-        if (args.length < 3) {
-            player.sendMessage(MINI.deserialize("<red>Usage: /clan create <name> <tag>"));
+        if (args.length < 2) {
+            player.sendMessage(MINI.deserialize("<red>Usage: /clan create <name>"));
             return;
         }
         if (clanCache.get(player.getUniqueId()).isPresent()) {
@@ -96,10 +103,8 @@ public class ClanCommand implements BasicCommand {
             return;
         }
         String name = args[1];
-        String tag = args[2].toUpperCase();
-        clanService.createClan(player.getUniqueId(), name, tag)
-                .thenRun(() -> player.sendMessage(MINI.deserialize(
-                        "<green>Clan <white>" + name + " <green>[<white>" + tag + "<green>] created!")))
+        clanService.createClan(player.getUniqueId(), name)
+                .thenRun(() -> player.sendMessage(MINI.deserialize("<green>Clan <white>" + name + " <green>created!")))
                 .exceptionally(ex -> { player.sendMessage(Component.text(rootCause(ex), NamedTextColor.RED)); return null; });
     }
 
@@ -141,12 +146,11 @@ public class ClanCommand implements BasicCommand {
         Component acceptButton = Component.text(" [Accept]", NamedTextColor.GREEN)
                 .clickEvent(ClickEvent.runCommand("/clan accept " + clan.name()))
                 .hoverEvent(HoverEvent.showText(
-                        Component.text("Click to join " + clan.name() + " [" + clan.tag() + "]",
-                                NamedTextColor.YELLOW)));
+                        Component.text("Click to join " + clan.name(), NamedTextColor.YELLOW)));
 
         target.sendMessage(Component.text()
                 .append(MINI.deserialize("<green>You have been invited to join <white>" + clan.name()
-                        + " <green>[<white>" + clan.tag() + "<green>] by <white>" + player.getName() + "<green>."))
+                        + " <green>by <white>" + player.getName() + "<green>."))
                 .append(acceptButton)
                 .build());
     }
@@ -471,7 +475,7 @@ public class ClanCommand implements BasicCommand {
                                                 .map(this::resolvePlayerName)
                                                 .orElse("Unknown");
                                         Component tooltip = Component.text()
-                                                .append(Component.text(owner.name() + " [" + owner.tag() + "]", NamedTextColor.YELLOW))
+                                                .append(Component.text(owner.name(), NamedTextColor.YELLOW))
                                                 .appendNewline()
                                                 .append(Component.text("Leader: " + leaderName, NamedTextColor.GRAY))
                                                 .build();
@@ -515,7 +519,7 @@ public class ClanCommand implements BasicCommand {
     }
 
     private void printClanInfo(Player player, Clan clan) {
-        player.sendMessage(MINI.deserialize("<yellow>--- <white>" + clan.name() + " <gray>[<white>" + clan.tag() + "<gray>] <yellow>---"));
+        player.sendMessage(MINI.deserialize("<yellow>--- <white>" + clan.name() + " <yellow>---"));
         player.sendMessage(MINI.deserialize("<gray>Founded: <white>" + DATE_FMT.format(clan.createdAt())));
         player.sendMessage(MINI.deserialize("<gray>Members: <white>" + clan.members().size()));
         clan.members().forEach(m -> {
@@ -532,7 +536,7 @@ public class ClanCommand implements BasicCommand {
             }
             player.sendMessage(MINI.deserialize("<yellow>--- Clans (" + clans.size() + ") ---"));
             clans.forEach(c -> player.sendMessage(MINI.deserialize(
-                    "<gray>" + c.name() + " <white>[" + c.tag() + "] <gray>- " + c.members().size() + " members")));
+                    "<white>" + c.name() + " <gray>- " + c.members().size() + " members")));
         }).exceptionally(ex -> { player.sendMessage(Component.text(rootCause(ex), NamedTextColor.RED)); return null; });
     }
 
@@ -600,6 +604,60 @@ public class ClanCommand implements BasicCommand {
         return clan;
     }
 
+    private void handleSetHome(Player player) {
+        Clan clan = requirePermission(player, ClanPermission.SET_HOME);
+        if (clan == null) return;
+
+        clanService.setHome(clan.clanId(), player.getLocation())
+                .thenRun(() -> player.sendMessage(
+                        MINI.deserialize("<green>Clan home set to your current location.")))
+                .exceptionally(ex -> {
+                    player.sendMessage(Component.text(rootCause(ex), NamedTextColor.RED));
+                    return null;
+                });
+    }
+
+    private void handleHome(Player player) {
+        Clan clan = clanCache.get(player.getUniqueId()).orElse(null);
+        if (clan == null) {
+            player.sendMessage(Component.text("You are not in a clan.", NamedTextColor.RED));
+            return;
+        }
+
+        clanService.getHome(clan.clanId()).thenAccept(opt -> {
+            if (opt.isEmpty()) {
+                player.sendMessage(Component.text(
+                        "Your clan has no home set. A leader can use /clan sethome.", NamedTextColor.RED));
+                return;
+            }
+            var model = opt.get();
+            var world = Bukkit.getWorld(model.world());
+            if (world == null) {
+                player.sendMessage(Component.text(
+                        "The clan home world '" + model.world() + "' is not loaded.", NamedTextColor.RED));
+                return;
+            }
+            var dest = new org.bukkit.Location(world, model.x(), model.y(), model.z(), model.yaw(), model.pitch());
+            warmupManager.start(player, dest);
+        }).exceptionally(ex -> {
+            player.sendMessage(Component.text(rootCause(ex), NamedTextColor.RED));
+            return null;
+        });
+    }
+
+    private void handleDelHome(Player player) {
+        Clan clan = requirePermission(player, ClanPermission.SET_HOME);
+        if (clan == null) return;
+
+        clanService.deleteHome(clan.clanId())
+                .thenRun(() -> player.sendMessage(
+                        MINI.deserialize("<yellow>Clan home removed.")))
+                .exceptionally(ex -> {
+                    player.sendMessage(Component.text(rootCause(ex), NamedTextColor.RED));
+                    return null;
+                });
+    }
+
     private List<String> onlinePlayers(String prefix) {
         return Bukkit.getOnlinePlayers().stream()
                 .map(Player::getName)
@@ -624,7 +682,7 @@ public class ClanCommand implements BasicCommand {
     private void sendUsage(Player player) {
         player.sendMessage(MINI.deserialize("""
                 <yellow>--- /clan commands ---
-                <white>/clan create <name> <tag>
+                <white>/clan create <name>
                 /clan disband
                 /clan invite <player>
                 /clan accept <clan>

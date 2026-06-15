@@ -46,12 +46,6 @@ public interface IClanRepository {
     CompletableFuture<Optional<ClanModel>> findClanByName(String name);
 
     /**
-     * @param tag the clan's tag (case-sensitive)
-     * @return a future of the clan row, or empty if not found
-     */
-    CompletableFuture<Optional<ClanModel>> findClanByTag(String tag);
-
-    /**
      * @return a future of all clans ordered by name
      */
     CompletableFuture<List<ClanModel>> findAllClans();

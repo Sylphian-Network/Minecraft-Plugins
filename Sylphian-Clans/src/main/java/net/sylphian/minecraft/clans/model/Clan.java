@@ -14,14 +14,12 @@ import java.util.UUID;
  *
  * @param clanId    the clan's unique identifier
  * @param name      the clan's display name (unique across all clans)
- * @param tag       the short tag displayed in chat and on the sidebar, e.g. {@code SYL}
  * @param members   all current members, including the leader
  * @param createdAt when the clan was founded
  */
 public record Clan(
         UUID clanId,
         String name,
-        String tag,
         List<ClanMember> members,
         Instant createdAt
 ) {
