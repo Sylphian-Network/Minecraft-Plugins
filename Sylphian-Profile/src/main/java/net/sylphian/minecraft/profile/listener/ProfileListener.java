@@ -61,6 +61,10 @@ public class ProfileListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         NametagService.clearNametagEntry(event.getPlayer().getName());
-        playerService.handleQuit(event.getPlayer().getUniqueId());
+        playerService.handleQuit(event.getPlayer().getUniqueId())
+                .exceptionally(ex -> {
+                    plugin.getLogger().severe("Failed to save quit data for " + event.getPlayer().getName() + ": " + ex.getMessage());
+                    return null;
+                });
     }
 }
