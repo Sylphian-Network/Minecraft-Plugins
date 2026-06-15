@@ -36,8 +36,7 @@ public class Migration001CreateFishEncyclopaedia implements Migration {
                 biggest_weight DOUBLE NOT NULL,
                 first_caught BIGINT NOT NULL,
                 last_caught BIGINT NOT NULL,
-                PRIMARY KEY (uuid, fish_id),
-                FOREIGN KEY (uuid) REFERENCES mc_players(uuid)
+                PRIMARY KEY (uuid, fish_id)
             )
         """);
     }

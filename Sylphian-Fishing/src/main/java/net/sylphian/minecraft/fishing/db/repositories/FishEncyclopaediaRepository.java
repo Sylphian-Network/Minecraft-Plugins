@@ -67,8 +67,8 @@ public class FishEncyclopaediaRepository implements IFishEncyclopaediaRepository
     }
 
     /**
-     * Records or updates a fish catch record.
-     * This is a fire-and-forget async operation that handles checking for existing records.
+     * Atomically records or updates a fish catch record using an upsert.
+     * Executes asynchronously on the database executor.
      *
      * @param uuid   the player's UUID
      * @param fishId the ID of the fish
@@ -79,16 +79,9 @@ public class FishEncyclopaediaRepository implements IFishEncyclopaediaRepository
     public CompletableFuture<Void> recordCatch(UUID uuid, String fishId, double weight) {
         long now = Instant.now().getEpochSecond();
         return CompletableFuture.runAsync(() ->
-                jdbi.useExtension(FishEncyclopaediaDao.class, dao -> {
-                    Optional<FishEncyclopaediaDao.FishEncyclopaediaRow> existing =
-                            dao.findEntry(uuid.toString(), fishId);
-
-                    if (existing.isEmpty()) {
-                        dao.insert(uuid.toString(), fishId, weight, now);
-                    } else {
-                        dao.update(uuid.toString(), fishId, weight, now);
-                    }
-                }), executor);
+                jdbi.useExtension(FishEncyclopaediaDao.class, dao ->
+                        dao.upsert(uuid.toString(), fishId, weight, now)
+                ), executor);
     }
 
     /**
