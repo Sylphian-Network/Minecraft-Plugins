@@ -23,11 +23,11 @@ public final class SylphianItems extends JavaPlugin {
             commands.register("sylphian-items", new SylphianItemsCommand());
         });
 
-        getLogger().info("Sylphian Core enabled!");
+        getLogger().info("Sylphian Items enabled!");
     }
 
     @Override
     public void onDisable() {
-        getLogger().info("Sylphian Core disabled!");
+        getLogger().info("Sylphian Items disabled!");
     }
 }
