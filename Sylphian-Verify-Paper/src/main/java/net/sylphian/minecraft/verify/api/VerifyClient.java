@@ -73,19 +73,17 @@ public class VerifyClient {
 
         return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(response -> {
-                    // Log the response for debugging purposes
-                    logger.info("API Response (" + response.statusCode() + "): " + response.body());
-                    
-                    // Fail if the server returns a 5xx error
-                    if (response.statusCode() >= 500) {
-                        throw new RuntimeException("API error: " + response.statusCode());
+                    logger.info("Verify API: " + response.statusCode() + " for " + uuid);
+                    if (response.statusCode() >= 400) {
+                        logger.warning("Verify API returned HTTP " + response.statusCode()
+                                + " for " + uuid + " — check API key and endpoint URL."
+                                + " Body: " + response.body());
+                        throw new RuntimeException("HTTP " + response.statusCode());
                     }
-                    
                     try {
-                        // Deserialize the JSON body into the generic ApiEnvelope
                         return gson.fromJson(response.body(), new TypeToken<ApiEnvelope<VerificationResponse>>() {}.getType());
                     } catch (Exception e) {
-                        logger.log(Level.SEVERE, "Failed to parse API response", e);
+                        logger.log(Level.SEVERE, "Failed to parse API response for " + uuid, e);
                         throw e;
                     }
                 });
@@ -116,14 +114,13 @@ public class VerifyClient {
 
         return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(response -> {
-                    logger.info("Batch API Response (" + response.statusCode() + "): " + response.body());
-                    
-                    if (response.statusCode() >= 500) {
-                        throw new RuntimeException("API error: " + response.statusCode());
+                    logger.info("Verify batch API: " + response.statusCode() + " for " + uuids.size() + " player(s)");
+                    if (response.statusCode() >= 400) {
+                        logger.warning("Verify batch API returned HTTP " + response.statusCode()
+                                + " — check API key and endpoint URL. Body: " + response.body());
+                        throw new RuntimeException("HTTP " + response.statusCode());
                     }
-                    
                     try {
-                        // Deserialize into a Map where keys are UUID strings
                         return gson.fromJson(response.body(), new TypeToken<ApiEnvelope<Map<String, VerificationResponse>>>() {}.getType());
                     } catch (Exception e) {
                         logger.log(Level.SEVERE, "Failed to parse batch API response", e);

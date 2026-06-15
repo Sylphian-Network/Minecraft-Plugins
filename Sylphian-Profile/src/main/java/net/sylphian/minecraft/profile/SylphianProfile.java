@@ -5,10 +5,12 @@ import net.sylphian.minecraft.database.DatabaseService;
 import net.sylphian.minecraft.profile.command.PlaytimeCommand;
 import net.sylphian.minecraft.profile.db.migrations.Migration001CreatePlayers;
 import net.sylphian.minecraft.profile.db.migrations.Migration002CreateSessions;
+import net.sylphian.minecraft.profile.db.models.PlayerModel;
 import net.sylphian.minecraft.profile.db.repositories.PlayerRepository;
 import net.sylphian.minecraft.profile.db.repositories.SessionRepository;
 import net.sylphian.minecraft.profile.listener.ChatListener;
 import net.sylphian.minecraft.profile.listener.ProfileListener;
+import net.sylphian.minecraft.profile.api.ProfileProvider;
 import net.sylphian.minecraft.profile.economy.BalanceTracker;
 import net.sylphian.minecraft.profile.service.PlayerService;
 import net.sylphian.minecraft.profile.sidebar.BalanceSupplier;
@@ -19,7 +21,9 @@ import net.sylphian.minecraft.scoreboard.services.SidebarService;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -32,6 +36,7 @@ public final class SylphianProfile extends JavaPlugin {
     private ProfileManager profileManager;
     private VisualManager visualManager;
     private PlayerService playerService;
+    private PlayerRepository playerRepository;
 
     /**
      * Called when the plugin is enabled.
@@ -51,11 +56,30 @@ public final class SylphianProfile extends JavaPlugin {
         
         this.profileManager = new ProfileManager();
         this.visualManager = new VisualManager(this);
+        this.playerRepository = new PlayerRepository(DatabaseService.getJdbi(), DatabaseService.getExecutor());
         this.playerService = new PlayerService(
-                new PlayerRepository(DatabaseService.getJdbi(), DatabaseService.getExecutor()),
+                playerRepository,
                 new SessionRepository(DatabaseService.getJdbi(), DatabaseService.getExecutor()),
                 profileManager
         );
+
+        ProfileProvider.register((uuid, xfUserId, mcUsername, forumUsername) -> {
+            long now = Instant.now().getEpochSecond();
+            return playerRepository.findByUuid(uuid).thenCompose(opt -> {
+                if (opt.isPresent()) {
+                    PlayerModel existing = opt.get();
+                    PlayerModel updated = new PlayerModel(
+                            uuid, xfUserId, mcUsername, forumUsername,
+                            existing.firstJoined(), now, existing.playtime(), existing.isOnline());
+                    return playerRepository.update(updated);
+                } else {
+                    PlayerModel inserted = new PlayerModel(
+                            uuid, xfUserId, mcUsername, forumUsername,
+                            now, now, 0, false);
+                    return playerRepository.insert(inserted);
+                }
+            });
+        });
 
         // Register event listeners
         ProfileListener profileListener = new ProfileListener(this, playerService);
@@ -90,6 +114,7 @@ public final class SylphianProfile extends JavaPlugin {
                 .map(p -> playerService.handleQuit(p.getUniqueId()))
                 .toList();
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+        ProfileProvider.unregister();
         getLogger().info("Sylphian-Profile disabled.");
     }
 

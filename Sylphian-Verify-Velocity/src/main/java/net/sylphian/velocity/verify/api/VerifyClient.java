@@ -71,14 +71,16 @@ public class VerifyClient {
 
         return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(response -> {
-                    logger.info("API Response ({}): {}", response.statusCode(), response.body());
-                    if (response.statusCode() >= 500) {
-                        throw new RuntimeException("API error: " + response.statusCode());
+                    logger.info("Verify API: {} for {}", response.statusCode(), uuid);
+                    if (response.statusCode() >= 400) {
+                        logger.warn("Verify API returned HTTP {} for {} — check API key and endpoint URL. Body: {}",
+                                response.statusCode(), uuid, response.body());
+                        throw new RuntimeException("HTTP " + response.statusCode());
                     }
                     try {
                         return gson.fromJson(response.body(), new TypeToken<ApiEnvelope<VerificationResponse>>() {}.getType());
                     } catch (Exception e) {
-                        logger.error("Failed to parse API response", e);
+                        logger.error("Failed to parse API response for {}", uuid, e);
                         throw e;
                     }
                 });
@@ -109,9 +111,11 @@ public class VerifyClient {
 
         return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(response -> {
-                    logger.info("Batch API Response ({}): {}", response.statusCode(), response.body());
-                    if (response.statusCode() >= 500) {
-                        throw new RuntimeException("API error: " + response.statusCode());
+                    logger.info("Verify batch API: {} for {} player(s)", response.statusCode(), uuids.size());
+                    if (response.statusCode() >= 400) {
+                        logger.warn("Verify batch API returned HTTP {} — check API key and endpoint URL. Body: {}",
+                                response.statusCode(), response.body());
+                        throw new RuntimeException("HTTP " + response.statusCode());
                     }
                     try {
                         return gson.fromJson(response.body(), new TypeToken<ApiEnvelope<Map<String, VerificationResponse>>>() {}.getType());

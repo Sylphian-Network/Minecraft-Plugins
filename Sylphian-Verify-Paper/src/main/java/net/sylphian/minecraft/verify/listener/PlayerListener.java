@@ -1,5 +1,6 @@
 package net.sylphian.minecraft.verify.listener;
 
+import net.kyori.adventure.text.Component;
 import net.sylphian.minecraft.verify.VerifyPaper;
 import net.sylphian.minecraft.verify.model.VerificationResult;
 import net.sylphian.minecraft.verify.util.MessageUtils;
@@ -9,6 +10,9 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 
 /**
@@ -43,18 +47,21 @@ public class PlayerListener implements Listener {
         String ip = event.getAddress().getHostAddress();
 
         try {
-            // Check verification status via the manager (blocks because this event is async)
-            VerificationResult result = plugin.getVerifyManager().checkPlayer(uuid, ip).join();
+            int timeoutSeconds = plugin.getVerifyConfig().getInt("api_timeout_seconds", 5);
+            VerificationResult result = plugin.getVerifyManager().checkPlayer(uuid, ip).get(timeoutSeconds, TimeUnit.SECONDS);
             if (!result.allowed()) {
-                // Deny login if verification failed
                 event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED, result.kickMessage());
             } else {
-                // Sync verified identity data to the database
                 plugin.writePlayerToDatabase(uuid, result.identity());
             }
-        } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Error checking verification for " + event.getName(), e);
-            // Fail closed by default if the API check crashes.
+        } catch (TimeoutException e) {
+            plugin.getLogger().warning("Verification timed out for " + event.getName() + " — denying login.");
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, Component.text("Verification timed out — please try again."));
+        } catch (ExecutionException e) {
+            plugin.getLogger().log(Level.SEVERE, "Verification check failed for " + event.getName(), e.getCause());
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, MessageUtils.buildErrorMessage(plugin.getVerifyConfig()));
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, MessageUtils.buildErrorMessage(plugin.getVerifyConfig()));
         }
     }

@@ -2,9 +2,7 @@ package net.sylphian.minecraft.verify;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.sylphian.minecraft.database.DatabaseService;
-import net.sylphian.minecraft.profile.db.models.PlayerModel;
-import net.sylphian.minecraft.profile.db.repositories.PlayerRepository;
+import net.sylphian.minecraft.profile.api.ProfileProvider;
 import net.sylphian.minecraft.verify.api.VerifyClient;
 import net.sylphian.minecraft.verify.api.VerifyService;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,7 +15,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -32,9 +29,7 @@ import java.util.stream.Collectors;
  * PROXY: Receives verification data from the Velocity proxy via plugin messaging.
  */
 public class VerifyPaper extends JavaPlugin {
-    /** Singleton instance of the plugin. */
-    private static VerifyPaper instance;
-    /** Manager handling the items verification logic. */
+    /** Manager handling the verification logic. */
     private VerifyManager verifyManager;
     /** Gson instance for JSON serialization/deserialization. */
     private Gson gson;
@@ -45,7 +40,6 @@ public class VerifyPaper extends JavaPlugin {
      */
     @Override
     public void onEnable() {
-        instance = this;
         saveDefaultConfig();
         FileConfiguration config = getConfig();
 
@@ -73,14 +67,6 @@ public class VerifyPaper extends JavaPlugin {
             getServer().getMessenger().registerIncomingPluginChannel(this, PlayerIdentity.CHANNEL, new VerifyPluginMessageListener(this));
             getLogger().info("Sylphian-Verify-Paper enabled in PROXY mode");
         }
-    }
-
-    /**
-     * Gets the singleton instance of the plugin.
-     * @return the VerifyPaper instance
-     */
-    public static VerifyPaper getInstance() {
-        return instance;
     }
 
     /**
@@ -148,63 +134,26 @@ public class VerifyPaper extends JavaPlugin {
     }
 
     /**
-     * Writes or updates player identity data in the database.
-     * This is used to ensure the profile table stays in sync with verified forum data.
-     * Only executes if database support is enabled in the config and required plugins are present.
+     * Writes or updates player identity data in the database via the ProfileProvider API.
+     * Only executes if database support is enabled in the config and Sylphian-Profile is loaded.
      *
      * @param uuid     the player's Mojang UUID
      * @param identity the verified identity data to write
      */
     public void writePlayerToDatabase(UUID uuid, PlayerIdentity identity) {
-        // Check if database integration is active
-        if (!getConfig().getBoolean("database.enabled") ||
-                getServer().getPluginManager().getPlugin("Sylphian-Database") == null ||
-                getServer().getPluginManager().getPlugin("Sylphian-Profile") == null) {
-            getLogger().info("Database or Profile plugin is not enabled/installed. Skipping database write.");
+        if (!getConfig().getBoolean("database.enabled")) {
             return;
         }
-
-        try {
-            // Use JDBI to perform async database operations
-            PlayerRepository repository = new PlayerRepository(DatabaseService.getJdbi(), DatabaseService.getExecutor());
-            repository.findByUuid(uuid).thenAccept(playerOpt -> {
-                long now = Instant.now().getEpochSecond();
-                if (playerOpt.isPresent()) {
-                    // Update existing profile with new forum identity info
-                    PlayerModel existing = playerOpt.get();
-                    PlayerModel updated = new PlayerModel(
-                            uuid,
-                            identity.xfUserId(),
-                            identity.mcUsername(),
-                            identity.forumUsername(),
-                            existing.firstJoined(),
-                            now,
-                            existing.playtime(),
-                            existing.isOnline()
-                    );
-                    repository.update(updated);
-                    getLogger().info("Player data updated: " + uuid);
-                } else {
-                    // Create new profile for a first-time verified player
-                    PlayerModel inserted = new PlayerModel(
-                            uuid,
-                            identity.xfUserId(),
-                            identity.mcUsername(),
-                            identity.forumUsername(),
-                            now,
-                            now,
-                            0,
-                            false
-                    );
-                    repository.insert(inserted);
-                    getLogger().info("Player data inserted: " + uuid);
-                }
-            }).exceptionally(ex -> {
-                getLogger().log(Level.WARNING, "Failed to update database for player " + uuid, ex);
-                return null;
-            });
-        } catch (Throwable t) {
-            getLogger().log(Level.WARNING, "Sylphian-Database is not properly initialized or missing.", t);
+        if (!ProfileProvider.isAvailable()) {
+            getLogger().info("Sylphian-Profile is not loaded — skipping profile write for " + uuid);
+            return;
         }
+        ProfileProvider.get()
+                .ensurePlayerExists(uuid, identity.xfUserId(), identity.mcUsername(), identity.forumUsername())
+                .thenRun(() -> getLogger().info("Profile synced for player: " + uuid))
+                .exceptionally(ex -> {
+                    getLogger().log(Level.WARNING, "Failed to sync profile for player " + uuid, ex);
+                    return null;
+                });
     }
 }
