@@ -20,6 +20,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Main plugin class for Sylphian-Profile.
@@ -85,8 +86,10 @@ public final class SylphianProfile extends JavaPlugin {
      */
     @Override
     public void onDisable() {
-        // Handle logout for all online players to ensure session data is saved
-        Bukkit.getOnlinePlayers().forEach(player -> playerService.handleQuit(player.getUniqueId()).join());
+        List<CompletableFuture<Void>> futures = Bukkit.getOnlinePlayers().stream()
+                .map(p -> playerService.handleQuit(p.getUniqueId()))
+                .toList();
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
         getLogger().info("Sylphian-Profile disabled.");
     }
 
