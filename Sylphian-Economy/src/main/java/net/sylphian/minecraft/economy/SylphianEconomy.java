@@ -48,7 +48,7 @@ public final class SylphianEconomy extends JavaPlugin {
 
         EconomyProvider.register(economyService);
 
-        getServer().getPluginManager().registerEvents(new EconomyListener(economyService), this);
+        getServer().getPluginManager().registerEvents(new EconomyListener(economyService, this), this);
         Bukkit.getOnlinePlayers().forEach(player -> economyService.load(player.getUniqueId()));
 
         getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
