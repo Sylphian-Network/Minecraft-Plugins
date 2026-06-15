@@ -115,9 +115,9 @@ public class VerifyVelocity {
         proxy.getChannelRegistrar().register(IDENTIFIER);
 
         // Initialize API client and service
-        String apiKey = (String) config.getOrDefault("api_key", "");
+        String apiKey = String.valueOf(config.getOrDefault("api_key", ""));
         VerifyClient client = new VerifyClient(
-                (String) config.getOrDefault("api_base_url", "http://localhost"),
+                String.valueOf(config.getOrDefault("api_base_url", "http://localhost")),
                 apiKey,
                 gson,
                 logger
@@ -139,7 +139,7 @@ public class VerifyVelocity {
      * If a player is no longer verified, they are kicked from the proxy.
      */
     private void startVerificationTask() {
-        int interval = (Integer) config.getOrDefault("verification_interval_minutes", 10);
+        int interval = ((Number) config.getOrDefault("verification_interval_minutes", 10)).intValue();
         if (interval <= 0) {
             logger.info("Periodic verification task is disabled (interval set to 0)");
             return;
