@@ -115,14 +115,6 @@ public interface IClanRepository {
     CompletableFuture<Void> deletePermission(UUID playerUuid, ClanPermission permission);
 
     /**
-     * Removes all permission rows for a player.
-     *
-     * @param playerUuid the player's UUID
-     * @return a future that completes when all rows are deleted
-     */
-    CompletableFuture<Void> deleteAllPermissionsForPlayer(UUID playerUuid);
-
-    /**
      * @param playerUuid the player's UUID
      * @return a future of all permissions currently held by the player
      */

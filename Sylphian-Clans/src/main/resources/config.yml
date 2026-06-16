@@ -1,3 +1,7 @@
+# Unique identifier for this server instance.
+# Once set should not be changed.
+server-id: default
+
 # Maximum number of chunks a single clan may claim.
 max-claims-per-clan: 50
 

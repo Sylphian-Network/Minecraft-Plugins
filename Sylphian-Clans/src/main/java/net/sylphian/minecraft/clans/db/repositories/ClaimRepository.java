@@ -16,20 +16,23 @@ import java.util.concurrent.ExecutorService;
  * JDBI-backed implementation of {@link IClaimRepository}.
  *
  * <p>All blocking DB calls are dispatched to the shared database executor so the
- * main thread is never blocked.</p>
+ * main thread is never blocked. All queries are scoped to {@code serverId}.</p>
  */
 public class ClaimRepository implements IClaimRepository {
 
     private final Jdbi jdbi;
     private final ExecutorService executor;
+    private final String serverId;
 
     /**
      * @param jdbi     the JDBI instance for database access
      * @param executor the shared database executor for async dispatch
+     * @param serverId the server identifier used to scope all queries
      */
-    public ClaimRepository(Jdbi jdbi, ExecutorService executor) {
+    public ClaimRepository(Jdbi jdbi, ExecutorService executor, String serverId) {
         this.jdbi = jdbi;
         this.executor = executor;
+        this.serverId = serverId;
     }
 
     @Override
@@ -37,6 +40,7 @@ public class ClaimRepository implements IClaimRepository {
         return CompletableFuture.runAsync(() ->
                 jdbi.useExtension(ClaimDao.class, dao ->
                         dao.insertClaim(
+                                serverId,
                                 model.world(),
                                 model.chunkX(),
                                 model.chunkZ(),
@@ -49,28 +53,28 @@ public class ClaimRepository implements IClaimRepository {
     public CompletableFuture<Void> deleteClaim(String world, int chunkX, int chunkZ) {
         return CompletableFuture.runAsync(() ->
                 jdbi.useExtension(ClaimDao.class, dao ->
-                        dao.deleteClaim(world, chunkX, chunkZ)), executor);
+                        dao.deleteClaim(serverId, world, chunkX, chunkZ)), executor);
     }
 
     @Override
     public CompletableFuture<Void> deleteAllClaimsForClan(UUID clanId) {
         return CompletableFuture.runAsync(() ->
                 jdbi.useExtension(ClaimDao.class, dao ->
-                        dao.deleteAllClaimsForClan(clanId.toString())), executor);
+                        dao.deleteAllClaimsForClan(clanId.toString(), serverId)), executor);
     }
 
     @Override
     public CompletableFuture<Optional<ClaimModel>> findClaimByChunk(String world, int chunkX, int chunkZ) {
         return CompletableFuture.supplyAsync(() ->
                 jdbi.withExtension(ClaimDao.class, dao ->
-                        dao.findClaimByChunk(world, chunkX, chunkZ).map(this::toModel)), executor);
+                        dao.findClaimByChunk(serverId, world, chunkX, chunkZ).map(this::toModel)), executor);
     }
 
     @Override
     public CompletableFuture<List<ClaimModel>> findClaimsByClan(UUID clanId) {
         return CompletableFuture.supplyAsync(() ->
                 jdbi.withExtension(ClaimDao.class, dao ->
-                        dao.findClaimsByClan(clanId.toString()).stream()
+                        dao.findClaimsByClan(clanId.toString(), serverId).stream()
                                 .map(this::toModel).toList()), executor);
     }
 
@@ -78,7 +82,7 @@ public class ClaimRepository implements IClaimRepository {
     public CompletableFuture<List<ClaimModel>> findAllClaims() {
         return CompletableFuture.supplyAsync(() ->
                 jdbi.withExtension(ClaimDao.class, dao ->
-                        dao.findAllClaims().stream()
+                        dao.findAllClaims(serverId).stream()
                                 .map(this::toModel).toList()), executor);
     }
 

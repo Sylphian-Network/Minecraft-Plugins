@@ -17,15 +17,17 @@ public class Migration002CreateClanMembers implements Migration {
 
     @Override
     public void up(Handle handle) {
-        // player_uuid is the PK, enforcing one clan per player at the DB level.
+        // (player_uuid, server_id) is the PK, enforcing one clan per player per server.
         // ON DELETE CASCADE removes member rows automatically when a clan is deleted.
         handle.execute("""
                 CREATE TABLE clan_members (
-                    player_uuid CHAR(36) NOT NULL PRIMARY KEY,
-                    clan_id     CHAR(36) NOT NULL,
-                    is_leader   BOOLEAN  NOT NULL DEFAULT FALSE,
-                    joined_at   BIGINT   NOT NULL,
-                    FOREIGN KEY (clan_id) REFERENCES clans(clan_id) ON DELETE CASCADE
+                    player_uuid CHAR(36)    NOT NULL,
+                    server_id   VARCHAR(64) NOT NULL,
+                    clan_id     CHAR(36)    NOT NULL,
+                    is_leader   BOOLEAN     NOT NULL DEFAULT FALSE,
+                    joined_at   BIGINT      NOT NULL,
+                    PRIMARY KEY (player_uuid, server_id),
+                    FOREIGN KEY (clan_id, server_id) REFERENCES clans(clan_id, server_id) ON DELETE CASCADE
                 )
                 """);
     }

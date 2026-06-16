@@ -23,138 +23,144 @@ public interface ClanDao {
      * Inserts a new clan row.
      *
      * @param clanId    the clan's UUID as a string
+     * @param serverId  the server this clan belongs to
      * @param name      the clan's display name
      * @param createdAt epoch-second creation timestamp
      */
-    @SqlUpdate("INSERT INTO clans (clan_id, name, created_at) VALUES (:clanId, :name, :createdAt)")
+    @SqlUpdate("INSERT INTO clans (clan_id, server_id, name, created_at) VALUES (:clanId, :serverId, :name, :createdAt)")
     void insertClan(
             @Bind("clanId") String clanId,
+            @Bind("serverId") String serverId,
             @Bind("name") String name,
             @Bind("createdAt") long createdAt
     );
 
     /**
-     * Deletes a clan by ID. {@code ON DELETE CASCADE} removes member rows automatically.
+     * Deletes a clan by ID and server. {@code ON DELETE CASCADE} removes member rows automatically.
      *
-     * @param clanId the clan's UUID as a string
+     * @param clanId   the clan's UUID as a string
+     * @param serverId the server this clan belongs to
      */
-    @SqlUpdate("DELETE FROM clans WHERE clan_id = :clanId")
-    void deleteClan(@Bind("clanId") String clanId);
+    @SqlUpdate("DELETE FROM clans WHERE clan_id = :clanId AND server_id = :serverId")
+    void deleteClan(@Bind("clanId") String clanId, @Bind("serverId") String serverId);
 
     /**
-     * Finds a clan by its UUID.
+     * Finds a clan by its UUID on a given server.
      *
-     * @param clanId the clan's UUID as a string
-     * @return a row containing {@code clan_id, name, created_at}, or empty
+     * @param clanId   the clan's UUID as a string
+     * @param serverId the server to look up the clan on
+     * @return a row containing clan fields, or empty
      */
-    @SqlQuery("SELECT clan_id, name, created_at FROM clans WHERE clan_id = :clanId")
-    Optional<ClanRow> findClanById(@Bind("clanId") String clanId);
+    @SqlQuery("SELECT clan_id, server_id, name, created_at FROM clans WHERE clan_id = :clanId AND server_id = :serverId")
+    Optional<ClanRow> findClanById(@Bind("clanId") String clanId, @Bind("serverId") String serverId);
 
     /**
-     * Finds a clan by its display name (case-sensitive).
+     * Finds a clan by its display name within a server (case-sensitive).
      *
-     * @param name the clan name to search for
-     * @return a row, or empty if no clan has that name
+     * @param serverId the server to search within
+     * @param name     the clan name to search for
+     * @return a row, or empty if no clan has that name on this server
      */
-    @SqlQuery("SELECT clan_id, name, created_at FROM clans WHERE name = :name")
-    Optional<ClanRow> findClanByName(@Bind("name") String name);
+    @SqlQuery("SELECT clan_id, server_id, name, created_at FROM clans WHERE server_id = :serverId AND name = :name")
+    Optional<ClanRow> findClanByName(@Bind("serverId") String serverId, @Bind("name") String name);
 
     /**
-     * @return all clan rows ordered by name
+     * @param serverId the server to list clans for
+     * @return all clan rows for this server, ordered by name
      */
-    @SqlQuery("SELECT clan_id, name, created_at FROM clans ORDER BY name")
-    List<ClanRow> findAllClans();
+    @SqlQuery("SELECT clan_id, server_id, name, created_at FROM clans WHERE server_id = :serverId ORDER BY name")
+    List<ClanRow> findAllClans(@Bind("serverId") String serverId);
 
     /**
      * Inserts a new member row.
      *
      * @param playerUuid the member's UUID as a string
+     * @param serverId   the server this membership belongs to
      * @param clanId     the clan's UUID as a string
      * @param isLeader   {@code true} if this member is the leader
      * @param joinedAt   epoch-second join timestamp
      */
-    @SqlUpdate("INSERT INTO clan_members (player_uuid, clan_id, is_leader, joined_at) VALUES (:playerUuid, :clanId, :isLeader, :joinedAt)")
+    @SqlUpdate("INSERT INTO clan_members (player_uuid, server_id, clan_id, is_leader, joined_at) VALUES (:playerUuid, :serverId, :clanId, :isLeader, :joinedAt)")
     void insertMember(
             @Bind("playerUuid") String playerUuid,
+            @Bind("serverId") String serverId,
             @Bind("clanId") String clanId,
             @Bind("isLeader") boolean isLeader,
             @Bind("joinedAt") long joinedAt
     );
 
     /**
-     * Deletes a member row by player UUID.
+     * Deletes a member row by player UUID and server.
      *
      * @param playerUuid the member's UUID as a string
+     * @param serverId   the server this membership belongs to
      */
-    @SqlUpdate("DELETE FROM clan_members WHERE player_uuid = :playerUuid")
-    void deleteMember(@Bind("playerUuid") String playerUuid);
+    @SqlUpdate("DELETE FROM clan_members WHERE player_uuid = :playerUuid AND server_id = :serverId")
+    void deleteMember(@Bind("playerUuid") String playerUuid, @Bind("serverId") String serverId);
 
     /**
-     * Finds the member row for a given player.
+     * Finds the member row for a given player on a given server.
      *
      * @param playerUuid the player's UUID as a string
-     * @return the member row, or empty if the player is not in any clan
+     * @param serverId   the server to look up membership on
+     * @return the member row, or empty if the player is not in any clan on this server
      */
-    @SqlQuery("SELECT player_uuid, clan_id, is_leader, joined_at FROM clan_members WHERE player_uuid = :playerUuid")
-    Optional<MemberRow> findMemberByPlayer(@Bind("playerUuid") String playerUuid);
+    @SqlQuery("SELECT player_uuid, server_id, clan_id, is_leader, joined_at FROM clan_members WHERE player_uuid = :playerUuid AND server_id = :serverId")
+    Optional<MemberRow> findMemberByPlayer(@Bind("playerUuid") String playerUuid, @Bind("serverId") String serverId);
 
     /**
-     * Returns all member rows for the given clan.
+     * Returns all member rows for the given clan on a given server.
      *
-     * @param clanId the clan's UUID as a string
+     * @param clanId   the clan's UUID as a string
+     * @param serverId the server this clan belongs to
      * @return all member rows for this clan
      */
-    @SqlQuery("SELECT player_uuid, clan_id, is_leader, joined_at FROM clan_members WHERE clan_id = :clanId")
-    List<MemberRow> findMembersByClan(@Bind("clanId") String clanId);
+    @SqlQuery("SELECT player_uuid, server_id, clan_id, is_leader, joined_at FROM clan_members WHERE clan_id = :clanId AND server_id = :serverId")
+    List<MemberRow> findMembersByClan(@Bind("clanId") String clanId, @Bind("serverId") String serverId);
 
     /**
-     * Sets the {@code is_leader} flag for a member.
+     * Sets the {@code is_leader} flag for a member on a given server.
      *
      * @param playerUuid the member's UUID as a string
+     * @param serverId   the server this membership belongs to
      * @param isLeader   the new leader flag value
      */
-    @SqlUpdate("UPDATE clan_members SET is_leader = :isLeader WHERE player_uuid = :playerUuid")
-    void setLeader(@Bind("playerUuid") String playerUuid, @Bind("isLeader") boolean isLeader);
+    @SqlUpdate("UPDATE clan_members SET is_leader = :isLeader WHERE player_uuid = :playerUuid AND server_id = :serverId")
+    void setLeader(@Bind("playerUuid") String playerUuid, @Bind("serverId") String serverId, @Bind("isLeader") boolean isLeader);
 
     /**
      * Grants a permission to a member. Silently ignored if already present.
      *
      * @param playerUuid the member's UUID as a string
+     * @param serverId   the server this permission applies to
      * @param permission the {@link net.sylphian.minecraft.clans.model.ClanPermission} name
      */
-    @SqlUpdate("INSERT IGNORE INTO clan_member_permissions (player_uuid, permission) VALUES (:playerUuid, :permission)")
-    void insertPermission(@Bind("playerUuid") String playerUuid, @Bind("permission") String permission);
+    @SqlUpdate("INSERT IGNORE INTO clan_member_permissions (player_uuid, server_id, permission) VALUES (:playerUuid, :serverId, :permission)")
+    void insertPermission(@Bind("playerUuid") String playerUuid, @Bind("serverId") String serverId, @Bind("permission") String permission);
 
     /**
      * Revokes a specific permission from a member.
      *
      * @param playerUuid the member's UUID as a string
+     * @param serverId   the server this permission applies to
      * @param permission the {@link net.sylphian.minecraft.clans.model.ClanPermission} name
      */
-    @SqlUpdate("DELETE FROM clan_member_permissions WHERE player_uuid = :playerUuid AND permission = :permission")
-    void deletePermission(@Bind("playerUuid") String playerUuid, @Bind("permission") String permission);
+    @SqlUpdate("DELETE FROM clan_member_permissions WHERE player_uuid = :playerUuid AND server_id = :serverId AND permission = :permission")
+    void deletePermission(@Bind("playerUuid") String playerUuid, @Bind("serverId") String serverId, @Bind("permission") String permission);
 
     /**
-     * Deletes all permission rows for a given player. Called when a member is
-     * kicked or leaves before their member row is removed.
-     *
-     * @param playerUuid the member's UUID as a string
-     */
-    @SqlUpdate("DELETE FROM clan_member_permissions WHERE player_uuid = :playerUuid")
-    void deleteAllPermissionsForPlayer(@Bind("playerUuid") String playerUuid);
-
-    /**
-     * Returns all permission names currently held by a player.
+     * Returns all permission names currently held by a player on a given server.
      *
      * @param playerUuid the player's UUID as a string
+     * @param serverId   the server to look up permissions for
      * @return list of permission name strings
      */
-    @SqlQuery("SELECT permission FROM clan_member_permissions WHERE player_uuid = :playerUuid")
-    List<String> findPermissionsForPlayer(@Bind("playerUuid") String playerUuid);
+    @SqlQuery("SELECT permission FROM clan_member_permissions WHERE player_uuid = :playerUuid AND server_id = :serverId")
+    List<String> findPermissionsForPlayer(@Bind("playerUuid") String playerUuid, @Bind("serverId") String serverId);
 
     /** Raw row from the {@code clans} table. */
-    record ClanRow(String clanId, String name, long createdAt) {}
+    record ClanRow(String clanId, String serverId, String name, long createdAt) {}
 
     /** Raw row from the {@code clan_members} table. */
-    record MemberRow(String playerUuid, String clanId, boolean isLeader, long joinedAt) {}
+    record MemberRow(String playerUuid, String serverId, String clanId, boolean isLeader, long joinedAt) {}
 }

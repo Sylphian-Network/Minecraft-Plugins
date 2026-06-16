@@ -39,6 +39,14 @@ public final class SylphianClans extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
 
+        String serverId = getConfig().getString("server-id", "default");
+        if (serverId.isBlank() || serverId.equalsIgnoreCase("default")) {
+            getLogger().severe("server-id is not configured. Set a unique 'server-id' in config.yml for this server instance, then restart. Disabling Sylphian-Clans to avoid sharing clan data across servers.");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        getLogger().info("Server ID: " + serverId);
+
         DatabaseService.registerMigrations(List.of(
                 new Migration001CreateClans(),
                 new Migration002CreateClanMembers(),
@@ -49,8 +57,8 @@ public final class SylphianClans extends JavaPlugin {
         ));
         DatabaseService.runMigrations("Sylphian-Clans", getLogger());
 
-        ClanRepository clanRepository = new ClanRepository(DatabaseService.getJdbi(), DatabaseService.getExecutor());
-        ClaimRepository claimRepository = new ClaimRepository(DatabaseService.getJdbi(), DatabaseService.getExecutor());
+        ClanRepository clanRepository = new ClanRepository(DatabaseService.getJdbi(), DatabaseService.getExecutor(), serverId);
+        ClaimRepository claimRepository = new ClaimRepository(DatabaseService.getJdbi(), DatabaseService.getExecutor(), serverId);
         ClanHomeRepository homeRepository = new ClanHomeRepository(DatabaseService.getJdbi(), DatabaseService.getExecutor());
 
         ClanCache clanCache = new ClanCache();
@@ -64,11 +72,9 @@ public final class SylphianClans extends JavaPlugin {
                 .map(ClanPermission::valueOf)
                 .toList();
 
-        TerritoryService territoryService = new TerritoryService(
-                claimRepository, territoryCache, this, maxClaims);
+        TerritoryService territoryService = new TerritoryService(claimRepository, territoryCache, this, maxClaims);
         ClanInviteService inviteService = new ClanInviteService(inviteExpiry);
-        clanService = new ClanService(
-                clanRepository, homeRepository, territoryService, clanCache, this, defaultPerms);
+        clanService = new ClanService(clanRepository, homeRepository, territoryService, clanCache, this, defaultPerms);
 
         ClanProvider.register(clanService);
 

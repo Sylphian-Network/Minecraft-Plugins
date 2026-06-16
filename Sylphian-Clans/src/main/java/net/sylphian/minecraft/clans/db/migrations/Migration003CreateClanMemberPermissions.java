@@ -22,8 +22,10 @@ public class Migration003CreateClanMemberPermissions implements Migration {
         handle.execute("""
                 CREATE TABLE clan_member_permissions (
                     player_uuid CHAR(36)    NOT NULL,
+                    server_id   VARCHAR(64) NOT NULL,
                     permission  VARCHAR(32) NOT NULL,
-                    PRIMARY KEY (player_uuid, permission)
+                    PRIMARY KEY (player_uuid, server_id, permission),
+                    FOREIGN KEY (player_uuid, server_id) REFERENCES clan_members(player_uuid, server_id) ON DELETE CASCADE
                 )
                 """);
     }

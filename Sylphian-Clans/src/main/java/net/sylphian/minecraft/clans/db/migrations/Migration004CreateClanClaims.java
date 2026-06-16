@@ -17,15 +17,16 @@ public class Migration004CreateClanClaims implements Migration {
 
     @Override
     public void up(Handle handle) {
-        // Primary key is (world, chunk_x, chunk_z): one owner per chunk.
+        // Primary key is (server_id, world, chunk_x, chunk_z): one owner per chunk per server.
         handle.execute("""
                 CREATE TABLE clan_claims (
+                    server_id  VARCHAR(64) NOT NULL,
                     world      VARCHAR(64) NOT NULL,
                     chunk_x    INT         NOT NULL,
                     chunk_z    INT         NOT NULL,
                     clan_id    CHAR(36)    NOT NULL,
                     claimed_at BIGINT      NOT NULL,
-                    PRIMARY KEY (world, chunk_x, chunk_z)
+                    PRIMARY KEY (server_id, world, chunk_x, chunk_z)
                 )
                 """);
     }

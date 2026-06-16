@@ -17,14 +17,16 @@ public interface ClaimDao {
     /**
      * Inserts a new territory claim.
      *
+     * @param serverId  the server this claim belongs to
      * @param world     the world name
      * @param chunkX    the chunk X coordinate
      * @param chunkZ    the chunk Z coordinate
      * @param clanId    the owning clan's UUID as a string
      * @param claimedAt epoch-second claim timestamp
      */
-    @SqlUpdate("INSERT INTO clan_claims (world, chunk_x, chunk_z, clan_id, claimed_at) VALUES (:world, :chunkX, :chunkZ, :clanId, :claimedAt)")
+    @SqlUpdate("INSERT INTO clan_claims (server_id, world, chunk_x, chunk_z, clan_id, claimed_at) VALUES (:serverId, :world, :chunkX, :chunkZ, :clanId, :claimedAt)")
     void insertClaim(
+            @Bind("serverId") String serverId,
             @Bind("world") String world,
             @Bind("chunkX") int chunkX,
             @Bind("chunkZ") int chunkZ,
@@ -33,57 +35,66 @@ public interface ClaimDao {
     );
 
     /**
-     * Deletes the claim for a specific chunk.
+     * Deletes the claim for a specific chunk on a given server.
      *
-     * @param world  the world name
-     * @param chunkX the chunk X coordinate
-     * @param chunkZ the chunk Z coordinate
+     * @param serverId the server this claim belongs to
+     * @param world    the world name
+     * @param chunkX   the chunk X coordinate
+     * @param chunkZ   the chunk Z coordinate
      */
-    @SqlUpdate("DELETE FROM clan_claims WHERE world = :world AND chunk_x = :chunkX AND chunk_z = :chunkZ")
+    @SqlUpdate("DELETE FROM clan_claims WHERE server_id = :serverId AND world = :world AND chunk_x = :chunkX AND chunk_z = :chunkZ")
     void deleteClaim(
+            @Bind("serverId") String serverId,
             @Bind("world") String world,
             @Bind("chunkX") int chunkX,
             @Bind("chunkZ") int chunkZ
     );
 
     /**
-     * Deletes all claims owned by a clan. Used when a clan is disbanded.
+     * Deletes all claims owned by a clan on a given server. Used when a clan is disbanded.
      *
-     * @param clanId the owning clan's UUID as a string
+     * @param clanId   the owning clan's UUID as a string
+     * @param serverId the server this clan belongs to
      */
-    @SqlUpdate("DELETE FROM clan_claims WHERE clan_id = :clanId")
-    void deleteAllClaimsForClan(@Bind("clanId") String clanId);
+    @SqlUpdate("DELETE FROM clan_claims WHERE clan_id = :clanId AND server_id = :serverId")
+    void deleteAllClaimsForClan(@Bind("clanId") String clanId, @Bind("serverId") String serverId);
 
     /**
-     * Finds the claim for a specific chunk.
+     * Finds the claim for a specific chunk on a given server.
      *
-     * @param world  the world name
-     * @param chunkX the chunk X coordinate
-     * @param chunkZ the chunk Z coordinate
-     * @return the claim row, or empty if the chunk is unclaimed
+     * @param serverId the server to look up the claim on
+     * @param world    the world name
+     * @param chunkX   the chunk X coordinate
+     * @param chunkZ   the chunk Z coordinate
+     * @return the claim row, or empty if the chunk is unclaimed on this server
      */
-    @SqlQuery("SELECT world, chunk_x, chunk_z, clan_id, claimed_at FROM clan_claims WHERE world = :world AND chunk_x = :chunkX AND chunk_z = :chunkZ")
+    @SqlQuery("SELECT server_id, world, chunk_x, chunk_z, clan_id, claimed_at FROM clan_claims WHERE server_id = :serverId AND world = :world AND chunk_x = :chunkX AND chunk_z = :chunkZ")
     Optional<ClaimRow> findClaimByChunk(
+            @Bind("serverId") String serverId,
             @Bind("world") String world,
             @Bind("chunkX") int chunkX,
             @Bind("chunkZ") int chunkZ
     );
 
     /**
-     * Returns all claims owned by the given clan.
+     * Returns all claims owned by the given clan on a given server.
      *
-     * @param clanId the owning clan's UUID as a string
+     * @param clanId   the owning clan's UUID as a string
+     * @param serverId the server this clan belongs to
      * @return all claim rows for this clan
      */
-    @SqlQuery("SELECT world, chunk_x, chunk_z, clan_id, claimed_at FROM clan_claims WHERE clan_id = :clanId")
-    List<ClaimRow> findClaimsByClan(@Bind("clanId") String clanId);
+    @SqlQuery("SELECT server_id, world, chunk_x, chunk_z, clan_id, claimed_at FROM clan_claims WHERE clan_id = :clanId AND server_id = :serverId")
+    List<ClaimRow> findClaimsByClan(@Bind("clanId") String clanId, @Bind("serverId") String serverId);
 
     /**
-     * @return all claim rows across all clans, used to seed the {@code TerritoryCache} on startup
+     * Returns all claim rows for a given server. Used to seed the {@code TerritoryCache} on startup.
+     *
+     * @param serverId the server to load claims for
+     * @return all claim rows for this server
      */
-    @SqlQuery("SELECT world, chunk_x, chunk_z, clan_id, claimed_at FROM clan_claims")
-    List<ClaimRow> findAllClaims();
+    @SqlQuery("SELECT server_id, world, chunk_x, chunk_z, clan_id, claimed_at FROM clan_claims WHERE server_id = :serverId")
+    List<ClaimRow> findAllClaims(@Bind("serverId") String serverId);
 
     /** Raw row from the {@code clan_claims} table. */
-    record ClaimRow(String world, int chunkX, int chunkZ, String clanId, long claimedAt) {}
+    record ClaimRow(String serverId, String world, int chunkX, int chunkZ, String clanId, long claimedAt) {}
 }

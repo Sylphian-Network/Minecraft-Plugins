@@ -17,20 +17,23 @@ import java.util.concurrent.ExecutorService;
  * JDBI-backed implementation of {@link IClanRepository}.
  *
  * <p>All blocking DB calls are dispatched to the shared database executor so the
- * main thread is never blocked.</p>
+ * main thread is never blocked. All queries are scoped to {@code serverId}.</p>
  */
 public class ClanRepository implements IClanRepository {
 
     private final Jdbi jdbi;
     private final ExecutorService executor;
+    private final String serverId;
 
     /**
      * @param jdbi     the JDBI instance for database access
      * @param executor the shared database executor for async dispatch
+     * @param serverId the server identifier used to scope all queries
      */
-    public ClanRepository(Jdbi jdbi, ExecutorService executor) {
+    public ClanRepository(Jdbi jdbi, ExecutorService executor, String serverId) {
         this.jdbi = jdbi;
         this.executor = executor;
+        this.serverId = serverId;
     }
 
     @Override
@@ -39,6 +42,7 @@ public class ClanRepository implements IClanRepository {
                 jdbi.useExtension(ClanDao.class, dao ->
                         dao.insertClan(
                                 model.clanId().toString(),
+                                serverId,
                                 model.name(),
                                 model.createdAt()
                         )), executor);
@@ -48,28 +52,28 @@ public class ClanRepository implements IClanRepository {
     public CompletableFuture<Void> deleteClan(UUID clanId) {
         return CompletableFuture.runAsync(() ->
                 jdbi.useExtension(ClanDao.class, dao ->
-                        dao.deleteClan(clanId.toString())), executor);
+                        dao.deleteClan(clanId.toString(), serverId)), executor);
     }
 
     @Override
     public CompletableFuture<Optional<ClanModel>> findClanById(UUID clanId) {
         return CompletableFuture.supplyAsync(() ->
                 jdbi.withExtension(ClanDao.class, dao ->
-                        dao.findClanById(clanId.toString()).map(this::toClanModel)), executor);
+                        dao.findClanById(clanId.toString(), serverId).map(this::toClanModel)), executor);
     }
 
     @Override
     public CompletableFuture<Optional<ClanModel>> findClanByName(String name) {
         return CompletableFuture.supplyAsync(() ->
                 jdbi.withExtension(ClanDao.class, dao ->
-                        dao.findClanByName(name).map(this::toClanModel)), executor);
+                        dao.findClanByName(serverId, name).map(this::toClanModel)), executor);
     }
 
     @Override
     public CompletableFuture<List<ClanModel>> findAllClans() {
         return CompletableFuture.supplyAsync(() ->
                 jdbi.withExtension(ClanDao.class, dao ->
-                        dao.findAllClans().stream().map(this::toClanModel).toList()), executor);
+                        dao.findAllClans(serverId).stream().map(this::toClanModel).toList()), executor);
     }
 
     @Override
@@ -78,6 +82,7 @@ public class ClanRepository implements IClanRepository {
                 jdbi.useExtension(ClanDao.class, dao ->
                         dao.insertMember(
                                 model.playerUuid().toString(),
+                                serverId,
                                 model.clanId().toString(),
                                 model.isLeader(),
                                 model.joinedAt()
@@ -88,21 +93,21 @@ public class ClanRepository implements IClanRepository {
     public CompletableFuture<Void> deleteMember(UUID playerUuid) {
         return CompletableFuture.runAsync(() ->
                 jdbi.useExtension(ClanDao.class, dao ->
-                        dao.deleteMember(playerUuid.toString())), executor);
+                        dao.deleteMember(playerUuid.toString(), serverId)), executor);
     }
 
     @Override
     public CompletableFuture<Optional<ClanMemberModel>> findMemberByPlayer(UUID playerUuid) {
         return CompletableFuture.supplyAsync(() ->
                 jdbi.withExtension(ClanDao.class, dao ->
-                        dao.findMemberByPlayer(playerUuid.toString()).map(this::toMemberModel)), executor);
+                        dao.findMemberByPlayer(playerUuid.toString(), serverId).map(this::toMemberModel)), executor);
     }
 
     @Override
     public CompletableFuture<List<ClanMemberModel>> findMembersByClan(UUID clanId) {
         return CompletableFuture.supplyAsync(() ->
                 jdbi.withExtension(ClanDao.class, dao ->
-                        dao.findMembersByClan(clanId.toString()).stream()
+                        dao.findMembersByClan(clanId.toString(), serverId).stream()
                                 .map(this::toMemberModel).toList()), executor);
     }
 
@@ -110,17 +115,17 @@ public class ClanRepository implements IClanRepository {
     public CompletableFuture<Void> setLeader(UUID playerUuid, boolean isLeader) {
         return CompletableFuture.runAsync(() ->
                 jdbi.useExtension(ClanDao.class, dao ->
-                        dao.setLeader(playerUuid.toString(), isLeader)), executor);
+                        dao.setLeader(playerUuid.toString(), serverId, isLeader)), executor);
     }
 
     @Override
     public CompletableFuture<Void> transferLeader(UUID oldLeaderUuid, UUID newLeaderUuid) {
         return CompletableFuture.runAsync(() ->
                 jdbi.useTransaction(handle -> {
-                    handle.createUpdate("UPDATE clan_members SET is_leader = false WHERE player_uuid = :uuid")
-                            .bind("uuid", oldLeaderUuid.toString()).execute();
-                    handle.createUpdate("UPDATE clan_members SET is_leader = true WHERE player_uuid = :uuid")
-                            .bind("uuid", newLeaderUuid.toString()).execute();
+                    handle.createUpdate("UPDATE clan_members SET is_leader = false WHERE player_uuid = :uuid AND server_id = :serverId")
+                            .bind("uuid", oldLeaderUuid.toString()).bind("serverId", serverId).execute();
+                    handle.createUpdate("UPDATE clan_members SET is_leader = true WHERE player_uuid = :uuid AND server_id = :serverId")
+                            .bind("uuid", newLeaderUuid.toString()).bind("serverId", serverId).execute();
                 }), executor);
     }
 
@@ -128,28 +133,21 @@ public class ClanRepository implements IClanRepository {
     public CompletableFuture<Void> insertPermission(UUID playerUuid, ClanPermission permission) {
         return CompletableFuture.runAsync(() ->
                 jdbi.useExtension(ClanDao.class, dao ->
-                        dao.insertPermission(playerUuid.toString(), permission.name())), executor);
+                        dao.insertPermission(playerUuid.toString(), serverId, permission.name())), executor);
     }
 
     @Override
     public CompletableFuture<Void> deletePermission(UUID playerUuid, ClanPermission permission) {
         return CompletableFuture.runAsync(() ->
                 jdbi.useExtension(ClanDao.class, dao ->
-                        dao.deletePermission(playerUuid.toString(), permission.name())), executor);
-    }
-
-    @Override
-    public CompletableFuture<Void> deleteAllPermissionsForPlayer(UUID playerUuid) {
-        return CompletableFuture.runAsync(() ->
-                jdbi.useExtension(ClanDao.class, dao ->
-                        dao.deleteAllPermissionsForPlayer(playerUuid.toString())), executor);
+                        dao.deletePermission(playerUuid.toString(), serverId, permission.name())), executor);
     }
 
     @Override
     public CompletableFuture<List<ClanPermission>> findPermissionsForPlayer(UUID playerUuid) {
         return CompletableFuture.supplyAsync(() ->
                 jdbi.withExtension(ClanDao.class, dao ->
-                        dao.findPermissionsForPlayer(playerUuid.toString()).stream()
+                        dao.findPermissionsForPlayer(playerUuid.toString(), serverId).stream()
                                 .map(ClanPermission::valueOf)
                                 .toList()), executor);
     }

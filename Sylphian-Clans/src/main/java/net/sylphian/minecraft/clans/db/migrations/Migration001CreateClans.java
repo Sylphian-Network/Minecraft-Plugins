@@ -20,8 +20,11 @@ public class Migration001CreateClans implements Migration {
         handle.execute("""
                 CREATE TABLE clans (
                     clan_id    CHAR(36)    NOT NULL PRIMARY KEY,
-                    name       VARCHAR(32) NOT NULL UNIQUE,
-                    created_at BIGINT      NOT NULL
+                    server_id  VARCHAR(64) NOT NULL,
+                    name       VARCHAR(32) NOT NULL,
+                    created_at BIGINT      NOT NULL,
+                    UNIQUE KEY idx_clans_server_name (server_id, name),
+                    UNIQUE KEY idx_clans_id_server (clan_id, server_id)
                 )
                 """);
     }

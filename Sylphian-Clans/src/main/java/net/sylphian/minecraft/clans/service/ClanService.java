@@ -149,13 +149,7 @@ public class ClanService implements ClanAPI {
         return buildClan(clanId).thenCompose(clan -> {
             if (clan == null) return CompletableFuture.completedFuture(null);
 
-            // Delete permissions for all members before deleting member rows.
-            List<CompletableFuture<Void>> permDeletions = clan.members().stream()
-                    .map(m -> clanRepository.deleteAllPermissionsForPlayer(m.playerId()))
-                    .toList();
-
-            return CompletableFuture.allOf(permDeletions.toArray(new CompletableFuture[0]))
-                    .thenCompose(v -> territoryService.unclaimAll(clanId))
+            return territoryService.unclaimAll(clanId)
                     .thenCompose(v -> clanRepository.deleteClan(clanId))
                     .thenRun(() -> {
                         clanCache.invalidateAll(clan);
@@ -194,15 +188,14 @@ public class ClanService implements ClanAPI {
 
     /**
      * Removes a member from their clan (kick or voluntary leave).
-     * Deletes their permission rows before removing their member row.
+     * Their permission rows are removed automatically by the database cascade.
      *
      * @param clanId      the clan the player is leaving
      * @param playerUuid  the player to remove
      * @return a future that completes when the member is removed
      */
     public CompletableFuture<Void> removeMember(UUID clanId, UUID playerUuid) {
-        return clanRepository.deleteAllPermissionsForPlayer(playerUuid)
-                .thenCompose(v -> clanRepository.deleteMember(playerUuid))
+        return clanRepository.deleteMember(playerUuid)
                 .thenRun(() -> clanCache.invalidate(playerUuid))
                 .thenCompose(v -> buildClan(clanId))
                 .thenAccept(clan -> {
