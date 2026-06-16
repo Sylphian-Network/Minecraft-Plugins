@@ -39,67 +39,85 @@ public class MigrationRunner {
      */
     public void run(Logger logger) {
         jdbi.useHandle(handle -> {
-            // Ensure the migration tracking table exists before proceeding
-            handle.execute("""
-                CREATE TABLE IF NOT EXISTS schema_migrations (
-                    version INT,
-                    name VARCHAR(255),
-                    plugin VARCHAR(64),
-                    description VARCHAR(255),
-                    applied_at BIGINT,
-                    execution_ms BIGINT,
-                    PRIMARY KEY (plugin, version)
-                )
-            """);
-
-            // Fetch already applied versions for this specific plugin
-            Set<Integer> applied = new HashSet<>(
-                handle.createQuery("SELECT version FROM schema_migrations WHERE plugin = :plugin")
-                      .bind("plugin", pluginName)
-                      .mapTo(Integer.class)
-                      .list()
-            );
-
-            int newlyApplied = 0;
-            for (Migration migration : migrations) {
-                // Only apply migrations that haven't been recorded yet
-                if (!applied.contains(migration.version())) {
-                    logger.info("[" + pluginName + "] Applying V" + migration.version() + " (" + migration.name() + ") — " + migration.description());
-                    
-                    long start = System.currentTimeMillis();
-                    try {
-                        // Execute the 'up' logic for the migration
-                        migration.up(handle);
-                    } catch (Exception e) {
-                        // Attempt a rollback using the migration's 'down' logic if 'up' fails
-                        try {
-                            migration.down(handle);
-                            logger.info("[" + pluginName + "] V" + migration.version() + " rolled back after failure.");
-                        } catch (Exception downEx) {
-                            logger.severe("[" + pluginName + "] Failed to rollback V" + migration.version() + ": " + downEx.getMessage());
-                        }
-                        throw new RuntimeException("Migration V" + migration.version() + " failed for plugin " + pluginName, e);
-                    }
-                    long executionMs = System.currentTimeMillis() - start;
-
-                    // Record the successful migration in the tracking table
-                    handle.execute(
-                        "INSERT INTO schema_migrations (version, name, plugin, description, applied_at, execution_ms) VALUES (?, ?, ?, ?, ?, ?)",
-                        migration.version(),
-                        migration.name(),
-                        pluginName,
-                        migration.description(),
-                        Instant.now().getEpochSecond(),
-                        executionMs
-                    );
-                    
-                    logger.info("[" + pluginName + "] V" + migration.version() + " (" + migration.name() + ") applied in " + executionMs + "ms.");
-                    newlyApplied++;
-                }
+            // Serialize migrations across all server instances that share this database.
+            // GET_LOCK is held on this connection only; other instances block here until
+            // it is released, then find the schema already up to date. Returns 1 on
+            // success, 0 on timeout, NULL on error.
+            final String lockName = "sylphian_schema_migrations";
+            Integer locked = handle.createQuery("SELECT GET_LOCK(:name, :timeout)")
+                    .bind("name", lockName)
+                    .bind("timeout", 120)
+                    .mapTo(Integer.class)
+                    .one();
+            if (locked == null || locked != 1) {
+                throw new RuntimeException("[" + pluginName + "] Could not acquire the migration lock (timed out). Aborting migrations.");
             }
 
-            if (newlyApplied == 0) {
-                logger.info("[" + pluginName + "] Schema up to date. (" + migrations.size() + " migration(s) registered)");
+            try {
+                // Ensure the migration tracking table exists before proceeding
+                handle.execute("""
+                    CREATE TABLE IF NOT EXISTS schema_migrations (
+                        version INT,
+                        name VARCHAR(255),
+                        plugin VARCHAR(64),
+                        description VARCHAR(255),
+                        applied_at BIGINT,
+                        execution_ms BIGINT,
+                        PRIMARY KEY (plugin, version)
+                    )
+                """);
+
+                // Fetch already applied versions for this specific plugin
+                Set<Integer> applied = new HashSet<>(
+                        handle.createQuery("SELECT version FROM schema_migrations WHERE plugin = :plugin")
+                                .bind("plugin", pluginName)
+                                .mapTo(Integer.class)
+                                .list()
+                );
+
+                int newlyApplied = 0;
+                for (Migration migration : migrations) {
+                    // Only apply migrations that haven't been recorded yet
+                    if (!applied.contains(migration.version())) {
+                        logger.info("[" + pluginName + "] Applying V" + migration.version() + " (" + migration.name() + ") — " + migration.description());
+
+                        long start = System.currentTimeMillis();
+                        try {
+                            migration.up(handle);
+                        } catch (Exception e) {
+                            try {
+                                migration.down(handle);
+                                logger.info("[" + pluginName + "] V" + migration.version() + " rolled back after failure.");
+                            } catch (Exception downEx) {
+                                logger.severe("[" + pluginName + "] Failed to rollback V" + migration.version() + ": " + downEx.getMessage());
+                            }
+                            throw new RuntimeException("Migration V" + migration.version() + " failed for plugin " + pluginName, e);
+                        }
+                        long executionMs = System.currentTimeMillis() - start;
+
+                        handle.execute(
+                                "INSERT INTO schema_migrations (version, name, plugin, description, applied_at, execution_ms) VALUES (?, ?, ?, ?, ?, ?)",
+                                migration.version(),
+                                migration.name(),
+                                pluginName,
+                                migration.description(),
+                                Instant.now().getEpochSecond(),
+                                executionMs
+                        );
+
+                        logger.info("[" + pluginName + "] V" + migration.version() + " (" + migration.name() + ") applied in " + executionMs + "ms.");
+                        newlyApplied++;
+                    }
+                }
+
+                if (newlyApplied == 0) {
+                    logger.info("[" + pluginName + "] Schema up to date. (" + migrations.size() + " migration(s) registered)");
+                }
+            } finally {
+                handle.createQuery("SELECT RELEASE_LOCK(:name)")
+                        .bind("name", lockName)
+                        .mapTo(Integer.class)
+                        .one();
             }
         });
     }
