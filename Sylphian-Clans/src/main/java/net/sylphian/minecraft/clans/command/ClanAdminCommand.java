@@ -10,6 +10,7 @@ import net.sylphian.minecraft.clans.service.TerritoryService;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.generator.WorldInfo;
 import org.jspecify.annotations.NonNull;
 
 import java.util.Collection;
@@ -119,7 +120,7 @@ public class ClanAdminCommand implements BasicCommand {
                     .toList();
         }
         if (args[0].equalsIgnoreCase("unclaim") && args.length == 2) {
-            return Bukkit.getWorlds().stream().map(w -> w.getName()).toList();
+            return Bukkit.getWorlds().stream().map(WorldInfo::getName).toList();
         }
         return List.of();
     }
