@@ -67,7 +67,12 @@ public enum ClanPermission {
     /** Can unclaim chunks on behalf of the clan. */
     UNCLAIM_TERRITORY,
     /** Can grant or revoke {@link #UNCLAIM_TERRITORY} on other members. */
-    GRANT_UNCLAIM_TERRITORY;
+    GRANT_UNCLAIM_TERRITORY,
+
+    /** Can set the clan's home location. */
+    SET_HOME,
+    /** Can grant or revoke {@link #SET_HOME} on other members. */
+    GRANT_SET_HOME;
 
     /**
      * @return {@code true} if this is a {@code GRANT_*} permission

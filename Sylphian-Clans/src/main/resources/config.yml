@@ -4,6 +4,9 @@ max-claims-per-clan: 50
 # How long (in seconds) a clan invite remains valid before expiring.
 invite-expiry-seconds: 300
 
+# How long (in seconds) a player must stand still before /clan home teleports them.
+home-warmup-seconds: 3
+
 # Permissions granted automatically when a member accepts an invite.
 # GRANT_* permissions are never in this list, only the LEADER may assign those.
 default-member-permissions:

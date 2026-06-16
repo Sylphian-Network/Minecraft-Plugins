@@ -11,12 +11,15 @@ import net.sylphian.minecraft.clans.db.migrations.Migration002CreateClanMembers;
 import net.sylphian.minecraft.clans.db.migrations.Migration003CreateClanMemberPermissions;
 import net.sylphian.minecraft.clans.db.migrations.Migration004CreateClanClaims;
 import net.sylphian.minecraft.clans.db.migrations.Migration005AddClaimsFK;
+import net.sylphian.minecraft.clans.db.migrations.Migration006CreateClanHomes;
+import net.sylphian.minecraft.clans.db.repositories.ClanHomeRepository;
 import net.sylphian.minecraft.clans.db.repositories.ClanRepository;
 import net.sylphian.minecraft.clans.db.repositories.ClaimRepository;
 import net.sylphian.minecraft.clans.listener.ClanListener;
 import net.sylphian.minecraft.clans.listener.TerritoryNotificationListener;
 import net.sylphian.minecraft.clans.listener.TerritoryProtectionListener;
 import net.sylphian.minecraft.clans.model.ClanPermission;
+import net.sylphian.minecraft.clans.service.ClanHomeWarmupManager;
 import net.sylphian.minecraft.clans.service.ClanInviteService;
 import net.sylphian.minecraft.clans.service.ClanService;
 import net.sylphian.minecraft.clans.service.TerritoryService;
@@ -41,18 +44,21 @@ public final class SylphianClans extends JavaPlugin {
                 new Migration002CreateClanMembers(),
                 new Migration003CreateClanMemberPermissions(),
                 new Migration004CreateClanClaims(),
-                new Migration005AddClaimsFK()
+                new Migration005AddClaimsFK(),
+                new Migration006CreateClanHomes()
         ));
         DatabaseService.runMigrations("Sylphian-Clans", getLogger());
 
         ClanRepository clanRepository = new ClanRepository(DatabaseService.getJdbi(), DatabaseService.getExecutor());
         ClaimRepository claimRepository = new ClaimRepository(DatabaseService.getJdbi(), DatabaseService.getExecutor());
+        ClanHomeRepository homeRepository = new ClanHomeRepository(DatabaseService.getJdbi(), DatabaseService.getExecutor());
 
         ClanCache clanCache = new ClanCache();
         TerritoryCache territoryCache = new TerritoryCache();
 
         int maxClaims = getConfig().getInt("max-claims-per-clan", 50);
         long inviteExpiry = getConfig().getLong("invite-expiry-seconds", 300);
+        int homeWarmup = getConfig().getInt("home-warmup-seconds", 3);
         List<ClanPermission> defaultPerms = getConfig()
                 .getStringList("default-member-permissions").stream()
                 .map(ClanPermission::valueOf)
@@ -62,7 +68,7 @@ public final class SylphianClans extends JavaPlugin {
                 claimRepository, territoryCache, this, maxClaims);
         ClanInviteService inviteService = new ClanInviteService(inviteExpiry);
         clanService = new ClanService(
-                clanRepository, territoryService, clanCache, this, defaultPerms);
+                clanRepository, homeRepository, territoryService, clanCache, this, defaultPerms);
 
         ClanProvider.register(clanService);
 
@@ -71,11 +77,14 @@ public final class SylphianClans extends JavaPlugin {
             return null;
         });
 
+        ClanHomeWarmupManager warmupManager = new ClanHomeWarmupManager(this, homeWarmup);
+
         getServer().getPluginManager().registerEvents(new ClanListener(clanService), this);
         getServer().getPluginManager().registerEvents(new TerritoryProtectionListener(territoryService, clanCache), this);
         getServer().getPluginManager().registerEvents(new TerritoryNotificationListener(territoryService, clanService), this);
+        getServer().getPluginManager().registerEvents(warmupManager, this);
 
-        ClanCommand clanCommand = new ClanCommand(clanService, inviteService, territoryService, clanCache);
+        ClanCommand clanCommand = new ClanCommand(clanService, inviteService, territoryService, clanCache, warmupManager);
         ClanAdminCommand adminCommand = new ClanAdminCommand(clanService, territoryService);
         getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
             event.registrar().register("clan", "Manage your clan.", clanCommand);

@@ -12,6 +12,7 @@ import net.sylphian.minecraft.clans.model.Clan;
 import net.sylphian.minecraft.clans.model.ClanMember;
 import net.sylphian.minecraft.clans.model.ClanPermission;
 import net.sylphian.minecraft.clans.model.ClanRole;
+import net.sylphian.minecraft.clans.service.ClanHomeWarmupManager;
 import net.sylphian.minecraft.clans.service.ClanInviteService;
 import net.sylphian.minecraft.clans.service.ClanInviteService.PendingInvite;
 import net.sylphian.minecraft.clans.service.ClanService;
@@ -695,6 +696,9 @@ public class ClanCommand implements BasicCommand {
                 /clan claim
                 /clan unclaim [all]
                 /clan map [radius]
+                /clan sethome
+                /clan home
+                /clan delhome
                 /clan info [clan]
                 /clan list"""));
     }
