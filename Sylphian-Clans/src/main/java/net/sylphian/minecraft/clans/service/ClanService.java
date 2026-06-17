@@ -7,6 +7,8 @@ import net.sylphian.minecraft.clans.db.api.IClanRepository;
 import net.sylphian.minecraft.clans.db.models.ClanHomeModel;
 import net.sylphian.minecraft.clans.db.models.ClanMemberModel;
 import net.sylphian.minecraft.clans.db.models.ClanModel;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Location;
 import net.sylphian.minecraft.clans.event.*;
 import net.sylphian.minecraft.clans.model.*;
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
  * Business logic implementation of {@link ClanAPI}.
  */
 public class ClanService implements ClanAPI {
+
+    private static final MiniMessage MOTD_MINI = MiniMessage.miniMessage();
 
     private final IClanRepository clanRepository;
     private final IClanHomeRepository homeRepository;
@@ -118,7 +122,7 @@ public class ClanService implements ClanAPI {
             UUID clanId = UUID.randomUUID();
             long now = Instant.now().getEpochSecond();
 
-            ClanModel clanModel = new ClanModel(clanId, name, now);
+            ClanModel clanModel = new ClanModel(clanId, name, null, now);
             ClanMemberModel memberModel = new ClanMemberModel(leaderUuid, clanId, true, now);
 
             return clanRepository.insertClan(clanModel)
@@ -312,6 +316,7 @@ public class ClanService implements ClanAPI {
                                     model.clanId(),
                                     model.name(),
                                     members,
+                                    model.motd(),
                                     Instant.ofEpochSecond(model.createdAt())
                             );
                         });
@@ -404,6 +409,34 @@ public class ClanService implements ClanAPI {
      */
     public CompletableFuture<Void> deleteHome(UUID clanId) {
         return homeRepository.deleteHome(clanId);
+    }
+
+    /**
+     * Sets or clears a clan's message of the day and refreshes the cache. Interactive
+     * MiniMessage (click, hover, insertion) is stripped before storage; null clears it.
+     *
+     * @param clanId  the clan to update
+     * @param rawMotd the raw MiniMessage input, or null to clear
+     * @return a future that completes when the change is persisted and cached
+     */
+    public CompletableFuture<Void> setMotd(UUID clanId, String rawMotd) {
+        String safe = (rawMotd == null) ? null : sanitizeMotd(rawMotd);
+        return clanRepository.updateMotd(clanId, safe)
+                .thenCompose(v -> buildClan(clanId))
+                .thenAccept(clan -> { if (clan != null) clanCache.put(clan); });
+    }
+
+    // Parses MiniMessage input and removes click/hover/insertion so a stored MOTD can never carry events.
+    private String sanitizeMotd(String raw) {
+        return MOTD_MINI.serialize(stripInteractivity(MOTD_MINI.deserialize(raw)));
+    }
+
+    private Component stripInteractivity(Component component) {
+        Component out = component
+                .clickEvent(null)
+                .hoverEvent(null)
+                .insertion(null);
+        return out.children(out.children().stream().map(this::stripInteractivity).toList());
     }
 
     /** Fires a Bukkit event on the main thread. */

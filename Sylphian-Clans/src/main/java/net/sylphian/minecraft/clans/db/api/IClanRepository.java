@@ -51,6 +51,15 @@ public interface IClanRepository {
     CompletableFuture<List<ClanModel>> findAllClans();
 
     /**
+     * Sets or clears the clan's message of the day.
+     *
+     * @param clanId the clan's UUID
+     * @param motd   the new MOTD, or null to clear
+     * @return a future that completes when the row is updated
+     */
+    CompletableFuture<Void> updateMotd(UUID clanId, String motd);
+
+    /**
      * Inserts a member row.
      *
      * @param model the member to insert

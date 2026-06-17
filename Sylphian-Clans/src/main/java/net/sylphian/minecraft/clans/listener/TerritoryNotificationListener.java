@@ -2,7 +2,9 @@ package net.sylphian.minecraft.clans.listener;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;
+import net.sylphian.minecraft.clans.model.Clan;
 import net.sylphian.minecraft.clans.service.ClanService;
 import net.sylphian.minecraft.clans.service.TerritoryService;
 import org.bukkit.entity.Player;
@@ -22,6 +24,8 @@ public class TerritoryNotificationListener implements Listener {
 
     private static final Title.Times TIMES = Title.Times.times(
             Duration.ofMillis(200), Duration.ofSeconds(2), Duration.ofMillis(500));
+
+    private static final MiniMessage MINI = MiniMessage.miniMessage();
 
     private final TerritoryService territoryService;
     private final ClanService clanService;
@@ -63,27 +67,30 @@ public class TerritoryNotificationListener implements Listener {
 
         clanService.getClanByPlayerCached(player.getUniqueId())
                 .filter(c -> c.clanId().equals(clanId))
-                .ifPresentOrElse(c -> showTitle(player, c.name(), player.getUniqueId(), clanId),
+                .ifPresentOrElse(c -> showTitle(player, c, player.getUniqueId(), clanId),
                         () -> clanService.getClanById(clanId).thenAccept(opt ->
                                 opt.ifPresent(c -> {
                                     boolean isOwn = c.members().stream()
                                             .anyMatch(m -> m.playerId().equals(player.getUniqueId()));
-                                    showTitle(player, c.name(), isOwn);
+                                    showTitle(player, c, isOwn);
                                 })));
     }
 
-    private void showTitle(Player player, String clanName, UUID playerUuid, UUID clanId) {
+    private void showTitle(Player player, Clan clan, UUID playerUuid, UUID clanId) {
         clanService.getClanByPlayerCached(playerUuid)
                 .ifPresentOrElse(
-                        c -> showTitle(player, clanName, c.clanId().equals(clanId)),
-                        () -> showTitle(player, clanName, false));
+                        c -> showTitle(player, clan, c.clanId().equals(clanId)),
+                        () -> showTitle(player, clan, false));
     }
 
-    private void showTitle(Player player, String clanName, boolean isOwn) {
+    private void showTitle(Player player, Clan clan, boolean isOwn) {
         NamedTextColor color = isOwn ? NamedTextColor.GREEN : NamedTextColor.RED;
+        Component subtitle = (clan.motd() != null && !clan.motd().isBlank())
+                ? MINI.deserialize(clan.motd())
+                : Component.empty();
         player.showTitle(Title.title(
-                Component.text(clanName + "'s Territory", color),
-                Component.empty(),
+                Component.text(clan.name(), color),
+                subtitle,
                 TIMES));
     }
 }

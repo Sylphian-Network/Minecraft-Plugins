@@ -51,7 +51,7 @@ public interface ClanDao {
      * @param serverId the server to look up the clan on
      * @return a row containing clan fields, or empty
      */
-    @SqlQuery("SELECT clan_id, server_id, name, created_at FROM clans WHERE clan_id = :clanId AND server_id = :serverId")
+    @SqlQuery("SELECT clan_id, server_id, name, motd, created_at FROM clans WHERE clan_id = :clanId AND server_id = :serverId")
     Optional<ClanRow> findClanById(@Bind("clanId") String clanId, @Bind("serverId") String serverId);
 
     /**
@@ -61,15 +61,25 @@ public interface ClanDao {
      * @param name     the clan name to search for
      * @return a row, or empty if no clan has that name on this server
      */
-    @SqlQuery("SELECT clan_id, server_id, name, created_at FROM clans WHERE server_id = :serverId AND name = :name")
+    @SqlQuery("SELECT clan_id, server_id, name, motd, created_at FROM clans WHERE server_id = :serverId AND name = :name")
     Optional<ClanRow> findClanByName(@Bind("serverId") String serverId, @Bind("name") String name);
 
     /**
      * @param serverId the server to list clans for
      * @return all clan rows for this server, ordered by name
      */
-    @SqlQuery("SELECT clan_id, server_id, name, created_at FROM clans WHERE server_id = :serverId ORDER BY name")
+    @SqlQuery("SELECT clan_id, server_id, name, motd, created_at FROM clans WHERE server_id = :serverId ORDER BY name")
     List<ClanRow> findAllClans(@Bind("serverId") String serverId);
+
+    /**
+     * Sets (or clears, when {@code motd} is null) the message of the day for a clan.
+     *
+     * @param clanId   the clan's UUID as a string
+     * @param serverId the server this clan belongs to
+     * @param motd     the new MOTD, or null to clear
+     */
+    @SqlUpdate("UPDATE clans SET motd = :motd WHERE clan_id = :clanId AND server_id = :serverId")
+    void updateMotd(@Bind("clanId") String clanId, @Bind("serverId") String serverId, @Bind("motd") String motd);
 
     /**
      * Inserts a new member row.
@@ -159,7 +169,7 @@ public interface ClanDao {
     List<String> findPermissionsForPlayer(@Bind("playerUuid") String playerUuid, @Bind("serverId") String serverId);
 
     /** Raw row from the {@code clans} table. */
-    record ClanRow(String clanId, String serverId, String name, long createdAt) {}
+    record ClanRow(String clanId, String serverId, String name, String motd, long createdAt) {}
 
     /** Raw row from the {@code clan_members} table. */
     record MemberRow(String playerUuid, String serverId, String clanId, boolean isLeader, long joinedAt) {}

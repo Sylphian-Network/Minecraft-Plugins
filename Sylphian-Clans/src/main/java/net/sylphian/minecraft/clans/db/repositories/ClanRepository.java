@@ -77,6 +77,13 @@ public class ClanRepository implements IClanRepository {
     }
 
     @Override
+    public CompletableFuture<Void> updateMotd(UUID clanId, String motd) {
+        return CompletableFuture.runAsync(() ->
+                jdbi.useExtension(ClanDao.class, dao ->
+                        dao.updateMotd(clanId.toString(), serverId, motd)), executor);
+    }
+
+    @Override
     public CompletableFuture<Void> insertMember(ClanMemberModel model) {
         return CompletableFuture.runAsync(() ->
                 jdbi.useExtension(ClanDao.class, dao ->
@@ -156,6 +163,7 @@ public class ClanRepository implements IClanRepository {
         return new ClanModel(
                 UUID.fromString(row.clanId()),
                 row.name(),
+                row.motd(),
                 row.createdAt()
         );
     }

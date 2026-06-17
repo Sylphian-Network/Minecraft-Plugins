@@ -15,12 +15,14 @@ import java.util.UUID;
  * @param clanId    the clan's unique identifier
  * @param name      the clan's display name (unique across all clans)
  * @param members   all current members, including the leader
+ * @param motd      message of the day, or null if none is set
  * @param createdAt when the clan was founded
  */
 public record Clan(
         UUID clanId,
         String name,
         List<ClanMember> members,
+        String motd,
         Instant createdAt
 ) {
 

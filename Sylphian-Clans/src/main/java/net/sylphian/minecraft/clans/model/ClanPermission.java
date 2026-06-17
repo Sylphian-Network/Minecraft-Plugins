@@ -72,7 +72,12 @@ public enum ClanPermission {
     /** Can set the clan's home location. */
     SET_HOME,
     /** Can grant or revoke {@link #SET_HOME} on other members. */
-    GRANT_SET_HOME;
+    GRANT_SET_HOME,
+
+    /** Can set the clan's message of the day. */
+    SET_MOTD,
+    /** Can grant or revoke {@link #SET_MOTD} on other members. */
+    GRANT_SET_MOTD;
 
     /**
      * @return {@code true} if this is a {@code GRANT_*} permission

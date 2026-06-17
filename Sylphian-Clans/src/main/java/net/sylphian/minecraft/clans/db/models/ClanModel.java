@@ -7,10 +7,12 @@ import java.util.UUID;
  *
  * @param clanId    the clan's UUID
  * @param name      the clan's display name
+ * @param motd      the clan's message of the day, or null if none is set
  * @param createdAt epoch-second timestamp of when the clan was created
  */
 public record ClanModel(
         UUID clanId,
         String name,
+        String motd,
         long createdAt
 ) {}

@@ -90,6 +90,7 @@ public class ClanCommand implements BasicCommand {
             case "sethome"    -> handleSetHome(player);
             case "home"       -> handleHome(player);
             case "delhome"    -> handleDelHome(player);
+            case "motd"       -> handleMotd(player, args);
             default           -> sendUsage(player);
         }
     }
@@ -521,6 +522,9 @@ public class ClanCommand implements BasicCommand {
 
     private void printClanInfo(Player player, Clan clan) {
         player.sendMessage(MINI.deserialize("<yellow>--- <white>" + clan.name() + " <yellow>---"));
+        if (clan.motd() != null && !clan.motd().isBlank()) {
+            player.sendMessage(MINI.deserialize("<gray>MOTD: <reset>" + clan.motd()));
+        }
         player.sendMessage(MINI.deserialize("<gray>Founded: <white>" + DATE_FMT.format(clan.createdAt())));
         player.sendMessage(MINI.deserialize("<gray>Members: <white>" + clan.members().size()));
         clan.members().forEach(m -> {
@@ -582,6 +586,7 @@ public class ClanCommand implements BasicCommand {
                     options.add("sethome");
                     options.add("delhome");
                 }
+                if (clan.hasPermission(uuid, ClanPermission.SET_MOTD)) options.add("motd");
                 if (canManagePermissions(clan, uuid)) options.add("permission");
 
                 if (leader) {
@@ -604,6 +609,7 @@ public class ClanCommand implements BasicCommand {
                         .map(PendingInvite::clanName).toList();
             }
             case "unclaim" -> args.length == 2 ? List.of("all") : List.of();
+            case "motd" -> args.length == 2 ? List.of("clear") : List.of();
             case "permission" -> {
                 if (args.length == 2) yield onlinePlayers(args[1]);
                 if (args.length == 3) yield List.of("grant", "revoke", "list");
@@ -661,6 +667,34 @@ public class ClanCommand implements BasicCommand {
         return Arrays.stream(ClanPermission.values())
                 .filter(p -> p.name().startsWith("GRANT_"))
                 .anyMatch(p -> clan.hasPermission(uuid, p));
+    }
+
+    private void handleMotd(Player player, String[] args) {
+        Clan clan = requirePermission(player, ClanPermission.SET_MOTD);
+        if (clan == null) return;
+
+        if (args.length < 2) {
+            player.sendMessage(MINI.deserialize("<red>Usage: /clan motd <message>  ·  /clan motd clear"));
+            return;
+        }
+
+        String raw = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+
+        if (raw.equalsIgnoreCase("clear")) {
+            clanService.setMotd(clan.clanId(), null)
+                    .thenRun(() -> player.sendMessage(MINI.deserialize("<yellow>Clan MOTD cleared.")))
+                    .exceptionally(ex -> { player.sendMessage(Component.text(rootCause(ex), NamedTextColor.RED)); return null; });
+            return;
+        }
+
+        if (raw.length() > 256) {
+            player.sendMessage(Component.text("MOTD is too long (max 256 characters).", NamedTextColor.RED));
+            return;
+        }
+
+        clanService.setMotd(clan.clanId(), raw)
+                .thenRun(() -> player.sendMessage(MINI.deserialize("<yellow>Clan MOTD updated. Use <white>/clan info</white> to view it.")))
+                .exceptionally(ex -> { player.sendMessage(Component.text(rootCause(ex), NamedTextColor.RED)); return null; });
     }
 
     private void handleSetHome(Player player) {
