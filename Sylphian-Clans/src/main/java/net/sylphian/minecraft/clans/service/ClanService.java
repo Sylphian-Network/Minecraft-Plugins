@@ -285,6 +285,16 @@ public class ClanService implements ClanAPI {
     }
 
     /**
+     * Evicts a player's cached clan snapshot. Called when the player disconnects so the
+     * cache stays bounded by online players. No-op if the player is not cached.
+     *
+     * @param playerUuid the disconnecting player's UUID
+     */
+    public void releaseCacheForPlayer(UUID playerUuid) {
+        clanCache.invalidate(playerUuid);
+    }
+
+    /**
      * Builds a full {@link Clan} snapshot by loading the clan row, all member rows,
      * and each member's permission rows from the database.
      *
