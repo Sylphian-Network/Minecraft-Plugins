@@ -544,8 +544,56 @@ public class ClanCommand implements BasicCommand {
     @Override
     public @NonNull Collection<String> suggest(@NonNull CommandSourceStack source, @NonNull String[] args) {
         if (args.length <= 1) {
-            return List.of("create", "disband", "invite", "accept", "decline", "invites",
-                    "leave", "kick", "transfer", "permission", "claim", "unclaim", "map", "info", "list");
+            if (!(source.getSender() instanceof Player player)) {
+                return List.of();
+            }
+            String prefix = args.length == 1 ? args[0].toLowerCase() : "";
+            UUID uuid = player.getUniqueId();
+
+            Optional<Clan> clanOpt = clanCache.get(uuid);
+            boolean inClan = clanOpt.isPresent();
+            Clan clan = clanOpt.orElse(null);
+            boolean leader = inClan && clan.leaderId().map(uuid::equals).orElse(false);
+            boolean multiMember = inClan && clan.members().size() > 1;
+            boolean hasInvites = !inviteService.getPendingInvites(uuid).isEmpty();
+
+            List<String> options = new ArrayList<>();
+
+            options.add("list");
+            options.add("info");
+            options.add("map");
+
+            if (!inClan) {
+                options.add("create");
+                if (hasInvites) {
+                    options.add("invites");
+                    options.add("accept");
+                    options.add("decline");
+                }
+            } else {
+                options.add("home");
+                if (!leader) options.add("leave");
+
+                if (clan.hasPermission(uuid, ClanPermission.INVITE_MEMBERS))            options.add("invite");
+                if (multiMember && clan.hasPermission(uuid, ClanPermission.KICK_MEMBERS)) options.add("kick");
+                if (clan.hasPermission(uuid, ClanPermission.CLAIM_TERRITORY))           options.add("claim");
+                if (clan.hasPermission(uuid, ClanPermission.UNCLAIM_TERRITORY))         options.add("unclaim");
+                if (clan.hasPermission(uuid, ClanPermission.SET_HOME)) {
+                    options.add("sethome");
+                    options.add("delhome");
+                }
+                if (canManagePermissions(clan, uuid)) options.add("permission");
+
+                if (leader) {
+                    if (multiMember) options.add("transfer");
+                    options.add("disband");
+                }
+            }
+
+            return options.stream()
+                    .filter(o -> o.startsWith(prefix))
+                    .sorted()
+                    .toList();
         }
 
         return switch (args[0].toLowerCase()) {
@@ -603,6 +651,16 @@ public class ClanCommand implements BasicCommand {
             return null;
         }
         return clan;
+    }
+
+    /**
+     * @return true if the player can manage clan permissions (holds any {@code GRANT_*}
+     * permission). The LEADER passes every permission check, so this covers leaders too.
+     */
+    private boolean canManagePermissions(Clan clan, UUID uuid) {
+        return Arrays.stream(ClanPermission.values())
+                .filter(p -> p.name().startsWith("GRANT_"))
+                .anyMatch(p -> clan.hasPermission(uuid, p));
     }
 
     private void handleSetHome(Player player) {
@@ -693,9 +751,9 @@ public class ClanCommand implements BasicCommand {
                 /clan kick <player>
                 /clan transfer <player>
                 /clan permission <player> grant|revoke|list [perm]
-                /clan claim
+                /clan claim [radius]
                 /clan unclaim [all]
-                /clan map [radius]
+                /clan map
                 /clan sethome
                 /clan home
                 /clan delhome
