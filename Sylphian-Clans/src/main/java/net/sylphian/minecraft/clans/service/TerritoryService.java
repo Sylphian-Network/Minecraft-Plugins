@@ -51,6 +51,13 @@ public class TerritoryService {
     }
 
     /**
+     * @return the maximum number of chunks a single clan may own
+     */
+    public int getMaxClaimsPerClan() {
+        return maxClaimsPerClan;
+    }
+
+    /**
      * Claims a chunk on behalf of a clan.
      *
      * <p>Fails silently (returned future completes exceptionally) if the chunk is
