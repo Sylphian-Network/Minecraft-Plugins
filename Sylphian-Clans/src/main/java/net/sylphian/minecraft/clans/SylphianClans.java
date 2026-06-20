@@ -1,6 +1,5 @@
 package net.sylphian.minecraft.clans;
 
-import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.sylphian.minecraft.clans.api.ClanProvider;
 import net.sylphian.minecraft.clans.cache.ClanCache;
 import net.sylphian.minecraft.clans.cache.TerritoryCache;
@@ -91,11 +90,10 @@ public final class SylphianClans extends JavaPlugin {
         getServer().getPluginManager().registerEvents(warmupManager, this);
 
         ClanCommand clanCommand = new ClanCommand(clanService, inviteService, territoryService, clanCache, warmupManager);
+        clanCommand.register();
+
         ClanAdminCommand adminCommand = new ClanAdminCommand(clanService, territoryService);
-        getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
-            event.registrar().register("clan", "Manage your clan.", clanCommand);
-            event.registrar().register("sylphian-clans", "Administrative clan commands.", adminCommand);
-        });
+        adminCommand.register();
 
         getLogger().info("Sylphian-Clans initialised.");
     }
