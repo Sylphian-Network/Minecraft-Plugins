@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.clans.cache.ClanCache;
+import net.sylphian.minecraft.clans.gui.ClanPermissionMenu;
 import net.sylphian.minecraft.clans.model.Clan;
 import net.sylphian.minecraft.clans.model.ClanPermission;
 import net.sylphian.minecraft.clans.service.ClanHomeWarmupManager;
@@ -25,7 +26,7 @@ import java.util.UUID;
  */
 public record ClanCommandContext(ClanService clanService, ClanInviteService inviteService,
                                  TerritoryService territoryService, ClanCache clanCache,
-                                 ClanHomeWarmupManager warmupManager) {
+                                 ClanHomeWarmupManager warmupManager, ClanPermissionMenu permissionMenu) {
 
     /**
      * Shared MiniMessage serializer for authoring player-facing text.
@@ -43,6 +44,7 @@ public record ClanCommandContext(ClanService clanService, ClanInviteService invi
      * @param territoryService the territory claiming service
      * @param clanCache        the in-memory membership cache
      * @param warmupManager    manages pending home teleport warmups
+     * @param permissionMenu   the member permission editing GUI
      */
     public ClanCommandContext {
     }

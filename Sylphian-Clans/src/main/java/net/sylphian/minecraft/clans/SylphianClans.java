@@ -14,7 +14,9 @@ import net.sylphian.minecraft.clans.db.migrations.Migration006CreateClanHomes;
 import net.sylphian.minecraft.clans.db.repositories.ClanHomeRepository;
 import net.sylphian.minecraft.clans.db.repositories.ClanRepository;
 import net.sylphian.minecraft.clans.db.repositories.ClaimRepository;
+import net.sylphian.minecraft.clans.gui.ClanPermissionMenu;
 import net.sylphian.minecraft.clans.listener.ClanListener;
+import net.sylphian.minecraft.clans.listener.ClanPermissionListener;
 import net.sylphian.minecraft.clans.listener.TerritoryNotificationListener;
 import net.sylphian.minecraft.clans.listener.TerritoryProtectionListener;
 import net.sylphian.minecraft.clans.model.ClanPermission;
@@ -83,13 +85,15 @@ public final class SylphianClans extends JavaPlugin {
         });
 
         ClanHomeWarmupManager warmupManager = new ClanHomeWarmupManager(this, homeWarmup);
+        ClanPermissionMenu permissionMenu = new ClanPermissionMenu(clanService, clanCache, this);
 
         getServer().getPluginManager().registerEvents(new ClanListener(clanService), this);
         getServer().getPluginManager().registerEvents(new TerritoryProtectionListener(territoryService, clanCache), this);
         getServer().getPluginManager().registerEvents(new TerritoryNotificationListener(territoryService, clanService), this);
+        getServer().getPluginManager().registerEvents(new ClanPermissionListener(), this);
         getServer().getPluginManager().registerEvents(warmupManager, this);
 
-        ClanCommand clanCommand = new ClanCommand(clanService, inviteService, territoryService, clanCache, warmupManager);
+        ClanCommand clanCommand = new ClanCommand(clanService, inviteService, territoryService, clanCache, warmupManager, permissionMenu);
         clanCommand.register();
 
         ClanAdminCommand adminCommand = new ClanAdminCommand(clanService, territoryService);

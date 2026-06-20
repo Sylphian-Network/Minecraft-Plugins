@@ -4,6 +4,7 @@ import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.executors.CommandArguments;
 import net.sylphian.minecraft.clans.cache.ClanCache;
 import net.sylphian.minecraft.clans.command.player.*;
+import net.sylphian.minecraft.clans.gui.ClanPermissionMenu;
 import net.sylphian.minecraft.clans.service.ClanHomeWarmupManager;
 import net.sylphian.minecraft.clans.service.ClanInviteService;
 import net.sylphian.minecraft.clans.service.ClanService;
@@ -30,11 +31,12 @@ public final class ClanCommand {
      * @param territoryService the territory claiming service
      * @param clanCache        the in-memory membership cache
      * @param warmupManager    manages pending home teleport warmups
+     * @param permissionMenu   the member permission editing GUI
      */
     public ClanCommand(ClanService clanService, ClanInviteService inviteService,
                        TerritoryService territoryService, ClanCache clanCache,
-                       ClanHomeWarmupManager warmupManager) {
-        this.ctx = new ClanCommandContext(clanService, inviteService, territoryService, clanCache, warmupManager);
+                       ClanHomeWarmupManager warmupManager, ClanPermissionMenu permissionMenu) {
+        this.ctx = new ClanCommandContext(clanService, inviteService, territoryService, clanCache, warmupManager, permissionMenu);
         this.subCommands = List.of(
                 new CreateSubCommand(ctx),
                 new DisbandSubCommand(ctx),

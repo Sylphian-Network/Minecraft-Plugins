@@ -39,8 +39,10 @@ public final class PermissionSubCommand implements SubCommand {
 
         return new LiteralArgument("permission")
                 .executesPlayer((Player player, CommandArguments _) ->
-                        player.sendMessage(MINI.deserialize("<red>Usage: /clan permission <player> grant|revoke|list <permission>")))
+                        player.sendMessage(MINI.deserialize("<red>Usage: /clan permission <player> <gray>(opens the editor)<red>, or /clan permission <player> grant|revoke|list <permission>")))
                 .then(new EntitySelectorArgument.OnePlayer("player")
+                        .executesPlayer((Player player, CommandArguments args) ->
+                                openGui(player, (Player) args.get("player")))
                         .then(new LiteralArgument("list")
                                 .executesPlayer((Player player, CommandArguments args) ->
                                         list(player, (Player) args.get("player"))))
@@ -52,6 +54,15 @@ public final class PermissionSubCommand implements SubCommand {
                                 .then(new StringArgument("permission").replaceSuggestions(permSuggestions)
                                         .executesPlayer((Player player, CommandArguments args) ->
                                                 revoke(player, (Player) args.get("player"), (String) args.get("permission"))))));
+    }
+
+    /** Opens the permission editing GUI for the target, if they are in the actor's clan. */
+    private void openGui(Player actor, Player target) {
+        Clan clan = resolveClan(actor, target);
+        if (clan == null) {
+            return;
+        }
+        ctx.permissionMenu().open(actor, target.getUniqueId());
     }
 
     /** Resolves the actor's clan and verifies the target is a member, or messages and returns {@code null}. */
