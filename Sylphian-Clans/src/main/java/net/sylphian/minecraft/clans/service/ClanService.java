@@ -247,7 +247,7 @@ public class ClanService implements ClanAPI {
      * @throws IllegalArgumentException if the requester lacks authority
      */
     public CompletableFuture<Void> grantPermission(UUID requesterId, UUID targetId, ClanPermission permission) {
-        return validatePermissionAuthority(requesterId, permission).thenCompose(clan ->
+        return validatePermissionAuthority(requesterId, targetId, permission).thenCompose(clan ->
                 clanRepository.insertPermission(targetId, permission)
                         .thenCompose(v -> buildClan(clan.clanId()))
                         .thenAccept(updated -> { if (updated != null) clanCache.put(updated); })
@@ -265,7 +265,7 @@ public class ClanService implements ClanAPI {
      * @throws IllegalArgumentException if the requester lacks authority
      */
     public CompletableFuture<Void> revokePermission(UUID requesterId, UUID targetId, ClanPermission permission) {
-        return validatePermissionAuthority(requesterId, permission).thenCompose(clan ->
+        return validatePermissionAuthority(requesterId, targetId, permission).thenCompose(clan ->
                 clanRepository.deletePermission(targetId, permission)
                         .thenCompose(v -> buildClan(clan.clanId()))
                         .thenAccept(updated -> { if (updated != null) clanCache.put(updated); })
@@ -339,16 +339,22 @@ public class ClanService implements ClanAPI {
      * {@code permission}, and returns their clan.
      *
      * @param requesterId the requesting player
+     * @param targetId    the player whose permissions are being changed
      * @param permission  the permission being assigned or revoked
      * @return a future of the requester's clan
-     * @throws IllegalArgumentException if the requester lacks authority or is not in a clan
+     * @throws IllegalArgumentException if the requester lacks authority, is not in a clan, or the target is the LEADER
      */
-    private CompletableFuture<Clan> validatePermissionAuthority(UUID requesterId, ClanPermission permission) {
+    private CompletableFuture<Clan> validatePermissionAuthority(UUID requesterId, UUID targetId, ClanPermission permission) {
         return getClanByPlayer(requesterId).thenApply(clanOpt -> {
             if (clanOpt.isEmpty()) {
                 throw new IllegalArgumentException("You are not in a clan.");
             }
             Clan clan = clanOpt.get();
+
+            // The LEADER bypasses all permission checks, so their permission set must never be modified.
+            if (clan.leaderId().map(targetId::equals).orElse(false)) {
+                throw new IllegalArgumentException("The clan leader already has all permissions.");
+            }
             ClanPermission required = permission.isGrant()
                     ? null  // only LEADER may assign GRANT_* permissions
                     : permission.asGrant();
