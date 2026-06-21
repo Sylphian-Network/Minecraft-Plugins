@@ -8,6 +8,7 @@ import net.sylphian.minecraft.clans.model.ClanPermission;
 import net.sylphian.minecraft.clans.service.TerritoryService;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -21,6 +22,7 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -212,6 +214,17 @@ public class TerritoryProtectionListener implements Listener {
         return entity instanceof Animals || entity instanceof WaterMob || entity instanceof Ambient;
     }
 
+    private static final Set<Material> CONTAINERS = Set.of(
+            Material.CHEST, Material.TRAPPED_CHEST, Material.BARREL, Material.HOPPER,
+            Material.DROPPER, Material.DISPENSER, Material.FURNACE, Material.BLAST_FURNACE,
+            Material.SMOKER, Material.BREWING_STAND, Material.ANVIL, Material.CHIPPED_ANVIL,
+            Material.DAMAGED_ANVIL);
+
+    private static final Set<Material> INTERACTABLES = Set.of(
+            Material.LEVER, Material.CRAFTING_TABLE, Material.ENCHANTING_TABLE, Material.BEACON,
+            Material.LOOM, Material.CARTOGRAPHY_TABLE, Material.GRINDSTONE, Material.STONECUTTER,
+            Material.FLETCHING_TABLE, Material.SMITHING_TABLE);
+
     /**
      * Maps an interacted block type to the permission required to interact with it.
      * Returns {@code null} if the block type requires no protection.
@@ -220,33 +233,10 @@ public class TerritoryProtectionListener implements Listener {
      * @return the required permission, or {@code null} if unprotected
      */
     private ClanPermission resolveInteractPermission(Material type) {
-        String name = type.name();
-
-        if (isContainer(name)) return ClanPermission.OPEN_CONTAINERS;
-        if (isDoor(name))      return ClanPermission.USE_DOORS;
-        if (isInteractable(name)) return ClanPermission.INTERACT;
-
+        if (Tag.SHULKER_BOXES.isTagged(type) || CONTAINERS.contains(type)) return ClanPermission.OPEN_CONTAINERS;
+        if (Tag.DOORS.isTagged(type) || Tag.TRAPDOORS.isTagged(type) || Tag.FENCE_GATES.isTagged(type)) return ClanPermission.USE_DOORS;
+        if (Tag.BUTTONS.isTagged(type) || INTERACTABLES.contains(type)
+                || type == Material.COMPARATOR || type == Material.REPEATER) return ClanPermission.INTERACT;
         return null;
-    }
-
-    private boolean isContainer(String name) {
-        return name.contains("CHEST") || name.equals("BARREL") || name.equals("SHULKER_BOX")
-                || name.contains("SHULKER_BOX") || name.equals("HOPPER") || name.equals("DROPPER")
-                || name.equals("DISPENSER") || name.equals("FURNACE") || name.equals("BLAST_FURNACE")
-                || name.equals("SMOKER") || name.equals("BREWING_STAND") || name.equals("ANVIL")
-                || name.equals("CHIPPED_ANVIL") || name.equals("DAMAGED_ANVIL");
-    }
-
-    private boolean isDoor(String name) {
-        return name.contains("DOOR") || name.contains("GATE") || name.contains("TRAPDOOR");
-    }
-
-    private boolean isInteractable(String name) {
-        return name.equals("LEVER") || name.contains("BUTTON") || name.equals("CRAFTING_TABLE")
-                || name.equals("ENCHANTING_TABLE") || name.equals("BEACON")
-                || name.equals("LOOM") || name.equals("CARTOGRAPHY_TABLE")
-                || name.equals("GRINDSTONE") || name.equals("STONECUTTER")
-                || name.equals("FLETCHING_TABLE") || name.equals("SMITHING_TABLE")
-                || name.contains("COMPARATOR") || name.contains("REPEATER");
     }
 }
