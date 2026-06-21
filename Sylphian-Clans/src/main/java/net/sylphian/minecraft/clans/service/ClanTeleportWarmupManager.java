@@ -3,6 +3,7 @@ package net.sylphian.minecraft.clans.service;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -134,7 +135,10 @@ public class ClanTeleportWarmupManager implements Listener {
     private void updateActionBar(Player player, String label, int seconds) {
         String unit = seconds == 1 ? "second" : "seconds";
         player.sendActionBar(MINI.deserialize(
-                "<yellow>Teleporting to <white>" + label + " <yellow>in <white>" + seconds + " " + unit + "<yellow>..."));
+                "<yellow>Teleporting to <white><location></white> <yellow>in <white><time> <unit></white><yellow>...",
+                Placeholder.unparsed("location", label),
+                Placeholder.unparsed("time", String.valueOf(seconds)),
+                Placeholder.unparsed("unit", unit)));
     }
 
     /** Cancels all pending warmups. Call from the plugin's onDisable. */
