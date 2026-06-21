@@ -5,9 +5,11 @@ import dev.jorel.commandapi.executors.CommandArguments;
 import net.sylphian.minecraft.clans.cache.ClanCache;
 import net.sylphian.minecraft.clans.command.player.*;
 import net.sylphian.minecraft.clans.gui.ClanPermissionMenu;
-import net.sylphian.minecraft.clans.service.ClanHomeWarmupManager;
+import net.sylphian.minecraft.clans.gui.ClanWarpMenu;
+import net.sylphian.minecraft.clans.service.ClanTeleportWarmupManager;
 import net.sylphian.minecraft.clans.service.ClanInviteService;
 import net.sylphian.minecraft.clans.service.ClanService;
+import net.sylphian.minecraft.clans.service.ClanWarpService;
 import net.sylphian.minecraft.clans.service.TerritoryService;
 import org.bukkit.entity.Player;
 
@@ -30,13 +32,17 @@ public final class ClanCommand {
      * @param inviteService    the in-memory invite store
      * @param territoryService the territory claiming service
      * @param clanCache        the in-memory membership cache
-     * @param warmupManager    manages pending home teleport warmups
+     * @param warmupManager    manages pending teleport warmups
      * @param permissionMenu   the member permission editing GUI
+     * @param warpService      the clan warp business logic service
+     * @param warpMenu         the clan warp list GUI
      */
     public ClanCommand(ClanService clanService, ClanInviteService inviteService,
                        TerritoryService territoryService, ClanCache clanCache,
-                       ClanHomeWarmupManager warmupManager, ClanPermissionMenu permissionMenu) {
-        this.ctx = new ClanCommandContext(clanService, inviteService, territoryService, clanCache, warmupManager, permissionMenu);
+                       ClanTeleportWarmupManager warmupManager, ClanPermissionMenu permissionMenu,
+                       ClanWarpService warpService, ClanWarpMenu warpMenu) {
+        this.ctx = new ClanCommandContext(clanService, inviteService, territoryService, clanCache,
+                warmupManager, permissionMenu, warpService, warpMenu);
         this.subCommands = List.of(
                 new CreateSubCommand(ctx),
                 new DisbandSubCommand(ctx),
@@ -53,9 +59,7 @@ public final class ClanCommand {
                 new MapSubCommand(ctx),
                 new InfoSubCommand(ctx),
                 new ListSubCommand(ctx),
-                new SetHomeSubCommand(ctx),
-                new HomeSubCommand(ctx),
-                new DelHomeSubCommand(ctx),
+                new WarpSubCommand(ctx),
                 new MotdSubCommand(ctx));
     }
 
@@ -90,9 +94,11 @@ public final class ClanCommand {
                 /clan claim [radius]
                 /clan unclaim [all]
                 /clan map
-                /clan sethome
-                /clan home
-                /clan delhome
+                /clan warp
+                /clan warp set <name> <item> [description]
+                /clan warp remove <name>
+                /clan warp access <name> <player>
+                /clan warp restrict <name>
                 /clan info [clan]
                 /clan list"""));
     }

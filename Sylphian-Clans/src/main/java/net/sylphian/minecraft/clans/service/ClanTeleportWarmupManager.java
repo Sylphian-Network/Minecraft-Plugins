@@ -17,13 +17,13 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Manages pending clan home teleport warmups.
+ * Manages pending clan teleport warmups (used by warps).
  *
- * <p>A warmup shows a live action-bar countdown. Any block-level movement
- * cancels it immediately via {@link PlayerMoveEvent}. Disconnecting also
- * cancels the warmup to prevent task leaks.</p>
+ * <p>A warmup shows a live action-bar countdown labelled with the destination.
+ * Any block-level movement cancels it immediately via {@link PlayerMoveEvent}.
+ * Disconnecting also cancels the warmup to prevent task leaks.</p>
  */
-public class ClanHomeWarmupManager implements Listener {
+public class ClanTeleportWarmupManager implements Listener {
 
     private static final MiniMessage MINI = MiniMessage.miniMessage();
 
@@ -37,7 +37,7 @@ public class ClanHomeWarmupManager implements Listener {
      * @param warmupSeconds how long the player must stand still before teleporting;
      *                      zero or negative means teleport instantly
      */
-    public ClanHomeWarmupManager(JavaPlugin plugin, int warmupSeconds) {
+    public ClanTeleportWarmupManager(JavaPlugin plugin, int warmupSeconds) {
         this.plugin = plugin;
         this.warmupSeconds = warmupSeconds;
     }
@@ -48,22 +48,20 @@ public class ClanHomeWarmupManager implements Listener {
      *
      * @param player the player requesting the teleport
      * @param dest   the destination location
+     * @param label  a short destination label shown in the countdown (e.g. the warp name)
      */
-    public void start(Player player, Location dest) {
+    public void start(Player player, Location dest, String label) {
         cancel(player.getUniqueId());
 
         if (warmupSeconds <= 0) {
-            player.teleportAsync(dest).thenAccept(success -> {
-                if (success) player.sendMessage(MINI.deserialize("<green>Teleported to clan home."));
-                else         player.sendMessage(Component.text("Teleport failed.", NamedTextColor.RED));
-            });
+            teleport(player, dest, label);
             return;
         }
 
         UUID uuid = player.getUniqueId();
         int[] remaining = {warmupSeconds};
 
-        updateActionBar(player, remaining[0]);
+        updateActionBar(player, label, remaining[0]);
 
         BukkitTask task = plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
             remaining[0]--;
@@ -71,12 +69,9 @@ public class ClanHomeWarmupManager implements Listener {
                 BukkitTask self = pending.remove(uuid);
                 if (self != null) self.cancel();
                 player.sendActionBar(Component.empty());
-                player.teleportAsync(dest).thenAccept(success -> {
-                    if (success) player.sendMessage(MINI.deserialize("<green>Teleported to clan home."));
-                    else         player.sendMessage(Component.text("Teleport failed.", NamedTextColor.RED));
-                });
+                teleport(player, dest, label);
             } else {
-                updateActionBar(player, remaining[0]);
+                updateActionBar(player, label, remaining[0]);
             }
         }, 20L, 20L);
 
@@ -120,9 +115,16 @@ public class ClanHomeWarmupManager implements Listener {
         cancel(event.getPlayer().getUniqueId());
     }
 
-    private void updateActionBar(Player player, int seconds) {
+    private void teleport(Player player, Location dest, String label) {
+        player.teleportAsync(dest).thenAccept(success -> {
+            if (success) player.sendMessage(MINI.deserialize("<green>Teleported to <white>" + label + "<green>."));
+            else         player.sendMessage(Component.text("Teleport failed.", NamedTextColor.RED));
+        });
+    }
+
+    private void updateActionBar(Player player, String label, int seconds) {
         String unit = seconds == 1 ? "second" : "seconds";
         player.sendActionBar(MINI.deserialize(
-                "<yellow>Teleporting home in <white>" + seconds + " " + unit + "<yellow>..."));
+                "<yellow>Teleporting to <white>" + label + " <yellow>in <white>" + seconds + " " + unit + "<yellow>..."));
     }
 }

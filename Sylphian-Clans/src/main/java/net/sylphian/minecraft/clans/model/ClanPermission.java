@@ -69,10 +69,10 @@ public enum ClanPermission {
     /** Can grant or revoke {@link #UNCLAIM_TERRITORY} on other members. */
     GRANT_UNCLAIM_TERRITORY,
 
-    /** Can set the clan's home location. */
-    SET_HOME,
-    /** Can grant or revoke {@link #SET_HOME} on other members. */
-    GRANT_SET_HOME,
+    /** Can create, remove, restrict, and manage access for the clan's warps. */
+    MANAGE_WARP,
+    /** Can grant or revoke {@link #MANAGE_WARP} on other members. */
+    GRANT_MANAGE_WARP,
 
     /** Can set the clan's message of the day. */
     SET_MOTD,

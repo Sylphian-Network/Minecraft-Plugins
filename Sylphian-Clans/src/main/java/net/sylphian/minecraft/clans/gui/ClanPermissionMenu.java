@@ -66,7 +66,7 @@ public final class ClanPermissionMenu {
             new Entry(ClanPermission.KICK_MEMBERS, Material.IRON_BOOTS, "Kick Members", "Kick members from the clan."),
             new Entry(ClanPermission.CLAIM_TERRITORY, Material.FILLED_MAP, "Claim Territory", "Claim chunks for the clan."),
             new Entry(ClanPermission.UNCLAIM_TERRITORY, Material.MAP, "Unclaim Territory", "Unclaim the clan's chunks."),
-            new Entry(ClanPermission.SET_HOME, Material.RED_BED, "Set Home", "Set the clan's home location."),
+            new Entry(ClanPermission.MANAGE_WARP, Material.ENDER_PEARL, "Manage Warps", "Create, remove, and manage clan warps."),
             new Entry(ClanPermission.SET_MOTD, Material.OAK_SIGN, "Set MOTD", "Set the clan's message of the day.")
     );
 

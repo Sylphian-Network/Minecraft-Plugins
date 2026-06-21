@@ -2,14 +2,11 @@ package net.sylphian.minecraft.clans.service;
 
 import net.sylphian.minecraft.clans.api.ClanAPI;
 import net.sylphian.minecraft.clans.cache.ClanCache;
-import net.sylphian.minecraft.clans.db.api.IClanHomeRepository;
 import net.sylphian.minecraft.clans.db.api.IClanRepository;
-import net.sylphian.minecraft.clans.db.models.ClanHomeModel;
 import net.sylphian.minecraft.clans.db.models.ClanMemberModel;
 import net.sylphian.minecraft.clans.db.models.ClanModel;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.Location;
 import net.sylphian.minecraft.clans.event.*;
 import net.sylphian.minecraft.clans.model.*;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,7 +24,6 @@ public class ClanService implements ClanAPI {
     private static final MiniMessage MOTD_MINI = MiniMessage.miniMessage();
 
     private final IClanRepository clanRepository;
-    private final IClanHomeRepository homeRepository;
     private final TerritoryService territoryService;
     private final ClanCache clanCache;
     private final JavaPlugin plugin;
@@ -35,17 +31,15 @@ public class ClanService implements ClanAPI {
 
     /**
      * @param clanRepository           persistence layer for clans and members
-     * @param homeRepository           persistence layer for clan home locations
      * @param territoryService         territory logic, used during disbandment
      * @param clanCache                in-memory membership cache
      * @param plugin                   the owning plugin, used for scheduler hops
      * @param defaultMemberPermissions permissions granted to a new member on join
      */
-    public ClanService(IClanRepository clanRepository, IClanHomeRepository homeRepository,
+    public ClanService(IClanRepository clanRepository,
                        TerritoryService territoryService, ClanCache clanCache,
                        JavaPlugin plugin, List<ClanPermission> defaultMemberPermissions) {
         this.clanRepository = clanRepository;
-        this.homeRepository = homeRepository;
         this.territoryService = territoryService;
         this.clanCache = clanCache;
         this.plugin = plugin;
@@ -385,46 +379,6 @@ public class ClanService implements ClanAPI {
             throw new IllegalArgumentException(
                     "Clan name must be 3–32 characters and contain only letters, digits, spaces, or hyphens.");
         }
-    }
-
-/**
-     * Sets or replaces the home location for a clan.
-     *
-     * @param clanId   the clan whose home to set
-     * @param location the new home location; must be in a loaded world
-     * @return a future that completes when the location is persisted
-     */
-    public CompletableFuture<Void> setHome(UUID clanId, Location location) {
-        ClanHomeModel model = new ClanHomeModel(
-                clanId,
-                location.getWorld().getName(),
-                location.getX(),
-                location.getY(),
-                location.getZ(),
-                location.getYaw(),
-                location.getPitch()
-        );
-        return homeRepository.setHome(model);
-    }
-
-    /**
-     * Returns the stored home location for a clan, if one has been set.
-     *
-     * @param clanId the clan to look up
-     * @return a future of the home model, or empty if no home is set
-     */
-    public CompletableFuture<Optional<ClanHomeModel>> getHome(UUID clanId) {
-        return homeRepository.getHome(clanId);
-    }
-
-    /**
-     * Removes the home for a clan. No-op if no home is set.
-     *
-     * @param clanId the clan whose home to remove
-     * @return a future that completes when the row is deleted
-     */
-    public CompletableFuture<Void> deleteHome(UUID clanId) {
-        return homeRepository.deleteHome(clanId);
     }
 
     /**

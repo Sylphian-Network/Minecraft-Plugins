@@ -5,11 +5,13 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.clans.cache.ClanCache;
 import net.sylphian.minecraft.clans.gui.ClanPermissionMenu;
+import net.sylphian.minecraft.clans.gui.ClanWarpMenu;
 import net.sylphian.minecraft.clans.model.Clan;
 import net.sylphian.minecraft.clans.model.ClanPermission;
-import net.sylphian.minecraft.clans.service.ClanHomeWarmupManager;
+import net.sylphian.minecraft.clans.service.ClanTeleportWarmupManager;
 import net.sylphian.minecraft.clans.service.ClanInviteService;
 import net.sylphian.minecraft.clans.service.ClanService;
+import net.sylphian.minecraft.clans.service.ClanWarpService;
 import net.sylphian.minecraft.clans.service.TerritoryService;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -26,7 +28,8 @@ import java.util.UUID;
  */
 public record ClanCommandContext(ClanService clanService, ClanInviteService inviteService,
                                  TerritoryService territoryService, ClanCache clanCache,
-                                 ClanHomeWarmupManager warmupManager, ClanPermissionMenu permissionMenu) {
+                                 ClanTeleportWarmupManager warmupManager, ClanPermissionMenu permissionMenu,
+                                 ClanWarpService warpService, ClanWarpMenu warpMenu) {
 
     /**
      * Shared MiniMessage serializer for authoring player-facing text.
@@ -43,8 +46,10 @@ public record ClanCommandContext(ClanService clanService, ClanInviteService invi
      * @param inviteService    the in-memory invite store
      * @param territoryService the territory claiming service
      * @param clanCache        the in-memory membership cache
-     * @param warmupManager    manages pending home teleport warmups
+     * @param warmupManager    manages pending teleport warmups
      * @param permissionMenu   the member permission editing GUI
+     * @param warpService      the clan warp business logic service
+     * @param warpMenu         the clan warp list GUI
      */
     public ClanCommandContext {
     }
