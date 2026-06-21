@@ -2,6 +2,8 @@ package net.sylphian.minecraft.clans.db.dao;
 
 import org.jdbi.v3.sqlobject.config.RegisterConstructorMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
+import org.jdbi.v3.sqlobject.customizer.BindMethods;
+import org.jdbi.v3.sqlobject.statement.SqlBatch;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
@@ -33,6 +35,17 @@ public interface ClaimDao {
             @Bind("clanId") String clanId,
             @Bind("claimedAt") long claimedAt
     );
+
+    /**
+     * Inserts many claims in a single batched statement. Each {@link ClaimInsert} row
+     * supplies its own column values (already converted to DB-native types); {@code serverId}
+     * is held constant across the batch.
+     *
+     * @param serverId the server these claims belong to
+     * @param claims   the rows to insert
+     */
+    @SqlBatch("INSERT INTO clan_claims (server_id, world, chunk_x, chunk_z, clan_id, claimed_at) VALUES (:serverId, :world, :chunkX, :chunkZ, :clanId, :claimedAt)")
+    void insertClaims(@Bind("serverId") String serverId, @BindMethods List<ClaimInsert> claims);
 
     /**
      * Deletes the claim for a specific chunk on a given server.
@@ -97,4 +110,11 @@ public interface ClaimDao {
 
     /** Raw row from the {@code clan_claims} table. */
     record ClaimRow(String serverId, String world, int chunkX, int chunkZ, String clanId, long claimedAt) {}
+
+    /**
+     * A single row for batch insertion, with values already in DB-native types
+     * ({@code clanId} as a string, {@code claimedAt} as an epoch second). The accessor
+     * names match the {@code :world}, {@code :chunkX}, etc. placeholders bound via {@code @BindMethods}.
+     */
+    record ClaimInsert(String world, int chunkX, int chunkZ, String clanId, long claimedAt) {}
 }

@@ -50,6 +50,21 @@ public class ClaimRepository implements IClaimRepository {
     }
 
     @Override
+    public CompletableFuture<Void> insertClaims(List<ClaimModel> claims) {
+        if (claims.isEmpty()) {
+            return CompletableFuture.completedFuture(null);
+        }
+        List<ClaimDao.ClaimInsert> rows = claims.stream()
+                .map(c -> new ClaimDao.ClaimInsert(
+                        c.world(), c.chunkX(), c.chunkZ(),
+                        c.clanId().toString(), c.claimedAt().getEpochSecond()))
+                .toList();
+        return CompletableFuture.runAsync(() ->
+                jdbi.useTransaction(handle ->
+                        handle.attach(ClaimDao.class).insertClaims(serverId, rows)), executor);
+    }
+
+    @Override
     public CompletableFuture<Void> deleteClaim(String world, int chunkX, int chunkZ) {
         return CompletableFuture.runAsync(() ->
                 jdbi.useExtension(ClaimDao.class, dao ->

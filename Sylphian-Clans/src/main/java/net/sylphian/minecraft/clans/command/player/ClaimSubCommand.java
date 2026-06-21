@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 import static net.sylphian.minecraft.clans.command.player.ClanCommandContext.MINI;
 
@@ -52,32 +51,24 @@ public final class ClaimSubCommand implements SubCommand {
             }
         }
 
-        List<String> failed = new ArrayList<>();
-        CompletableFuture<Void> chain = CompletableFuture.completedFuture(null);
-
-        for (int[] cc : chunks) {
-            int cx = cc[0], cz = cc[1];
-            chain = chain.thenCompose(_ ->
-                    ctx.territoryService().claimChunk(clan.clanId(), world, cx, cz)
-                            .exceptionally(_ -> { failed.add(cx + "," + cz); return null; }));
-        }
-
         int total = chunks.size();
-        chain.thenRun(() -> {
-            int claimed = total - failed.size();
-            if (claimed == 0) {
-                player.sendMessage(Component.text(
-                        "No chunks were claimed. They may already be taken or you have hit the limit.",
-                        NamedTextColor.RED));
-            } else if (failed.isEmpty()) {
-                player.sendMessage(MINI.deserialize(
-                        "<green>Claimed <white>" + claimed + " <green>chunk"
-                                + (claimed == 1 ? "" : "s") + " for <white>" + clan.name() + "<green>."));
-            } else {
-                player.sendMessage(MINI.deserialize(
-                        "<yellow>Claimed <white>" + claimed + "<yellow>/<white>" + total
-                                + "<yellow> chunks. " + failed.size() + " already taken or at the limit."));
-            }
-        }).exceptionally(ex -> { player.sendMessage(Component.text(ctx.rootCause(ex), NamedTextColor.RED)); return null; });
+        ctx.territoryService().claimChunks(clan.clanId(), world, chunks)
+                .thenAccept(claimedChunks -> {
+                    int claimed = claimedChunks.size();
+                    if (claimed == 0) {
+                        player.sendMessage(Component.text(
+                                "No chunks were claimed. They may already be taken or you have hit the limit.",
+                                NamedTextColor.RED));
+                    } else if (claimed == total) {
+                        player.sendMessage(MINI.deserialize(
+                                "<green>Claimed <white>" + claimed + " <green>chunk"
+                                        + (claimed == 1 ? "" : "s") + " for <white>" + clan.name() + "<green>."));
+                    } else {
+                        player.sendMessage(MINI.deserialize(
+                                "<yellow>Claimed <white>" + claimed + "<yellow>/<white>" + total
+                                        + "<yellow> chunks. The rest were already taken or at the limit."));
+                    }
+                })
+                .exceptionally(ex -> { player.sendMessage(Component.text(ctx.rootCause(ex), NamedTextColor.RED)); return null; });
     }
 }

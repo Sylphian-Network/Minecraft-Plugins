@@ -24,6 +24,14 @@ public interface IClaimRepository {
     CompletableFuture<Void> insertClaim(ClaimModel model);
 
     /**
+     * Persists many claims in a single transaction.
+     *
+     * @param claims the claims to insert; a no-op if empty
+     * @return a future that completes when all rows are written
+     */
+    CompletableFuture<Void> insertClaims(List<ClaimModel> claims);
+
+    /**
      * Deletes the claim for a specific chunk.
      *
      * @param world  the world name

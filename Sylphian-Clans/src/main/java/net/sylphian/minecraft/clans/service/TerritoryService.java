@@ -93,6 +93,53 @@ public class TerritoryService {
     }
 
     /**
+     * Claims many chunks at once on behalf of a clan.
+     *
+     * <p>Chunks already claimed (by any clan) are skipped using the cache, and the
+     * per-clan limit is enforced once for the whole batch: if the candidates would
+     * exceed the limit, only as many as fit are claimed. The survivors are inserted
+     * in a single transaction, then the cache is updated and one
+     * {@link TerritoryClaimEvent} is fired per claimed chunk on the main thread.</p>
+     *
+     * @param clanId the clan claiming the chunks
+     * @param world  the world name
+     * @param chunks the candidate chunks as {@code {chunkX, chunkZ}} pairs
+     * @return a future of the chunks actually claimed (a subset of the input; empty if none)
+     * @throws IllegalStateException if the clan is already at its claim limit
+     */
+    public CompletableFuture<List<int[]>> claimChunks(UUID clanId, String world, List<int[]> chunks) {
+        return claimRepository.findClaimsByClan(clanId).thenCompose(existing -> {
+            int remaining = maxClaimsPerClan - existing.size();
+            if (remaining <= 0) {
+                return CompletableFuture.failedFuture(new IllegalStateException(
+                        "Your clan has reached the maximum claim limit of " + maxClaimsPerClan + "."));
+            }
+
+            List<int[]> toClaim = chunks.stream()
+                    .filter(c -> !territoryCache.isClaimed(world, c[0], c[1]))
+                    .limit(remaining)
+                    .toList();
+
+            if (toClaim.isEmpty()) {
+                return CompletableFuture.completedFuture(List.<int[]>of());
+            }
+
+            Instant now = Instant.now();
+            List<ClaimModel> models = toClaim.stream()
+                    .map(c -> new ClaimModel(world, c[0], c[1], clanId, now))
+                    .toList();
+
+            return claimRepository.insertClaims(models).thenApply(v -> {
+                toClaim.forEach(c -> territoryCache.put(world, c[0], c[1], clanId));
+                plugin.getServer().getScheduler().runTask(plugin, () ->
+                        toClaim.forEach(c -> plugin.getServer().getPluginManager()
+                                .callEvent(new TerritoryClaimEvent(clanId, world, c[0], c[1]))));
+                return toClaim;
+            });
+        });
+    }
+
+    /**
      * Unclaims a chunk owned by the given clan.
      *
      * @param clanId the clan that owns the chunk
