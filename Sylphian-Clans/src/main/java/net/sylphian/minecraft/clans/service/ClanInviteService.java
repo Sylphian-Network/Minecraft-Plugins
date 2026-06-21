@@ -16,7 +16,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class ClanInviteService {
 
-    private final long expirySeconds;
+    private volatile long expirySeconds;
 
     /** Maps each invited player's UUID to their list of pending invites. */
     private final Map<UUID, CopyOnWriteArrayList<PendingInvite>> pending = new ConcurrentHashMap<>();
@@ -25,6 +25,16 @@ public class ClanInviteService {
      * @param expirySeconds how long an invite remains valid after it is sent
      */
     public ClanInviteService(long expirySeconds) {
+        this.expirySeconds = expirySeconds;
+    }
+
+    /**
+     * Updates how long new invites stay valid. Called after a config reload.
+     * Invites already pending keep the expiry they were created with.
+     *
+     * @param expirySeconds the new expiry duration in seconds
+     */
+    public void setExpirySeconds(long expirySeconds) {
         this.expirySeconds = expirySeconds;
     }
 

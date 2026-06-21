@@ -28,7 +28,7 @@ public class ClanTeleportWarmupManager implements Listener {
     private static final MiniMessage MINI = MiniMessage.miniMessage();
 
     private final JavaPlugin plugin;
-    private final int warmupSeconds;
+    private volatile int warmupSeconds;
 
     private final Map<UUID, BukkitTask> pending = new ConcurrentHashMap<>();
 
@@ -39,6 +39,15 @@ public class ClanTeleportWarmupManager implements Listener {
      */
     public ClanTeleportWarmupManager(JavaPlugin plugin, int warmupSeconds) {
         this.plugin = plugin;
+        this.warmupSeconds = warmupSeconds;
+    }
+
+    /**
+     * Updates the warmup duration applied to new teleports. Called after a config reload.
+     *
+     * @param warmupSeconds the new warmup in seconds; zero or negative teleports instantly
+     */
+    public void setWarmupSeconds(int warmupSeconds) {
         this.warmupSeconds = warmupSeconds;
     }
 
@@ -126,5 +135,11 @@ public class ClanTeleportWarmupManager implements Listener {
         String unit = seconds == 1 ? "second" : "seconds";
         player.sendActionBar(MINI.deserialize(
                 "<yellow>Teleporting to <white>" + label + " <yellow>in <white>" + seconds + " " + unit + "<yellow>..."));
+    }
+
+    /** Cancels all pending warmups. Call from the plugin's onDisable. */
+    public void shutdown() {
+        pending.values().forEach(BukkitTask::cancel);
+        pending.clear();
     }
 }

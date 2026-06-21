@@ -5,6 +5,7 @@ import net.sylphian.minecraft.clans.cache.ClanCache;
 import net.sylphian.minecraft.clans.cache.TerritoryCache;
 import net.sylphian.minecraft.clans.command.ClanAdminCommand;
 import net.sylphian.minecraft.clans.command.ClanCommand;
+import net.sylphian.minecraft.clans.config.ClansConfig;
 import net.sylphian.minecraft.clans.db.migrations.Migration001CreateClans;
 import net.sylphian.minecraft.clans.db.migrations.Migration002CreateClanMembers;
 import net.sylphian.minecraft.clans.db.migrations.Migration003CreateClanMemberPermissions;
@@ -22,17 +23,18 @@ import net.sylphian.minecraft.clans.listener.ClanPermissionListener;
 import net.sylphian.minecraft.clans.listener.ClanWarpListener;
 import net.sylphian.minecraft.clans.listener.TerritoryNotificationListener;
 import net.sylphian.minecraft.clans.listener.TerritoryProtectionListener;
-import net.sylphian.minecraft.clans.model.ClanPermission;
 import net.sylphian.minecraft.clans.service.ClanTeleportWarmupManager;
 import net.sylphian.minecraft.clans.service.ClanInviteService;
 import net.sylphian.minecraft.clans.service.ClanService;
 import net.sylphian.minecraft.clans.service.ClanWarpService;
 import net.sylphian.minecraft.clans.service.TerritoryService;
 import net.sylphian.minecraft.database.DatabaseService;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Main plugin class for Sylphian-Clans.
@@ -40,6 +42,10 @@ import java.util.Optional;
 public final class SylphianClans extends JavaPlugin {
 
     private ClanService clanService;
+    private TerritoryService territoryService;
+    private ClanWarpService warpService;
+    private ClanInviteService inviteService;
+    private ClanTeleportWarmupManager warmupManager;
 
     @Override
     public void onEnable() {
@@ -70,24 +76,12 @@ public final class SylphianClans extends JavaPlugin {
         ClanCache clanCache = new ClanCache();
         TerritoryCache territoryCache = new TerritoryCache();
 
-        int maxClaims = getConfig().getInt("max-claims-per-clan", 50);
-        int maxWarps = getConfig().getInt("max-warps-per-clan", 5);
-        long inviteExpiry = getConfig().getLong("invite-expiry-seconds", 300);
-        int teleportWarmup = getConfig().getInt("home-warmup-seconds", 3);
-        List<ClanPermission> defaultPerms = getConfig()
-                .getStringList("default-member-permissions").stream()
-                .flatMap(raw -> ClanPermission.parse(raw)
-                        .or(() -> {
-                            getLogger().warning("Unknown permission '" + raw + "' in default-member-permissions, skipping.");
-                            return Optional.empty();
-                        })
-                        .stream())
-                .toList();
+        ClansConfig config = ClansConfig.from(getConfig(), getLogger());
 
-        TerritoryService territoryService = new TerritoryService(claimRepository, territoryCache, this, maxClaims);
-        ClanInviteService inviteService = new ClanInviteService(inviteExpiry);
-        ClanWarpService warpService = new ClanWarpService(warpRepository, maxWarps);
-        clanService = new ClanService(clanRepository, territoryService, clanCache, this, defaultPerms);
+        territoryService = new TerritoryService(claimRepository, territoryCache, this, config.maxClaimsPerClan());
+        inviteService = new ClanInviteService(config.inviteExpiry());
+        warpService = new ClanWarpService(warpRepository, config.maxWarpsPerClan());
+        clanService = new ClanService(clanRepository, territoryService, clanCache, this, config.defaultMemberPerms());
 
         ClanProvider.register(clanService);
 
@@ -96,7 +90,7 @@ public final class SylphianClans extends JavaPlugin {
             return null;
         });
 
-        ClanTeleportWarmupManager warmupManager = new ClanTeleportWarmupManager(this, teleportWarmup);
+        warmupManager = new ClanTeleportWarmupManager(this, config.teleportWarmup());
         ClanPermissionMenu permissionMenu = new ClanPermissionMenu(clanService, clanCache, this);
         ClanWarpAccessMenu warpAccessMenu = new ClanWarpAccessMenu(warpService, clanCache, this);
         ClanWarpMenu warpMenu = new ClanWarpMenu(warpService, clanCache, warmupManager, warpAccessMenu, this);
@@ -112,10 +106,33 @@ public final class SylphianClans extends JavaPlugin {
                 warmupManager, permissionMenu, warpService, warpMenu);
         clanCommand.register();
 
-        ClanAdminCommand adminCommand = new ClanAdminCommand(clanService, territoryService);
+        ClanAdminCommand adminCommand = new ClanAdminCommand(clanService, territoryService, this);
         adminCommand.register();
 
         getLogger().info("Sylphian-Clans initialised.");
+    }
+
+    /**
+     * Re-reads {@code config.yml} and applies the new settings to the live services.
+     * On any failure the previous configuration is kept and the error is reported.
+     *
+     * @param sender the command sender to notify, or {@code null} for a silent reload
+     */
+    public void reload(CommandSender sender) {
+        try {
+            reloadConfig();
+            ClansConfig fresh = ClansConfig.from(getConfig(), getLogger());
+            territoryService.setMaxClaimsPerClan(fresh.maxClaimsPerClan());
+            warpService.setMaxWarpsPerClan(fresh.maxWarpsPerClan());
+            clanService.setDefaultMemberPermissions(fresh.defaultMemberPerms());
+            inviteService.setExpirySeconds(fresh.inviteExpiry());
+            warmupManager.setWarmupSeconds(fresh.teleportWarmup());
+            getLogger().info("Configuration reloaded.");
+            if (sender != null) sender.sendMessage(Component.text("Clans config reloaded.", NamedTextColor.GREEN));
+        } catch (Exception e) {
+            getLogger().severe("Reload failed, keeping old config: " + e.getMessage());
+            if (sender != null) sender.sendMessage(Component.text("Reload failed — see console.", NamedTextColor.RED));
+        }
     }
 
     @Override

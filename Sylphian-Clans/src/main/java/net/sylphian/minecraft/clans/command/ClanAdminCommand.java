@@ -2,9 +2,11 @@ package net.sylphian.minecraft.clans.command;
 
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.executors.CommandArguments;
+import net.sylphian.minecraft.clans.SylphianClans;
 import net.sylphian.minecraft.clans.command.admin.ClanAdminContext;
 import net.sylphian.minecraft.clans.command.admin.DisbandSubCommand;
 import net.sylphian.minecraft.clans.command.admin.KickSubCommand;
+import net.sylphian.minecraft.clans.command.admin.ReloadSubCommand;
 import net.sylphian.minecraft.clans.command.admin.UnclaimSubCommand;
 import net.sylphian.minecraft.clans.service.ClanService;
 import net.sylphian.minecraft.clans.service.TerritoryService;
@@ -29,13 +31,15 @@ public final class ClanAdminCommand {
     /**
      * @param clanService      the clan service for disband and kick operations
      * @param territoryService the territory service for unclaim operations
+     * @param plugin           the owning plugin, used by the reload subcommand
      */
-    public ClanAdminCommand(ClanService clanService, TerritoryService territoryService) {
+    public ClanAdminCommand(ClanService clanService, TerritoryService territoryService, SylphianClans plugin) {
         ClanAdminContext ctx = new ClanAdminContext(clanService, territoryService);
         this.subCommands = List.of(
                 new DisbandSubCommand(ctx),
                 new KickSubCommand(ctx),
-                new UnclaimSubCommand(ctx));
+                new UnclaimSubCommand(ctx),
+                new ReloadSubCommand(plugin));
     }
 
     /**
@@ -58,6 +62,7 @@ public final class ClanAdminCommand {
                 <yellow>--- /sylphian-clans commands ---
                 <white>/sylphian-clans disband <clan_name>
                 /sylphian-clans kick <player>
-                /sylphian-clans unclaim <world> <chunk_x> <chunk_z>"""));
+                /sylphian-clans unclaim <world> <chunk_x> <chunk_z>
+                /sylphian-clans reload"""));
     }
 }
