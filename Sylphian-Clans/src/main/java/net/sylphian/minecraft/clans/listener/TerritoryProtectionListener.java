@@ -81,8 +81,11 @@ public class TerritoryProtectionListener implements Listener {
         Player attacker = resolvePlayer(event.getDamager());
         if (attacker == null) return;
 
-        Chunk chunk = event.getEntity().getLocation().getChunk();
-        ClanPermission required = isPassive(event.getEntity())
+        Entity victim = event.getEntity();
+        if (victim instanceof Player) return;
+
+        Chunk chunk = victim.getLocation().getChunk();
+        ClanPermission required = isPassive(victim)
                 ? ClanPermission.KILL_ANIMALS
                 : ClanPermission.KILL_MONSTERS;
 
