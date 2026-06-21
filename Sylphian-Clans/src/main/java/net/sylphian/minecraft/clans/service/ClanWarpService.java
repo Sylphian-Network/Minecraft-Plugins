@@ -1,11 +1,11 @@
 package net.sylphian.minecraft.clans.service;
 
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.clans.db.api.IClanWarpRepository;
 import net.sylphian.minecraft.clans.db.models.ClanWarpModel;
 import net.sylphian.minecraft.clans.model.Clan;
 import net.sylphian.minecraft.clans.model.ClanPermission;
+import net.sylphian.minecraft.clans.util.MiniMessageSanitizer;
 import org.bukkit.Location;
 
 import java.util.HashSet;
@@ -26,7 +26,6 @@ public final class ClanWarpService {
 
     private static final int MAX_NAME_LENGTH = 32;
     private static final int MAX_DESCRIPTION_LENGTH = 256;
-    private static final MiniMessage DESCRIPTION_MINI = MiniMessage.miniMessage();
 
     private final IClanWarpRepository warpRepository;
     private volatile int maxWarpsPerClan;
@@ -87,7 +86,7 @@ public final class ClanWarpService {
                 location.getYaw(),
                 location.getPitch(),
                 iconName,
-                description == null ? "" : sanitizeDescription(description),
+                description == null ? "" : MiniMessageSanitizer.sanitize(description),
                 false
         );
 
@@ -218,19 +217,6 @@ public final class ClanWarpService {
             throw new IllegalArgumentException(
                     "Warp name must be 1-" + MAX_NAME_LENGTH + " characters: letters, digits, hyphen, or underscore.");
         }
-    }
-
-    // Parses MiniMessage input and removes click/hover/insertion so a stored description can never carry events.
-    private String sanitizeDescription(String raw) {
-        return DESCRIPTION_MINI.serialize(stripInteractivity(DESCRIPTION_MINI.deserialize(raw)));
-    }
-
-    private Component stripInteractivity(Component component) {
-        Component out = component
-                .clickEvent(null)
-                .hoverEvent(null)
-                .insertion(null);
-        return out.children(out.children().stream().map(this::stripInteractivity).toList());
     }
 }
 
