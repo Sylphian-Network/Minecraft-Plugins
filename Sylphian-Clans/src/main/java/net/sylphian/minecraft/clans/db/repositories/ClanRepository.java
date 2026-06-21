@@ -155,7 +155,8 @@ public class ClanRepository implements IClanRepository {
         return CompletableFuture.supplyAsync(() ->
                 jdbi.withExtension(ClanDao.class, dao ->
                         dao.findPermissionsForPlayer(playerUuid.toString(), serverId).stream()
-                                .map(ClanPermission::valueOf)
+                                .map(ClanPermission::parse)
+                                .flatMap(Optional::stream)
                                 .toList()), executor);
     }
 

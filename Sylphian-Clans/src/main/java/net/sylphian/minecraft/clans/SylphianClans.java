@@ -32,6 +32,7 @@ import net.sylphian.minecraft.database.DatabaseService;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Main plugin class for Sylphian-Clans.
@@ -75,7 +76,12 @@ public final class SylphianClans extends JavaPlugin {
         int teleportWarmup = getConfig().getInt("home-warmup-seconds", 3);
         List<ClanPermission> defaultPerms = getConfig()
                 .getStringList("default-member-permissions").stream()
-                .map(ClanPermission::valueOf)
+                .flatMap(raw -> ClanPermission.parse(raw)
+                        .or(() -> {
+                            getLogger().warning("Unknown permission '" + raw + "' in default-member-permissions, skipping.");
+                            return Optional.empty();
+                        })
+                        .stream())
                 .toList();
 
         TerritoryService territoryService = new TerritoryService(claimRepository, territoryCache, this, maxClaims);

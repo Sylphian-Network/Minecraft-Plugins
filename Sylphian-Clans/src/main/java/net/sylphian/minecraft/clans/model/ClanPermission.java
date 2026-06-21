@@ -1,5 +1,7 @@
 package net.sylphian.minecraft.clans.model;
 
+import java.util.Optional;
+
 /**
  * A capability that can be granted to or revoked from an individual clan member.
  *
@@ -104,6 +106,20 @@ public enum ClanPermission {
      */
     public ClanPermission asBase() {
         return isGrant() ? valueOf(name().substring(6)) : this;
+    }
+
+    /**
+     * Parses a permission name, returning empty (instead of throwing) for unknown values.
+     *
+     * @param raw the permission name to parse
+     * @return the matching permission, or empty if the name is not recognised
+     */
+    public static Optional<ClanPermission> parse(String raw) {
+        try {
+            return Optional.of(valueOf(raw));
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
     }
 }
 
