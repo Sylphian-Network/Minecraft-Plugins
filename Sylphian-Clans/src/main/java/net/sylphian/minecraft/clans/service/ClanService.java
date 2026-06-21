@@ -300,31 +300,18 @@ public class ClanService implements ClanAPI {
             if (clanOpt.isEmpty()) return CompletableFuture.completedFuture(null);
             ClanModel model = clanOpt.get();
 
-            return clanRepository.findMembersByClan(clanId).thenCompose(memberModels -> {
-                List<CompletableFuture<ClanMember>> memberFutures = memberModels.stream()
-                        .map(m -> clanRepository.findPermissionsForPlayer(m.playerUuid())
-                                .thenApply(perms -> new ClanMember(
+            return clanRepository.findMembersByClan(clanId).thenCompose(memberModels ->
+                    clanRepository.findPermissionsByClan(clanId).thenApply(permsByPlayer -> {
+                        List<ClanMember> members = memberModels.stream()
+                                .map(m -> new ClanMember(
                                         m.playerUuid(),
                                         m.isLeader() ? ClanRole.LEADER : ClanRole.MEMBER,
-                                        new HashSet<>(perms),
-                                        Instant.ofEpochSecond(m.joinedAt())
-                                )))
-                        .toList();
-
-                return CompletableFuture.allOf(memberFutures.toArray(new CompletableFuture[0]))
-                        .thenApply(v -> {
-                            List<ClanMember> members = memberFutures.stream()
-                                    .map(CompletableFuture::join)
-                                    .collect(Collectors.toList());
-                            return new Clan(
-                                    model.clanId(),
-                                    model.name(),
-                                    members,
-                                    model.motd(),
-                                    Instant.ofEpochSecond(model.createdAt())
-                            );
-                        });
-            });
+                                        new HashSet<>(permsByPlayer.getOrDefault(m.playerUuid(), Set.of())),
+                                        Instant.ofEpochSecond(m.joinedAt())))
+                                .toList();
+                        return new Clan(model.clanId(), model.name(), members,
+                                model.motd(), Instant.ofEpochSecond(model.createdAt()));
+                    }));
         });
     }
 

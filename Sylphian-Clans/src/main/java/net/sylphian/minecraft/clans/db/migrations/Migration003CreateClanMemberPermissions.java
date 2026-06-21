@@ -17,8 +17,8 @@ public class Migration003CreateClanMemberPermissions implements Migration {
 
     @Override
     public void up(Handle handle) {
-        // No FK to clan_members: ClanService deletes permission rows explicitly
-        // when a member is kicked or leaves, keeping cascade logic in the service layer.
+        // FK to clan_members with ON DELETE CASCADE: removing a member row (kick/leave)
+        // automatically deletes that member's permission rows.
         handle.execute("""
                 CREATE TABLE clan_member_permissions (
                     player_uuid CHAR(36)    NOT NULL,

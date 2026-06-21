@@ -168,6 +168,23 @@ public interface ClanDao {
     @SqlQuery("SELECT permission FROM clan_member_permissions WHERE player_uuid = :playerUuid AND server_id = :serverId")
     List<String> findPermissionsForPlayer(@Bind("playerUuid") String playerUuid, @Bind("serverId") String serverId);
 
+    /**
+     * Returns one row per (member, permission) for a clan, with a null permission
+     * for members who hold none (via LEFT JOIN). Used to load a clan in two queries.
+     */
+    @SqlQuery("""
+        SELECT m.player_uuid AS playerUuid, p.permission AS permission
+        FROM clan_members m
+        LEFT JOIN clan_member_permissions p
+               ON p.player_uuid = m.player_uuid AND p.server_id = m.server_id
+        WHERE m.clan_id = :clanId AND m.server_id = :serverId
+        """)
+    @RegisterConstructorMapper(PermissionRow.class)
+    List<PermissionRow> findPermissionsByClan(@Bind("clanId") String clanId, @Bind("serverId") String serverId);
+
+    /** A member UUID paired with one of their permission names (null if they have none). */
+    record PermissionRow(String playerUuid, String permission) {}
+
     /** Raw row from the {@code clans} table. */
     record ClanRow(String clanId, String serverId, String name, String motd, long createdAt) {}
 

@@ -7,9 +7,7 @@ import net.sylphian.minecraft.clans.db.models.ClanModel;
 import net.sylphian.minecraft.clans.model.ClanPermission;
 import org.jdbi.v3.core.Jdbi;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
@@ -158,6 +156,22 @@ public class ClanRepository implements IClanRepository {
                                 .map(ClanPermission::parse)
                                 .flatMap(Optional::stream)
                                 .toList()), executor);
+    }
+
+    @Override
+    public CompletableFuture<Map<UUID, Set<ClanPermission>>> findPermissionsByClan(UUID clanId) {
+        return CompletableFuture.supplyAsync(() ->
+                jdbi.withExtension(ClanDao.class, dao -> {
+                    Map<UUID, Set<ClanPermission>> result = new HashMap<>();
+                    for (ClanDao.PermissionRow row : dao.findPermissionsByClan(clanId.toString(), serverId)) {
+                        Set<ClanPermission> set = result.computeIfAbsent(
+                                UUID.fromString(row.playerUuid()), k -> new HashSet<>());
+                        if (row.permission() != null) {
+                            ClanPermission.parse(row.permission()).ifPresent(set::add);
+                        }
+                    }
+                    return result;
+                }), executor);
     }
 
     private ClanModel toClanModel(ClanDao.ClanRow row) {

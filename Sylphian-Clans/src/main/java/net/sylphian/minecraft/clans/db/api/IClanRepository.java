@@ -4,9 +4,7 @@ import net.sylphian.minecraft.clans.db.models.ClanMemberModel;
 import net.sylphian.minecraft.clans.db.models.ClanModel;
 import net.sylphian.minecraft.clans.model.ClanPermission;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -128,4 +126,12 @@ public interface IClanRepository {
      * @return a future of all permissions currently held by the player
      */
     CompletableFuture<List<ClanPermission>> findPermissionsForPlayer(UUID playerUuid);
+
+    /**
+     * Loads every member's permissions for a clan in a single query.
+     *
+     * @param clanId the clan's UUID
+     * @return a future mapping each member UUID to their permission set
+     */
+    CompletableFuture<Map<UUID, Set<ClanPermission>>> findPermissionsByClan(UUID clanId);
 }
