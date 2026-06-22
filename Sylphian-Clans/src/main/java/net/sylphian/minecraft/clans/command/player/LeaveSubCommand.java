@@ -6,6 +6,7 @@ import dev.jorel.commandapi.executors.CommandArguments;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.sylphian.minecraft.clans.command.SubCommand;
+import net.sylphian.minecraft.clans.event.ClanMemberLeaveEvent;
 import net.sylphian.minecraft.clans.model.Clan;
 import org.bukkit.entity.Player;
 
@@ -44,7 +45,7 @@ public final class LeaveSubCommand implements SubCommand {
                         return;
                     }
 
-                    ctx.clanService().removeMember(clan.clanId(), player.getUniqueId())
+                    ctx.clanService().removeMember(clan.clanId(), player.getUniqueId(), ClanMemberLeaveEvent.Cause.LEAVE)
                             .thenRun(() -> player.sendMessage(MINI.deserialize("<yellow>You left <white>" + clan.name() + "<yellow>.")))
                             .exceptionally(ex -> { player.sendMessage(Component.text(ctx.rootCause(ex), NamedTextColor.RED)); return null; });
                 });

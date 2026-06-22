@@ -5,7 +5,6 @@ import net.sylphian.minecraft.clans.cache.ClanCache;
 import net.sylphian.minecraft.clans.db.api.IClanRepository;
 import net.sylphian.minecraft.clans.db.models.ClanMemberModel;
 import net.sylphian.minecraft.clans.db.models.ClanModel;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.clans.event.*;
 import net.sylphian.minecraft.clans.model.*;
 import net.sylphian.minecraft.clans.util.MiniMessageSanitizer;
@@ -105,13 +104,20 @@ public class ClanService implements ClanAPI {
     public CompletableFuture<Void> createClan(UUID leaderUuid, String name) {
         validateName(name);
 
+        UUID clanId = UUID.randomUUID();
+        // Pre fires on the main thread (the calling command's context) so a listener can veto.
+        ClanCreateEvent.Pre pre = new ClanCreateEvent.Pre(clanId, leaderUuid, name);
+        plugin.getServer().getPluginManager().callEvent(pre);
+        if (pre.isCancelled()) {
+            return CompletableFuture.failedFuture(new IllegalStateException("Clan creation was cancelled."));
+        }
+
         return clanRepository.findClanByName(name).thenCompose(existing -> {
             if (existing.isPresent()) {
                 return CompletableFuture.failedFuture(
                         new IllegalArgumentException("A clan named '" + name + "' already exists."));
             }
 
-            UUID clanId = UUID.randomUUID();
             long now = Instant.now().getEpochSecond();
 
             ClanModel clanModel = new ClanModel(clanId, name, null, now);
@@ -122,7 +128,7 @@ public class ClanService implements ClanAPI {
                     .thenCompose(v -> buildClan(clanId))
                     .thenAccept(clan -> {
                         if (clan != null) clanCache.put(clan);
-                        fireEvent(new ClanCreateEvent(clanId));
+                        fireEvent(new ClanCreateEvent.Post(clanId, leaderUuid, name));
                     });
         }).exceptionally(ex -> {
             Throwable cause = ex.getCause() != null ? ex.getCause() : ex;
@@ -142,6 +148,11 @@ public class ClanService implements ClanAPI {
      * @return a future that completes when disbandment is fully applied
      */
     public CompletableFuture<Void> disbandClan(UUID clanId) {
+        ClanDisbandEvent.Pre pre = new ClanDisbandEvent.Pre(clanId);
+        plugin.getServer().getPluginManager().callEvent(pre);
+        if (pre.isCancelled()) {
+            return CompletableFuture.failedFuture(new IllegalStateException("Disband was cancelled."));
+        }
         return buildClan(clanId).thenCompose(clan -> {
             if (clan == null) return CompletableFuture.completedFuture(null);
 
@@ -149,7 +160,7 @@ public class ClanService implements ClanAPI {
                     .thenCompose(v -> clanRepository.deleteClan(clanId))
                     .thenRun(() -> {
                         clanCache.invalidateAll(clan);
-                        fireEvent(new ClanDisbandEvent(clanId));
+                        fireEvent(new ClanDisbandEvent.Post(clanId));
                     });
         });
     }
@@ -164,6 +175,11 @@ public class ClanService implements ClanAPI {
      * @return a future that completes when the member is added
      */
     public CompletableFuture<Void> addMember(UUID clanId, UUID playerUuid, ClanInviteService inviteService) {
+        ClanMemberJoinEvent.Pre pre = new ClanMemberJoinEvent.Pre(clanId, playerUuid);
+        plugin.getServer().getPluginManager().callEvent(pre);
+        if (pre.isCancelled()) {
+            return CompletableFuture.failedFuture(new IllegalStateException("Join was cancelled."));
+        }
         long now = Instant.now().getEpochSecond();
         ClanMemberModel model = new ClanMemberModel(playerUuid, clanId, false, now);
 
@@ -178,7 +194,7 @@ public class ClanService implements ClanAPI {
                 .thenAccept(clan -> {
                     if (clan != null) clanCache.put(clan);
                     inviteService.clearInvites(playerUuid);
-                    fireEvent(new ClanMemberJoinEvent(clanId, playerUuid));
+                    fireEvent(new ClanMemberJoinEvent.Post(clanId, playerUuid));
                 });
     }
 
@@ -188,21 +204,22 @@ public class ClanService implements ClanAPI {
      *
      * @param clanId      the clan the player is leaving
      * @param playerUuid  the player to remove
+     * @param cause       whether the player left voluntarily or was kicked
      * @return a future that completes when the member is removed
      */
-    public CompletableFuture<Void> removeMember(UUID clanId, UUID playerUuid) {
+    public CompletableFuture<Void> removeMember(UUID clanId, UUID playerUuid, ClanMemberLeaveEvent.Cause cause) {
         return clanRepository.deleteMember(playerUuid)
                 .thenRun(() -> clanCache.invalidate(playerUuid))
                 .thenCompose(v -> buildClan(clanId))
                 .thenAccept(clan -> {
                     if (clan != null) clanCache.put(clan);
-                    fireEvent(new ClanMemberLeaveEvent(clanId, playerUuid));
+                    fireEvent(new ClanMemberLeaveEvent(clanId, playerUuid, cause));
                 });
     }
 
     /**
      * Transfers leadership from the current leader to another member.
-     * Two role-change events are fired: one for the old leader and one for the new.
+     * Fires a single {@link ClanLeadershipTransferEvent} carrying both leaders.
      *
      * @param clanId         the clan in which leadership is being transferred
      * @param newLeaderUuid  the member who will become the new leader
@@ -220,8 +237,7 @@ public class ClanService implements ClanAPI {
                     .thenCompose(v -> buildClan(clanId))
                     .thenAccept(updated -> {
                         if (updated != null) clanCache.put(updated);
-                        fireEvent(new ClanRoleChangeEvent(clanId, oldLeader));
-                        fireEvent(new ClanRoleChangeEvent(clanId, newLeaderUuid));
+                        fireEvent(new ClanLeadershipTransferEvent(clanId, oldLeader, newLeaderUuid));
                     });
         });
     }
@@ -242,7 +258,11 @@ public class ClanService implements ClanAPI {
         return validatePermissionAuthority(requesterId, targetId, permission).thenCompose(clan ->
                 clanRepository.insertPermission(targetId, permission)
                         .thenCompose(v -> buildClan(clan.clanId()))
-                        .thenAccept(updated -> { if (updated != null) clanCache.put(updated); })
+                        .thenAccept(updated -> {
+                            if (updated != null) clanCache.put(updated);
+                            fireEvent(new ClanPermissionChangeEvent(clan.clanId(), targetId, permission,
+                                    ClanPermissionChangeEvent.Action.GRANT));
+                        })
         );
     }
 
@@ -260,7 +280,11 @@ public class ClanService implements ClanAPI {
         return validatePermissionAuthority(requesterId, targetId, permission).thenCompose(clan ->
                 clanRepository.deletePermission(targetId, permission)
                         .thenCompose(v -> buildClan(clan.clanId()))
-                        .thenAccept(updated -> { if (updated != null) clanCache.put(updated); })
+                        .thenAccept(updated -> {
+                            if (updated != null) clanCache.put(updated);
+                            fireEvent(new ClanPermissionChangeEvent(clan.clanId(), targetId, permission,
+                                    ClanPermissionChangeEvent.Action.REVOKE));
+                        })
         );
     }
 
@@ -378,7 +402,10 @@ public class ClanService implements ClanAPI {
         String safe = (rawMotd == null) ? null : MiniMessageSanitizer.sanitize(rawMotd);
         return clanRepository.updateMotd(clanId, safe)
                 .thenCompose(v -> buildClan(clanId))
-                .thenAccept(clan -> { if (clan != null) clanCache.put(clan); });
+                .thenAccept(clan -> {
+                    if (clan != null) clanCache.put(clan);
+                    fireEvent(new ClanMotdChangeEvent(clanId, safe));
+                });
     }
 
     /** Fires a Bukkit event on the main thread. */

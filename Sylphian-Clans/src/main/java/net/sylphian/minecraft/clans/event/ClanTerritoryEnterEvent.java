@@ -7,34 +7,41 @@ import org.jspecify.annotations.NonNull;
 import java.util.UUID;
 
 /**
- * Fired on the main thread after a clan unclaims a chunk.
+ * Fired on the main thread when a player walks into a chunk owned by a clan, having just
+ * been in wilderness or another clan's territory. Not cancellable, movement is not blocked.
  */
-public class TerritoryUnclaimEvent extends Event {
+public class ClanTerritoryEnterEvent extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();
 
+    private final UUID playerUuid;
     private final UUID clanId;
     private final String world;
     private final int chunkX;
     private final int chunkZ;
 
     /**
-     * @param clanId the clan that unclaimed the chunk
-     * @param world  the name of the world containing the chunk
-     * @param chunkX the chunk X coordinate
-     * @param chunkZ the chunk Z coordinate
+     * @param playerUuid the player who entered the territory
+     * @param clanId     the clan that owns the entered chunk
+     * @param world      the world containing the chunk
+     * @param chunkX     the chunk X coordinate
+     * @param chunkZ     the chunk Z coordinate
      */
-    public TerritoryUnclaimEvent(UUID clanId, String world, int chunkX, int chunkZ) {
+    public ClanTerritoryEnterEvent(UUID playerUuid, UUID clanId, String world, int chunkX, int chunkZ) {
+        this.playerUuid = playerUuid;
         this.clanId = clanId;
         this.world = world;
         this.chunkX = chunkX;
         this.chunkZ = chunkZ;
     }
 
-    /** @return the clan that unclaimed the chunk */
+    /** @return the player who entered the territory */
+    public UUID getPlayerUuid() { return playerUuid; }
+
+    /** @return the clan that owns the entered chunk */
     public UUID getClanId() { return clanId; }
 
-    /** @return the name of the world containing the chunk */
+    /** @return the world containing the chunk */
     public String getWorld() { return world; }
 
     /** @return the chunk X coordinate */

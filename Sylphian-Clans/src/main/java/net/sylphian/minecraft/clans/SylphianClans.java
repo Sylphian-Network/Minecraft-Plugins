@@ -21,8 +21,9 @@ import net.sylphian.minecraft.clans.gui.ClanWarpMenu;
 import net.sylphian.minecraft.clans.listener.ClanListener;
 import net.sylphian.minecraft.clans.listener.ClanPermissionListener;
 import net.sylphian.minecraft.clans.listener.ClanWarpListener;
-import net.sylphian.minecraft.clans.listener.TerritoryNotificationListener;
 import net.sylphian.minecraft.clans.listener.TerritoryProtectionListener;
+import net.sylphian.minecraft.clans.listener.TerritoryTitleListener;
+import net.sylphian.minecraft.clans.listener.TerritoryTrackingListener;
 import net.sylphian.minecraft.clans.service.ClanTeleportWarmupManager;
 import net.sylphian.minecraft.clans.service.ClanInviteService;
 import net.sylphian.minecraft.clans.service.ClanService;
@@ -80,7 +81,7 @@ public final class SylphianClans extends JavaPlugin {
 
         territoryService = new TerritoryService(claimRepository, territoryCache, this, config.maxClaimsPerClan());
         inviteService = new ClanInviteService(config.inviteExpiry());
-        warpService = new ClanWarpService(warpRepository, config.maxWarpsPerClan());
+        warpService = new ClanWarpService(warpRepository, config.maxWarpsPerClan(), this);
         clanService = new ClanService(clanRepository, territoryService, clanCache, this, config.defaultMemberPerms());
 
         ClanProvider.register(clanService);
@@ -97,7 +98,8 @@ public final class SylphianClans extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new ClanListener(clanService), this);
         getServer().getPluginManager().registerEvents(new TerritoryProtectionListener(territoryService, clanCache), this);
-        getServer().getPluginManager().registerEvents(new TerritoryNotificationListener(territoryService, clanService), this);
+        getServer().getPluginManager().registerEvents(new TerritoryTrackingListener(territoryService), this);
+        getServer().getPluginManager().registerEvents(new TerritoryTitleListener(territoryService, clanService), this);
         getServer().getPluginManager().registerEvents(new ClanPermissionListener(), this);
         getServer().getPluginManager().registerEvents(new ClanWarpListener(), this);
         getServer().getPluginManager().registerEvents(warmupManager, this);

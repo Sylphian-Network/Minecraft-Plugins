@@ -1,12 +1,15 @@
 package net.sylphian.minecraft.clans.service;
 
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.clans.db.api.IClanWarpRepository;
 import net.sylphian.minecraft.clans.db.models.ClanWarpModel;
+import net.sylphian.minecraft.clans.event.ClanWarpCreateEvent;
+import net.sylphian.minecraft.clans.event.ClanWarpDeleteEvent;
 import net.sylphian.minecraft.clans.model.Clan;
 import net.sylphian.minecraft.clans.model.ClanPermission;
 import net.sylphian.minecraft.clans.util.MiniMessageSanitizer;
 import org.bukkit.Location;
+import org.bukkit.event.Event;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashSet;
 import java.util.List;
@@ -28,15 +31,23 @@ public final class ClanWarpService {
     private static final int MAX_DESCRIPTION_LENGTH = 256;
 
     private final IClanWarpRepository warpRepository;
+    private final JavaPlugin plugin;
     private volatile int maxWarpsPerClan;
 
     /**
      * @param warpRepository  persistence layer for warps and access
      * @param maxWarpsPerClan the maximum number of warps a single clan may own
+     * @param plugin          the owning plugin, used for scheduler hops when firing events
      */
-    public ClanWarpService(IClanWarpRepository warpRepository, int maxWarpsPerClan) {
+    public ClanWarpService(IClanWarpRepository warpRepository, int maxWarpsPerClan, JavaPlugin plugin) {
         this.warpRepository = warpRepository;
         this.maxWarpsPerClan = maxWarpsPerClan;
+        this.plugin = plugin;
+    }
+
+    /** Fires a Bukkit event on the main thread. */
+    private void fireEvent(Event event) {
+        plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().getPluginManager().callEvent(event));
     }
 
     /**
@@ -99,7 +110,8 @@ public final class ClanWarpService {
                     return CompletableFuture.failedFuture(
                             new IllegalStateException("Your clan has reached the maximum of " + maxWarpsPerClan + " warps."));
                 }
-                return warpRepository.saveWarp(model);
+                return warpRepository.saveWarp(model)
+                        .thenRun(() -> fireEvent(new ClanWarpCreateEvent(clanId, name, model.world())));
             });
         });
     }
@@ -116,7 +128,10 @@ public final class ClanWarpService {
             if (existing.isEmpty()) {
                 return CompletableFuture.completedFuture(false);
             }
-            return warpRepository.deleteWarp(clanId, name).thenApply(v -> true);
+            return warpRepository.deleteWarp(clanId, name).thenApply(v -> {
+                fireEvent(new ClanWarpDeleteEvent(clanId, name));
+                return true;
+            });
         });
     }
 

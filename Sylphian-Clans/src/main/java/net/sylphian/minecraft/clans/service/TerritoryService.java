@@ -3,11 +3,12 @@ package net.sylphian.minecraft.clans.service;
 import net.sylphian.minecraft.clans.cache.TerritoryCache;
 import net.sylphian.minecraft.clans.db.api.IClaimRepository;
 import net.sylphian.minecraft.clans.db.models.ClaimModel;
-import net.sylphian.minecraft.clans.event.TerritoryClaimEvent;
-import net.sylphian.minecraft.clans.event.TerritoryUnclaimEvent;
+import net.sylphian.minecraft.clans.event.ClanClaimEvent;
+import net.sylphian.minecraft.clans.event.ClanUnclaimEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -87,7 +88,7 @@ public class TerritoryService {
                 territoryCache.put(world, chunkX, chunkZ, clanId);
                 plugin.getServer().getScheduler().runTask(plugin,
                         () -> plugin.getServer().getPluginManager()
-                                .callEvent(new TerritoryClaimEvent(clanId, world, chunkX, chunkZ)));
+                                .callEvent(new ClanClaimEvent.Post(clanId, world, chunkX, chunkZ)));
             });
         });
     }
@@ -99,7 +100,7 @@ public class TerritoryService {
      * per-clan limit is enforced once for the whole batch: if the candidates would
      * exceed the limit, only as many as fit are claimed. The survivors are inserted
      * in a single transaction, then the cache is updated and one
-     * {@link TerritoryClaimEvent} is fired per claimed chunk on the main thread.</p>
+     * {@link ClanClaimEvent.Post} is fired per claimed chunk on the main thread.</p>
      *
      * @param clanId the clan claiming the chunks
      * @param world  the world name
@@ -108,6 +109,17 @@ public class TerritoryService {
      * @throws IllegalStateException if the clan is already at its claim limit
      */
     public CompletableFuture<List<int[]>> claimChunks(UUID clanId, String world, List<int[]> chunks) {
+        // Pre fires per chunk on the main thread (the calling command's context); cancelled chunks are dropped.
+        List<int[]> allowed = new ArrayList<>();
+        for (int[] c : chunks) {
+            ClanClaimEvent.Pre pre = new ClanClaimEvent.Pre(clanId, world, c[0], c[1]);
+            plugin.getServer().getPluginManager().callEvent(pre);
+            if (!pre.isCancelled()) allowed.add(c);
+        }
+        if (allowed.isEmpty()) {
+            return CompletableFuture.completedFuture(List.<int[]>of());
+        }
+
         return claimRepository.findClaimsByClan(clanId).thenCompose(existing -> {
             int remaining = maxClaimsPerClan - existing.size();
             if (remaining <= 0) {
@@ -115,7 +127,7 @@ public class TerritoryService {
                         "Your clan has reached the maximum claim limit of " + maxClaimsPerClan + "."));
             }
 
-            List<int[]> toClaim = chunks.stream()
+            List<int[]> toClaim = allowed.stream()
                     .filter(c -> !territoryCache.isClaimed(world, c[0], c[1]))
                     .limit(remaining)
                     .toList();
@@ -133,7 +145,7 @@ public class TerritoryService {
                 toClaim.forEach(c -> territoryCache.put(world, c[0], c[1], clanId));
                 plugin.getServer().getScheduler().runTask(plugin, () ->
                         toClaim.forEach(c -> plugin.getServer().getPluginManager()
-                                .callEvent(new TerritoryClaimEvent(clanId, world, c[0], c[1]))));
+                                .callEvent(new ClanClaimEvent.Post(clanId, world, c[0], c[1]))));
                 return toClaim;
             });
         });
@@ -156,11 +168,17 @@ public class TerritoryService {
                     new IllegalStateException("Clan does not own chunk " + world + ":" + chunkX + ":" + chunkZ + "."));
         }
 
+        ClanUnclaimEvent.Pre pre = new ClanUnclaimEvent.Pre(clanId, world, chunkX, chunkZ);
+        plugin.getServer().getPluginManager().callEvent(pre);
+        if (pre.isCancelled()) {
+            return CompletableFuture.failedFuture(new IllegalStateException("Unclaim was cancelled."));
+        }
+
         return claimRepository.deleteClaim(world, chunkX, chunkZ).thenRun(() -> {
             territoryCache.remove(world, chunkX, chunkZ);
             plugin.getServer().getScheduler().runTask(plugin,
                     () -> plugin.getServer().getPluginManager()
-                            .callEvent(new TerritoryUnclaimEvent(clanId, world, chunkX, chunkZ)));
+                            .callEvent(new ClanUnclaimEvent.Post(clanId, world, chunkX, chunkZ)));
         });
     }
 

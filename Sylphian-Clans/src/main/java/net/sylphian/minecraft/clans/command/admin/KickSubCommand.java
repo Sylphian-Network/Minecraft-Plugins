@@ -7,6 +7,7 @@ import dev.jorel.commandapi.executors.CommandArguments;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.sylphian.minecraft.clans.command.SubCommand;
+import net.sylphian.minecraft.clans.event.ClanMemberLeaveEvent;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -36,7 +37,7 @@ public final class KickSubCommand implements SubCommand {
                                     sender.sendMessage(Component.text(target.getName() + " is not in a clan.", NamedTextColor.RED));
                                     return CompletableFuture.completedFuture(null);
                                 }
-                                return ctx.clanService().removeMember(clanOpt.get().clanId(), target.getUniqueId())
+                                return ctx.clanService().removeMember(clanOpt.get().clanId(), target.getUniqueId(), ClanMemberLeaveEvent.Cause.KICK)
                                         .thenRun(() -> {
                                             sender.sendMessage(MINI.deserialize("<yellow>Force-kicked <white>" + target.getName() + "<yellow> from their clan."));
                                             target.sendMessage(MINI.deserialize("<red>You were removed from your clan by an administrator."));
