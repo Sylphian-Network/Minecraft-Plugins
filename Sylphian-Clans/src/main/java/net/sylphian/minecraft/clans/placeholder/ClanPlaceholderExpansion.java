@@ -12,7 +12,7 @@ import java.util.Optional;
  *
  * <p>Supported placeholders:
  * <ul>
- *   <li>{@code %sylphian_clans_name%} — the player's clan name, or "" if not in one</li>
+ *   <li>{@code %sylphian-clans_name%} — the player's clan name, or "" if not in one</li>
  * </ul>
  *
  * <p>Reads from the in-memory clan cache — no database calls on the render path.</p>

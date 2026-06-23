@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * <p>Supported placeholders:
  * <ul>
- *   <li>{@code %sylphian_economy_balance%} — the player's formatted balance</li>
+ *   <li>{@code %sylphian-economy_balance%} — the player's formatted balance</li>
  * </ul>
  *
  * <p>Balance is cached on join and invalidated on quit, updated by
