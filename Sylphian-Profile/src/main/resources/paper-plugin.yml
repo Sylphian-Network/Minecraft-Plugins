@@ -17,10 +17,7 @@ dependencies:
     Sylphian-Scoreboard:
       load: BEFORE
       required: true
-    Sylphian-Economy:
-      load: BEFORE
-      required: false
-    Sylphian-Clans:
+    PlaceholderAPI:
       load: BEFORE
       required: false
 

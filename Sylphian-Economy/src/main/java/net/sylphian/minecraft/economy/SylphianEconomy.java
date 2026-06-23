@@ -12,6 +12,7 @@ import net.sylphian.minecraft.economy.db.repositories.EconomyRepository;
 import net.sylphian.minecraft.economy.event.EconomyConfigReloadEvent;
 import net.sylphian.minecraft.economy.event.PlayerBalanceChangeEvent;
 import net.sylphian.minecraft.economy.listener.EconomyListener;
+import net.sylphian.minecraft.economy.placeholder.EconomyPlaceholderExpansion;
 import net.sylphian.minecraft.economy.service.BalanceChangePublisher;
 import net.sylphian.minecraft.economy.service.EconomyService;
 import net.sylphian.minecraft.economy.util.MoneyFormat;
@@ -47,6 +48,12 @@ public final class SylphianEconomy extends JavaPlugin {
         this.economyService = new EconomyService(repository, startingBalance, publisher);
 
         EconomyProvider.register(economyService);
+
+        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            EconomyPlaceholderExpansion expansion = new EconomyPlaceholderExpansion(economyService);
+            expansion.register();
+            getServer().getPluginManager().registerEvents(expansion, this);
+        }
 
         getServer().getPluginManager().registerEvents(new EconomyListener(economyService, this), this);
         Bukkit.getOnlinePlayers().forEach(player -> economyService.load(player.getUniqueId()));

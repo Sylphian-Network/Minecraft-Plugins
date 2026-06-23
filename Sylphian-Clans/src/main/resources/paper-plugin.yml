@@ -20,6 +20,9 @@ dependencies:
     CommandAPI:
       load: BEFORE
       required: true
+    PlaceholderAPI:
+      load: BEFORE
+      required: false
 
 permissions:
   sylphian.clans.use:
