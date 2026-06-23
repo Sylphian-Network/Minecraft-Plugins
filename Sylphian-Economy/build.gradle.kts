@@ -4,6 +4,7 @@ dependencies {
     compileOnly(project(":Sylphian-Database"))
     compileOnly(libs.jdbi.core)
     compileOnly(libs.jdbi.sqlobject)
+    compileOnly(libs.placeholderapi)
 }
 
 tasks {

@@ -8,6 +8,7 @@ allprojects {
         maven { url = uri("https://repo.codemc.io/repository/maven-releases/") }
         maven { url = uri("https://repo.codemc.io/repository/maven-snapshots/") }
         maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
+        maven { url = uri("https://repo.extendedclip.com/releases/") }
     }
 }
 

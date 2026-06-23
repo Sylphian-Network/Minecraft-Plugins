@@ -1,6 +1,7 @@
 package net.sylphian.minecraft.profile.sidebar;
 
 import net.sylphian.minecraft.profile.UserProfile;
+import net.sylphian.minecraft.profile.placeholder.PlaceholderResolver;
 import net.sylphian.minecraft.profile.utils.ProfileManager;
 import net.sylphian.minecraft.scoreboard.api.AbstractSidebarContributor;
 import net.sylphian.minecraft.scoreboard.api.SidebarLine;
@@ -14,29 +15,24 @@ import java.util.List;
 /**
  * Contributes player profile information to the sidebar.
  *
- * <p>Shows a welcome message using the player's linked forum username (if any),
- * and live playtime calculated from their cached stored playtime plus their
- * current session duration.</p>
+ * <p>Shows a welcome message, live playtime, and — when PlaceholderAPI is present
+ * and the relevant plugins are installed — balance and clan name.</p>
  */
 public class ProfileContributor extends AbstractSidebarContributor {
 
     public static final int PRIORITY = 10;
 
     private final ProfileManager profileManager;
-    private final @Nullable BalanceSupplier balanceSupplier;
-    private final @Nullable ClanSupplier clanSupplier;
+    private final @Nullable PlaceholderResolver resolver;
 
     /**
-     * Constructs a new ProfileContributor.
-     *
-     * @param profileManager  the in-memory profile cache
-     * @param balanceSupplier supplies the player's balance line, or null to omit it
+     * @param profileManager the in-memory profile cache
+     * @param resolver       PlaceholderAPI bridge, or null if PAPI is not installed
      */
-    public ProfileContributor(ProfileManager profileManager, @Nullable BalanceSupplier balanceSupplier, @Nullable ClanSupplier clanSupplier) {
+    public ProfileContributor(ProfileManager profileManager, @Nullable PlaceholderResolver resolver) {
         super("sylphian-profile", PRIORITY);
         this.profileManager = profileManager;
-        this.balanceSupplier = balanceSupplier;
-        this.clanSupplier = clanSupplier;
+        this.resolver = resolver;
     }
 
     /**
@@ -51,7 +47,7 @@ public class ProfileContributor extends AbstractSidebarContributor {
         UserProfile profile = profileManager.getProfile(player.getUniqueId());
         if (profile == null) return List.of();
 
-        long totalSeconds = profile.playtime() + (Instant.now().getEpochSecond() - (profile.lastSeen()));
+        long totalSeconds = profile.playtime() + (Instant.now().getEpochSecond() - profile.lastSeen());
         String playtime = formatPlaytime(totalSeconds);
 
         List<SidebarLine> lines = new ArrayList<>();
@@ -59,16 +55,14 @@ public class ProfileContributor extends AbstractSidebarContributor {
         lines.add(SidebarLine.of("<dark_gray>Welcome <gray>" + display + "!"));
         lines.add(SidebarLine.of("<dark_gray>Playtime: <gray>" + playtime));
 
-        if (balanceSupplier != null) {
-            String balance = balanceSupplier.formattedBalance(player.getUniqueId());
-            if (balance != null) {
+        if (resolver != null) {
+            String balance = resolver.resolve(player, "%sylphian-economy_balance%");
+            if (!balance.isEmpty()) {
                 lines.add(SidebarLine.of("<dark_gray>Balance: <gray>" + balance));
             }
-        }
 
-        if (clanSupplier != null) {
-            String clan = clanSupplier.formattedClan(player.getUniqueId());
-            if (clan != null) {
+            String clan = resolver.resolve(player, "%sylphian-clans_name%");
+            if (!clan.isEmpty()) {
                 lines.add(SidebarLine.of("<dark_gray>Clan: <gray>" + clan));
             }
         }

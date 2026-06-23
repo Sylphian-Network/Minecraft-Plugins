@@ -1,8 +1,6 @@
 package net.sylphian.minecraft.profile;
 
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
-import net.sylphian.minecraft.clans.api.ClanProvider;
-import net.sylphian.minecraft.clans.model.Clan;
 import net.sylphian.minecraft.database.DatabaseService;
 import net.sylphian.minecraft.profile.command.PlaytimeCommand;
 import net.sylphian.minecraft.profile.db.migrations.Migration001CreatePlayers;
@@ -13,10 +11,9 @@ import net.sylphian.minecraft.profile.db.repositories.SessionRepository;
 import net.sylphian.minecraft.profile.listener.ChatListener;
 import net.sylphian.minecraft.profile.listener.ProfileListener;
 import net.sylphian.minecraft.profile.api.ProfileProvider;
-import net.sylphian.minecraft.profile.economy.BalanceTracker;
+import net.sylphian.minecraft.profile.placeholder.PapiPlaceholderBridge;
+import net.sylphian.minecraft.profile.placeholder.PlaceholderResolver;
 import net.sylphian.minecraft.profile.service.PlayerService;
-import net.sylphian.minecraft.profile.sidebar.BalanceSupplier;
-import net.sylphian.minecraft.profile.sidebar.ClanSupplier;
 import net.sylphian.minecraft.profile.sidebar.ProfileContributor;
 import net.sylphian.minecraft.profile.utils.ProfileManager;
 import net.sylphian.minecraft.profile.utils.VisualManager;
@@ -94,21 +91,11 @@ public final class SylphianProfile extends JavaPlugin {
                         new PlaytimeCommand(playerService, this))
         );
 
-        // Soft dependency: show balances on the sidebar only when Sylphian-Economy is installed.
-        BalanceSupplier balanceSupplier = null;
-        if (getServer().getPluginManager().getPlugin("Sylphian-Economy") != null) {
-            BalanceTracker balanceTracker = new BalanceTracker();
-            getServer().getPluginManager().registerEvents(balanceTracker, this);
-            balanceSupplier = balanceTracker;
+        PlaceholderResolver resolver = null;
+        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            resolver = new PapiPlaceholderBridge();
         }
-        ClanSupplier clanSupplier = null;
-        if (getServer().getPluginManager().getPlugin("Sylphian-Clans") != null) {
-            clanSupplier = uuid -> ClanProvider.get()
-                    .getClanByPlayerCached(uuid)
-                    .map(Clan::name)
-                    .orElse(null);
-        }
-        SidebarService.registerContributor(new ProfileContributor(profileManager, balanceSupplier, clanSupplier));
+        SidebarService.registerContributor(new ProfileContributor(profileManager, resolver));
 
         getLogger().info("Sylphian-Profile initialized.");
     }

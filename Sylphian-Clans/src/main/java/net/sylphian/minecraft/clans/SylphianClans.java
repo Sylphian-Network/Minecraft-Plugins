@@ -24,6 +24,7 @@ import net.sylphian.minecraft.clans.listener.ClanWarpListener;
 import net.sylphian.minecraft.clans.listener.TerritoryProtectionListener;
 import net.sylphian.minecraft.clans.listener.TerritoryTitleListener;
 import net.sylphian.minecraft.clans.listener.TerritoryTrackingListener;
+import net.sylphian.minecraft.clans.placeholder.ClanPlaceholderExpansion;
 import net.sylphian.minecraft.clans.service.ClanTeleportWarmupManager;
 import net.sylphian.minecraft.clans.service.ClanInviteService;
 import net.sylphian.minecraft.clans.service.ClanService;
@@ -85,6 +86,10 @@ public final class SylphianClans extends JavaPlugin {
         clanService = new ClanService(clanRepository, territoryService, clanCache, this, config.defaultMemberPerms());
 
         ClanProvider.register(clanService);
+
+        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new ClanPlaceholderExpansion().register();
+        }
 
         territoryService.seedCache().exceptionally(ex -> {
             getLogger().warning("Failed to seed territory cache: " + ex.getMessage());

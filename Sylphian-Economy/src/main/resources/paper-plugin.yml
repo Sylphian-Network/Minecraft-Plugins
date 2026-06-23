@@ -14,6 +14,9 @@ dependencies:
     Sylphian-Database:
       load: BEFORE
       required: true
+    PlaceholderAPI:
+      load: BEFORE
+      required: false
 
 permissions:
   sylphian.economy.balance:
