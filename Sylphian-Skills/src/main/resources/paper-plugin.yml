@@ -1,0 +1,27 @@
+name: Sylphian-Skills
+prefix: Sylphian-Skills
+version: '${version}'
+
+main: net.sylphian.minecraft.skills.SylphianSkills
+api-version: '26.1.2'
+load: POSTWORLD
+
+authors: [QuackieMackie]
+website: https://sylphian.net
+
+dependencies:
+  server:
+    Sylphian-Database:
+      load: BEFORE
+      required: true
+    CommandAPI:
+      load: BEFORE
+      required: true
+    PlaceholderAPI:
+      load: BEFORE
+      required: false
+
+permissions:
+  sylphian.skills.admin:
+    description: Administrative skills commands (/sylphian-skills).
+    default: op

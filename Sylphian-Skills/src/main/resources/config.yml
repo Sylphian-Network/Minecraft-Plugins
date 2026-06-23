@@ -1,0 +1,74 @@
+# =============================================================
+# Sylphian Skills - Main Configuration
+# =============================================================
+
+# =============================================================
+# Expansions
+# =============================================================
+# Each entry defines one content tier. Levels are cumulative:
+# a 30-level Base Game followed by a 10-level expansion gives
+# a total cap of 40.
+#
+# To raise the cap for a new release, append a new entry.
+# Never shorten or remove existing entries; doing so would
+# invalidate player XP earned under the old tiers.
+#
+# Fields per expansion:
+#   name: display name shown in skill menus and tooltips.
+#   levels: how many levels this tier adds to the cap.
+#
+#   xp-curve:
+#     base: XP constant. Higher values mean more XP per level overall.
+#     exponent: curve steepness. Higher values make later levels much harder.
+#
+#   XP formula (relative to the start of this tier):
+#     xp_required(position) = base * position ^ exponent
+#
+#   Examples for base=100, exponent=1.5 (Base Game, 30 levels):
+#     Level  1:       100 XP
+#     Level 10:     3,162 XP
+#     Level 20:     8,944 XP
+#     Level 30:    16,431 XP
+#
+#   Examples for base=8000, exponent=1.3 (expansion, 10 levels):
+#     Level 51 (pos 1):     8,000 XP from tier start
+#     Level 55 (pos 5):    27,108 XP from tier start
+#     Level 60 (pos 10):   79,812 XP from tier start
+# =============================================================
+
+expansions:
+  - name: "Base Game"
+    levels: 30
+    xp-curve:
+      base: 100.0
+      exponent: 1.5
+
+# To add an expansion, uncomment and append:
+#  - name: "First Expansion"
+#    levels: 10
+#    xp-curve:
+#      base: 8000.0
+#      exponent: 1.3
+
+# =============================================================
+# Level Up Effects
+# =============================================================
+# Effects shown to a player when they gain a level in any skill.
+# {skill}: replaced with the skill's display name (e.g. "Mining")
+# {level}: replaced with the new level number
+# =============================================================
+
+level-up:
+  sound:
+    enabled: true
+    name: "minecraft:entity.player.levelup"
+    volume: 1.0
+    pitch: 1.0
+
+  title:
+    enabled: true
+    title: "<gold><bold>Level Up!"
+    subtitle: "<yellow>{skill} is now level <gold>{level}<yellow>!"
+    fade-in: 10
+    stay: 50
+    fade-out: 10
