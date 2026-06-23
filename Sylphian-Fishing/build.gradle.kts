@@ -5,6 +5,7 @@ dependencies {
     compileOnly(project(":Sylphian-Items"))
     compileOnly(project(":Sylphian-Scoreboard"))
     compileOnly(project(":Sylphian-Crates"))
+    compileOnly(project(":Sylphian-Skills"))
     compileOnly(libs.jdbi.core)
     compileOnly(libs.jdbi.sqlobject)
 }
