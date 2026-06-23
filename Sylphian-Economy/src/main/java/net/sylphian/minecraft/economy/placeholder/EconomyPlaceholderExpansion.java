@@ -35,7 +35,7 @@ public final class EconomyPlaceholderExpansion extends PlaceholderExpansion impl
         this.economy = economy;
     }
 
-    @Override public String getIdentifier() { return "sylphian_economy"; }
+    @Override public String getIdentifier() { return "sylphian-economy"; }
     @Override public String getAuthor() { return "QuackieMackie"; }
     @Override public String getVersion() { return "1.0.0"; }
 

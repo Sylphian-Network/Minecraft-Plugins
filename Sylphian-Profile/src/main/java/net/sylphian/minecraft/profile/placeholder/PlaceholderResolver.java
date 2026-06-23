@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 public interface PlaceholderResolver {
     /**
      * @param player      the player to resolve for
-     * @param placeholder the full placeholder string, e.g. {@code "%sylphian_economy_balance%"}
+     * @param placeholder the full placeholder string, e.g. {@code "%sylphian-economy_balance%"}
      * @return the resolved value, or the original string if unresolvable
      */
     String resolve(Player player, String placeholder);

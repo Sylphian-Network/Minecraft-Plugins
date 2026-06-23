@@ -19,7 +19,7 @@ import java.util.Optional;
  */
 public final class ClanPlaceholderExpansion extends PlaceholderExpansion {
 
-    @Override public String getIdentifier() { return "sylphian_clans"; }
+    @Override public String getIdentifier() { return "sylphian-clans"; }
     @Override public String getAuthor() { return "QuackieMackie"; }
     @Override public String getVersion() { return "1.0.0"; }
     @Override public boolean persist() { return true; }

@@ -56,12 +56,12 @@ public class ProfileContributor extends AbstractSidebarContributor {
         lines.add(SidebarLine.of("<dark_gray>Playtime: <gray>" + playtime));
 
         if (resolver != null) {
-            String balance = resolver.resolve(player, "%sylphian_economy_balance%");
+            String balance = resolver.resolve(player, "%sylphian-economy_balance%");
             if (!balance.isEmpty()) {
                 lines.add(SidebarLine.of("<dark_gray>Balance: <gray>" + balance));
             }
 
-            String clan = resolver.resolve(player, "%sylphian_clans_name%");
+            String clan = resolver.resolve(player, "%sylphian-clans_name%");
             if (!clan.isEmpty()) {
                 lines.add(SidebarLine.of("<dark_gray>Clan: <gray>" + clan));
             }
