@@ -1,6 +1,8 @@
 package net.sylphian.minecraft.profile;
 
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
+import net.sylphian.minecraft.clans.api.ClanProvider;
+import net.sylphian.minecraft.clans.model.Clan;
 import net.sylphian.minecraft.database.DatabaseService;
 import net.sylphian.minecraft.profile.command.PlaytimeCommand;
 import net.sylphian.minecraft.profile.db.migrations.Migration001CreatePlayers;
@@ -14,6 +16,7 @@ import net.sylphian.minecraft.profile.api.ProfileProvider;
 import net.sylphian.minecraft.profile.economy.BalanceTracker;
 import net.sylphian.minecraft.profile.service.PlayerService;
 import net.sylphian.minecraft.profile.sidebar.BalanceSupplier;
+import net.sylphian.minecraft.profile.sidebar.ClanSupplier;
 import net.sylphian.minecraft.profile.sidebar.ProfileContributor;
 import net.sylphian.minecraft.profile.utils.ProfileManager;
 import net.sylphian.minecraft.profile.utils.VisualManager;
@@ -23,7 +26,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -99,7 +101,14 @@ public final class SylphianProfile extends JavaPlugin {
             getServer().getPluginManager().registerEvents(balanceTracker, this);
             balanceSupplier = balanceTracker;
         }
-        SidebarService.registerContributor(new ProfileContributor(profileManager, balanceSupplier));
+        ClanSupplier clanSupplier = null;
+        if (getServer().getPluginManager().getPlugin("Sylphian-Clans") != null) {
+            clanSupplier = uuid -> ClanProvider.get()
+                    .getClanByPlayerCached(uuid)
+                    .map(Clan::name)
+                    .orElse(null);
+        }
+        SidebarService.registerContributor(new ProfileContributor(profileManager, balanceSupplier, clanSupplier));
 
         getLogger().info("Sylphian-Profile initialized.");
     }

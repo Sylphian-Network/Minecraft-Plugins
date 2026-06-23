@@ -8,6 +8,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.components.CustomModelDataComponent;
@@ -121,6 +122,28 @@ public class ItemBuilder {
             meta.addEnchant(enchantment, level, true);
         }
 
+        return this;
+    }
+
+    /**
+     * Adds an enchantment glint to the item without applying a real enchantment,
+     * so no enchantment text appears in the tooltip.
+     *
+     * @return the builder instance
+     */
+    public ItemBuilder glint() {
+        meta.setEnchantmentGlintOverride(true);
+        return this;
+    }
+
+    /**
+     * Hides the item's attribute modifiers (e.g. attack damage, armor) from its tooltip.
+     * Useful when a tool, weapon, or armour piece is used purely as a GUI icon.
+     *
+     * @return the builder instance
+     */
+    public ItemBuilder hideAttributes() {
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         return this;
     }
 
