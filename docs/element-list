@@ -14,6 +14,7 @@ net.sylphian.minecraft.clans.event
 net.sylphian.minecraft.clans.gui
 net.sylphian.minecraft.clans.listener
 net.sylphian.minecraft.clans.model
+net.sylphian.minecraft.clans.placeholder
 net.sylphian.minecraft.clans.service
 net.sylphian.minecraft.clans.util
 net.sylphian.minecraft.cooking
@@ -46,6 +47,7 @@ net.sylphian.minecraft.economy.db.models
 net.sylphian.minecraft.economy.db.repositories
 net.sylphian.minecraft.economy.event
 net.sylphian.minecraft.economy.listener
+net.sylphian.minecraft.economy.placeholder
 net.sylphian.minecraft.economy.service
 net.sylphian.minecraft.economy.util
 net.sylphian.minecraft.fishing
@@ -77,8 +79,8 @@ net.sylphian.minecraft.profile.db.dao
 net.sylphian.minecraft.profile.db.migrations
 net.sylphian.minecraft.profile.db.models
 net.sylphian.minecraft.profile.db.repositories
-net.sylphian.minecraft.profile.economy
 net.sylphian.minecraft.profile.listener
+net.sylphian.minecraft.profile.placeholder
 net.sylphian.minecraft.profile.service
 net.sylphian.minecraft.profile.sidebar
 net.sylphian.minecraft.profile.utils

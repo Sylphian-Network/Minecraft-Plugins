@@ -63,7 +63,7 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(net.sylphian.minecraft.profile.utils.ProfileManager,net.sylphian.minecraft.profile.sidebar.BalanceSupplier,net.sylphian.minecraft.profile.sidebar.ClanSupplier)" tabindex="0">ProfileContributor(ProfileManager, BalanceSupplier, ClanSupplier)</a></li>
+<li><a href="#%3Cinit%3E(net.sylphian.minecraft.profile.utils.ProfileManager,net.sylphian.minecraft.profile.placeholder.PlaceholderResolver)" tabindex="0">ProfileContributor(ProfileManager, PlaceholderResolver)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -94,9 +94,8 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="../../scoreboard/api/AbstractSidebarContributor.html" title="class in net.sylphian.minecraft.scoreboard.api">AbstractSidebarContributor</a></span></div>
 <div class="block">Contributes player profile information to the sidebar.
 
-<p>Shows a welcome message using the player's linked forum username (if any),
-and live playtime calculated from their cached stored playtime plus their
-current session duration.</p></div>
+<p>Shows a welcome message, live playtime, and — when PlaceholderAPI is present
+and the relevant plugins are installed — balance and clan name.</p></div>
 </div>
 </section>
 <section class="summary">
@@ -124,12 +123,9 @@ current session duration.</p></div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.sylphian.minecraft.profile.utils.ProfileManager,net.sylphian.minecraft.profile.sidebar.BalanceSupplier,net.sylphian.minecraft.profile.sidebar.ClanSupplier)" class="member-name-link">ProfileContributor</a><wbr>(<a href="../utils/ProfileManager.html" title="class in net.sylphian.minecraft.profile.utils">ProfileManager</a>&nbsp;profileManager,
- @Nullable <a href="BalanceSupplier.html" title="interface in net.sylphian.minecraft.profile.sidebar">BalanceSupplier</a>&nbsp;balanceSupplier,
- @Nullable <a href="ClanSupplier.html" title="interface in net.sylphian.minecraft.profile.sidebar">ClanSupplier</a>&nbsp;clanSupplier)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Constructs a new ProfileContributor.</div>
-</div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.sylphian.minecraft.profile.utils.ProfileManager,net.sylphian.minecraft.profile.placeholder.PlaceholderResolver)" class="member-name-link">ProfileContributor</a><wbr>(<a href="../utils/ProfileManager.html" title="class in net.sylphian.minecraft.profile.utils">ProfileManager</a>&nbsp;profileManager,
+ @Nullable <a href="../placeholder/PlaceholderResolver.html" title="interface in net.sylphian.minecraft.profile.placeholder">PlaceholderResolver</a>&nbsp;resolver)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -197,17 +193,15 @@ current session duration.</p></div>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(net.sylphian.minecraft.profile.utils.ProfileManager,net.sylphian.minecraft.profile.sidebar.BalanceSupplier,net.sylphian.minecraft.profile.sidebar.ClanSupplier)">
+<section class="detail" id="&lt;init&gt;(net.sylphian.minecraft.profile.utils.ProfileManager,net.sylphian.minecraft.profile.placeholder.PlaceholderResolver)">
 <h3>ProfileContributor</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ProfileContributor</span><wbr><span class="parameters">(<a href="../utils/ProfileManager.html" title="class in net.sylphian.minecraft.profile.utils">ProfileManager</a>&nbsp;profileManager,
- @Nullable <a href="BalanceSupplier.html" title="interface in net.sylphian.minecraft.profile.sidebar">BalanceSupplier</a>&nbsp;balanceSupplier,
- @Nullable <a href="ClanSupplier.html" title="interface in net.sylphian.minecraft.profile.sidebar">ClanSupplier</a>&nbsp;clanSupplier)</span></div>
-<div class="block">Constructs a new ProfileContributor.</div>
+ @Nullable <a href="../placeholder/PlaceholderResolver.html" title="interface in net.sylphian.minecraft.profile.placeholder">PlaceholderResolver</a>&nbsp;resolver)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>profileManager</code> - the in-memory profile cache</dd>
-<dd><code>balanceSupplier</code> - supplies the player's balance line, or null to omit it</dd>
+<dd><code>resolver</code> - PlaceholderAPI bridge, or null if PAPI is not installed</dd>
 </dl>
 </div>
 </section>
