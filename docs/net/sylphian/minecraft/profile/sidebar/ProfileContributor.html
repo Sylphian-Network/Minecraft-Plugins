@@ -63,7 +63,7 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(net.sylphian.minecraft.profile.utils.ProfileManager,net.sylphian.minecraft.profile.sidebar.BalanceSupplier)" tabindex="0">ProfileContributor(ProfileManager, BalanceSupplier)</a></li>
+<li><a href="#%3Cinit%3E(net.sylphian.minecraft.profile.utils.ProfileManager,net.sylphian.minecraft.profile.sidebar.BalanceSupplier,net.sylphian.minecraft.profile.sidebar.ClanSupplier)" tabindex="0">ProfileContributor(ProfileManager, BalanceSupplier, ClanSupplier)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -124,8 +124,9 @@ current session duration.</p></div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.sylphian.minecraft.profile.utils.ProfileManager,net.sylphian.minecraft.profile.sidebar.BalanceSupplier)" class="member-name-link">ProfileContributor</a><wbr>(<a href="../utils/ProfileManager.html" title="class in net.sylphian.minecraft.profile.utils">ProfileManager</a>&nbsp;profileManager,
- @Nullable <a href="BalanceSupplier.html" title="interface in net.sylphian.minecraft.profile.sidebar">BalanceSupplier</a>&nbsp;balanceSupplier)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.sylphian.minecraft.profile.utils.ProfileManager,net.sylphian.minecraft.profile.sidebar.BalanceSupplier,net.sylphian.minecraft.profile.sidebar.ClanSupplier)" class="member-name-link">ProfileContributor</a><wbr>(<a href="../utils/ProfileManager.html" title="class in net.sylphian.minecraft.profile.utils">ProfileManager</a>&nbsp;profileManager,
+ @Nullable <a href="BalanceSupplier.html" title="interface in net.sylphian.minecraft.profile.sidebar">BalanceSupplier</a>&nbsp;balanceSupplier,
+ @Nullable <a href="ClanSupplier.html" title="interface in net.sylphian.minecraft.profile.sidebar">ClanSupplier</a>&nbsp;clanSupplier)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Constructs a new ProfileContributor.</div>
 </div>
@@ -157,6 +158,9 @@ current session duration.</p></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#method-summary" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-net.sylphian.minecraft.scoreboard.api.SidebarContributor">Methods inherited from interface&nbsp;<a href="../../scoreboard/api/SidebarContributor.html#method-summary" title="interface in net.sylphian.minecraft.scoreboard.api">SidebarContributor</a></h3>
+<code><a href="../../scoreboard/api/SidebarContributor.html#getExclusionGroup()" title="getExclusionGroup()">getExclusionGroup</a></code></div>
 </section>
 </li>
 </ul>
@@ -193,11 +197,12 @@ current session duration.</p></div>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(net.sylphian.minecraft.profile.utils.ProfileManager,net.sylphian.minecraft.profile.sidebar.BalanceSupplier)">
+<section class="detail" id="&lt;init&gt;(net.sylphian.minecraft.profile.utils.ProfileManager,net.sylphian.minecraft.profile.sidebar.BalanceSupplier,net.sylphian.minecraft.profile.sidebar.ClanSupplier)">
 <h3>ProfileContributor</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ProfileContributor</span><wbr><span class="parameters">(<a href="../utils/ProfileManager.html" title="class in net.sylphian.minecraft.profile.utils">ProfileManager</a>&nbsp;profileManager,
- @Nullable <a href="BalanceSupplier.html" title="interface in net.sylphian.minecraft.profile.sidebar">BalanceSupplier</a>&nbsp;balanceSupplier)</span></div>
+ @Nullable <a href="BalanceSupplier.html" title="interface in net.sylphian.minecraft.profile.sidebar">BalanceSupplier</a>&nbsp;balanceSupplier,
+ @Nullable <a href="ClanSupplier.html" title="interface in net.sylphian.minecraft.profile.sidebar">ClanSupplier</a>&nbsp;clanSupplier)</span></div>
 <div class="block">Constructs a new ProfileContributor.</div>
 <dl class="notes">
 <dt>Parameters:</dt>

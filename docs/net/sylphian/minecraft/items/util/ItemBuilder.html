@@ -68,6 +68,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#lore(java.lang.String...)" tabindex="0">lore(String...)</a></li>
 <li><a href="#loreStrings(java.util.List)" tabindex="0">loreStrings(List)</a></li>
 <li><a href="#enchant(java.lang.String,int)" tabindex="0">enchant(String, int)</a></li>
+<li><a href="#glint()" tabindex="0">glint()</a></li>
+<li><a href="#hideAttributes()" tabindex="0">hideAttributes()</a></li>
 <li><a href="#amount(int)" tabindex="0">amount(int)</a></li>
 <li><a href="#customModelData(float)" tabindex="0">customModelData(float)</a></li>
 <li><a href="#build()" tabindex="0">build()</a></li>
@@ -137,6 +139,17 @@ using MiniMessage for universal text formatting.</div>
  int&nbsp;level)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Applies an enchantment to the item by namespaced key.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ItemBuilder.html" title="class in net.sylphian.minecraft.items.util">ItemBuilder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#glint()" class="member-name-link">glint</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Adds an enchantment glint to the item without applying a real enchantment,
+so no enchantment text appears in the tooltip.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ItemBuilder.html" title="class in net.sylphian.minecraft.items.util">ItemBuilder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hideAttributes()" class="member-name-link">hideAttributes</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Hides the item's attribute modifiers (e.g.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ItemBuilder.html" title="class in net.sylphian.minecraft.items.util">ItemBuilder</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#lore(java.lang.String...)" class="member-name-link">lore</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;lines)</code></div>
@@ -291,6 +304,34 @@ and fully qualified namespaced keys (e.g. <code>"sylphian:super_fish"</code>).</
 <dt>Parameters:</dt>
 <dd><code>key</code> - the enchantment key, with or without namespace</dd>
 <dd><code>level</code> - the enchantment level</dd>
+<dt>Returns:</dt>
+<dd>the builder instance</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="glint()">
+<h3>glint</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ItemBuilder.html" title="class in net.sylphian.minecraft.items.util">ItemBuilder</a></span>&nbsp;<span class="element-name">glint</span>()</div>
+<div class="block">Adds an enchantment glint to the item without applying a real enchantment,
+so no enchantment text appears in the tooltip.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the builder instance</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="hideAttributes()">
+<h3>hideAttributes</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ItemBuilder.html" title="class in net.sylphian.minecraft.items.util">ItemBuilder</a></span>&nbsp;<span class="element-name">hideAttributes</span>()</div>
+<div class="block">Hides the item's attribute modifiers (e.g. attack damage, armor) from its tooltip.
+Useful when a tool, weapon, or armour piece is used purely as a GUI icon.</div>
+<dl class="notes">
 <dt>Returns:</dt>
 <dd>the builder instance</dd>
 </dl>

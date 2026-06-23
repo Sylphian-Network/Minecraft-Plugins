@@ -68,6 +68,7 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
+<li><a href="#getExclusionGroup()" tabindex="0">getExclusionGroup()</a></li>
 <li><a href="#getLinesFor(org.bukkit.entity.Player)" tabindex="0">getLinesFor(Player)</a></li>
 <li><a href="#trackHook(java.util.UUID,org.bukkit.entity.FishHook)" tabindex="0">trackHook(UUID, FishHook)</a></li>
 <li><a href="#clearHook(java.util.UUID)" tabindex="0">clearHook(UUID)</a></li>
@@ -149,15 +150,21 @@ at the hook's location.</p></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Removes the player's hook from tracking.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../../scoreboard/api/SidebarLine.html" title="class in net.sylphian.minecraft.scoreboard.api">SidebarLine</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLinesFor(org.bukkit.entity.Player)" class="member-name-link">getLinesFor</a><wbr>(org.bukkit.entity.Player&nbsp;player)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getExclusionGroup()" class="member-name-link">getExclusionGroup</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the exclusion group this contributor belongs to, or <code>null</code>
+for no grouping.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../../scoreboard/api/SidebarLine.html" title="class in net.sylphian.minecraft.scoreboard.api">SidebarLine</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLinesFor(org.bukkit.entity.Player)" class="member-name-link">getLinesFor</a><wbr>(org.bukkit.entity.Player&nbsp;player)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns bait zone lines if the player's hook is bobbing in one or more zones.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#trackHook(java.util.UUID,org.bukkit.entity.FishHook)" class="member-name-link">trackHook</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#trackHook(java.util.UUID,org.bukkit.entity.FishHook)" class="member-name-link">trackHook</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid,
  org.bukkit.entity.FishHook&nbsp;hook)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Registers the player's active fishing hook for zone tracking.</div>
 </div>
 </div>
@@ -225,6 +232,24 @@ at the hook's location.</p></div>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="getExclusionGroup()">
+<h3>getExclusionGroup</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getExclusionGroup</span>()</div>
+<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../../scoreboard/api/SidebarContributor.html#getExclusionGroup()">SidebarContributor</a></code></span></div>
+<div class="block">Returns the exclusion group this contributor belongs to, or <code>null</code>
+for no grouping. Within a group, only the highest-priority contributor
+(lowest priority value) that returns non-empty lines is rendered per
+refresh — the rest are skipped. Contributors with no group always render
+independently.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the exclusion group identifier, or <code>null</code></dd>
+</dl>
+</div>
+</section>
+</li>
 <li>
 <section class="detail" id="getLinesFor(org.bukkit.entity.Player)">
 <h3>getLinesFor</h3>
