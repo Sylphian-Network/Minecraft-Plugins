@@ -137,7 +137,7 @@ public final class WarpSubCommand implements SubCommand {
         ctx.warpService().getWarp(clanId, name).thenCompose(opt -> {
             if (opt.isEmpty()) {
                 player.sendMessage(Component.text("No warp named '" + name + "'.", NamedTextColor.RED));
-                return CompletableFuture.<Void>completedFuture(null);
+                return CompletableFuture.completedFuture(null);
             }
             return ctx.warpService().listAccess(clanId, name).thenCompose(access -> {
                 boolean has = access.contains(targetId);
@@ -160,7 +160,7 @@ public final class WarpSubCommand implements SubCommand {
         ctx.warpService().getWarp(clanId, name).thenCompose(opt -> {
             if (opt.isEmpty()) {
                 player.sendMessage(Component.text("No warp named '" + name + "'.", NamedTextColor.RED));
-                return CompletableFuture.<Void>completedFuture(null);
+                return CompletableFuture.completedFuture(null);
             }
             boolean nowRestricted = !opt.get().restricted();
             return ctx.warpService().setRestricted(clanId, name, nowRestricted).thenRun(() -> player.sendMessage(nowRestricted

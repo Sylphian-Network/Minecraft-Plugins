@@ -8,8 +8,6 @@ import net.sylphian.minecraft.profile.service.PlayerService;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import java.util.logging.Logger;
-
 /**
  * Command to view a player's total cumulative playtime.
  * Uses the PlayerService to calculate real-time playtime including the current session.

@@ -141,7 +141,7 @@ public final class ClanWarpAccessMenu {
         warpService.getWarp(clanId, warpName)
                 .thenCompose(opt -> {
                     if (opt.isEmpty()) {
-                        return java.util.concurrent.CompletableFuture.<Void>completedFuture(null);
+                        return java.util.concurrent.CompletableFuture.completedFuture(null);
                     }
                     return warpService.setRestricted(clanId, warpName, !opt.get().restricted());
                 })

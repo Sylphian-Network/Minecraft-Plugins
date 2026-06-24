@@ -117,7 +117,7 @@ public class TerritoryService {
             if (!pre.isCancelled()) allowed.add(c);
         }
         if (allowed.isEmpty()) {
-            return CompletableFuture.completedFuture(List.<int[]>of());
+            return CompletableFuture.completedFuture(List.of());
         }
 
         return claimRepository.findClaimsByClan(clanId).thenCompose(existing -> {
@@ -133,7 +133,7 @@ public class TerritoryService {
                     .toList();
 
             if (toClaim.isEmpty()) {
-                return CompletableFuture.completedFuture(List.<int[]>of());
+                return CompletableFuture.completedFuture(List.of());
             }
 
             Instant now = Instant.now();

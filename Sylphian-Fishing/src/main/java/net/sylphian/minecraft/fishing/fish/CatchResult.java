@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
  * @param itemStack the built ItemStack for standard fish entries where
  *                  {@link LootEntry#externalItemId()} is null; {@code null} for
  *                  external item entries, which are resolved directly from the
- *                  {@link net.sylphian.minecraft.core.item.ItemRegistry} at grant time
+ *                  {@link net.sylphian.minecraft.items.item.ItemRegistry} at grant time
  * @param entry     the originating loot entry
  */
 public record CatchResult(double weight, ItemStack itemStack, LootEntry entry) {
