@@ -10,9 +10,10 @@ import org.bukkit.entity.Player;
 import java.time.Duration;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
- * Active perk unlocked at level 5.
+ * Active ability unlocked at level 5.
  *
  * <p>When activated, the player's next cast will use shortened hook wait times,
  * causing a bite to occur within 3-5 seconds instead of the normal window.</p>
@@ -24,39 +25,74 @@ public final class PatientAngler implements Ability {
     /** Cooldown key used with {@link CooldownManager}. */
     public static final String COOLDOWN_ID = "fishing:patient-angler";
 
-    @Override public String id()           { return COOLDOWN_ID; }
-    @Override public String name()         { return "Patient Angler"; }
-    @Override public String description()  { return "Your next cast will bite in 3-5 seconds."; }
-    @Override public int    unlockLevel()  { return 5; }
+    private final Supplier<FishingSkillConfig> config;
+    private final CooldownManager cooldownManager;
+    private final Set<UUID> pendingSet;
 
     /**
-     * Marks the next cast as a Patient Angler cast and starts the cooldown.
-     *
-     * @param player  the activating player
-     * @param uuid    the player's UUID
-     * @param cfg     current config snapshot
-     * @param cd      cooldown manager
-     * @param pending the set tracking whose next cast is affected
+     * @param config         supplier for the current config snapshot
+     * @param cooldownManager the shared cooldown manager
+     * @param pendingSet     the set tracking whose next cast is affected
      */
-    public void activate(Player player, UUID uuid, FishingSkillConfig cfg,
-                         CooldownManager cd, Set<UUID> pending) {
-        pending.add(uuid);
-        cd.setCooldown(uuid, COOLDOWN_ID, Duration.ofSeconds(cfg.patientAnglerCooldownSeconds()));
+    public PatientAngler(Supplier<FishingSkillConfig> config,
+                         CooldownManager cooldownManager,
+                         Set<UUID> pendingSet) {
+        this.config          = config;
+        this.cooldownManager = cooldownManager;
+        this.pendingSet      = pendingSet;
+    }
+
+    @Override public String  id()           { return COOLDOWN_ID; }
+    @Override public String  name()         { return "Patient Angler"; }
+    @Override public String  description()  { return "Your next cast will bite in 3-5 seconds."; }
+    @Override public boolean isActive()     { return true; }
+    @Override public String  activation()   { return "Sneak + right-click to open ability menu."; }
+    @Override public int     unlockLevel()  { return 5; }
+
+    /**
+     * Called by the framework when the player activates this ability.
+     * Checks cooldown and pending state before queuing the next fast cast.
+     */
+    @Override
+    public void onActivate(Player player, UUID uuid) {
+        if (pendingSet.contains(uuid)) {
+            player.sendActionBar(MINI.deserialize(
+                    "<yellow>Patient Angler <white>is already pending your next cast."));
+            return;
+        }
+        if (cooldownManager.isOnCooldown(uuid, COOLDOWN_ID)) {
+            player.sendActionBar(MINI.deserialize(
+                    "<red>Patient Angler: <white>"
+                    + cooldownManager.getRemainingSeconds(uuid, COOLDOWN_ID) + "s remaining."));
+            return;
+        }
+        FishingSkillConfig cfg = config.get();
+        pendingSet.add(uuid);
+        cooldownManager.setCooldown(uuid, COOLDOWN_ID, Duration.ofSeconds(cfg.patientAnglerCooldownSeconds()));
         player.sendActionBar(MINI.deserialize(
                 "<aqua>Patient Angler <white>ready! Your next cast will bite quickly."));
     }
 
     /**
-     * Applies the shortened wait times to the hook if this player's cast is pending.
-     * Removes the pending marker regardless of outcome so it does not carry over.
-     *
-     * @param hook    the newly cast hook
-     * @param uuid    the casting player's UUID
-     * @param cfg     current config snapshot
-     * @param pending the set tracking whose next cast is affected
+     * Short status string shown in the action bar during sneak-scroll selection.
      */
-    public void applyOnCast(FishHook hook, UUID uuid, FishingSkillConfig cfg, Set<UUID> pending) {
-        if (!pending.remove(uuid)) return;
+    @Override
+    public String selectionStatus(UUID uuid) {
+        if (pendingSet.contains(uuid)) return "<yellow>Pending";
+        long s = cooldownManager.getRemainingSeconds(uuid, COOLDOWN_ID);
+        return s > 0 ? "<red>" + s + "s" : "<green>Ready";
+    }
+
+    /**
+     * Applies the shortened wait times to the hook if this player's cast is pending.
+     * Removes the pending marker so it does not carry over to subsequent casts.
+     *
+     * @param hook the newly cast hook
+     * @param uuid the casting player's UUID
+     */
+    public void applyOnCast(FishHook hook, UUID uuid) {
+        if (!pendingSet.remove(uuid)) return;
+        FishingSkillConfig cfg = config.get();
         hook.setMinWaitTime(cfg.patientAnglerMinTicks());
         hook.setMaxWaitTime(cfg.patientAnglerMaxTicks());
     }

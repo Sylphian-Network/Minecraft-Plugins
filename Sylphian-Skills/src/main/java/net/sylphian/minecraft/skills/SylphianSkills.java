@@ -7,6 +7,7 @@ import net.sylphian.minecraft.skills.api.SkillsProvider;
 import net.sylphian.minecraft.skills.command.SkillsAdminCommand;
 import net.sylphian.minecraft.skills.command.SkillsPlayerCommand;
 import net.sylphian.minecraft.skills.gui.SkillsMenu;
+import net.sylphian.minecraft.skills.service.ActiveAbilityCoordinator;
 import net.sylphian.minecraft.skills.config.SkillsConfig;
 import net.sylphian.minecraft.skills.listener.SkillsMenuListener;
 import net.sylphian.minecraft.skills.db.migrations.Migration001CreatePlayerSkills;
@@ -56,6 +57,7 @@ public final class SylphianSkills extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new SkillsListener(skillsService), this);
         getServer().getPluginManager().registerEvents(new SkillsMenuListener(), this);
+        getServer().getPluginManager().registerEvents(new ActiveAbilityCoordinator(skillsService, this), this);
 
         Bukkit.getOnlinePlayers().forEach(p -> skillsService.load(p.getUniqueId()));
 

@@ -85,6 +85,8 @@ public final class SkillDetailMenu {
         List<String> lore = new ArrayList<>();
         lore.add("<gray>" + ability.description());
         lore.add("");
+        lore.add("<dark_gray>Activation: <gray>" + ability.activation());
+        lore.add("");
 
         if (unlocked) {
             lore.add("<green>Unlocked at level " + ability.unlockLevel());

@@ -11,9 +11,10 @@ import org.bukkit.plugin.Plugin;
 import java.time.Duration;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
- * Active perk unlocked at level 15.
+ * Active ability unlocked at level 15.
  *
  * <p>When activated, the player's next catch yields a second copy of the item,
  * delivered one tick after the original to ensure proper inventory handling.</p>
@@ -25,41 +26,78 @@ public final class DoubleHaul implements Ability {
     /** Cooldown key used with {@link CooldownManager}. */
     public static final String COOLDOWN_ID = "fishing:double-haul";
 
-    @Override public String id()           { return COOLDOWN_ID; }
-    @Override public String name()         { return "Double Haul"; }
-    @Override public String description()  { return "Your next catch yields a second copy of the item."; }
-    @Override public int    unlockLevel()  { return 15; }
+    private final Supplier<FishingSkillConfig> config;
+    private final CooldownManager cooldownManager;
+    private final Set<UUID> pendingSet;
+    private final Plugin plugin;
 
     /**
-     * Marks the next catch for duplication and starts the cooldown.
-     *
-     * @param player  the activating player
-     * @param uuid    the player's UUID
-     * @param cfg     current config snapshot
-     * @param cd      cooldown manager
-     * @param pending the set tracking whose next catch is duplicated
+     * @param config          supplier for the current config snapshot
+     * @param cooldownManager the shared cooldown manager
+     * @param pendingSet      the set tracking whose next catch is duplicated
+     * @param plugin          the owning plugin, used to schedule the delayed item delivery
      */
-    public void activate(Player player, UUID uuid, FishingSkillConfig cfg,
-                         CooldownManager cd, Set<UUID> pending) {
-        pending.add(uuid);
-        cd.setCooldown(uuid, COOLDOWN_ID, Duration.ofSeconds(cfg.doubleHaulCooldownSeconds()));
+    public DoubleHaul(Supplier<FishingSkillConfig> config,
+                      CooldownManager cooldownManager,
+                      Set<UUID> pendingSet,
+                      Plugin plugin) {
+        this.config          = config;
+        this.cooldownManager = cooldownManager;
+        this.pendingSet      = pendingSet;
+        this.plugin          = plugin;
+    }
+
+    @Override public String  id()           { return COOLDOWN_ID; }
+    @Override public String  name()         { return "Double Haul"; }
+    @Override public String  description()  { return "Your next catch yields a second copy of the item."; }
+    @Override public boolean isActive()     { return true; }
+    @Override public String  activation()   { return "Sneak + right-click to open ability menu."; }
+    @Override public int     unlockLevel()  { return 15; }
+
+    /**
+     * Called by the framework when the player activates this ability.
+     * Checks cooldown and pending state, then marks the next catch for duplication.
+     */
+    @Override
+    public void onActivate(Player player, UUID uuid) {
+        if (pendingSet.contains(uuid)) {
+            player.sendActionBar(MINI.deserialize(
+                    "<yellow>Double Haul <white>is already pending your next catch."));
+            return;
+        }
+        if (cooldownManager.isOnCooldown(uuid, COOLDOWN_ID)) {
+            player.sendActionBar(MINI.deserialize(
+                    "<red>Double Haul: <white>"
+                    + cooldownManager.getRemainingSeconds(uuid, COOLDOWN_ID) + "s remaining."));
+            return;
+        }
+        FishingSkillConfig cfg = config.get();
+        pendingSet.add(uuid);
+        cooldownManager.setCooldown(uuid, COOLDOWN_ID, Duration.ofSeconds(cfg.doubleHaulCooldownSeconds()));
         player.sendActionBar(MINI.deserialize(
                 "<aqua>Double Haul <white>ready! Your next catch will be duplicated."));
     }
 
     /**
-     * Gives the player a second copy of the caught item if this catch is pending.
-     * The clone is delivered one tick later so the original item lands in inventory first.
-     *
-     * @param player  the catching player
-     * @param uuid    the player's UUID
-     * @param caught  the item that was caught
-     * @param plugin  the owning plugin (used for scheduling)
-     * @param pending the set tracking whose next catch is duplicated
+     * Short status string shown in the action bar during sneak-scroll selection.
      */
-    public void applyOnCatch(Player player, UUID uuid, ItemStack caught,
-                             Plugin plugin, Set<UUID> pending) {
-        if (!pending.remove(uuid)) return;
+    @Override
+    public String selectionStatus(UUID uuid) {
+        if (pendingSet.contains(uuid)) return "<yellow>Pending";
+        long s = cooldownManager.getRemainingSeconds(uuid, COOLDOWN_ID);
+        return s > 0 ? "<red>" + s + "s" : "<green>Ready";
+    }
+
+    /**
+     * Gives the player a second copy of the caught item if this catch is pending.
+     * The clone is delivered two ticks later so the original item lands in inventory first.
+     *
+     * @param player the catching player
+     * @param uuid   the player's UUID
+     * @param caught the item that was caught
+     */
+    public void applyOnCatch(Player player, UUID uuid, ItemStack caught) {
+        if (!pendingSet.remove(uuid)) return;
         ItemStack clone = caught.clone();
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
             if (player.isOnline()) {

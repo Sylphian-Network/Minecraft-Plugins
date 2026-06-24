@@ -10,9 +10,10 @@ import org.bukkit.plugin.Plugin;
 
 import java.time.Duration;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
- * Active perk unlocked at level 25.
+ * Active ability unlocked at level 25.
  *
  * <p>For a configurable duration, all hook wait times are reduced by 60%
  * and the player earns double XP per catch. A buff marker is held in
@@ -27,28 +28,55 @@ public final class FishersFrenzy implements Ability {
     /** Key used with {@link ActiveBuffTracker} to track the active buff. */
     public static final String BUFF_ID     = "fishing:frenzy-buff";
 
-    @Override public String id()           { return COOLDOWN_ID; }
-    @Override public String name()         { return "Fisher's Frenzy"; }
-    @Override public String description()  {
-        return "For 60 seconds, bites come 60% faster and you earn double XP.";
-    }
-    @Override public int    unlockLevel()  { return 25; }
+    private final Supplier<FishingSkillConfig> config;
+    private final CooldownManager cooldownManager;
+    private final ActiveBuffTracker buffs;
+    private final Plugin plugin;
 
     /**
-     * Activates Fisher's Frenzy: applies the buff, starts the cooldown, and
-     * schedules the buff expiry task.
-     *
-     * @param player  the activating player
-     * @param uuid    the player's UUID
-     * @param cfg     current config snapshot
-     * @param cd      cooldown manager
-     * @param buffs   active buff tracker
-     * @param plugin  the owning plugin (used for scheduling the expiry task)
+     * @param config          supplier for the current config snapshot
+     * @param cooldownManager the shared cooldown manager
+     * @param buffs           the active buff tracker
+     * @param plugin          the owning plugin, used to schedule the buff expiry task
      */
-    public void activate(Player player, UUID uuid, FishingSkillConfig cfg,
-                         CooldownManager cd, ActiveBuffTracker buffs, Plugin plugin) {
+    public FishersFrenzy(Supplier<FishingSkillConfig> config,
+                         CooldownManager cooldownManager,
+                         ActiveBuffTracker buffs,
+                         Plugin plugin) {
+        this.config          = config;
+        this.cooldownManager = cooldownManager;
+        this.buffs           = buffs;
+        this.plugin          = plugin;
+    }
+
+    @Override public String  id()           { return COOLDOWN_ID; }
+    @Override public String  name()         { return "Fisher's Frenzy"; }
+    @Override public String  description()  {
+        return "For 60 seconds, bites come 60% faster and you earn double XP.";
+    }
+    @Override public boolean isActive()     { return true; }
+    @Override public String  activation()   { return "Sneak + right-click to open ability menu."; }
+    @Override public int     unlockLevel()  { return 25; }
+
+    /**
+     * Called by the framework when the player activates this ability.
+     * Applies the buff, starts the cooldown, and schedules buff expiry.
+     */
+    @Override
+    public void onActivate(Player player, UUID uuid) {
+        if (isFrenzyActive(uuid)) {
+            player.sendActionBar(MINI.deserialize("<gold>Fisher's Frenzy <white>is already active!"));
+            return;
+        }
+        if (cooldownManager.isOnCooldown(uuid, COOLDOWN_ID)) {
+            player.sendActionBar(MINI.deserialize(
+                    "<red>Fisher's Frenzy: <white>"
+                    + cooldownManager.getRemainingSeconds(uuid, COOLDOWN_ID) + "s remaining."));
+            return;
+        }
+        FishingSkillConfig cfg = config.get();
         buffs.addBuff(uuid, BUFF_ID);
-        cd.setCooldown(uuid, COOLDOWN_ID, Duration.ofSeconds(cfg.fishersFrenzyCooldownSeconds()));
+        cooldownManager.setCooldown(uuid, COOLDOWN_ID, Duration.ofSeconds(cfg.fishersFrenzyCooldownSeconds()));
 
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
             buffs.removeBuff(uuid, BUFF_ID);
@@ -63,30 +91,36 @@ public final class FishersFrenzy implements Ability {
     }
 
     /**
-     * @param uuid  the player's UUID
-     * @param buffs active buff tracker
+     * Short status string shown in the action bar during sneak-scroll selection.
+     */
+    @Override
+    public String selectionStatus(UUID uuid) {
+        if (isFrenzyActive(uuid)) return "<gold>Active!";
+        long s = cooldownManager.getRemainingSeconds(uuid, COOLDOWN_ID);
+        return s > 0 ? "<red>" + s + "s" : "<green>Ready";
+    }
+
+    /**
+     * @param uuid the player's UUID
      * @return {@code true} if Fisher's Frenzy is currently active for this player
      */
-    public boolean isActive(UUID uuid, ActiveBuffTracker buffs) {
+    public boolean isFrenzyActive(UUID uuid) {
         return buffs.hasBuff(uuid, BUFF_ID);
     }
 
     /**
-     * @param uuid  the player's UUID
-     * @param buffs active buff tracker
-     * @param cfg   current config snapshot
-     * @return the fractional wait-time reduction while active, or 0.0 if inactive
+     * @param uuid the player's UUID
+     * @return the fractional wait-time reduction while the buff is active, or 0.0 if inactive
      */
-    public double reductionFraction(UUID uuid, ActiveBuffTracker buffs, FishingSkillConfig cfg) {
-        return isActive(uuid, buffs) ? cfg.fishersFrenzyReductionPercent() / 100.0 : 0.0;
+    public double reductionFraction(UUID uuid) {
+        return isFrenzyActive(uuid) ? config.get().fishersFrenzyReductionPercent() / 100.0 : 0.0;
     }
 
     /**
-     * @param uuid  the player's UUID
-     * @param buffs active buff tracker
+     * @param uuid the player's UUID
      * @return 2.0 while the buff is active, 1.0 otherwise
      */
-    public double xpMultiplier(UUID uuid, ActiveBuffTracker buffs) {
-        return isActive(uuid, buffs) ? 2.0 : 1.0;
+    public double xpMultiplier(UUID uuid) {
+        return isFrenzyActive(uuid) ? 2.0 : 1.0;
     }
 }

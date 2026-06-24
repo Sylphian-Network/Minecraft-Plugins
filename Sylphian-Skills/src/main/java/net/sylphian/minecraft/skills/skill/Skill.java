@@ -1,9 +1,13 @@
 package net.sylphian.minecraft.skills.skill;
 
 import net.sylphian.minecraft.skills.api.SkillsAPI;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Contract for a single skill implementation.
@@ -41,6 +45,31 @@ public interface Skill {
      */
     default List<Ability> getAbilities() {
         return List.of();
+    }
+
+    /**
+     * The item material a player must be holding for the framework's active-ability
+     * coordinator to intercept sneak-scroll and sneak-right-click gestures.
+     * Return {@link Optional#empty()} for skills with no active abilities.
+     *
+     * @return the trigger material, or empty if not applicable
+     */
+    default Optional<Material> activationMaterial() {
+        return Optional.empty();
+    }
+
+    /**
+     * Returns {@code false} to suppress active-ability activation for this player
+     * right now, without cancelling the underlying item interaction.
+     * For example, a fishing skill returns false while the hook is in the water
+     * so the player can still reel in normally.
+     *
+     * @param player the interacting player
+     * @param uuid   the player's UUID
+     * @return {@code true} if activation should proceed
+     */
+    default boolean canInteract(Player player, UUID uuid) {
+        return true;
     }
 
     /**
