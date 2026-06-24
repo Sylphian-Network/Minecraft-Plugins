@@ -3,6 +3,8 @@ package net.sylphian.minecraft.skills.skill;
 import net.sylphian.minecraft.skills.api.SkillsAPI;
 import org.bukkit.plugin.Plugin;
 
+import java.util.List;
+
 /**
  * Contract for a single skill implementation.
  *
@@ -30,6 +32,16 @@ public interface Skill {
      * @param api    the skills API for XP awards, cooldowns, and buff tracking
      */
     void registerListeners(Plugin plugin, SkillsAPI api);
+
+    /**
+     * Returns the abilities unlocked as the player levels up this skill.
+     * The default returns an empty list; override via {@link AbstractSkill#addAbility}.
+     *
+     * @return ordered list of abilities, from lowest to highest unlock level
+     */
+    default List<Ability> getAbilities() {
+        return List.of();
+    }
 
     /**
      * Called when the owning plugin reloads its config. No-op by default.

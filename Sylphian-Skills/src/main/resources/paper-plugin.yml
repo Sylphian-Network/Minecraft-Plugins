@@ -14,6 +14,9 @@ dependencies:
     Sylphian-Database:
       load: BEFORE
       required: true
+    Sylphian-Items:
+      load: BEFORE
+      required: true
     CommandAPI:
       load: BEFORE
       required: true
@@ -22,6 +25,9 @@ dependencies:
       required: false
 
 permissions:
+  sylphian.skills.use:
+    description: Access to the /skills player command.
+    default: true
   sylphian.skills.admin:
     description: Administrative skills commands (/sylphian-skills).
     default: op

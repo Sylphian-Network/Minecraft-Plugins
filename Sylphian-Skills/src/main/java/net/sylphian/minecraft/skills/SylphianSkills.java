@@ -5,7 +5,10 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.sylphian.minecraft.database.DatabaseService;
 import net.sylphian.minecraft.skills.api.SkillsProvider;
 import net.sylphian.minecraft.skills.command.SkillsAdminCommand;
+import net.sylphian.minecraft.skills.command.SkillsPlayerCommand;
+import net.sylphian.minecraft.skills.gui.SkillsMenu;
 import net.sylphian.minecraft.skills.config.SkillsConfig;
+import net.sylphian.minecraft.skills.listener.SkillsMenuListener;
 import net.sylphian.minecraft.skills.db.migrations.Migration001CreatePlayerSkills;
 import net.sylphian.minecraft.skills.db.repositories.SkillRepository;
 import net.sylphian.minecraft.skills.listener.SkillsListener;
@@ -46,9 +49,13 @@ public final class SylphianSkills extends JavaPlugin {
 
         SkillsProvider.register(skillsService);
 
+        SkillsMenu skillsMenu = new SkillsMenu(skillsService);
+
         new SkillsAdminCommand(this).register();
+        new SkillsPlayerCommand(skillsMenu).register();
 
         getServer().getPluginManager().registerEvents(new SkillsListener(skillsService), this);
+        getServer().getPluginManager().registerEvents(new SkillsMenuListener(), this);
 
         Bukkit.getOnlinePlayers().forEach(p -> skillsService.load(p.getUniqueId()));
 
