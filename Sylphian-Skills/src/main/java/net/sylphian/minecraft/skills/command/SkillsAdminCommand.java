@@ -5,6 +5,8 @@ import dev.jorel.commandapi.executors.CommandArguments;
 import net.sylphian.minecraft.skills.SylphianSkills;
 import net.sylphian.minecraft.skills.command.admin.ReloadSubCommand;
 import net.sylphian.minecraft.skills.command.admin.SkillsAdminContext;
+import net.sylphian.minecraft.skills.command.admin.XpSubCommand;
+import net.sylphian.minecraft.skills.service.SkillsService;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -22,12 +24,14 @@ public final class SkillsAdminCommand {
     private final List<SubCommand> subCommands;
 
     /**
-     * @param plugin the owning plugin, passed through to subcommands that need it
+     * @param plugin  the owning plugin, passed through to subcommands that need it
+     * @param service the skills service, used by subcommands that read or write player data
      */
-    public SkillsAdminCommand(SylphianSkills plugin) {
+    public SkillsAdminCommand(SylphianSkills plugin, SkillsService service) {
         new SkillsAdminContext();
         this.subCommands = List.of(
-                new ReloadSubCommand(plugin));
+                new ReloadSubCommand(plugin),
+                new XpSubCommand(service));
     }
 
     /**
@@ -49,6 +53,9 @@ public final class SkillsAdminCommand {
     private void sendUsage(CommandSender sender) {
         sender.sendMessage(MINI.deserialize("""
                 <yellow>--- /sylphian-skills commands ---
-                <white>/sylphian-skills reload"""));
+                <white>/sylphian-skills reload
+                /sylphian-skills xp add <player> <skill> <amount>
+                /sylphian-skills xp set <player> <skill> <amount>
+                /sylphian-skills xp remove <player> <skill> <amount>"""));
     }
 }

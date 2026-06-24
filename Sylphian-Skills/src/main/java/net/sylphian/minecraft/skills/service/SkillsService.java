@@ -177,6 +177,59 @@ public class SkillsService implements SkillsAPI {
                 .thenApply(data -> data.getOrDefault(skillId, 0L));
     }
 
+    /**
+     * Directly sets a player's XP for a skill, clamping to [0, XP cap].
+     * Updates the in-memory cache and writes through to the database.
+     * Does not fire events or show level-up effects.
+     *
+     * @param uuid    the target player's UUID
+     * @param skillId the skill to modify
+     * @param amount  the desired XP value; clamped to [0, cap]
+     * @return the actual XP value after clamping
+     */
+    public CompletableFuture<Long> adminSetXP(UUID uuid, String skillId, long amount) {
+        SkillsConfig snapshot = config;
+        long clamped = Math.clamp(amount, 0L, snapshot.xpForLevel(snapshot.levelCap()));
+        cache.computeIfAbsent(uuid, _ -> new ConcurrentHashMap<>()).put(skillId, clamped);
+        return repository.upsertXP(uuid, skillId, clamped).thenApply(_ -> clamped);
+    }
+
+    /**
+     * Adds XP to a player's skill, clamping at the XP cap.
+     * Updates the in-memory cache and writes through to the database.
+     * Does not fire events or show level-up effects.
+     *
+     * @param uuid    the target player's UUID
+     * @param skillId the skill to modify
+     * @param amount  the amount of XP to add; must be positive
+     * @return the resulting XP total
+     */
+    public CompletableFuture<Long> adminAddXP(UUID uuid, String skillId, long amount) {
+        SkillsConfig snapshot = config;
+        long cap = snapshot.xpForLevel(snapshot.levelCap());
+        Map<String, Long> playerSkills = cache.computeIfAbsent(uuid, _ -> new ConcurrentHashMap<>());
+        long after = Math.min(playerSkills.getOrDefault(skillId, 0L) + amount, cap);
+        playerSkills.put(skillId, after);
+        return repository.upsertXP(uuid, skillId, after).thenApply(_ -> after);
+    }
+
+    /**
+     * Subtracts XP from a player's skill, clamping at zero.
+     * Updates the in-memory cache and writes through to the database.
+     * Does not fire events or show level-up effects.
+     *
+     * @param uuid    the target player's UUID
+     * @param skillId the skill to modify
+     * @param amount  the amount of XP to remove; must be positive
+     * @return the resulting XP total
+     */
+    public CompletableFuture<Long> adminRemoveXP(UUID uuid, String skillId, long amount) {
+        Map<String, Long> playerSkills = cache.computeIfAbsent(uuid, _ -> new ConcurrentHashMap<>());
+        long after = Math.max(0L, playerSkills.getOrDefault(skillId, 0L) - amount);
+        playerSkills.put(skillId, after);
+        return repository.upsertXP(uuid, skillId, after).thenApply(_ -> after);
+    }
+
     @Override
     public Collection<Skill> getSkills() {
         return registry.all();

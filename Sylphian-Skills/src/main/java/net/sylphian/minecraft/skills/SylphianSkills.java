@@ -51,7 +51,7 @@ public final class SylphianSkills extends JavaPlugin {
 
         SkillsMenu skillsMenu = new SkillsMenu(skillsService);
 
-        new SkillsAdminCommand(this).register();
+        new SkillsAdminCommand(this, skillsService).register();
         new SkillsPlayerCommand(skillsMenu).register();
 
         getServer().getPluginManager().registerEvents(new SkillsListener(skillsService), this);
