@@ -92,6 +92,16 @@ public interface SkillsAPI {
     CompletableFuture<Long> getXP(UUID uuid, String skillId);
 
     /**
+     * Returns whether a player is at the level cap for a skill.
+     * Uses the cached XP, so returns {@code false} if the player is not loaded.
+     *
+     * @param uuid    the player's UUID
+     * @param skillId the skill identifier
+     * @return {@code true} if the player's cached XP equals or exceeds the cap
+     */
+    boolean isAtCap(UUID uuid, String skillId);
+
+    /**
      * @return all registered skills in insertion order
      */
     Collection<Skill> getSkills();

@@ -6,6 +6,7 @@ import net.sylphian.minecraft.skills.api.SkillsAPI;
 import net.sylphian.minecraft.skills.config.SkillsConfig;
 import net.sylphian.minecraft.skills.db.api.ISkillRepository;
 import net.sylphian.minecraft.skills.event.SkillLevelUpEvent;
+import net.sylphian.minecraft.skills.event.SkillMaxLevelEvent;
 import net.sylphian.minecraft.skills.event.SkillXPGainEvent;
 import net.sylphian.minecraft.skills.skill.Skill;
 import net.sylphian.minecraft.skills.skill.SkillRegistry;
@@ -142,15 +143,14 @@ public class SkillsService implements SkillsAPI {
         Skill skill = skillOpt.get();
 
         UUID uuid = player.getUniqueId();
+        if (isAtCap(uuid, skillId)) return;
+
         SkillsConfig snapshot = config;
 
         Map<String, Long> playerSkills = cache.computeIfAbsent(uuid, k -> new ConcurrentHashMap<>());
         long before = playerSkills.getOrDefault(skillId, 0L);
+        long after  = Math.min(before + amount, snapshot.xpForLevel(snapshot.levelCap()));
 
-        long cap = snapshot.xpForLevel(snapshot.levelCap());
-        long after = Math.min(before + amount, cap);
-
-        if (after == before) return; // already at cap, nothing to do
         playerSkills.put(skillId, after);
 
         repository.upsertXP(uuid, skillId, after)
@@ -163,11 +163,16 @@ public class SkillsService implements SkillsAPI {
         plugin.getServer().getPluginManager().callEvent(new SkillXPGainEvent(uuid, skill, after - before, after));
 
         int levelBefore = snapshot.levelFromXp(before);
-        int levelAfter = snapshot.levelFromXp(after);
+        int levelAfter  = snapshot.levelFromXp(after);
         if (levelAfter > levelBefore) {
             plugin.getServer().getPluginManager().callEvent(
                     new SkillLevelUpEvent(uuid, skill, levelBefore, levelAfter));
             showLevelUpEffects(player, skill, levelAfter, snapshot);
+        }
+
+        int levelCap = snapshot.levelCap();
+        if (levelBefore < levelCap && levelAfter >= levelCap) {
+            plugin.getServer().getPluginManager().callEvent(new SkillMaxLevelEvent(uuid, skill, levelCap));
         }
     }
 
@@ -228,6 +233,12 @@ public class SkillsService implements SkillsAPI {
         long after = Math.max(0L, playerSkills.getOrDefault(skillId, 0L) - amount);
         playerSkills.put(skillId, after);
         return repository.upsertXP(uuid, skillId, after).thenApply(_ -> after);
+    }
+
+    @Override
+    public boolean isAtCap(UUID uuid, String skillId) {
+        SkillsConfig snapshot = config;
+        return getCachedXP(uuid, skillId) >= snapshot.xpForLevel(snapshot.levelCap());
     }
 
     @Override
