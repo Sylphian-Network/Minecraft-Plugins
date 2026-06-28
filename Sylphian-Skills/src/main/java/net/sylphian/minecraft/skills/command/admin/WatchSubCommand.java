@@ -8,8 +8,8 @@ import dev.jorel.commandapi.arguments.StringArgument;
 import dev.jorel.commandapi.executors.CommandArguments;
 import net.sylphian.minecraft.skills.command.SubCommand;
 import net.sylphian.minecraft.skills.service.SkillsService;
-import net.sylphian.minecraft.skills.skill.AbstractSkill;
 import net.sylphian.minecraft.skills.skill.Skill;
+import net.sylphian.minecraft.skills.skill.Watchable;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -56,7 +56,7 @@ public final class WatchSubCommand implements SubCommand {
             sender.sendMessage(MINI.deserialize("<red>Unknown skill: <white>" + skillId));
             return;
         }
-        if (!(opt.get() instanceof AbstractSkill skill)) {
+        if (!(opt.get() instanceof Watchable skill)) {
             sender.sendMessage(MINI.deserialize(
                     "<red>" + skillId + " <white>does not support watch."));
             return;
@@ -81,7 +81,7 @@ public final class WatchSubCommand implements SubCommand {
         return new StringArgument("skill")
                 .replaceSuggestions(ArgumentSuggestions.strings(
                         _ -> service.getSkills().stream()
-                                .filter(s -> s instanceof AbstractSkill)
+                                .filter(s -> s instanceof Watchable)
                                 .map(Skill::getId)
                                 .toArray(String[]::new)));
     }

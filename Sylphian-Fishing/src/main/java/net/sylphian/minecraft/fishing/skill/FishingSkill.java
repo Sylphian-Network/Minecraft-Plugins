@@ -14,7 +14,6 @@ import net.sylphian.minecraft.fishing.skill.trigger.FishCastTrigger;
 import net.sylphian.minecraft.fishing.skill.trigger.FishCatchTrigger;
 import net.sylphian.minecraft.skills.api.SkillsAPI;
 import net.sylphian.minecraft.skills.skill.AbstractSkill;
-import net.sylphian.minecraft.skills.skill.TraceEntry;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -169,8 +168,7 @@ public final class FishingSkill extends AbstractSkill {
         firePassives(castTrigger, player, uuid);
         castTrigger.applyToHook();
 
-        CommandSender watcher = getWatcher(uuid);
-        if (watcher != null) sendCastTrace(watcher, player, castTrigger, event.getHook(), priorMin, priorMax);
+        if (isWatched(uuid)) sendCastTrace(player, castTrigger, event.getHook(), priorMin, priorMax);
     }
 
     /**
@@ -193,8 +191,7 @@ public final class FishingSkill extends AbstractSkill {
         long finalXp = Math.max(1L, (long) (baseXp * catchTrigger.xpMultiplier()));
         skillsApi.awardXP(player, "fishing", finalXp);
 
-        CommandSender watcher = getWatcher(uuid);
-        if (watcher != null) sendCatchTrace(watcher, player, catchTrigger, caught, baseXp, finalXp);
+        if (isWatched(uuid)) sendCatchTrace(player, catchTrigger, caught, baseXp, finalXp);
     }
 
     /** Clears all per-player state on disconnect. */
@@ -227,36 +224,25 @@ public final class FishingSkill extends AbstractSkill {
     }
 
     /**
-     * Sends a step-by-step cast trace to the watching admin.
+     * Sends the cast trace header and ability contributions via
+     * {@link #sendTrace}, then appends the fishing-specific result footer.
      *
-     * @param watcher  the admin receiving the output
      * @param player   the player who cast
      * @param trigger  the populated cast trigger
      * @param hook     the hook after reductions were applied
      * @param priorMin hook min wait before passives
      * @param priorMax hook max wait before passives
      */
-    private void sendCastTrace(CommandSender watcher, Player player, FishCastTrigger trigger, FishHook hook, int priorMin, int priorMax) {
-        int level = skillsApi.getCachedLevel(player.getUniqueId(), "fishing");
-        List<TraceEntry> all = trigger.traceEntries();
-
-        watcher.sendMessage(MINI.deserialize(
+    private void sendCastTrace(Player player, FishCastTrigger trigger, FishHook hook, int priorMin, int priorMax) {
+        UUID uuid = player.getUniqueId();
+        int level = skillsApi.getCachedLevel(uuid, "fishing");
+        sendTrace(uuid,
                 "<dark_aqua>- Cast <white>" + player.getName()
                 + " <dark_gray>| <gray>Lv <white>" + level
-                + " <dark_gray>| <gray>Hook <white>" + priorMin + "<gray>-<white>" + priorMax + "<gray>t"));
-
-        if (all.isEmpty()) {
-            watcher.sendMessage(MINI.deserialize("<gray>  (no abilities contributed)"));
-        } else {
-            for (TraceEntry entry : all) {
-                if (entry.active()) {
-                    watcher.sendMessage(MINI.deserialize("<gray>  <yellow>- [Active] <white>" + entry.source() + " <white>" + entry.description()));
-                } else {
-                    watcher.sendMessage(MINI.deserialize("<gray>  <dark_aqua>- [Passive] <aqua>" + entry.source() + " <white>" + entry.description()));
-                }
-            }
-        }
-
+                + " <dark_gray>| <gray>Hook <white>" + priorMin + "<gray>-<white>" + priorMax + "<gray>t",
+                trigger.traceEntries());
+        CommandSender watcher = getWatcher(uuid);
+        if (watcher == null) return;
         double combined = Math.min(0.90, trigger.totalReduction());
         watcher.sendMessage(MINI.deserialize(
                 "<gray>  Result: <white>" + hook.getMinWaitTime() + "<gray>-<white>" + hook.getMaxWaitTime()
@@ -264,41 +250,30 @@ public final class FishingSkill extends AbstractSkill {
     }
 
     /**
-     * Sends a step-by-step catch trace to the watching admin.
+     * Sends the catch trace header and ability contributions via
+     * {@link #sendTrace}, then appends the fishing-specific XP footer.
      *
-     * @param watcher  the admin receiving the output
-     * @param player   the player who caught
-     * @param trigger  the populated catch trigger
-     * @param caught   the caught item
-     * @param baseXp   XP before multipliers
-     * @param finalXp  XP after multipliers
+     * @param player  the player who caught
+     * @param trigger the populated catch trigger
+     * @param caught  the caught item
+     * @param baseXp  XP before multipliers
+     * @param finalXp XP after multipliers
      */
-    private void sendCatchTrace(CommandSender watcher, Player player, FishCatchTrigger trigger, ItemStack caught, long baseXp, long finalXp) {
-        int level = skillsApi.getCachedLevel(player.getUniqueId(), "fishing");
-        List<TraceEntry> all = trigger.traceEntries();
-
+    private void sendCatchTrace(Player player, FishCatchTrigger trigger, ItemStack caught, long baseXp, long finalXp) {
+        UUID uuid = player.getUniqueId();
+        int level = skillsApi.getCachedLevel(uuid, "fishing");
         String itemName = caught.hasItemMeta() && caught.getItemMeta().hasDisplayName()
                 ? PlainTextComponentSerializer.plainText().serialize(Objects.requireNonNull(caught.getItemMeta().displayName()))
                 : caught.getType().name();
-
-        watcher.sendMessage(MINI.deserialize(
+        sendTrace(uuid,
                 "<green>- Catch <white>" + player.getName()
                 + " <dark_gray>| <gray>Lv <white>" + level
-                + " <dark_gray>| <white>" + itemName));
-
-        if (all.isEmpty()) {
-            watcher.sendMessage(MINI.deserialize("<gray>  (no abilities contributed)"));
-        } else {
-            for (TraceEntry entry : all) {
-                if (entry.active()) {
-                    watcher.sendMessage(MINI.deserialize("<gray>  <yellow>- [Active] <white>" + entry.source() + " <white>" + entry.description()));
-                } else {
-                    watcher.sendMessage(MINI.deserialize("<gray>  <green>- [Passive] <aqua>" + entry.source() + " <white>" + entry.description()));
-                }
-            }
-        }
-
-        watcher.sendMessage(MINI.deserialize("<gray>  XP: <white>" + baseXp + " <gray>base -> <white>" + finalXp + " <gray>awarded"));
+                + " <dark_gray>| <white>" + itemName,
+                trigger.traceEntries());
+        CommandSender watcher = getWatcher(uuid);
+        if (watcher == null) return;
+        watcher.sendMessage(MINI.deserialize(
+                "<gray>  XP: <white>" + baseXp + " <gray>base -> <white>" + finalXp + " <gray>awarded"));
     }
 
     /**

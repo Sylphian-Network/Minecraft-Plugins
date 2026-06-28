@@ -1,5 +1,6 @@
 package net.sylphian.minecraft.skills.skill;
 
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.skills.api.SkillsAPI;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -35,7 +36,9 @@ import java.util.UUID;
  *     }
  * </pre>
  */
-public abstract class AbstractSkill implements Skill, Listener {
+public abstract class AbstractSkill implements Skill, Listener, Watchable {
+
+    private static final MiniMessage MINI = MiniMessage.miniMessage();
 
     private final String id;
     private final String displayName;
@@ -129,43 +132,52 @@ public abstract class AbstractSkill implements Skill, Listener {
                 watcher -> watcher instanceof Player p && p.getUniqueId().equals(quitterId));
     }
 
-    /**
-     * Registers an admin to receive debug event traces for a player's skill events.
-     * Replaces any existing watcher for that player.
-     *
-     * @param playerUuid the player whose events to watch
-     * @param watcher    the admin to send trace output to
-     */
+    @Override
     public void watch(UUID playerUuid, CommandSender watcher) {
         debugWatchers.put(playerUuid, watcher);
     }
 
-    /**
-     * Removes the debug watcher for a player.
-     *
-     * @param playerUuid the player to stop watching
-     */
+    @Override
     public void unwatch(UUID playerUuid) {
         debugWatchers.remove(playerUuid);
     }
 
-    /**
-     * Returns {@code true} if a debug watcher is registered for this player.
-     *
-     * @param playerUuid the player's UUID
-     * @return {@code true} if the player is currently being watched
-     */
+    @Override
     public boolean isWatched(UUID playerUuid) {
         return debugWatchers.containsKey(playerUuid);
     }
 
-    /**
-     * Returns the admin watching this player's skill events, or {@code null} if none.
-     *
-     * @param playerUuid the player's UUID
-     * @return the watching admin, or {@code null}
-     */
+    @Override
     public @Nullable CommandSender getWatcher(UUID playerUuid) {
         return debugWatchers.get(playerUuid);
+    }
+
+    /**
+     * Sends a trace header line followed by per-ability contribution lines to the
+     * watching admin for this player. Does nothing if the player is not being watched.
+     *
+     * <p>Subclasses call this after firing passives, passing their own header string
+     * and the trigger's {@link TraceEntry} list. Any event-specific footer lines
+     * (e.g. final hook times, awarded XP) should be appended by the caller via
+     * {@link #getWatcher}.</p>
+     *
+     * @param uuid    the target player's UUID
+     * @param header  a MiniMessage string summarising the event
+     * @param entries the ability contributions recorded on the trigger token
+     */
+    protected void sendTrace(UUID uuid, String header, List<TraceEntry> entries) {
+        CommandSender watcher = getWatcher(uuid);
+        if (watcher == null) return;
+        watcher.sendMessage(MINI.deserialize(header));
+        if (entries.isEmpty()) {
+            watcher.sendMessage(MINI.deserialize("<gray>  (no abilities contributed)"));
+        } else {
+            for (TraceEntry entry : entries) {
+                String line = entry.active()
+                        ? "<gray>  <yellow>- [Active] <white>" + entry.source() + " <white>" + entry.description()
+                        : "<gray>  <aqua>- [Passive] <aqua>" + entry.source() + " <white>" + entry.description();
+                watcher.sendMessage(MINI.deserialize(line));
+            }
+        }
     }
 }
