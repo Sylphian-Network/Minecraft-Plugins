@@ -66,10 +66,10 @@ public final class FishersFrenzy implements ActiveAbility, PassiveAbility {
             player.sendActionBar(MINI.deserialize("<gold>Fisher's Frenzy <white>is already active!"));
             return;
         }
-        if (cooldownManager.isOnCooldown(uuid, COOLDOWN_ID)) {
+        long remaining = cooldownManager.getRemainingMillis(uuid, COOLDOWN_ID);
+        if (remaining > 0) {
             player.sendActionBar(MINI.deserialize(
-                    "<red>Fisher's Frenzy: <white>"
-                    + cooldownManager.getRemainingSeconds(uuid, COOLDOWN_ID) + "s remaining."));
+                    "<red>Fisher's Frenzy: <white>" + (remaining / 1000) + "s remaining."));
             return;
         }
         FishingSkillConfig cfg = config.get();

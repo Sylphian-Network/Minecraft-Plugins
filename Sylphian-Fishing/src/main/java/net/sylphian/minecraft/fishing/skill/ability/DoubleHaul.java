@@ -64,10 +64,10 @@ public final class DoubleHaul implements ActiveAbility {
                     "<yellow>Double Haul <white>is already pending your next catch."));
             return;
         }
-        if (cooldownManager.isOnCooldown(uuid, COOLDOWN_ID)) {
+        long remaining = cooldownManager.getRemainingMillis(uuid, COOLDOWN_ID);
+        if (remaining > 0) {
             player.sendActionBar(MINI.deserialize(
-                    "<red>Double Haul: <white>"
-                    + cooldownManager.getRemainingSeconds(uuid, COOLDOWN_ID) + "s remaining."));
+                    "<red>Double Haul: <white>" + (remaining / 1000) + "s remaining."));
             return;
         }
         FishingSkillConfig cfg = config.get();

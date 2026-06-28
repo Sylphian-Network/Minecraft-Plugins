@@ -19,6 +19,33 @@ public final class CooldownManager {
     private final Map<UUID, Map<String, Instant>> cooldowns = new ConcurrentHashMap<>();
 
     /**
+     * Returns the milliseconds remaining on a cooldown as a signed value.
+     * A positive result means the cooldown is still active; zero or negative
+     * means it has expired (or was never set).
+     *
+     * <p>Takes a single {@link Instant#now()} snapshot, so callers that need
+     * both an active check and a display value can derive both from one call:</p>
+     * <pre>
+     *     long ms = cooldowns.getRemainingMillis(uuid, id);
+     *     if (ms &gt; 0) {
+     *         player.sendActionBar("..." + ms / 1000 + "s remaining.");
+     *         return;
+     *     }
+     * </pre>
+     *
+     * @param uuid      the player's UUID
+     * @param abilityId the ability identifier (e.g. {@code "fishing:patient-angler"})
+     * @return milliseconds until expiry, or {@code 0} if not active
+     */
+    public long getRemainingMillis(UUID uuid, String abilityId) {
+        Map<String, Instant> player = cooldowns.get(uuid);
+        if (player == null) return 0L;
+        Instant expiry = player.get(abilityId);
+        if (expiry == null) return 0L;
+        return Duration.between(Instant.now(), expiry).toMillis();
+    }
+
+    /**
      * Returns whether the player is currently on cooldown for the given ability.
      *
      * @param uuid      the player's UUID
@@ -26,10 +53,7 @@ public final class CooldownManager {
      * @return {@code true} if the cooldown has not yet expired
      */
     public boolean isOnCooldown(UUID uuid, String abilityId) {
-        Map<String, Instant> player = cooldowns.get(uuid);
-        if (player == null) return false;
-        Instant expiry = player.get(abilityId);
-        return expiry != null && Instant.now().isBefore(expiry);
+        return getRemainingMillis(uuid, abilityId) > 0;
     }
 
     /**
@@ -46,17 +70,14 @@ public final class CooldownManager {
 
     /**
      * Returns the whole seconds remaining on a cooldown, or {@code 0} if not active.
+     * Derives from {@link #getRemainingMillis} so both share a single time snapshot.
      *
      * @param uuid      the player's UUID
      * @param abilityId the ability identifier
      * @return seconds remaining, minimum 0
      */
     public long getRemainingSeconds(UUID uuid, String abilityId) {
-        Map<String, Instant> player = cooldowns.get(uuid);
-        if (player == null) return 0L;
-        Instant expiry = player.get(abilityId);
-        if (expiry == null) return 0L;
-        return Math.max(0L, Duration.between(Instant.now(), expiry).getSeconds());
+        return Math.max(0L, getRemainingMillis(uuid, abilityId) / 1000);
     }
 
     /**

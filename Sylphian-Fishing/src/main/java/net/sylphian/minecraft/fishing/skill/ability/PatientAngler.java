@@ -59,10 +59,10 @@ public final class PatientAngler implements ActiveAbility {
                     "<yellow>Patient Angler <white>is already pending your next cast."));
             return;
         }
-        if (cooldownManager.isOnCooldown(uuid, COOLDOWN_ID)) {
+        long remaining = cooldownManager.getRemainingMillis(uuid, COOLDOWN_ID);
+        if (remaining > 0) {
             player.sendActionBar(MINI.deserialize(
-                    "<red>Patient Angler: <white>"
-                    + cooldownManager.getRemainingSeconds(uuid, COOLDOWN_ID) + "s remaining."));
+                    "<red>Patient Angler: <white>" + (remaining / 1000) + "s remaining."));
             return;
         }
         FishingSkillConfig cfg = config.get();
