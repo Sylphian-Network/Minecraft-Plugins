@@ -3,9 +3,8 @@ package net.sylphian.minecraft.skills.command;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.executors.CommandArguments;
 import net.sylphian.minecraft.skills.SylphianSkills;
-import net.sylphian.minecraft.skills.command.admin.WatchSubCommand;
 import net.sylphian.minecraft.skills.command.admin.ReloadSubCommand;
-import net.sylphian.minecraft.skills.command.admin.SkillsAdminContext;
+import net.sylphian.minecraft.skills.command.admin.WatchSubCommand;
 import net.sylphian.minecraft.skills.command.admin.XpSubCommand;
 import net.sylphian.minecraft.skills.service.SkillsService;
 import org.bukkit.command.CommandSender;
@@ -29,7 +28,6 @@ public final class SkillsAdminCommand {
      * @param service the skills service, used by subcommands that read or write player data
      */
     public SkillsAdminCommand(SylphianSkills plugin, SkillsService service) {
-        new SkillsAdminContext();
         this.subCommands = List.of(
                 new ReloadSubCommand(plugin),
                 new XpSubCommand(service),

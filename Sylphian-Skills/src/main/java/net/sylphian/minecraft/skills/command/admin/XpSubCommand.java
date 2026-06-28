@@ -26,8 +26,6 @@ import static net.sylphian.minecraft.skills.command.admin.SkillsAdminContext.MIN
  */
 public final class XpSubCommand implements SubCommand {
 
-    private static final SkillsAdminContext CTX = new SkillsAdminContext();
-
     private final SkillsService service;
 
     /**
@@ -62,7 +60,7 @@ public final class XpSubCommand implements SubCommand {
                                                                     + skillId + "<green>. Total: <white>" + after)))
                                                     .exceptionally(ex -> {
                                                         sender.sendMessage(MINI.deserialize(
-                                                                "<red>Failed: " + CTX.rootCause(ex)));
+                                                                "<red>Failed: " + SkillsAdminContext.rootCause(ex)));
                                                         return null;
                                                     });
                                         }))));
@@ -85,7 +83,7 @@ public final class XpSubCommand implements SubCommand {
                                                                     + "<green> XP to <white>" + after)))
                                                     .exceptionally(ex -> {
                                                         sender.sendMessage(MINI.deserialize(
-                                                                "<red>Failed: " + CTX.rootCause(ex)));
+                                                                "<red>Failed: " + SkillsAdminContext.rootCause(ex)));
                                                         return null;
                                                     });
                                         }))));
@@ -108,7 +106,7 @@ public final class XpSubCommand implements SubCommand {
                                                                     + skillId + "<green>. Total: <white>" + after)))
                                                     .exceptionally(ex -> {
                                                         sender.sendMessage(MINI.deserialize(
-                                                                "<red>Failed: " + CTX.rootCause(ex)));
+                                                                "<red>Failed: " + SkillsAdminContext.rootCause(ex)));
                                                         return null;
                                                     });
                                         }))));

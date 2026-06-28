@@ -5,7 +5,9 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 /**
  * Shared constants and helpers for {@code /sylphian-skills} admin subcommands.
  */
-public record SkillsAdminContext() {
+public final class SkillsAdminContext {
+
+    private SkillsAdminContext() {}
 
     /** Shared MiniMessage serializer for authoring operator-facing text. */
     public static final MiniMessage MINI = MiniMessage.miniMessage();
@@ -16,7 +18,7 @@ public record SkillsAdminContext() {
      * @param ex the throwable from an async chain
      * @return the deepest non-null message, or a generic fallback
      */
-    public String rootCause(Throwable ex) {
+    public static String rootCause(Throwable ex) {
         Throwable cause = ex;
         while (cause.getCause() != null) {
             cause = cause.getCause();
