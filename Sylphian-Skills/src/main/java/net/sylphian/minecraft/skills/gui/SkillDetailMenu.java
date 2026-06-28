@@ -89,7 +89,8 @@ public final class SkillDetailMenu {
         lore.add("");
         if (ability instanceof PassiveAbility passive) {
             lore.add("<dark_gray>Triggers: <gray>" + passive.triggerCondition());
-        } else if (ability instanceof ActiveAbility active) {
+        }
+        if (ability instanceof ActiveAbility active) {
             lore.add("<dark_gray>Activation: <gray>" + active.activation());
         }
         lore.add("");
