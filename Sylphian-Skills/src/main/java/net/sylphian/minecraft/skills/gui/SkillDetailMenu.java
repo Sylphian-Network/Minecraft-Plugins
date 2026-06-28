@@ -6,6 +6,8 @@ import net.sylphian.minecraft.items.util.ItemBuilder;
 import net.sylphian.minecraft.skills.config.SkillsConfig;
 import net.sylphian.minecraft.skills.service.SkillsService;
 import net.sylphian.minecraft.skills.skill.Ability;
+import net.sylphian.minecraft.skills.skill.ActiveAbility;
+import net.sylphian.minecraft.skills.skill.PassiveAbility;
 import net.sylphian.minecraft.skills.skill.Skill;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -85,7 +87,11 @@ public final class SkillDetailMenu {
         List<String> lore = new ArrayList<>();
         lore.add("<gray>" + ability.description());
         lore.add("");
-        lore.add("<dark_gray>Activation: <gray>" + ability.activation());
+        if (ability instanceof PassiveAbility passive) {
+            lore.add("<dark_gray>Triggers: <gray>" + passive.triggerCondition());
+        } else if (ability instanceof ActiveAbility active) {
+            lore.add("<dark_gray>Activation: <gray>" + active.activation());
+        }
         lore.add("");
 
         if (unlocked) {

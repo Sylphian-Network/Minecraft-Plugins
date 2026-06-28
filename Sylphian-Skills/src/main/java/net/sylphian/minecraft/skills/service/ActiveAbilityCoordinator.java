@@ -3,7 +3,7 @@ package net.sylphian.minecraft.skills.service;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.skills.gui.AbilitySelectionHolder;
-import net.sylphian.minecraft.skills.skill.Ability;
+import net.sylphian.minecraft.skills.skill.ActiveAbility;
 import net.sylphian.minecraft.skills.skill.Skill;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -29,7 +29,7 @@ import java.util.*;
  * <p>Any skill that returns a non-empty {@link Skill#activationMaterial()} participates
  * automatically. When a player sneaks and right-clicks while holding the trigger material,
  * the coordinator opens a small inventory GUI showing their unlocked active abilities.
- * Clicking an ability item closes the menu and calls {@link Ability#onActivate}.</p>
+ * Clicking an ability item closes the menu and calls {@link ActiveAbility#onActivate}.</p>
  *
  * <p>If {@link Skill#canInteract} returns {@code false} (e.g. a hook is already in the
  * water), the interact event is left uncancelled so the game handles it naturally
@@ -83,7 +83,7 @@ public final class ActiveAbilityCoordinator implements Listener {
             if (!skill.canInteract(player, uuid)) return;
 
             int level = service.getCachedLevel(uuid, skill.getId());
-            List<Ability> actives = unlockedActives(skill, level);
+            List<ActiveAbility> actives = unlockedActives(skill, level);
             if (actives.isEmpty()) return;
 
             event.setCancelled(true);
@@ -104,7 +104,7 @@ public final class ActiveAbilityCoordinator implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) return;
         if (!player.getUniqueId().equals(holder.getOwnerUuid())) return;
 
-        Ability ability = holder.getAbilityAt(event.getRawSlot());
+        ActiveAbility ability = holder.getAbilityAt(event.getRawSlot());
         if (ability == null) return;
 
         player.closeInventory();
@@ -132,26 +132,26 @@ public final class ActiveAbilityCoordinator implements Listener {
         if (task != null) task.cancel();
     }
 
-    private void openAbilityMenu(Player player, UUID uuid, List<Ability> actives) {
+    private void openAbilityMenu(Player player, UUID uuid, List<ActiveAbility> actives) {
         AbilitySelectionHolder holder = new AbilitySelectionHolder(actives, uuid);
         Inventory inv = Bukkit.createInventory(holder, 9,
                 MINI.deserialize("<dark_aqua>Select Ability"));
 
-        for (Map.Entry<Integer, Ability> entry : holder.getSlotMap().entrySet()) {
+        for (Map.Entry<Integer, ActiveAbility> entry : holder.getSlotMap().entrySet()) {
             inv.setItem(entry.getKey(), abilityItem(entry.getValue(), uuid));
         }
 
         player.openInventory(inv);
 
         BukkitTask task = plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
-            for (Map.Entry<Integer, Ability> entry : holder.getSlotMap().entrySet()) {
+            for (Map.Entry<Integer, ActiveAbility> entry : holder.getSlotMap().entrySet()) {
                 inv.setItem(entry.getKey(), abilityItem(entry.getValue(), uuid));
             }
         }, 20L, 20L);
         refreshTasks.put(uuid, task);
     }
 
-    private ItemStack abilityItem(Ability ability, UUID uuid) {
+    private ItemStack abilityItem(ActiveAbility ability, UUID uuid) {
         String status = ability.selectionStatus(uuid);
         ItemStack item = ItemStack.of(statusMaterial(status));
         item.editMeta(meta -> {
@@ -169,7 +169,7 @@ public final class ActiveAbilityCoordinator implements Listener {
 
     /**
      * Picks a material that visually reflects the ability's current state,
-     * inferred from the leading colour tag in {@link Ability#selectionStatus}.
+     * inferred from the leading colour tag in {@link ActiveAbility#selectionStatus}.
      */
     private static Material statusMaterial(String status) {
         if (status.startsWith("<green>"))  return Material.LIME_DYE;
@@ -179,9 +179,10 @@ public final class ActiveAbilityCoordinator implements Listener {
         return Material.PAPER;
     }
 
-    private static List<Ability> unlockedActives(Skill skill, int level) {
+    private static List<ActiveAbility> unlockedActives(Skill skill, int level) {
         return skill.getAbilities().stream()
-                .filter(a -> a.isActive() && level >= a.unlockLevel())
+                .filter(a -> a instanceof ActiveAbility && level >= a.unlockLevel())
+                .map(a -> (ActiveAbility) a)
                 .toList();
     }
 }

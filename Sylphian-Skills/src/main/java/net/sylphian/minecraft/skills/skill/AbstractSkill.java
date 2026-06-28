@@ -1,12 +1,14 @@
 package net.sylphian.minecraft.skills.skill;
 
 import net.sylphian.minecraft.skills.api.SkillsAPI;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Base implementation of {@link Skill} providing id, display name, ability
@@ -73,6 +75,25 @@ public abstract class AbstractSkill implements Skill, Listener {
      */
     public List<Ability> getAbilities() {
         return Collections.unmodifiableList(abilities);
+    }
+
+    /**
+     * Dispatches a passive trigger to every {@link PassiveAbility} registered
+     * with this skill that accepts it and whose unlock level the player meets.
+     *
+     * @param trigger the trigger token carrying event context and accumulating outputs
+     * @param player  the player the event concerns
+     * @param uuid    the player's UUID
+     */
+    protected void firePassives(PassiveTrigger trigger, Player player, UUID uuid) {
+        int level = skillsApi.getCachedLevel(uuid, getId());
+        for (Ability ability : abilities) {
+            if (ability instanceof PassiveAbility passive
+                    && passive.accepts(trigger)
+                    && level >= passive.unlockLevel()) {
+                passive.onPassiveTrigger(player, uuid, trigger);
+            }
+        }
     }
 
     /**

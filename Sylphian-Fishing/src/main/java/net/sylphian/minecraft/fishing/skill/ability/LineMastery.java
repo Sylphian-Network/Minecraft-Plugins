@@ -1,25 +1,43 @@
 package net.sylphian.minecraft.fishing.skill.ability;
 
 import net.sylphian.minecraft.fishing.skill.FishingSkillConfig;
-import net.sylphian.minecraft.skills.skill.Ability;
+import net.sylphian.minecraft.fishing.skill.trigger.FishCastTrigger;
+import net.sylphian.minecraft.skills.skill.PassiveAbility;
+import net.sylphian.minecraft.skills.skill.PassiveTrigger;
+import org.bukkit.entity.Player;
+
+import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
  * Passive perk unlocked at level 10.
  *
  * <p>Permanently reduces hook wait times by a flat percentage on every cast.</p>
  */
-public final class LineMastery implements Ability {
+public final class LineMastery implements PassiveAbility {
 
-    @Override public String id()           { return "fishing:line-mastery"; }
-    @Override public String name()         { return "Line Mastery"; }
-    @Override public String description()  { return "Passively reduces bite wait time by 15%."; }
-    @Override public int    unlockLevel()  { return 10; }
+    private final Supplier<FishingSkillConfig> config;
 
     /**
-     * @param cfg current config snapshot
-     * @return the fractional wait-time reduction (e.g. 0.15 for 15%)
+     * @param config supplier for the current config snapshot
      */
-    public double reductionFraction(FishingSkillConfig cfg) {
-        return cfg.lineMasteryReductionPercent() / 100.0;
+    public LineMastery(Supplier<FishingSkillConfig> config) {
+        this.config = config;
+    }
+
+    @Override public String id()               { return "fishing:line-mastery"; }
+    @Override public String name()             { return "Line Mastery"; }
+    @Override public String description()      { return "Passively reduces bite wait time by 15%."; }
+    @Override public int    unlockLevel()      { return 10; }
+    @Override public String triggerCondition() { return "On casting a fishing rod."; }
+
+    @Override
+    public boolean accepts(PassiveTrigger trigger) {
+        return trigger instanceof FishCastTrigger;
+    }
+
+    @Override
+    public void onPassiveTrigger(Player player, UUID uuid, PassiveTrigger trigger) {
+        ((FishCastTrigger) trigger).addReduction(config.get().lineMasteryReductionPercent() / 100.0);
     }
 }

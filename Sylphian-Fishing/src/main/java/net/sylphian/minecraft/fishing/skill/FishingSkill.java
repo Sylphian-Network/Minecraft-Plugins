@@ -8,12 +8,13 @@ import net.sylphian.minecraft.fishing.skill.ability.LineMastery;
 import net.sylphian.minecraft.fishing.skill.ability.MasterAngler;
 import net.sylphian.minecraft.fishing.skill.ability.PatientAngler;
 import net.sylphian.minecraft.fishing.skill.ability.SteadyCurrent;
+import net.sylphian.minecraft.fishing.skill.trigger.FishCastTrigger;
+import net.sylphian.minecraft.fishing.skill.trigger.FishCatchTrigger;
 import net.sylphian.minecraft.skills.api.SkillsAPI;
 import net.sylphian.minecraft.skills.skill.AbstractSkill;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -40,7 +41,7 @@ import java.util.UUID;
  * with injected dependencies in {@link #registerListeners} and added in
  * unlock-level order so the framework surfaces them correctly.</p>
  *
- * <p>Active ability selection and activation (sneak-scroll + sneak-right-click)
+ * <p>Active ability selection and activation (sneak + right-click)
  * is handled generically by {@code ActiveAbilityCoordinator} in Sylphian-Skills.
  * This class only implements {@link #activationMaterial()} and {@link #canInteract}
  * to participate in that framework.</p>
@@ -91,11 +92,11 @@ public final class FishingSkill extends AbstractSkill {
         this.config = FishingSkillConfig.from(plugin.getConfig());
 
         patientAngler = new PatientAngler(() -> config, api.getCooldownManager(), patientAnglerPending);
-        lineMastery   = new LineMastery();
+        lineMastery   = new LineMastery(() -> config);
         doubleHaul    = new DoubleHaul(() -> config, api.getCooldownManager(), doubleHaulPending, owningPlugin);
-        steadyCurrent = new SteadyCurrent();
+        steadyCurrent = new SteadyCurrent(() -> config, momentum);
         fishersFrenzy = new FishersFrenzy(() -> config, api.getCooldownManager(), api.getActiveBuffTracker(), owningPlugin);
-        masterAngler  = new MasterAngler();
+        masterAngler  = new MasterAngler(() -> config);
 
         addAbility(patientAngler);
         addAbility(lineMastery);
@@ -117,7 +118,7 @@ public final class FishingSkill extends AbstractSkill {
 
     /**
      * The item a player must hold for the {@code ActiveAbilityCoordinator} to
-     * intercept their sneak-scroll and sneak-right-click gestures.
+     * intercept sneak-right-click gestures.
      */
     @Override
     public Optional<Material> activationMaterial() {
@@ -144,7 +145,7 @@ public final class FishingSkill extends AbstractSkill {
         UUID uuid = player.getUniqueId();
 
         switch (event.getState()) {
-            case FISHING     -> handleCast(event, uuid);
+            case FISHING     -> handleCast(event, player, uuid);
             case CAUGHT_FISH -> handleCatch(event, player, uuid);
             // All terminal states: the hook is no longer in the water.
             default          -> activelyCasting.remove(uuid);
@@ -152,22 +153,22 @@ public final class FishingSkill extends AbstractSkill {
     }
 
     /**
-     * On cast: tracks the hook, applies Patient Angler if pending, then
-     * stacks all passive timer reductions on top.
+     * On cast: tracks the hook, applies Patient Angler if pending, then fires
+     * passive cast triggers to accumulate timer reductions before applying them.
      */
-    private void handleCast(PlayerFishEvent event, UUID uuid) {
+    private void handleCast(PlayerFishEvent event, Player player, UUID uuid) {
         activelyCasting.add(uuid);
-
-        FishingSkillConfig cfg = config;
-        int level = skillsApi.getCachedLevel(uuid, "fishing");
-
         patientAngler.applyOnCast(event.getHook(), uuid);
-        applyTimerReduction(event.getHook(), uuid, level, cfg);
+
+        FishCastTrigger castTrigger = new FishCastTrigger(event.getHook());
+        firePassives(castTrigger, player, uuid);
+        castTrigger.addReduction(fishersFrenzy.reductionFraction(uuid));
+        castTrigger.applyToHook();
     }
 
     /**
-     * On catch: removes from casting set, updates Steady Current momentum,
-     * applies Double Haul if pending, and awards XP for Sylphian fish.
+     * On catch: removes from casting set, fires passive catch triggers to update
+     * momentum and accumulate XP multipliers, then applies Double Haul and awards XP.
      */
     private void handleCatch(PlayerFishEvent event, Player player, UUID uuid) {
         activelyCasting.remove(uuid);
@@ -177,17 +178,14 @@ public final class FishingSkill extends AbstractSkill {
         ItemStack caught = caughtItem.getItemStack();
         if (!isSylphianFish(caught)) return;
 
-        FishingSkillConfig cfg = config;
-        int level = skillsApi.getCachedLevel(uuid, "fishing");
+        FishCatchTrigger catchTrigger = new FishCatchTrigger(caught, caughtItem.getLocation());
+        firePassives(catchTrigger, player, uuid);
+        catchTrigger.multiplyXp(fishersFrenzy.xpMultiplier(uuid));
 
-        if (level >= steadyCurrent.unlockLevel()) {
-            steadyCurrent.updateMomentum(player, uuid, caughtItem.getLocation(), cfg, momentum);
-        }
-        if (level >= doubleHaul.unlockLevel()) {
-            doubleHaul.applyOnCatch(player, uuid, caught);
-        }
+        doubleHaul.applyOnCatch(player, uuid, caught);
 
-        skillsApi.awardXP(player, "fishing", computeXp(uuid, level, cfg));
+        long xp = Math.max(1L, (long) (config.xpPerCatch() * catchTrigger.xpMultiplier()));
+        skillsApi.awardXP(player, "fishing", xp);
     }
 
     /** Clears all per-player state on disconnect. */
@@ -216,43 +214,6 @@ public final class FishingSkill extends AbstractSkill {
         if (worldChanged || distantMove) {
             momentum.remove(event.getPlayer().getUniqueId());
         }
-    }
-
-    /**
-     * Scales down the hook's wait times by the combined passive reduction.
-     * Reductions from Line Mastery, Steady Current, Master Angler, and Fisher's
-     * Frenzy stack additively, capped at 90%.
-     */
-    private void applyTimerReduction(FishHook hook, UUID uuid, int level, FishingSkillConfig cfg) {
-        double reduction = 0.0;
-
-        if (level >= lineMastery.unlockLevel())    reduction += lineMastery.reductionFraction(cfg);
-        if (level >= steadyCurrent.unlockLevel())  reduction += steadyCurrent.reductionFraction(uuid, cfg, momentum);
-        if (level >= masterAngler.unlockLevel())   reduction += masterAngler.reductionFraction(cfg);
-        reduction += fishersFrenzy.reductionFraction(uuid);
-
-        if (reduction <= 0.0) return;
-        reduction = Math.min(0.90, reduction);
-
-        int newMin = Math.max(20, (int) (hook.getMinWaitTime() * (1.0 - reduction)));
-        int newMax = Math.max(newMin, (int) (hook.getMaxWaitTime() * (1.0 - reduction)));
-        hook.setMinWaitTime(newMin);
-        hook.setMaxWaitTime(newMax);
-    }
-
-    /**
-     * Computes the XP to award for a catch, applying Master Angler and Frenzy multipliers.
-     *
-     * @param uuid  the player's UUID
-     * @param level the player's current fishing level
-     * @param cfg   the current config snapshot
-     * @return XP to award, at least 1
-     */
-    private long computeXp(UUID uuid, int level, FishingSkillConfig cfg) {
-        double multiplier = 1.0;
-        if (level >= masterAngler.unlockLevel()) multiplier *= masterAngler.xpMultiplier(cfg);
-        multiplier *= fishersFrenzy.xpMultiplier(uuid);
-        return Math.max(1L, (long) (cfg.xpPerCatch() * multiplier));
     }
 
     /**

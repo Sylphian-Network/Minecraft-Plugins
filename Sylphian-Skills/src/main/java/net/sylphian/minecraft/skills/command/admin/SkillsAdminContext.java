@@ -3,7 +3,7 @@ package net.sylphian.minecraft.skills.command.admin;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 /**
- * Services and helpers passed to every {@code /sylphian-skills} admin subcommand.
+ * Shared constants and helpers for {@code /sylphian-skills} admin subcommands.
  */
 public record SkillsAdminContext() {
 

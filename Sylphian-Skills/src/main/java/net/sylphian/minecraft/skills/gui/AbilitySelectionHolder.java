@@ -1,6 +1,6 @@
 package net.sylphian.minecraft.skills.gui;
 
-import net.sylphian.minecraft.skills.skill.Ability;
+import net.sylphian.minecraft.skills.skill.ActiveAbility;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.Nullable;
@@ -20,17 +20,17 @@ import java.util.UUID;
  */
 public final class AbilitySelectionHolder implements InventoryHolder {
 
-    private final Map<Integer, Ability> slotMap;
+    private final Map<Integer, ActiveAbility> slotMap;
     private final UUID ownerUuid;
 
     /**
      * @param abilities the unlocked active abilities to display, in order
      * @param ownerUuid UUID of the player who opened this menu
      */
-    public AbilitySelectionHolder(List<Ability> abilities, UUID ownerUuid) {
+    public AbilitySelectionHolder(List<ActiveAbility> abilities, UUID ownerUuid) {
         this.ownerUuid = ownerUuid;
 
-        Map<Integer, Ability> map = new LinkedHashMap<>();
+        Map<Integer, ActiveAbility> map = new LinkedHashMap<>();
         int startSlot = (9 - abilities.size()) / 2;
         for (int i = 0; i < abilities.size(); i++) {
             map.put(startSlot + i, abilities.get(i));
@@ -42,14 +42,14 @@ public final class AbilitySelectionHolder implements InventoryHolder {
      * @param slot the raw inventory slot clicked
      * @return the ability at that slot, or {@code null} if the slot is empty
      */
-    public @Nullable Ability getAbilityAt(int slot) {
+    public @Nullable ActiveAbility getAbilityAt(int slot) {
         return slotMap.get(slot);
     }
 
     /**
      * @return a slot-to-ability mapping, used when populating the inventory
      */
-    public Map<Integer, Ability> getSlotMap() {
+    public Map<Integer, ActiveAbility> getSlotMap() {
         return slotMap;
     }
 

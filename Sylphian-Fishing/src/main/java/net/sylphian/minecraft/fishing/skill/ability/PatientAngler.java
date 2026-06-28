@@ -3,7 +3,7 @@ package net.sylphian.minecraft.fishing.skill.ability;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.fishing.skill.FishingSkillConfig;
 import net.sylphian.minecraft.skills.service.CooldownManager;
-import net.sylphian.minecraft.skills.skill.Ability;
+import net.sylphian.minecraft.skills.skill.ActiveAbility;
 import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 
@@ -18,7 +18,7 @@ import java.util.function.Supplier;
  * <p>When activated, the player's next cast will use shortened hook wait times,
  * causing a bite to occur within 3-5 seconds instead of the normal window.</p>
  */
-public final class PatientAngler implements Ability {
+public final class PatientAngler implements ActiveAbility {
 
     private static final MiniMessage MINI = MiniMessage.miniMessage();
 
@@ -42,12 +42,10 @@ public final class PatientAngler implements Ability {
         this.pendingSet      = pendingSet;
     }
 
-    @Override public String  id()           { return COOLDOWN_ID; }
-    @Override public String  name()         { return "Patient Angler"; }
-    @Override public String  description()  { return "Your next cast will bite in 3-5 seconds."; }
-    @Override public boolean isActive()     { return true; }
-    @Override public String  activation()   { return "Sneak + right-click to open ability menu."; }
-    @Override public int     unlockLevel()  { return 5; }
+    @Override public String id()          { return COOLDOWN_ID; }
+    @Override public String name()        { return "Patient Angler"; }
+    @Override public String description() { return "Your next cast will bite in 3-5 seconds."; }
+    @Override public int    unlockLevel() { return 5; }
 
     /**
      * Called by the framework when the player activates this ability.
@@ -74,7 +72,7 @@ public final class PatientAngler implements Ability {
     }
 
     /**
-     * Short status string shown in the action bar during sneak-scroll selection.
+     * Short MiniMessage status string shown as item lore in the ability selection GUI.
      */
     @Override
     public String selectionStatus(UUID uuid) {

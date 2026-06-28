@@ -49,7 +49,7 @@ public interface Skill {
 
     /**
      * The item material a player must be holding for the framework's active-ability
-     * coordinator to intercept sneak-scroll and sneak-right-click gestures.
+     * coordinator to intercept sneak-right-click gestures.
      * Return {@link Optional#empty()} for skills with no active abilities.
      *
      * @return the trigger material, or empty if not applicable

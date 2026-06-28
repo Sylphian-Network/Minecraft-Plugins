@@ -4,7 +4,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.fishing.skill.FishingSkillConfig;
 import net.sylphian.minecraft.skills.service.ActiveBuffTracker;
 import net.sylphian.minecraft.skills.service.CooldownManager;
-import net.sylphian.minecraft.skills.skill.Ability;
+import net.sylphian.minecraft.skills.skill.ActiveAbility;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -19,7 +19,7 @@ import java.util.function.Supplier;
  * and the player earns double XP per catch. A buff marker is held in
  * {@link ActiveBuffTracker} for the duration and cleared on expiry.</p>
  */
-public final class FishersFrenzy implements Ability {
+public final class FishersFrenzy implements ActiveAbility {
 
     private static final MiniMessage MINI = MiniMessage.miniMessage();
 
@@ -49,14 +49,10 @@ public final class FishersFrenzy implements Ability {
         this.plugin          = plugin;
     }
 
-    @Override public String  id()           { return COOLDOWN_ID; }
-    @Override public String  name()         { return "Fisher's Frenzy"; }
-    @Override public String  description()  {
-        return "For 60 seconds, bites come 60% faster and you earn double XP.";
-    }
-    @Override public boolean isActive()     { return true; }
-    @Override public String  activation()   { return "Sneak + right-click to open ability menu."; }
-    @Override public int     unlockLevel()  { return 25; }
+    @Override public String id()          { return COOLDOWN_ID; }
+    @Override public String name()        { return "Fisher's Frenzy"; }
+    @Override public String description() { return "For 60 seconds, bites come 60% faster and you earn double XP."; }
+    @Override public int    unlockLevel() { return 25; }
 
     /**
      * Called by the framework when the player activates this ability.
@@ -91,7 +87,7 @@ public final class FishersFrenzy implements Ability {
     }
 
     /**
-     * Short status string shown in the action bar during sneak-scroll selection.
+     * Short MiniMessage status string shown as item lore in the ability selection GUI.
      */
     @Override
     public String selectionStatus(UUID uuid) {

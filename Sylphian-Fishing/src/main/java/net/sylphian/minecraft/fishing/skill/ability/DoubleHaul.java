@@ -3,7 +3,7 @@ package net.sylphian.minecraft.fishing.skill.ability;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.fishing.skill.FishingSkillConfig;
 import net.sylphian.minecraft.skills.service.CooldownManager;
-import net.sylphian.minecraft.skills.skill.Ability;
+import net.sylphian.minecraft.skills.skill.ActiveAbility;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -19,7 +19,7 @@ import java.util.function.Supplier;
  * <p>When activated, the player's next catch yields a second copy of the item,
  * delivered one tick after the original to ensure proper inventory handling.</p>
  */
-public final class DoubleHaul implements Ability {
+public final class DoubleHaul implements ActiveAbility {
 
     private static final MiniMessage MINI = MiniMessage.miniMessage();
 
@@ -47,12 +47,10 @@ public final class DoubleHaul implements Ability {
         this.plugin          = plugin;
     }
 
-    @Override public String  id()           { return COOLDOWN_ID; }
-    @Override public String  name()         { return "Double Haul"; }
-    @Override public String  description()  { return "Your next catch yields a second copy of the item."; }
-    @Override public boolean isActive()     { return true; }
-    @Override public String  activation()   { return "Sneak + right-click to open ability menu."; }
-    @Override public int     unlockLevel()  { return 15; }
+    @Override public String id()          { return COOLDOWN_ID; }
+    @Override public String name()        { return "Double Haul"; }
+    @Override public String description() { return "Your next catch yields a second copy of the item."; }
+    @Override public int    unlockLevel() { return 15; }
 
     /**
      * Called by the framework when the player activates this ability.
@@ -79,7 +77,7 @@ public final class DoubleHaul implements Ability {
     }
 
     /**
-     * Short status string shown in the action bar during sneak-scroll selection.
+     * Short MiniMessage status string shown as item lore in the ability selection GUI.
      */
     @Override
     public String selectionStatus(UUID uuid) {
