@@ -5,6 +5,7 @@ import net.sylphian.minecraft.fishing.skill.FishingSkillConfig;
 import net.sylphian.minecraft.skills.service.CooldownManager;
 import net.sylphian.minecraft.skills.skill.ActiveAbility;
 import net.sylphian.minecraft.skills.skill.PassiveTrigger;
+import net.sylphian.minecraft.skills.skill.StatusLevel;
 import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 
@@ -81,6 +82,12 @@ public final class PatientAngler implements ActiveAbility {
         return s > 0 ? "<red>" + s + "s" : "<green>Ready";
     }
 
+    @Override
+    public StatusLevel statusLevel(UUID uuid) {
+        if (pendingSet.contains(uuid)) return StatusLevel.PENDING;
+        return cooldownManager.isOnCooldown(uuid, COOLDOWN_ID) ? StatusLevel.ON_COOLDOWN : StatusLevel.READY;
+    }
+
     /**
      * Applies the shortened wait times to the hook if this player's cast is pending.
      * Removes the pending marker so it does not carry over to subsequent casts.
@@ -94,6 +101,6 @@ public final class PatientAngler implements ActiveAbility {
         FishingSkillConfig cfg = config.get();
         hook.setMinWaitTime(cfg.patientAnglerMinTicks());
         hook.setMaxWaitTime(cfg.patientAnglerMaxTicks());
-        trigger.recordActive(name(), "set hook to " + cfg.patientAnglerMinTicks() + "-" + cfg.patientAnglerMaxTicks() + "t");
+        trigger.record(name(), "set hook to " + cfg.patientAnglerMinTicks() + "-" + cfg.patientAnglerMaxTicks() + "t", true);
     }
 }

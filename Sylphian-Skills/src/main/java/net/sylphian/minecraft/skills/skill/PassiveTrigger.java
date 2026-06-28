@@ -24,22 +24,25 @@ import java.util.List;
 public interface PassiveTrigger {
 
     /**
-     * Records a passive ability's contribution to this trigger for debug tracing.
+     * Records an ability's contribution to this trigger for debug tracing.
      * No-op by default; override in concrete trigger classes that support tracing.
      *
      * @param source      display name of the contributing ability
      * @param description short human-readable description of what the ability did
+     * @param active      {@code true} if the contribution came from an active ability
      */
-    default void record(String source, String description) {}
+    default void record(String source, String description, boolean active) {}
 
     /**
-     * Records an active ability's contribution to this trigger for debug tracing.
-     * No-op by default; override in concrete trigger classes that support tracing.
+     * Convenience overload for passive contributions; delegates to
+     * {@link #record(String, String, boolean)} with {@code active = false}.
      *
      * @param source      display name of the contributing ability
      * @param description short human-readable description of what the ability did
      */
-    default void recordActive(String source, String description) {}
+    default void record(String source, String description) {
+        record(source, description, false);
+    }
 
     /**
      * Returns all trace entries recorded on this trigger, in the order they were added.

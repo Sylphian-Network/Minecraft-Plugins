@@ -9,6 +9,7 @@ import net.sylphian.minecraft.skills.service.CooldownManager;
 import net.sylphian.minecraft.skills.skill.ActiveAbility;
 import net.sylphian.minecraft.skills.skill.PassiveAbility;
 import net.sylphian.minecraft.skills.skill.PassiveTrigger;
+import net.sylphian.minecraft.skills.skill.StatusLevel;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -97,20 +98,18 @@ public final class FishersFrenzy implements ActiveAbility, PassiveAbility {
         return s > 0 ? "<red>" + s + "s" : "<green>Ready";
     }
 
+    @Override
+    public StatusLevel statusLevel(UUID uuid) {
+        if (isFrenzyActive(uuid)) return StatusLevel.ACTIVE;
+        return cooldownManager.isOnCooldown(uuid, COOLDOWN_ID) ? StatusLevel.ON_COOLDOWN : StatusLevel.READY;
+    }
+
     /**
      * @param uuid the player's UUID
      * @return {@code true} if Fisher's Frenzy is currently active for this player
      */
     public boolean isFrenzyActive(UUID uuid) {
         return buffs.hasBuff(uuid, BUFF_ID);
-    }
-
-    /**
-     * @param uuid the player's UUID
-     * @return the fractional wait-time reduction while the buff is active, or 0.0 if inactive
-     */
-    private double reductionFraction(UUID uuid) {
-        return isFrenzyActive(uuid) ? config.get().fishersFrenzyReductionPercent() / 100.0 : 0.0;
     }
 
     /**

@@ -65,13 +65,8 @@ public final class FishCatchTrigger implements PassiveTrigger {
     }
 
     @Override
-    public void record(String source, String description) {
-        traceLog.add(new TraceEntry(source, description));
-    }
-
-    @Override
-    public void recordActive(String source, String description) {
-        traceLog.add(new TraceEntry(source, description, true));
+    public void record(String source, String description, boolean active) {
+        traceLog.add(new TraceEntry(source, description, active));
     }
 
     @Override

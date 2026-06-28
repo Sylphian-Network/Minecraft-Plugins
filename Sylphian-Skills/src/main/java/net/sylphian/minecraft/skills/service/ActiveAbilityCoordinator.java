@@ -5,6 +5,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.skills.gui.AbilitySelectionHolder;
 import net.sylphian.minecraft.skills.skill.ActiveAbility;
 import net.sylphian.minecraft.skills.skill.Skill;
+import net.sylphian.minecraft.skills.skill.StatusLevel;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -153,7 +154,7 @@ public final class ActiveAbilityCoordinator implements Listener {
 
     private ItemStack abilityItem(ActiveAbility ability, UUID uuid) {
         String status = ability.selectionStatus(uuid);
-        ItemStack item = ItemStack.of(statusMaterial(status));
+        ItemStack item = ItemStack.of(statusMaterial(ability.statusLevel(uuid)));
         item.editMeta(meta -> {
             meta.displayName(MINI.deserialize("<!italic><gold>" + ability.name()));
             meta.lore(List.of(
@@ -168,15 +169,15 @@ public final class ActiveAbilityCoordinator implements Listener {
     }
 
     /**
-     * Picks a material that visually reflects the ability's current state,
-     * inferred from the leading colour tag in {@link ActiveAbility#selectionStatus}.
+     * Picks a material that visually reflects the ability's current state.
      */
-    private static Material statusMaterial(String status) {
-        if (status.startsWith("<green>"))  return Material.LIME_DYE;
-        if (status.startsWith("<yellow>")) return Material.YELLOW_DYE;
-        if (status.startsWith("<gold>"))   return Material.GOLD_NUGGET;
-        if (status.startsWith("<red>"))    return Material.GRAY_DYE;
-        return Material.PAPER;
+    private static Material statusMaterial(StatusLevel level) {
+        return switch (level) {
+            case READY       -> Material.LIME_DYE;
+            case PENDING     -> Material.YELLOW_DYE;
+            case ACTIVE      -> Material.GOLD_NUGGET;
+            case ON_COOLDOWN -> Material.GRAY_DYE;
+        };
     }
 
     private static List<ActiveAbility> unlockedActives(Skill skill, int level) {

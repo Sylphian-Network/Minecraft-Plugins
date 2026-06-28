@@ -5,6 +5,7 @@ import net.sylphian.minecraft.fishing.skill.FishingSkillConfig;
 import net.sylphian.minecraft.skills.service.CooldownManager;
 import net.sylphian.minecraft.skills.skill.ActiveAbility;
 import net.sylphian.minecraft.skills.skill.PassiveTrigger;
+import net.sylphian.minecraft.skills.skill.StatusLevel;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -86,6 +87,12 @@ public final class DoubleHaul implements ActiveAbility {
         return s > 0 ? "<red>" + s + "s" : "<green>Ready";
     }
 
+    @Override
+    public StatusLevel statusLevel(UUID uuid) {
+        if (pendingSet.contains(uuid)) return StatusLevel.PENDING;
+        return cooldownManager.isOnCooldown(uuid, COOLDOWN_ID) ? StatusLevel.ON_COOLDOWN : StatusLevel.READY;
+    }
+
     /**
      * Gives the player a second copy of the caught item if this catch is pending.
      * The clone is delivered two ticks later so the original item lands in inventory first.
@@ -105,6 +112,6 @@ public final class DoubleHaul implements ActiveAbility {
                         "<aqua>Double Haul: <white>Second catch added to your inventory!"));
             }
         }, 2L);
-        trigger.recordActive(name(), "duplicate item queued");
+        trigger.record(name(), "duplicate item queued", true);
     }
 }

@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
+
 /**
  * Extension of {@link Ability} for abilities that are manually triggered by the player.
  *
@@ -52,5 +53,20 @@ public interface ActiveAbility extends Ability {
      */
     default String selectionStatus(UUID uuid) {
         return "<green>Ready";
+    }
+
+    /**
+     * Returns the current state of this ability for GUI display purposes.
+     * The {@code ActiveAbilityCoordinator} uses this to select an appropriate
+     * display material without parsing the {@link #selectionStatus} string.
+     *
+     * <p>Defaults to {@link StatusLevel#READY}. Override whenever the ability
+     * has pending, cooldown, or active-buff states.</p>
+     *
+     * @param uuid the player's UUID
+     * @return the current status level
+     */
+    default StatusLevel statusLevel(UUID uuid) {
+        return StatusLevel.READY;
     }
 }
