@@ -1,5 +1,7 @@
 package net.sylphian.minecraft.fishing.skill;
 
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.sylphian.minecraft.fishing.SylphianFishing;
 import net.sylphian.minecraft.fishing.skill.ability.CatchMomentum;
 import net.sylphian.minecraft.fishing.skill.ability.DoubleHaul;
@@ -12,9 +14,12 @@ import net.sylphian.minecraft.fishing.skill.trigger.FishCastTrigger;
 import net.sylphian.minecraft.fishing.skill.trigger.FishCatchTrigger;
 import net.sylphian.minecraft.skills.api.SkillsAPI;
 import net.sylphian.minecraft.skills.skill.AbstractSkill;
+import net.sylphian.minecraft.skills.skill.TraceEntry;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,12 +31,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * The Fishing skill contributed to Sylphian-Skills by Sylphian-Fishing.
@@ -50,13 +50,15 @@ import java.util.UUID;
  */
 public final class FishingSkill extends AbstractSkill {
 
+    private static final MiniMessage MINI = MiniMessage.miniMessage();
+
     /** PDC key stamped on every Sylphian fish by LootService. */
     private static final NamespacedKey FISH_KEY = new NamespacedKey("sylphian-fishing", "item_id");
 
     private final SylphianFishing plugin;
     private volatile FishingSkillConfig config;
 
-    // Abilities — assigned in registerListeners once API deps are available.
+    // Abilities: assigned in registerListeners once API deps are available.
     private PatientAngler patientAngler;
     private LineMastery   lineMastery;
     private DoubleHaul    doubleHaul;
@@ -154,16 +156,21 @@ public final class FishingSkill extends AbstractSkill {
 
     /**
      * On cast: tracks the hook, applies Patient Angler if pending, then fires
-     * passive cast triggers to accumulate timer reductions before applying them.
+     * all passive cast triggers (including Fisher's Frenzy if active) before applying them.
      */
     private void handleCast(PlayerFishEvent event, Player player, UUID uuid) {
         activelyCasting.add(uuid);
-        patientAngler.applyOnCast(event.getHook(), uuid);
+
+        int priorMin = event.getHook().getMinWaitTime();
+        int priorMax = event.getHook().getMaxWaitTime();
 
         FishCastTrigger castTrigger = new FishCastTrigger(event.getHook());
+        patientAngler.applyOnCast(event.getHook(), uuid, castTrigger);
         firePassives(castTrigger, player, uuid);
-        castTrigger.addReduction(fishersFrenzy.reductionFraction(uuid));
         castTrigger.applyToHook();
+
+        CommandSender watcher = getWatcher(uuid);
+        if (watcher != null) sendCastTrace(watcher, player, castTrigger, event.getHook(), priorMin, priorMax);
     }
 
     /**
@@ -180,12 +187,14 @@ public final class FishingSkill extends AbstractSkill {
 
         FishCatchTrigger catchTrigger = new FishCatchTrigger(caught, caughtItem.getLocation());
         firePassives(catchTrigger, player, uuid);
-        catchTrigger.multiplyXp(fishersFrenzy.xpMultiplier(uuid));
+        doubleHaul.applyOnCatch(player, uuid, caught, catchTrigger);
 
-        doubleHaul.applyOnCatch(player, uuid, caught);
+        long baseXp = config.xpPerCatch();
+        long finalXp = Math.max(1L, (long) (baseXp * catchTrigger.xpMultiplier()));
+        skillsApi.awardXP(player, "fishing", finalXp);
 
-        long xp = Math.max(1L, (long) (config.xpPerCatch() * catchTrigger.xpMultiplier()));
-        skillsApi.awardXP(player, "fishing", xp);
+        CommandSender watcher = getWatcher(uuid);
+        if (watcher != null) sendCatchTrace(watcher, player, catchTrigger, caught, baseXp, finalXp);
     }
 
     /** Clears all per-player state on disconnect. */
@@ -196,6 +205,7 @@ public final class FishingSkill extends AbstractSkill {
         patientAnglerPending.remove(uuid);
         doubleHaulPending.remove(uuid);
         momentum.remove(uuid);
+        unwatch(uuid);
     }
 
     /**
@@ -217,12 +227,86 @@ public final class FishingSkill extends AbstractSkill {
     }
 
     /**
+     * Sends a step-by-step cast trace to the watching admin.
+     *
+     * @param watcher  the admin receiving the output
+     * @param player   the player who cast
+     * @param trigger  the populated cast trigger
+     * @param hook     the hook after reductions were applied
+     * @param priorMin hook min wait before passives
+     * @param priorMax hook max wait before passives
+     */
+    private void sendCastTrace(CommandSender watcher, Player player, FishCastTrigger trigger, FishHook hook, int priorMin, int priorMax) {
+        int level = skillsApi.getCachedLevel(player.getUniqueId(), "fishing");
+        List<TraceEntry> all = trigger.traceEntries();
+
+        watcher.sendMessage(MINI.deserialize(
+                "<dark_aqua>- Cast <white>" + player.getName()
+                + " <dark_gray>| <gray>Lv <white>" + level
+                + " <dark_gray>| <gray>Hook <white>" + priorMin + "<gray>-<white>" + priorMax + "<gray>t"));
+
+        if (all.isEmpty()) {
+            watcher.sendMessage(MINI.deserialize("<gray>  (no abilities contributed)"));
+        } else {
+            for (TraceEntry entry : all) {
+                if (entry.active()) {
+                    watcher.sendMessage(MINI.deserialize("<gray>  <yellow>- [Active] <white>" + entry.source() + " <white>" + entry.description()));
+                } else {
+                    watcher.sendMessage(MINI.deserialize("<gray>  <dark_aqua>- [Passive] <aqua>" + entry.source() + " <white>" + entry.description()));
+                }
+            }
+        }
+
+        double combined = Math.min(0.90, trigger.totalReduction());
+        watcher.sendMessage(MINI.deserialize(
+                "<gray>  Result: <white>" + hook.getMinWaitTime() + "<gray>-<white>" + hook.getMaxWaitTime()
+                + "<gray>t <dark_gray>(<gray>combined <white>" + String.format("%.0f%%", combined * 100) + "<gray>)"));
+    }
+
+    /**
+     * Sends a step-by-step catch trace to the watching admin.
+     *
+     * @param watcher  the admin receiving the output
+     * @param player   the player who caught
+     * @param trigger  the populated catch trigger
+     * @param caught   the caught item
+     * @param baseXp   XP before multipliers
+     * @param finalXp  XP after multipliers
+     */
+    private void sendCatchTrace(CommandSender watcher, Player player, FishCatchTrigger trigger, ItemStack caught, long baseXp, long finalXp) {
+        int level = skillsApi.getCachedLevel(player.getUniqueId(), "fishing");
+        List<TraceEntry> all = trigger.traceEntries();
+
+        String itemName = caught.hasItemMeta() && caught.getItemMeta().hasDisplayName()
+                ? PlainTextComponentSerializer.plainText().serialize(Objects.requireNonNull(caught.getItemMeta().displayName()))
+                : caught.getType().name();
+
+        watcher.sendMessage(MINI.deserialize(
+                "<green>- Catch <white>" + player.getName()
+                + " <dark_gray>| <gray>Lv <white>" + level
+                + " <dark_gray>| <white>" + itemName));
+
+        if (all.isEmpty()) {
+            watcher.sendMessage(MINI.deserialize("<gray>  (no abilities contributed)"));
+        } else {
+            for (TraceEntry entry : all) {
+                if (entry.active()) {
+                    watcher.sendMessage(MINI.deserialize("<gray>  <yellow>- [Active] <white>" + entry.source() + " <white>" + entry.description()));
+                } else {
+                    watcher.sendMessage(MINI.deserialize("<gray>  <green>- [Passive] <aqua>" + entry.source() + " <white>" + entry.description()));
+                }
+            }
+        }
+
+        watcher.sendMessage(MINI.deserialize("<gray>  XP: <white>" + baseXp + " <gray>base -> <white>" + finalXp + " <gray>awarded"));
+    }
+
+    /**
      * Returns {@code true} if the item carries the {@code sylphian-fishing:item_id} PDC key,
      * indicating it was produced by Sylphian-Fishing's loot system.
      */
     private static boolean isSylphianFish(ItemStack item) {
         if (item == null || !item.hasItemMeta()) return false;
-        return item.getItemMeta().getPersistentDataContainer()
-                   .has(FISH_KEY, PersistentDataType.STRING);
+        return item.getItemMeta().getPersistentDataContainer().has(FISH_KEY, PersistentDataType.STRING);
     }
 }

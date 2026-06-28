@@ -1,13 +1,19 @@
 package net.sylphian.minecraft.skills.skill;
 
 import net.sylphian.minecraft.skills.api.SkillsAPI;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -40,6 +46,9 @@ public abstract class AbstractSkill implements Skill, Listener {
      * {@link #registerListeners} has been called.
      */
     protected SkillsAPI skillsApi;
+
+    /** Maps watched player UUIDs to the admin {@link CommandSender} receiving their trace output. */
+    private final Map<UUID, CommandSender> debugWatchers = new ConcurrentHashMap<>();
 
     /**
      * @param id          unique lowercase identifier, e.g. {@code "mining"}
@@ -107,5 +116,56 @@ public abstract class AbstractSkill implements Skill, Listener {
     public void registerListeners(Plugin owningPlugin, SkillsAPI api) {
         this.skillsApi = api;
         owningPlugin.getServer().getPluginManager().registerEvents(this, owningPlugin);
+    }
+
+    /**
+     * Removes any debug watch session where the quitting player is the watcher.
+     * Prevents trace messages being sent to a disconnected admin.
+     */
+    @EventHandler
+    public void onWatcherQuit(PlayerQuitEvent event) {
+        UUID quitterId = event.getPlayer().getUniqueId();
+        debugWatchers.values().removeIf(
+                watcher -> watcher instanceof Player p && p.getUniqueId().equals(quitterId));
+    }
+
+    /**
+     * Registers an admin to receive debug event traces for a player's skill events.
+     * Replaces any existing watcher for that player.
+     *
+     * @param playerUuid the player whose events to watch
+     * @param watcher    the admin to send trace output to
+     */
+    public void watch(UUID playerUuid, CommandSender watcher) {
+        debugWatchers.put(playerUuid, watcher);
+    }
+
+    /**
+     * Removes the debug watcher for a player.
+     *
+     * @param playerUuid the player to stop watching
+     */
+    public void unwatch(UUID playerUuid) {
+        debugWatchers.remove(playerUuid);
+    }
+
+    /**
+     * Returns {@code true} if a debug watcher is registered for this player.
+     *
+     * @param playerUuid the player's UUID
+     * @return {@code true} if the player is currently being watched
+     */
+    public boolean isWatched(UUID playerUuid) {
+        return debugWatchers.containsKey(playerUuid);
+    }
+
+    /**
+     * Returns the admin watching this player's skill events, or {@code null} if none.
+     *
+     * @param playerUuid the player's UUID
+     * @return the watching admin, or {@code null}
+     */
+    public @Nullable CommandSender getWatcher(UUID playerUuid) {
+        return debugWatchers.get(playerUuid);
     }
 }

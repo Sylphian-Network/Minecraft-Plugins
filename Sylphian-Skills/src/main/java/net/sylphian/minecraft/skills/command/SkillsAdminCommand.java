@@ -3,6 +3,7 @@ package net.sylphian.minecraft.skills.command;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.executors.CommandArguments;
 import net.sylphian.minecraft.skills.SylphianSkills;
+import net.sylphian.minecraft.skills.command.admin.WatchSubCommand;
 import net.sylphian.minecraft.skills.command.admin.ReloadSubCommand;
 import net.sylphian.minecraft.skills.command.admin.SkillsAdminContext;
 import net.sylphian.minecraft.skills.command.admin.XpSubCommand;
@@ -31,7 +32,8 @@ public final class SkillsAdminCommand {
         new SkillsAdminContext();
         this.subCommands = List.of(
                 new ReloadSubCommand(plugin),
-                new XpSubCommand(service));
+                new XpSubCommand(service),
+                new WatchSubCommand(service));
     }
 
     /**
@@ -56,6 +58,7 @@ public final class SkillsAdminCommand {
                 <white>/sylphian-skills reload
                 /sylphian-skills xp add <player> <skill> <amount>
                 /sylphian-skills xp set <player> <skill> <amount>
-                /sylphian-skills xp remove <player> <skill> <amount>"""));
+                /sylphian-skills xp remove <player> <skill> <amount>
+                /sylphian-skills watch <skill> <player>"""));
     }
 }

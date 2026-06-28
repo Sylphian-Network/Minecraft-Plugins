@@ -60,8 +60,17 @@ public final class SteadyCurrent implements PassiveAbility {
     public void onPassiveTrigger(Player player, UUID uuid, PassiveTrigger trigger) {
         if (trigger instanceof FishCatchTrigger catchTrigger) {
             updateMomentum(player, uuid, catchTrigger);
+            CatchMomentum updated = momentum.get(uuid);
+            int stacks = updated != null ? updated.stacks() : 1;
+            trigger.record(name(), "streak → " + stacks + " stack" + (stacks == 1 ? "" : "s"));
         } else if (trigger instanceof FishCastTrigger castTrigger) {
-            castTrigger.addReduction(reductionFraction(uuid));
+            double reduction = reductionFraction(uuid);
+            castTrigger.addReduction(reduction);
+            CatchMomentum m = momentum.get(uuid);
+            int stacks = m != null ? m.stacks() : 0;
+            trigger.record(name(), stacks > 0
+                    ? "-" + (int)(reduction * 100) + "% cast timer (" + stacks + " stack" + (stacks == 1 ? "" : "s") + ")"
+                    : "no stacks yet");
         }
     }
 

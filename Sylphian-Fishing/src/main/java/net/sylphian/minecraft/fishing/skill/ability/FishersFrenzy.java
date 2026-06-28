@@ -2,9 +2,13 @@ package net.sylphian.minecraft.fishing.skill.ability;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.fishing.skill.FishingSkillConfig;
+import net.sylphian.minecraft.fishing.skill.trigger.FishCastTrigger;
+import net.sylphian.minecraft.fishing.skill.trigger.FishCatchTrigger;
 import net.sylphian.minecraft.skills.service.ActiveBuffTracker;
 import net.sylphian.minecraft.skills.service.CooldownManager;
 import net.sylphian.minecraft.skills.skill.ActiveAbility;
+import net.sylphian.minecraft.skills.skill.PassiveAbility;
+import net.sylphian.minecraft.skills.skill.PassiveTrigger;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -19,15 +23,13 @@ import java.util.function.Supplier;
  * and the player earns double XP per catch. A buff marker is held in
  * {@link ActiveBuffTracker} for the duration and cleared on expiry.</p>
  */
-public final class FishersFrenzy implements ActiveAbility {
-
-    private static final MiniMessage MINI = MiniMessage.miniMessage();
+public final class FishersFrenzy implements ActiveAbility, PassiveAbility {
 
     /** Key used with {@link CooldownManager} to track the cooldown. */
     public static final String COOLDOWN_ID = "fishing:fishers-frenzy";
     /** Key used with {@link ActiveBuffTracker} to track the active buff. */
     public static final String BUFF_ID     = "fishing:frenzy-buff";
-
+    private static final MiniMessage MINI = MiniMessage.miniMessage();
     private final Supplier<FishingSkillConfig> config;
     private final CooldownManager cooldownManager;
     private final ActiveBuffTracker buffs;
@@ -48,7 +50,6 @@ public final class FishersFrenzy implements ActiveAbility {
         this.buffs           = buffs;
         this.plugin          = plugin;
     }
-
     @Override public String id()          { return COOLDOWN_ID; }
     @Override public String name()        { return "Fisher's Frenzy"; }
     @Override public String description() { return "For 60 seconds, bites come 60% faster and you earn double XP."; }
@@ -108,7 +109,7 @@ public final class FishersFrenzy implements ActiveAbility {
      * @param uuid the player's UUID
      * @return the fractional wait-time reduction while the buff is active, or 0.0 if inactive
      */
-    public double reductionFraction(UUID uuid) {
+    private double reductionFraction(UUID uuid) {
         return isFrenzyActive(uuid) ? config.get().fishersFrenzyReductionPercent() / 100.0 : 0.0;
     }
 
@@ -116,7 +117,36 @@ public final class FishersFrenzy implements ActiveAbility {
      * @param uuid the player's UUID
      * @return 2.0 while the buff is active, 1.0 otherwise
      */
-    public double xpMultiplier(UUID uuid) {
+    private double xpMultiplier(UUID uuid) {
         return isFrenzyActive(uuid) ? 2.0 : 1.0;
+    }
+
+    @Override
+    public boolean accepts(PassiveTrigger trigger) {
+        return trigger instanceof FishCastTrigger || trigger instanceof FishCatchTrigger;
+    }
+
+    /**
+     * Contributes cast timer reduction or XP multiplier while the buff is active.
+     * Does nothing if Fisher's Frenzy is not currently running for this player.
+     */
+    @Override
+    public void onPassiveTrigger(Player player, UUID uuid, PassiveTrigger trigger) {
+        if (!isFrenzyActive(uuid)) return;
+        FishingSkillConfig cfg = config.get();
+        if (trigger instanceof FishCastTrigger castTrigger) {
+            double reduction = cfg.fishersFrenzyReductionPercent() / 100.0;
+            castTrigger.addReduction(reduction);
+            trigger.record(name(), "-" + (int)(reduction * 100) + "% cast timer (buff active)");
+        } else if (trigger instanceof FishCatchTrigger catchTrigger) {
+            catchTrigger.multiplyXp(2.0);
+            trigger.record(name(), "x2.0 XP (buff active)");
+        }
+    }
+
+    /** @return when this passive fires, shown in the skill detail GUI */
+    @Override
+    public String triggerCondition() {
+        return "While Fisher's Frenzy buff is active.";
     }
 }

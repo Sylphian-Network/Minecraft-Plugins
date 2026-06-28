@@ -38,6 +38,8 @@ public final class LineMastery implements PassiveAbility {
 
     @Override
     public void onPassiveTrigger(Player player, UUID uuid, PassiveTrigger trigger) {
-        ((FishCastTrigger) trigger).addReduction(config.get().lineMasteryReductionPercent() / 100.0);
+        double pct = config.get().lineMasteryReductionPercent();
+        ((FishCastTrigger) trigger).addReduction(pct / 100.0);
+        trigger.record(name(), "-" + (int) pct + "% cast timer");
     }
 }

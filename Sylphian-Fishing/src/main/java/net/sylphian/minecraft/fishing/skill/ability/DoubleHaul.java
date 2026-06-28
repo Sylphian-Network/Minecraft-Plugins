@@ -4,6 +4,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.fishing.skill.FishingSkillConfig;
 import net.sylphian.minecraft.skills.service.CooldownManager;
 import net.sylphian.minecraft.skills.skill.ActiveAbility;
+import net.sylphian.minecraft.skills.skill.PassiveTrigger;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -46,7 +47,6 @@ public final class DoubleHaul implements ActiveAbility {
         this.pendingSet      = pendingSet;
         this.plugin          = plugin;
     }
-
     @Override public String id()          { return COOLDOWN_ID; }
     @Override public String name()        { return "Double Haul"; }
     @Override public String description() { return "Your next catch yields a second copy of the item."; }
@@ -90,11 +90,12 @@ public final class DoubleHaul implements ActiveAbility {
      * Gives the player a second copy of the caught item if this catch is pending.
      * The clone is delivered two ticks later so the original item lands in inventory first.
      *
-     * @param player the catching player
-     * @param uuid   the player's UUID
-     * @param caught the item that was caught
+     * @param player  the catching player
+     * @param uuid    the player's UUID
+     * @param caught  the item that was caught
+     * @param trigger the catch trigger to record the contribution on
      */
-    public void applyOnCatch(Player player, UUID uuid, ItemStack caught) {
+    public void applyOnCatch(Player player, UUID uuid, ItemStack caught, PassiveTrigger trigger) {
         if (!pendingSet.remove(uuid)) return;
         ItemStack clone = caught.clone();
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
@@ -104,5 +105,6 @@ public final class DoubleHaul implements ActiveAbility {
                         "<aqua>Double Haul: <white>Second catch added to your inventory!"));
             }
         }, 2L);
+        trigger.recordActive(name(), "duplicate item queued");
     }
 }

@@ -4,6 +4,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.fishing.skill.FishingSkillConfig;
 import net.sylphian.minecraft.skills.service.CooldownManager;
 import net.sylphian.minecraft.skills.skill.ActiveAbility;
+import net.sylphian.minecraft.skills.skill.PassiveTrigger;
 import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 
@@ -41,7 +42,6 @@ public final class PatientAngler implements ActiveAbility {
         this.cooldownManager = cooldownManager;
         this.pendingSet      = pendingSet;
     }
-
     @Override public String id()          { return COOLDOWN_ID; }
     @Override public String name()        { return "Patient Angler"; }
     @Override public String description() { return "Your next cast will bite in 3-5 seconds."; }
@@ -85,13 +85,15 @@ public final class PatientAngler implements ActiveAbility {
      * Applies the shortened wait times to the hook if this player's cast is pending.
      * Removes the pending marker so it does not carry over to subsequent casts.
      *
-     * @param hook the newly cast hook
-     * @param uuid the casting player's UUID
+     * @param hook    the newly cast hook
+     * @param uuid    the casting player's UUID
+     * @param trigger the cast trigger to record the contribution on
      */
-    public void applyOnCast(FishHook hook, UUID uuid) {
+    public void applyOnCast(FishHook hook, UUID uuid, PassiveTrigger trigger) {
         if (!pendingSet.remove(uuid)) return;
         FishingSkillConfig cfg = config.get();
         hook.setMinWaitTime(cfg.patientAnglerMinTicks());
         hook.setMaxWaitTime(cfg.patientAnglerMaxTicks());
+        trigger.recordActive(name(), "set hook to " + cfg.patientAnglerMinTicks() + "-" + cfg.patientAnglerMaxTicks() + "t");
     }
 }

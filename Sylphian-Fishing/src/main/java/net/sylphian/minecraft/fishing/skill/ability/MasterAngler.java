@@ -53,8 +53,10 @@ public final class MasterAngler implements PassiveAbility {
         FishingSkillConfig cfg = config.get();
         if (trigger instanceof FishCastTrigger castTrigger) {
             castTrigger.addReduction(cfg.masterAnglerReductionPercent() / 100.0);
+            trigger.record(name(), "-" + cfg.masterAnglerReductionPercent() + "% cast timer");
         } else if (trigger instanceof FishCatchTrigger catchTrigger) {
             catchTrigger.multiplyXp(cfg.masterAnglerXpMultiplier());
+            trigger.record(name(), String.format("x%.1f XP", cfg.masterAnglerXpMultiplier()));
         }
     }
 }
