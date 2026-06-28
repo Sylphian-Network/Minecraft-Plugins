@@ -34,7 +34,7 @@ public final class SkillsMenuListener implements Listener {
         } else if (event.getInventory().getHolder() instanceof SkillDetailHolder holder) {
             event.setCancelled(true);
             if (!(event.getWhoClicked() instanceof Player player)) return;
-            if (event.getRawSlot() == 48) holder.getMenu().open(player);
+            if (event.getRawSlot() == SkillDetailHolder.BACK_SLOT) holder.getMenu().open(player);
         }
     }
 

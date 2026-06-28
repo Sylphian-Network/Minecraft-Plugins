@@ -13,6 +13,9 @@ import org.jspecify.annotations.Nullable;
  */
 public class SkillDetailHolder implements InventoryHolder {
 
+    /** Raw slot index of the back button in the detail view. */
+    public static final int BACK_SLOT = 48;
+
     private final SkillsMenu menu;
     private final Skill skill;
 

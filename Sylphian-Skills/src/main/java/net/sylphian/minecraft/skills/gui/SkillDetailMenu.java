@@ -34,7 +34,6 @@ public final class SkillDetailMenu {
     private static final MiniMessage MINI = MiniMessage.miniMessage();
 
     private static final int BOTTOM_ROW_START = 45;
-    private static final int BACK_SLOT        = 48;
     private static final int INFO_SLOT        = 49;
 
     private final SkillsService service;
@@ -75,7 +74,7 @@ public final class SkillDetailMenu {
             inv.setItem(i, border);
         }
 
-        inv.setItem(BACK_SLOT, backButton());
+        inv.setItem(SkillDetailHolder.BACK_SLOT, backButton());
         inv.setItem(INFO_SLOT, infoItem(skill, level, xp, config));
 
         player.openInventory(inv);
