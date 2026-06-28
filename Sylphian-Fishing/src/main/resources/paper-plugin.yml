@@ -24,6 +24,9 @@ dependencies:
     Sylphian-Crates:
       load: BEFORE
       required: false
+    Sylphian-Skills:
+      load: BEFORE
+      required: false
 
 permissions:
   sylphian.fishing.admin:

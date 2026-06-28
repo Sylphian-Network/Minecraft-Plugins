@@ -332,6 +332,60 @@ bite-timer:
 #                 amplifier — Effect level, 0-indexed (0 = level I)
 # =============================================================
 
+# =============================================================
+# Fishing Skill (Sylphian-Skills integration)
+# =============================================================
+# Requires Sylphian-Skills to be installed. If it is absent,
+# this section is ignored and no XP or skill effects are applied.
+#
+# Active skills are triggered by sneaking and right-clicking
+# while holding a fishing rod and not currently casting.
+# The highest unlocked skill not on cooldown activates.
+#
+# Levels:
+#   5  - Active:  Patient Angler — next cast bites quickly
+#   10 - Passive: Line Mastery   — permanent bite timer reduction
+#   15 - Active:  Double Haul    — next catch is duplicated
+#   20 - Passive: Steady Current — consecutive catches in the same spot stack bite timer reductions
+#   25 - Active:  Fisher's Frenzy — 60s buff: faster bites and double XP
+#   30 - Passive: Master Angler  — additional timer reduction and XP multiplier
+# =============================================================
+
+fishing-skill:
+  xp-per-catch: 10
+
+  # Level 5 - Active: Patient Angler
+  patient-angler:
+    cooldown-seconds: 90
+    min-wait-ticks: 60     # 3 seconds
+    max-wait-ticks: 100    # 5 seconds
+
+  # Level 10 - Passive: Line Mastery
+  line-mastery:
+    reduction-percent: 15.0
+
+  # Level 15 - Active: Double Haul
+  double-haul:
+    cooldown-seconds: 180
+
+  # Level 20 - Passive: Steady Current
+  steady-current:
+    stack-reduction-percent: 5.0   # per stack
+    max-stacks: 5                  # 25% maximum from this passive
+    range-blocks: 15.0             # how far to move before the streak resets
+
+  # Level 25 - Active: Fisher's Frenzy
+  fishers-frenzy:
+    cooldown-seconds: 300
+    duration-seconds: 60
+    reduction-percent: 60.0        # bite timer reduction during frenzy
+
+  # Level 30 - Passive: Master Angler
+  master-angler:
+    reduction-percent: 20.0        # stacks with Line Mastery
+    xp-multiplier: 1.5
+
+
 mutations:
   super_fish:
     enabled: true

@@ -9,6 +9,7 @@ import net.sylphian.minecraft.database.DatabaseService;
 import net.sylphian.minecraft.fishing.commands.EncyclopaediaCommand;
 import net.sylphian.minecraft.fishing.item.FishingItemProvider;
 import net.sylphian.minecraft.fishing.commands.SylphianFishingCommand;
+import net.sylphian.minecraft.fishing.skill.SkillsBridge;
 import net.sylphian.minecraft.fishing.config.*;
 import net.sylphian.minecraft.fishing.db.migrations.Migration001CreateFishEncyclopaedia;
 import net.sylphian.minecraft.fishing.db.repositories.FishEncyclopaediaRepository;
@@ -42,6 +43,7 @@ public class SylphianFishing extends JavaPlugin {
     private EncyclopaediaMenu encyclopaediaMenu;
 
     private LootService lootService;
+    private SkillsBridge skillsBridge;
     private FishMutationService mutationService;
     private CatchEffectService catchEffectService;
     private BiteTimerService biteTimerService;
@@ -120,6 +122,10 @@ public class SylphianFishing extends JavaPlugin {
             commands.register("encyclopaedia", new EncyclopaediaCommand(encyclopaediaMenu));
         });
 
+        if (getServer().getPluginManager().getPlugin("Sylphian-Skills") != null) {
+            skillsBridge = new SkillsBridge(this);
+        }
+
         getLogger().info("Sylphian Fishing enabled!");
     }
 
@@ -128,6 +134,7 @@ public class SylphianFishing extends JavaPlugin {
      */
     @Override
     public void onDisable() {
+        if (skillsBridge != null) skillsBridge.unregister();
         ItemRegistry.unregister("sylphian-fishing");
         baitZoneService.shutdown();
         baitListener.shutdown();
@@ -159,6 +166,7 @@ public class SylphianFishing extends JavaPlugin {
             mutationService.reload(newConfig);
             biteTimerService.reload(newConfig);
             baitZoneService.reload(newBaits);
+            if (skillsBridge != null) skillsBridge.reload();
 
             encyclopaediaMenu.reload(newLootTableEntries);
 
