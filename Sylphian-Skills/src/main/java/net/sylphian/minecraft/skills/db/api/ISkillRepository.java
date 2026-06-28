@@ -18,6 +18,15 @@ public interface ISkillRepository {
     CompletableFuture<Map<String, Long>> loadAll(UUID uuid);
 
     /**
+     * Loads the XP for a single skill. Returns 0 if no row exists yet.
+     *
+     * @param uuid    the player's UUID
+     * @param skillId the skill identifier
+     * @return a future of the stored XP, or {@code 0} if not found
+     */
+    CompletableFuture<Long> loadOne(UUID uuid, String skillId);
+
+    /**
      * Persists a player's XP for a single skill.
      * Uses an upsert that keeps the higher of the stored and incoming value,
      * so out-of-order async writes can never overwrite a newer result.

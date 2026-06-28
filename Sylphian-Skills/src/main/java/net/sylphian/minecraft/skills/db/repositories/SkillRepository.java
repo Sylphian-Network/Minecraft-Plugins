@@ -38,6 +38,15 @@ public class SkillRepository implements ISkillRepository {
     }
 
     @Override
+    public CompletableFuture<Long> loadOne(UUID uuid, String skillId) {
+        return CompletableFuture.supplyAsync(() -> {
+            Long result = jdbi.withExtension(SkillDao.class, dao ->
+                    dao.findOne(uuid.toString(), skillId));
+            return result != null ? result : 0L;
+        }, executor);
+    }
+
+    @Override
     public CompletableFuture<Void> upsertXP(UUID uuid, String skillId, long xp) {
         return CompletableFuture.runAsync(() ->
                 jdbi.useExtension(SkillDao.class, dao ->

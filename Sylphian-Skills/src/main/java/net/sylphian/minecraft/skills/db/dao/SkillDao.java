@@ -23,6 +23,16 @@ public interface SkillDao {
     List<SkillRow> findAll(@Bind("uuid") String uuid);
 
     /**
+     * Loads the XP for a single skill, or {@code null} if no row exists yet.
+     *
+     * @param uuid    the player's UUID string
+     * @param skillId the skill identifier
+     * @return the stored XP, or {@code null} if not found
+     */
+    @SqlQuery("SELECT xp FROM player_skills WHERE player_uuid = :uuid AND skill_id = :skillId")
+    Long findOne(@Bind("uuid") String uuid, @Bind("skillId") String skillId);
+
+    /**
      * Inserts or updates a player's XP for a skill, keeping whichever value is higher.
      * Using GREATEST guards against out-of-order async writes overwriting a newer value.
      *

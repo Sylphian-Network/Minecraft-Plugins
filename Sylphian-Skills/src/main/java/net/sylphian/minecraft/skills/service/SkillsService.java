@@ -178,8 +178,7 @@ public class SkillsService implements SkillsAPI {
 
     @Override
     public CompletableFuture<Long> getXP(UUID uuid, String skillId) {
-        return repository.loadAll(uuid)
-                .thenApply(data -> data.getOrDefault(skillId, 0L));
+        return repository.loadOne(uuid, skillId);
     }
 
     /**
