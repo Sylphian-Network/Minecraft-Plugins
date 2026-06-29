@@ -1,5 +1,7 @@
 package net.sylphian.minecraft.cooking.station;
 
+import net.sylphian.minecraft.cooking.event.CookingCompleteEvent;
+import net.sylphian.minecraft.cooking.event.CookingStartEvent;
 import net.sylphian.minecraft.cooking.gui.CookingStationGui;
 import net.sylphian.minecraft.cooking.recipe.CookingRecipe;
 import org.bukkit.Location;
@@ -10,6 +12,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -24,11 +27,19 @@ import java.util.function.Consumer;
  *
  * <p>When a station becomes fully idle (no ingredients, no fuel, no output, no
  * viewers) it is evicted from memory and its PDC is cleared.</p>
+ *
+ * <p>At the start of each new cook cycle the service fires {@link CookingStartEvent},
+ * allowing skill listeners to reduce the effective cook time. When a recipe completes
+ * it fires {@link CookingCompleteEvent}, allowing skill listeners to award XP and
+ * set a bonus output item to be dropped at the station.</p>
  */
 public class CookingStationService {
 
     /** Ticks between each processing cycle (20 = once per second). */
     private static final int TICK_INTERVAL = 20;
+
+    /** Minimum cook time in ticks that skills may reduce a cycle to. */
+    private static final int MIN_COOK_TIME = 20;
 
     private final JavaPlugin plugin;
     private final CookingStationGui gui;
@@ -49,7 +60,7 @@ public class CookingStationService {
      *
      * @param plugin  the owning plugin
      * @param recipes all loaded cooking recipes
-     * @param fuels   map of fuel material → burn time in ticks
+     * @param fuels   map of fuel material to burn time in ticks
      * @param gui     the GUI factory used to open and update station inventories
      */
     public CookingStationService(JavaPlugin plugin, List<CookingRecipe> recipes,
@@ -97,8 +108,7 @@ public class CookingStationService {
      */
     public void openStation(Player player, Block block) {
         Location location = block.getLocation();
-        CookingStationState state = stations.computeIfAbsent(location,
-                loc -> CookingStationPdc.load(block));
+        CookingStationState state = stations.computeIfAbsent(location, _ -> CookingStationPdc.load(block));
 
         updateActiveRecipe(state);
 
@@ -173,14 +183,14 @@ public class CookingStationService {
      * Returns the location of the station currently open for the given player,
      * or null if they have no station open.
      */
-    public Location getOpenStationLocation(UUID uuid) {
+    public @Nullable Location getOpenStationLocation(UUID uuid) {
         return playerStationMap.get(uuid);
     }
 
     /**
      * Returns the in-memory state of the station at the given location, or null.
      */
-    public CookingStationState getState(Location location) {
+    public @Nullable CookingStationState getState(Location location) {
         return stations.get(location);
     }
 
@@ -247,6 +257,23 @@ public class CookingStationService {
         return item != null && !item.getType().isAir() && fuels.containsKey(item.getType());
     }
 
+    /**
+     * Immediately completes the current recipe at the station the given player has open,
+     * attributing the completion to {@code activatorUuid}. Used by active cooking abilities.
+     * Does nothing if the player has no station open or the station has no active recipe.
+     *
+     * @param player        the player who triggered the ability (must have a station open)
+     * @param activatorUuid the UUID to attribute this completion to for XP and skill effects
+     */
+    public void rushCook(Player player, UUID activatorUuid) {
+        Location location = playerStationMap.get(player.getUniqueId());
+        if (location == null) return;
+        CookingStationState state = stations.get(location);
+        if (state == null || state.getActiveRecipe() == null) return;
+        state.setLastInteractor(activatorUuid);
+        finishCooking(location, state, state.getActiveRecipe());
+    }
+
     private void tickAll() {
         for (Map.Entry<Location, CookingStationState> entry : new ArrayList<>(stations.entrySet())) {
             tickStation(entry.getKey(), entry.getValue());
@@ -259,6 +286,7 @@ public class CookingStationService {
         if (recipe == null) {
             if (state.getCookProgress() > 0) {
                 state.setCookProgress(0);
+                state.setEffectiveCookTime(0);
                 refreshViewers(location, state);
             }
             return;
@@ -270,6 +298,17 @@ public class CookingStationService {
                     || currentOutput.getAmount() + recipe.output().getAmount()
                     > currentOutput.getMaxStackSize()) {
                 return;
+            }
+        }
+
+        if (state.getEffectiveCookTime() == 0) {
+            int baseTime = recipe.cookTime();
+            if (state.getLastInteractor() != null) {
+                CookingStartEvent startEvent = new CookingStartEvent(location, recipe, state.getLastInteractor(), baseTime);
+                plugin.getServer().getPluginManager().callEvent(startEvent);
+                state.setEffectiveCookTime(Math.max(MIN_COOK_TIME, startEvent.getEffectiveCookTime()));
+            } else {
+                state.setEffectiveCookTime(baseTime);
             }
         }
 
@@ -286,7 +325,7 @@ public class CookingStationService {
         state.setFuelRemaining(state.getFuelRemaining() - TICK_INTERVAL);
         state.setCookProgress(state.getCookProgress() + TICK_INTERVAL);
 
-        if (state.getCookProgress() >= recipe.cookTime()) {
+        if (state.getCookProgress() >= state.getEffectiveCookTime()) {
             finishCooking(location, state, recipe);
         } else {
             refreshViewers(location, state);
@@ -316,10 +355,19 @@ public class CookingStationService {
     }
 
     /**
-     * Completes a cook cycle: produces output, decrements matched ingredients,
+     * Completes a cook cycle: fires {@link CookingCompleteEvent} for skill listeners,
+     * produces output, drops any bonus output, decrements matched ingredients,
      * resets progress, and refreshes all viewer GUIs.
      */
     private void finishCooking(Location location, CookingStationState state, CookingRecipe recipe) {
+        if (state.getLastInteractor() != null) {
+            CookingCompleteEvent completeEvent = new CookingCompleteEvent(location, recipe, state.getLastInteractor());
+            plugin.getServer().getPluginManager().callEvent(completeEvent);
+            if (completeEvent.getBonusOutput() != null) {
+                dropItem(location.clone().add(0.5, 0.5, 0.5), completeEvent.getBonusOutput());
+            }
+        }
+
         ItemStack existing = state.getOutput();
         if (existing == null || existing.getType().isAir()) {
             state.setOutput(recipe.output().clone());
@@ -343,6 +391,7 @@ public class CookingStationService {
             }
         }
 
+        state.setEffectiveCookTime(0);
         state.setCookProgress(0);
         updateActiveRecipe(state);
         refreshViewers(location, state);
@@ -358,6 +407,7 @@ public class CookingStationService {
         if (!Objects.equals(matched, state.getActiveRecipe())) {
             state.setActiveRecipe(matched);
             state.setCookProgress(0);
+            state.setEffectiveCookTime(0);
         }
     }
 
@@ -390,6 +440,7 @@ public class CookingStationService {
         if (location == null) return;
         CookingStationState state = stations.get(location);
         if (state == null) return;
+        state.setLastInteractor(player.getUniqueId());
         mutation.accept(state);
         refreshViewers(location, state);
     }

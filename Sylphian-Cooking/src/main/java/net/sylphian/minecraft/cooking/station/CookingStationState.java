@@ -39,6 +39,20 @@ public class CookingStationState {
     /** The recipe currently being cooked, or null if no recipe matches the current ingredients. */
     private CookingRecipe activeRecipe;
 
+    /**
+     * The player who last mutated an ingredient or fuel slot, used to attribute
+     * skill effects (cook time reduction, bonus yield, XP) to the correct player.
+     * Null if no player has interacted with this station in the current session.
+     */
+    private UUID lastInteractor;
+
+    /**
+     * The effective cook time in ticks for the current recipe cycle, set by the
+     * skills framework on the first tick of each new recipe to apply any passive
+     * cook time reductions. Zero until a cook cycle begins.
+     */
+    private int effectiveCookTime;
+
     /** UUIDs of players currently viewing this station's GUI. */
     private final Set<UUID> viewers = new HashSet<>();
 
@@ -91,6 +105,33 @@ public class CookingStationState {
     public CookingRecipe getActiveRecipe() { return activeRecipe; }
     public void setActiveRecipe(CookingRecipe activeRecipe) { this.activeRecipe = activeRecipe; }
 
+    /** @return the UUID of the player who last mutated an ingredient or fuel slot, or null */
+    public UUID getLastInteractor() { return lastInteractor; }
+
+    /**
+     * Records the player who last mutated an ingredient or fuel slot.
+     *
+     * @param lastInteractor the interacting player's UUID
+     */
+    public void setLastInteractor(UUID lastInteractor) { this.lastInteractor = lastInteractor; }
+
+    /**
+     * Returns the effective cook time in ticks for the current recipe cycle.
+     * Zero means no cycle is active; use {@link CookingRecipe#cookTime()} as the base.
+     *
+     * @return effective cook time, or 0 if not yet set for the current cycle
+     */
+    public int getEffectiveCookTime() { return effectiveCookTime; }
+
+    /**
+     * Sets the effective cook time for the current recipe cycle.
+     * Set to 0 when the active recipe changes to signal that the next tick
+     * should re-derive it (giving skills a chance to apply reductions).
+     *
+     * @param effectiveCookTime the cook time in ticks, or 0 to reset
+     */
+    public void setEffectiveCookTime(int effectiveCookTime) { this.effectiveCookTime = effectiveCookTime; }
+
     public Set<UUID> getViewers() { return viewers; }
     public void addViewer(UUID uuid) { viewers.add(uuid); }
     public void removeViewer(UUID uuid) { viewers.remove(uuid); }
@@ -109,10 +150,13 @@ public class CookingStationState {
 
     /**
      * Returns the fraction of cook progress as a value between 0.0 and 1.0.
+     * Uses {@link #effectiveCookTime} when set, falling back to the recipe's base cook time.
      * Returns 0.0 if no recipe is active.
      */
     public double cookProgressFraction() {
-        if (activeRecipe == null || activeRecipe.cookTime() <= 0) return 0.0;
-        return Math.min(1.0, (double) cookProgress / activeRecipe.cookTime());
+        if (activeRecipe == null) return 0.0;
+        int total = effectiveCookTime > 0 ? effectiveCookTime : activeRecipe.cookTime();
+        if (total <= 0) return 0.0;
+        return Math.min(1.0, (double) cookProgress / total);
     }
 }
