@@ -10,6 +10,7 @@ import net.sylphian.minecraft.cooking.gui.CookingStationGui;
 import net.sylphian.minecraft.cooking.item.CookingItemProvider;
 import net.sylphian.minecraft.cooking.listener.CookingStationListener;
 import net.sylphian.minecraft.cooking.recipe.CookingRecipe;
+import net.sylphian.minecraft.cooking.skill.SkillsBridge;
 import net.sylphian.minecraft.cooking.station.CookingStationService;
 import net.sylphian.minecraft.items.item.ItemRegistry;
 import org.bukkit.Material;
@@ -32,6 +33,7 @@ public final class SylphianCooking extends JavaPlugin {
 
     private CookingStationService stationService;
     private CookingItemProvider itemProvider;
+    private SkillsBridge skillsBridge;
 
     private File recipesFile;
 
@@ -63,14 +65,24 @@ public final class SylphianCooking extends JavaPlugin {
             event.registrar().register("sylphian-cooking", new SylphianCookingCommand(this));
         });
 
+        if (getServer().getPluginManager().getPlugin("Sylphian-Skills") != null) {
+            skillsBridge = new SkillsBridge(this);
+        }
+
         getLogger().info("Sylphian Cooking enabled! [" + recipes.size() + " recipe(s) loaded]");
     }
 
     @Override
     public void onDisable() {
+        if (skillsBridge != null) skillsBridge.unregister();
         if (stationService != null) stationService.shutdown();
         ItemRegistry.unregister("sylphian-cooking");
         getLogger().info("Sylphian Cooking disabled.");
+    }
+
+    /** @return the cooking station service */
+    public CookingStationService getStationService() {
+        return stationService;
     }
 
     private List<CookingRecipe> loadRecipes() {
@@ -98,6 +110,7 @@ public final class SylphianCooking extends JavaPlugin {
                     getConfig(), getLogger()).loadFuels();
 
             stationService.reload(recipes, fuels);
+            if (skillsBridge != null) skillsBridge.reload();
 
             getLogger().info("Configuration reloaded successfully.");
             if (sender != null)

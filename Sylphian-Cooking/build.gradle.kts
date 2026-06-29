@@ -1,5 +1,6 @@
 // Sylphian-Cooking
 dependencies {
+    compileOnly(project(":Sylphian-Skills"))
     compileOnly(libs.paper.api)
     compileOnly(project(":Sylphian-Items"))
 }
