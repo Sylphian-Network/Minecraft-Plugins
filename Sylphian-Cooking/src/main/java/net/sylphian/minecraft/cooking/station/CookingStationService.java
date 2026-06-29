@@ -5,6 +5,7 @@ import net.sylphian.minecraft.cooking.event.CookingCompleteEvent;
 import net.sylphian.minecraft.cooking.event.CookingStartEvent;
 import net.sylphian.minecraft.cooking.event.CookingXpEvent;
 import net.sylphian.minecraft.cooking.gui.CookingStationGui;
+import net.sylphian.minecraft.cooking.mastery.MasteryAccessor;
 import net.sylphian.minecraft.cooking.quality.CookingQuality;
 import net.sylphian.minecraft.cooking.quality.QualityRoller;
 import net.sylphian.minecraft.cooking.recipe.CookingRecipe;
@@ -62,6 +63,12 @@ public class CookingStationService {
     /** Provides a player's cooking skill level; defaults to 0 (no level bonus) when Skills is absent. */
     private Function<UUID, Integer> levelProvider = _ -> 0;
 
+    /** Provides mastery counts; defaults to no-op until {@link net.sylphian.minecraft.cooking.mastery.CookingMasteryManager} is wired in. */
+    private MasteryAccessor masteryAccessor = new MasteryAccessor() {
+        public int getCount(UUID playerUuid, String recipeId) { return 0; }
+        public void increment(UUID playerUuid, String recipeId) {}
+    };
+
     /** Active stations keyed by their block's location. */
     private final Map<Location, CookingStationState> stations = new HashMap<>();
 
@@ -95,6 +102,16 @@ public class CookingStationService {
      */
     public void setLevelProvider(Function<UUID, Integer> levelProvider) {
         this.levelProvider = levelProvider;
+    }
+
+    /**
+     * Sets the mastery accessor used to read and record per-player recipe cook counts.
+     * Call from {@code SylphianCooking.onEnable()} after the mastery manager is ready.
+     *
+     * @param masteryAccessor the mastery accessor
+     */
+    public void setMasteryAccessor(MasteryAccessor masteryAccessor) {
+        this.masteryAccessor = masteryAccessor;
     }
 
     /** Starts the background tick loop. Call from {@link JavaPlugin#onEnable()}. */
@@ -371,17 +388,22 @@ public class CookingStationService {
         UUID interactor = state.getLastInteractor();
 
         // Collect passive contributions from Skills (or other listeners).
-        Map<CookingQuality, Double> qualityShifts = Map.of();
+        EnumMap<CookingQuality, Double> qualityShifts = new EnumMap<>(CookingQuality.class);
         double xpMultiplier = 1.0;
-        @Nullable ItemStack bonusOutput = null;
+        ItemStack bonusOutput = null;
 
         if (interactor != null) {
             CookingCompleteEvent completeEvent =
                     new CookingCompleteEvent(location, recipe, interactor);
             plugin.getServer().getPluginManager().callEvent(completeEvent);
-            qualityShifts = completeEvent.getQualityShifts();
+            qualityShifts.putAll(completeEvent.getQualityShifts());
             xpMultiplier  = completeEvent.getXpMultiplier();
             bonusOutput   = completeEvent.getBonusOutput();
+        }
+
+        // Apply mastery bonus if the player has cooked this recipe enough times.
+        if (interactor != null && masteryAccessor.getCount(interactor, recipe.id()) >= cfg.masteryThreshold()) {
+            qualityShifts.merge(CookingQuality.PERFECT, cfg.masteryBonus(), Double::sum);
         }
 
         // Roll quality; always happens, Skills is not required.
@@ -395,6 +417,11 @@ public class CookingStationService {
 
         if (bonusOutput != null) {
             dropItem(location.clone().add(0.5, 0.5, 0.5), bonusOutput);
+        }
+
+        // Record this cook in mastery (cache + async DB write).
+        if (interactor != null) {
+            masteryAccessor.increment(interactor, recipe.id());
         }
 
         // Fire XP event so Skills (or any other listener) can award XP.

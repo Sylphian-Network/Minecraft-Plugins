@@ -3,21 +3,29 @@ package net.sylphian.minecraft.cooking;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.sylphian.minecraft.cooking.commands.CookbookCommand;
 import net.sylphian.minecraft.cooking.commands.SylphianCookingCommand;
 import net.sylphian.minecraft.cooking.config.CookingConfig;
 import net.sylphian.minecraft.cooking.config.FuelConfigLoader;
 import net.sylphian.minecraft.cooking.config.RecipeConfigLoader;
 import net.sylphian.minecraft.cooking.gui.CookingStationGui;
+import net.sylphian.minecraft.cooking.gui.RecipeBookMenu;
 import net.sylphian.minecraft.cooking.item.CookingItemProvider;
 import net.sylphian.minecraft.cooking.listener.CookingStationListener;
+import net.sylphian.minecraft.cooking.listener.RecipeBookListener;
 import net.sylphian.minecraft.cooking.recipe.CookingRecipe;
+import net.sylphian.minecraft.cooking.db.migrations.Migration001CreateCookingMastery;
+import net.sylphian.minecraft.cooking.db.repositories.CookingMasteryRepository;
+import net.sylphian.minecraft.cooking.mastery.CookingMasteryManager;
 import net.sylphian.minecraft.cooking.skill.SkillsBridge;
+import net.sylphian.minecraft.database.DatabaseService;
 import net.sylphian.minecraft.cooking.station.CookingStationService;
 import net.sylphian.minecraft.items.item.ItemRegistry;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -34,6 +42,8 @@ public final class SylphianCooking extends JavaPlugin {
 
     private CookingStationService stationService;
     private CookingItemProvider itemProvider;
+    private CookingMasteryRepository masteryRepository;
+    private RecipeBookMenu recipeBookMenu;
     private SkillsBridge skillsBridge;
 
     private File recipesFile;
@@ -63,8 +73,29 @@ public final class SylphianCooking extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new CookingStationListener(this, stationService), this);
 
+        DatabaseService.registerMigrations(List.of(
+                new Migration001CreateCookingMastery()
+        ));
+        DatabaseService.runMigrations("Sylphian-Cooking", getLogger());
+
+        masteryRepository = new CookingMasteryRepository(
+                DatabaseService.getJdbi(),
+                DatabaseService.getExecutor()
+        );
+
+        CookingMasteryManager masteryManager = new CookingMasteryManager(masteryRepository, getLogger());
+        getServer().getPluginManager().registerEvents(masteryManager, this);
+        stationService.setMasteryAccessor(masteryManager);
+        masteryManager.seedOnlinePlayers(
+                getServer().getOnlinePlayers().stream().map(Entity::getUniqueId).toList()
+        );
+
+        recipeBookMenu = new RecipeBookMenu(recipes, cookingConfig, masteryManager);
+        getServer().getPluginManager().registerEvents(new RecipeBookListener(), this);
+
         getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
             event.registrar().register("sylphian-cooking", new SylphianCookingCommand(this));
+            event.registrar().register("cookbook", new CookbookCommand(recipeBookMenu));
         });
 
         if (getServer().getPluginManager().getPlugin("Sylphian-Skills") != null) {
@@ -83,9 +114,10 @@ public final class SylphianCooking extends JavaPlugin {
     }
 
     /** @return the cooking station service */
-    public CookingStationService getStationService() {
-        return stationService;
-    }
+    public CookingStationService getStationService() { return stationService; }
+
+    /** @return the mastery repository */
+    public CookingMasteryRepository getMasteryRepository() { return masteryRepository; }
 
     private List<CookingRecipe> loadRecipes() {
         FileConfiguration recipesConfig = YamlConfiguration.loadConfiguration(recipesFile);
@@ -113,6 +145,7 @@ public final class SylphianCooking extends JavaPlugin {
 
             CookingConfig cookingConfig = CookingConfig.from(getConfig());
             stationService.reload(recipes, fuels, cookingConfig);
+            recipeBookMenu.reload(recipes, cookingConfig);
             if (skillsBridge != null) skillsBridge.reload();
 
             getLogger().info("Configuration reloaded successfully.");
