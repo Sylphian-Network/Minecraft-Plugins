@@ -11,10 +11,12 @@ import net.sylphian.minecraft.cooking.quality.QualityRoller;
 import net.sylphian.minecraft.cooking.recipe.CookingRecipe;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jspecify.annotations.Nullable;
@@ -52,6 +54,9 @@ public class CookingStationService {
 
     /** Minimum cook time in ticks that skills may reduce a cycle to. */
     private static final int MIN_COOK_TIME = 20;
+
+    /** PDC key stamped on every cooking output so it can be used as a namespaced ingredient. */
+    private static final NamespacedKey ITEM_ID_KEY = new NamespacedKey("sylphian-cooking", "item_id");
 
     private final JavaPlugin plugin;
     private final CookingStationGui gui;
@@ -406,12 +411,19 @@ public class CookingStationService {
             qualityShifts.merge(CookingQuality.PERFECT, cfg.masteryBonus(), Double::sum);
         }
 
-        // Roll quality; always happens, Skills is not required.
-        int level     = interactor != null ? levelProvider.apply(interactor) : 0;
-        int slotCount = recipe.ingredients().size();
-        CookingQuality quality = QualityRoller.roll(cfg.baseWeights(), level, slotCount, qualityShifts, cfg.levelBonus(), cfg.slotBonus());
-
-        ItemStack outputItem = quality.applyTo(recipe.output(), cfg.formatFor(quality));
+        // Roll quality for quality-eligible recipes; skip entirely for non-food/material recipes.
+        CookingQuality quality;
+        ItemStack outputItem;
+        if (recipe.qualityBonusEnabled()) {
+            int level    = interactor != null ? levelProvider.apply(interactor) : 0;
+            int slotCount = recipe.ingredients().size();
+            quality = QualityRoller.roll(cfg.baseWeights(), level, slotCount, qualityShifts, cfg.levelBonus(), cfg.slotBonus());
+            outputItem = quality.applyTo(recipe.output(), cfg.formatFor(quality));
+        } else {
+            quality = CookingQuality.PLAIN;
+            outputItem = recipe.output().clone();
+        }
+        outputItem.editMeta(meta -> meta.getPersistentDataContainer().set(ITEM_ID_KEY, PersistentDataType.STRING, recipe.id()));
         state.setLastQuality(quality);
         placeOutput(location, state, outputItem);
 
