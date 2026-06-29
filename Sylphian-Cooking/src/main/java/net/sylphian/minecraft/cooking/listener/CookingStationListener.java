@@ -66,7 +66,7 @@ public class CookingStationListener implements Listener {
      * Intercepts right-clicks on station blocks and opens the custom cooking GUI.
      * The vanilla furnace/campfire interaction is cancelled.
      */
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInteract(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if (event.getHand() != EquipmentSlot.HAND) return;

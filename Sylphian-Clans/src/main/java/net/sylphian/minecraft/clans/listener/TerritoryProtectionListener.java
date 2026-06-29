@@ -218,7 +218,7 @@ public class TerritoryProtectionListener implements Listener {
             Material.CHEST, Material.TRAPPED_CHEST, Material.BARREL, Material.HOPPER,
             Material.DROPPER, Material.DISPENSER, Material.FURNACE, Material.BLAST_FURNACE,
             Material.SMOKER, Material.BREWING_STAND, Material.ANVIL, Material.CHIPPED_ANVIL,
-            Material.DAMAGED_ANVIL);
+            Material.DAMAGED_ANVIL, Material.CAMPFIRE, Material.SOUL_CAMPFIRE);
 
     private static final Set<Material> INTERACTABLES = Set.of(
             Material.LEVER, Material.CRAFTING_TABLE, Material.ENCHANTING_TABLE, Material.BEACON,
