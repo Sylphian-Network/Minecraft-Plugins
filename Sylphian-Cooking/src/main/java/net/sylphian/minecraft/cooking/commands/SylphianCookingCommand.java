@@ -1,44 +1,41 @@
 package net.sylphian.minecraft.cooking.commands;
 
-import io.papermc.paper.command.brigadier.BasicCommand;
-import io.papermc.paper.command.brigadier.CommandSourceStack;
+import dev.jorel.commandapi.CommandTree;
+import dev.jorel.commandapi.arguments.LiteralArgument;
+import dev.jorel.commandapi.executors.CommandArguments;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.sylphian.minecraft.cooking.SylphianCooking;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Collection;
-import java.util.List;
 
 /**
- * Root administrative command for Sylphian-Cooking ({@code /sylphian-cooking reload}).
- * Requires the {@code sylphian.cooking.admin} permission.
+ * Builds and registers the operator-only {@code /sylphian-cooking} CommandAPI command tree.
+ *
+ * <p>Subcommands: {@code reload}. Requires {@code sylphian.cooking.admin}.</p>
  */
-public class SylphianCookingCommand implements BasicCommand {
+public final class SylphianCookingCommand {
+
+    private static final String PERMISSION = "sylphian.cooking.admin";
+
     private final SylphianCooking plugin;
 
-    public SylphianCookingCommand(SylphianCooking plugin) { this.plugin = plugin; }
-
-    @Override
-    public void execute(@NotNull CommandSourceStack stack, @NotNull String[] args) {
-        CommandSender sender = stack.getSender();
-        if (args.length == 0) { sendUsage(sender); return; }
-        switch (args[0].toLowerCase()) {
-            case "reload" -> plugin.reload(sender);
-            default       -> sendUsage(sender);
-        }
+    /**
+     * @param plugin the owning plugin, used by the reload subcommand
+     */
+    public SylphianCookingCommand(SylphianCooking plugin) {
+        this.plugin = plugin;
     }
 
-    @Override
-    public @NotNull Collection<String> suggest(@NotNull CommandSourceStack stack, @NotNull String[] args) {
-        if (args.length <= 1) return List.of("reload");
-        return List.of();
-    }
-
-    @Override
-    public boolean canUse(@NotNull CommandSender sender) {
-        return sender.hasPermission("sylphian.cooking.admin");
+    /**
+     * Builds the {@code /sylphian-cooking} tree and registers it with the CommandAPI.
+     */
+    public void register() {
+        new CommandTree("sylphian-cooking")
+                .withPermission(PERMISSION)
+                .executes((CommandSender sender, CommandArguments _) -> sendUsage(sender))
+                .then(new LiteralArgument("reload")
+                        .executes((CommandSender sender, CommandArguments _) -> plugin.reload(sender)))
+                .register();
     }
 
     private void sendUsage(CommandSender sender) {

@@ -1,6 +1,5 @@
 package net.sylphian.minecraft.cooking;
 
-import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.sylphian.minecraft.cooking.commands.CookbookCommand;
@@ -93,10 +92,8 @@ public final class SylphianCooking extends JavaPlugin {
         recipeBookMenu = new RecipeBookMenu(recipes, cookingConfig, masteryManager);
         getServer().getPluginManager().registerEvents(new RecipeBookListener(), this);
 
-        getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
-            event.registrar().register("sylphian-cooking", new SylphianCookingCommand(this));
-            event.registrar().register("cookbook", new CookbookCommand(recipeBookMenu));
-        });
+        new SylphianCookingCommand(this).register();
+        new CookbookCommand(recipeBookMenu).register();
 
         if (getServer().getPluginManager().getPlugin("Sylphian-Skills") != null) {
             skillsBridge = new SkillsBridge(this, stationService);

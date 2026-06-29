@@ -6,6 +6,7 @@ dependencies {
     compileOnly(libs.jdbi.core)
     compileOnly(libs.jdbi.sqlobject)
     compileOnly(project(":Sylphian-Items"))
+    compileOnly(libs.command.api)
 }
 
 tasks {

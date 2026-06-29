@@ -8,6 +8,7 @@ dependencies {
     compileOnly(project(":Sylphian-Skills"))
     compileOnly(libs.jdbi.core)
     compileOnly(libs.jdbi.sqlobject)
+    compileOnly(libs.command.api)
 }
 
 tasks {

@@ -20,6 +20,9 @@ dependencies:
     Sylphian-Database:
       load: BEFORE
       required: true
+    CommandAPI:
+      load: BEFORE
+      required: true
 
 permissions:
   sylphian.cooking.admin:

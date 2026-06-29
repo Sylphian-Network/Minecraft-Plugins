@@ -1,7 +1,5 @@
 package net.sylphian.minecraft.fishing;
 
-import io.papermc.paper.command.brigadier.Commands;
-import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.sylphian.minecraft.items.item.ItemRegistry;
@@ -115,12 +113,8 @@ public class SylphianFishing extends JavaPlugin {
 
         this.encyclopaediaMenu = new EncyclopaediaMenu(lootTableEntries, encyclopaediaRepository, this);
 
-        getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
-            Commands commands = event.registrar();
-
-            commands.register("sylphian-fishing", new SylphianFishingCommand(this, catchEffectService, lootService, mutationService));
-            commands.register("encyclopaedia", new EncyclopaediaCommand(encyclopaediaMenu));
-        });
+        new SylphianFishingCommand(this, catchEffectService, lootService, mutationService).register();
+        new EncyclopaediaCommand(encyclopaediaMenu).register();
 
         if (getServer().getPluginManager().getPlugin("Sylphian-Skills") != null) {
             skillsBridge = new SkillsBridge(this);
