@@ -15,6 +15,8 @@ import org.bukkit.inventory.ItemStack;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Builds and opens the paginated recipe book GUI.
  *
@@ -24,10 +26,10 @@ import java.util.stream.Collectors;
  *   Row 5   (slots 45-53): filler, with prev/info/next at slots 48/49/50
  * </pre>
  *
- * <p>A recipe is considered locked if the player has never cooked it (cook count = 0).
- * Locked entries show as a gray glass pane named {@code ???} with only the ingredient
- * list in the lore. Unlocked entries display the recipe output item with cook time,
- * ingredients, and mastery progress appended to its lore.</p>
+ * <p>An entry is locked until the player has cooked it at least once; locked entries show a
+ * gray glass pane named {@code ???} with only the ingredient list. Unlocked entries display
+ * the output item with cook time, ingredients, and — for recipes with {@code quality-bonus: true}
+ * (the default) — mastery progress in the lore.</p>
  */
 public final class RecipeBookMenu {
 
@@ -111,24 +113,30 @@ public final class RecipeBookMenu {
 
     private ItemStack unlockedEntry(CookingRecipe recipe, int cookCount) {
         CookingConfig cfg = config;
-        int threshold = cfg.masteryThreshold();
 
         List<String> lore = new ArrayList<>();
         lore.add("<gray>Cook time: <white>" + formatTicks(recipe.cookTime()));
         lore.add("");
         lore.add("<gray>Ingredients:");
         lore.addAll(ingredientLines(recipe));
-        lore.add("");
-        if (cookCount >= threshold) {
-            lore.add("<gold>★ Mastered");
-        } else {
-            lore.add("<gray>Mastery: <white>" + cookCount + "<dark_gray>/<white>" + threshold);
+
+        if (recipe.qualityBonusEnabled()) {
+            lore.add("");
+            int threshold = cfg.masteryThreshold();
+            if (cookCount >= threshold) {
+                lore.add("<gold>★ Mastered");
+            } else {
+                lore.add("<gray>Mastery: <white>" + cookCount + "<dark_gray>/<white>" + threshold);
+            }
         }
 
         ItemStack output = recipe.output();
         ItemBuilder builder = new ItemBuilder(output.getType()).loreStrings(lore);
         if (output.hasItemMeta() && output.getItemMeta().hasDisplayName()) {
-            builder.name(Objects.requireNonNull(output.getItemMeta().displayName()));
+            builder.name(requireNonNull(output.getItemMeta().displayName()));
+        }
+        if (recipe.customModelData() >= 0) {
+            builder.customModelData(recipe.customModelData());
         }
         return builder.build();
     }

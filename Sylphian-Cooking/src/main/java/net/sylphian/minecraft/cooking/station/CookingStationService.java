@@ -401,8 +401,8 @@ public class CookingStationService {
             bonusOutput   = completeEvent.getBonusOutput();
         }
 
-        // Apply mastery bonus if the player has cooked this recipe enough times.
-        if (interactor != null && masteryAccessor.getCount(interactor, recipe.id()) >= cfg.masteryThreshold()) {
+        // Apply mastery quality bonus if enabled for this recipe and the player has cooked it enough times.
+        if (interactor != null && recipe.qualityBonusEnabled() && masteryAccessor.getCount(interactor, recipe.id()) >= cfg.masteryThreshold()) {
             qualityShifts.merge(CookingQuality.PERFECT, cfg.masteryBonus(), Double::sum);
         }
 
@@ -419,7 +419,7 @@ public class CookingStationService {
             dropItem(location.clone().add(0.5, 0.5, 0.5), bonusOutput);
         }
 
-        // Record this cook in mastery (cache + async DB write).
+        // Record this cook in the count (cache + async DB write).
         if (interactor != null) {
             masteryAccessor.increment(interactor, recipe.id());
         }
