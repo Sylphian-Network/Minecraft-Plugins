@@ -1,5 +1,6 @@
 package net.sylphian.minecraft.cooking.skill.trigger;
 
+import net.sylphian.minecraft.cooking.quality.CookingQuality;
 import net.sylphian.minecraft.cooking.recipe.CookingRecipe;
 import net.sylphian.minecraft.skills.skill.PassiveTrigger;
 import net.sylphian.minecraft.skills.skill.TraceEntry;
@@ -8,22 +9,20 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Trigger token fired when a cooking station completes a recipe.
- *
- * <p>Passives may multiply the XP award via {@link #multiplyXp} and set a
- * bonus output item via {@link #setBonusOutput}. After all passives have fired,
- * the skill reads these values and applies them to the
- * {@link net.sylphian.minecraft.cooking.event.CookingCompleteEvent}.</p>
- *
- * <p>Supports debug tracing via {@link #record}.</p>
+ * Passives accumulate an XP multiplier via {@link #multiplyXp}, quality weight
+ * shifts via {@link #shiftQuality}, and an optional bonus drop via {@link #setBonusOutput}.
  */
 public final class CookingCompleteTrigger implements PassiveTrigger {
 
     private final CookingRecipe recipe;
     private double xpMultiplier = 1.0;
+    private final Map<CookingQuality, Double> qualityShifts = new EnumMap<>(CookingQuality.class);
     private @Nullable ItemStack bonusOutput;
     private final List<TraceEntry> traceLog = new ArrayList<>();
 
@@ -61,6 +60,29 @@ public final class CookingCompleteTrigger implements PassiveTrigger {
      * @param item the item to drop as a bonus, or null to clear
      */
     public void setBonusOutput(@Nullable ItemStack item) { this.bonusOutput = item; }
+
+    /**
+     * Adds a weight delta to the given quality tier's probability.
+     * Positive values increase the chance of that tier; negative values decrease it.
+     * Deltas from multiple passives accumulate additively.
+     * The roller clamps each tier at zero so negative totals cannot invert weights.
+     *
+     * @param tier  the tier to shift
+     * @param delta the weight delta to add
+     */
+    public void shiftQuality(CookingQuality tier, double delta) {
+        qualityShifts.merge(tier, delta, Double::sum);
+    }
+
+    /**
+     * Returns the accumulated per-tier weight deltas contributed by all passives.
+     * The returned map is unmodifiable.
+     *
+     * @return quality weight shifts, keyed by tier
+     */
+    public Map<CookingQuality, Double> qualityShifts() {
+        return Collections.unmodifiableMap(qualityShifts);
+    }
 
     /** @return the bonus output item, or null if none was set */
     public @Nullable ItemStack bonusOutput() { return bonusOutput; }

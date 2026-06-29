@@ -4,6 +4,7 @@ import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.sylphian.minecraft.cooking.commands.SylphianCookingCommand;
+import net.sylphian.minecraft.cooking.config.CookingConfig;
 import net.sylphian.minecraft.cooking.config.FuelConfigLoader;
 import net.sylphian.minecraft.cooking.config.RecipeConfigLoader;
 import net.sylphian.minecraft.cooking.gui.CookingStationGui;
@@ -50,10 +51,11 @@ public final class SylphianCooking extends JavaPlugin {
 
         List<CookingRecipe> recipes = loadRecipes();
         Map<Material, Integer> fuels = loadFuels();
+        CookingConfig cookingConfig = CookingConfig.from(getConfig());
 
         CookingStationGui gui = new CookingStationGui();
 
-        stationService = new CookingStationService(this, recipes, fuels, gui);
+        stationService = new CookingStationService(this, recipes, fuels, gui, cookingConfig);
         stationService.start();
 
         itemProvider = new CookingItemProvider(recipes);
@@ -66,7 +68,7 @@ public final class SylphianCooking extends JavaPlugin {
         });
 
         if (getServer().getPluginManager().getPlugin("Sylphian-Skills") != null) {
-            skillsBridge = new SkillsBridge(this);
+            skillsBridge = new SkillsBridge(this, stationService);
         }
 
         getLogger().info("Sylphian Cooking enabled! [" + recipes.size() + " recipe(s) loaded]");
@@ -109,14 +111,15 @@ public final class SylphianCooking extends JavaPlugin {
             Map<Material, Integer> fuels = new FuelConfigLoader(
                     getConfig(), getLogger()).loadFuels();
 
-            stationService.reload(recipes, fuels);
+            CookingConfig cookingConfig = CookingConfig.from(getConfig());
+            stationService.reload(recipes, fuels, cookingConfig);
             if (skillsBridge != null) skillsBridge.reload();
 
             getLogger().info("Configuration reloaded successfully.");
             if (sender != null)
                 sender.sendMessage(Component.text("Sylphian Cooking reloaded successfully.", NamedTextColor.GREEN));
         } catch (Exception e) {
-            getLogger().severe("Failed to reload — keeping existing configuration. Error: " + e.getMessage());
+            getLogger().severe("Failed to reload; keeping existing configuration. Error: " + e.getMessage());
             if (sender != null)
                 sender.sendMessage(Component.text("Reload failed. Check console for details.", NamedTextColor.RED));
         }

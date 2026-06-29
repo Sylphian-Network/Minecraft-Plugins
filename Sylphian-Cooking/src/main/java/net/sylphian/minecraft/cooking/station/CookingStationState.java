@@ -1,7 +1,9 @@
 package net.sylphian.minecraft.cooking.station;
 
+import net.sylphian.minecraft.cooking.quality.CookingQuality;
 import net.sylphian.minecraft.cooking.recipe.CookingRecipe;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -9,26 +11,19 @@ import java.util.UUID;
 
 /**
  * Mutable runtime state for a single cooking station (furnace or campfire block).
- *
- * <p>All state is persisted to the block's {@link org.bukkit.persistence.PersistentDataContainer}
- * via {@link CookingStationPdc} whenever the station is closed or the tick loop
- * detects a state change.</p>
- *
- * <p>Slot layout (internal indices, not GUI slot indices):</p>
- * <ul>
- *   <li>0–4 — ingredient slots</li>
- *   <li>5 — fuel slot</li>
- *   <li>6 — output slot</li>
- * </ul>
+ * Persisted to the block's PDC via {@link CookingStationPdc} on GUI close and state changes.
  */
 public class CookingStationState {
 
     /** Number of ingredient slots in a cooking station. */
     public static final int INGREDIENT_COUNT = 5;
 
+    /** Number of output slots in a cooking station. */
+    public static final int OUTPUT_COUNT = 5;
+
     private final ItemStack[] ingredients = new ItemStack[INGREDIENT_COUNT];
+    private final ItemStack[] outputs     = new ItemStack[OUTPUT_COUNT];
     private ItemStack fuel;
-    private ItemStack output;
 
     /** Ticks of progress toward completing the active recipe. */
     private int cookProgress;
@@ -39,19 +34,14 @@ public class CookingStationState {
     /** The recipe currently being cooked, or null if no recipe matches the current ingredients. */
     private CookingRecipe activeRecipe;
 
-    /**
-     * The player who last mutated an ingredient or fuel slot, used to attribute
-     * skill effects (cook time reduction, bonus yield, XP) to the correct player.
-     * Null if no player has interacted with this station in the current session.
-     */
+    /** UUID of the player who last mutated an ingredient or fuel slot. Null until first interaction this session. */
     private UUID lastInteractor;
 
-    /**
-     * The effective cook time in ticks for the current recipe cycle, set by the
-     * skills framework on the first tick of each new recipe to apply any passive
-     * cook time reductions. Zero until a cook cycle begins.
-     */
+    /** Cook time in ticks for the current cycle after passive reductions. Zero until set on the first tick of a cycle. */
     private int effectiveCookTime;
+
+    /** Quality tier of the last completed cycle. Not persisted to PDC. Null if no cycle has completed. */
+    private @Nullable CookingQuality lastQuality;
 
     /** UUIDs of players currently viewing this station's GUI. */
     private final Set<UUID> viewers = new HashSet<>();
@@ -78,7 +68,6 @@ public class CookingStationState {
 
     /**
      * Returns a snapshot copy of all ingredient slots.
-     * Modifying the returned array does not affect this state.
      *
      * @return array of length {@link #INGREDIENT_COUNT}
      */
@@ -90,11 +79,28 @@ public class CookingStationState {
         return copy;
     }
 
-    public ItemStack getFuel() { return fuel; }
-    public void setFuel(ItemStack fuel) { this.fuel = fuel; }
+    /**
+     * Returns the item in the given output slot.
+     *
+     * @param index 0–4
+     * @return the item, or null if the slot is empty
+     */
+    public @Nullable ItemStack getOutput(int index) {
+        return outputs[index];
+    }
 
-    public ItemStack getOutput() { return output; }
-    public void setOutput(ItemStack output) { this.output = output; }
+    /**
+     * Sets the item in the given output slot.
+     *
+     * @param index 0–4
+     * @param item  the item to place, or null to clear
+     */
+    public void setOutput(int index, @Nullable ItemStack item) {
+        outputs[index] = item;
+    }
+
+    public @Nullable ItemStack getFuel() { return fuel; }
+    public void setFuel(@Nullable ItemStack fuel) { this.fuel = fuel; }
 
     public int getCookProgress() { return cookProgress; }
     public void setCookProgress(int cookProgress) { this.cookProgress = cookProgress; }
@@ -102,11 +108,11 @@ public class CookingStationState {
     public int getFuelRemaining() { return fuelRemaining; }
     public void setFuelRemaining(int fuelRemaining) { this.fuelRemaining = fuelRemaining; }
 
-    public CookingRecipe getActiveRecipe() { return activeRecipe; }
-    public void setActiveRecipe(CookingRecipe activeRecipe) { this.activeRecipe = activeRecipe; }
+    public @Nullable CookingRecipe getActiveRecipe() { return activeRecipe; }
+    public void setActiveRecipe(@Nullable CookingRecipe activeRecipe) { this.activeRecipe = activeRecipe; }
 
     /** @return the UUID of the player who last mutated an ingredient or fuel slot, or null */
-    public UUID getLastInteractor() { return lastInteractor; }
+    public @Nullable UUID getLastInteractor() { return lastInteractor; }
 
     /**
      * Records the player who last mutated an ingredient or fuel slot.
@@ -125,26 +131,35 @@ public class CookingStationState {
 
     /**
      * Sets the effective cook time for the current recipe cycle.
-     * Set to 0 when the active recipe changes to signal that the next tick
-     * should re-derive it (giving skills a chance to apply reductions).
      *
-     * @param effectiveCookTime the cook time in ticks, or 0 to reset
+     * @param effectiveCookTime the cook time in ticks, or 0 to reset for the next cycle
      */
     public void setEffectiveCookTime(int effectiveCookTime) { this.effectiveCookTime = effectiveCookTime; }
+
+    /**
+     * Returns the quality tier of the most recently completed cook cycle, or null if none.
+     * Not persisted to PDC.
+     */
+    public @Nullable CookingQuality getLastQuality() { return lastQuality; }
+
+    /** @param lastQuality the rolled quality, or null to clear */
+    public void setLastQuality(@Nullable CookingQuality lastQuality) { this.lastQuality = lastQuality; }
 
     public Set<UUID> getViewers() { return viewers; }
     public void addViewer(UUID uuid) { viewers.add(uuid); }
     public void removeViewer(UUID uuid) { viewers.remove(uuid); }
 
     /**
-     * Returns true if every ingredient slot, the fuel slot, and the output slot are all empty.
+     * Returns true if every ingredient slot, the fuel slot, and all output slots are empty.
      */
     public boolean isEmpty() {
         for (ItemStack ingredient : ingredients) {
             if (ingredient != null && !ingredient.getType().isAir()) return false;
         }
         if (fuel != null && !fuel.getType().isAir()) return false;
-        if (output != null && !output.getType().isAir()) return false;
+        for (ItemStack output : outputs) {
+            if (output != null && !output.getType().isAir()) return false;
+        }
         return true;
     }
 

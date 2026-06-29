@@ -21,19 +21,22 @@ public final class CookingStationPdc {
 
     private static final String NS = "sylphian-cooking";
 
-    // Keys for ingredient slots 0-4
     private static final NamespacedKey[] INGREDIENT_KEYS = new NamespacedKey[CookingStationState.INGREDIENT_COUNT];
+
+    private static final NamespacedKey[] OUTPUT_KEYS = new NamespacedKey[CookingStationState.OUTPUT_COUNT];
+
+    private static final NamespacedKey KEY_FUEL           = new NamespacedKey(NS, "fuel");
+    private static final NamespacedKey KEY_COOK_PROGRESS  = new NamespacedKey(NS, "cook_progress");
+    private static final NamespacedKey KEY_FUEL_REMAINING = new NamespacedKey(NS, "fuel_remaining");
 
     static {
         for (int i = 0; i < CookingStationState.INGREDIENT_COUNT; i++) {
             INGREDIENT_KEYS[i] = new NamespacedKey(NS, "ingredient_" + i);
         }
+        for (int i = 0; i < CookingStationState.OUTPUT_COUNT; i++) {
+            OUTPUT_KEYS[i] = new NamespacedKey(NS, "output_" + i);
+        }
     }
-
-    private static final NamespacedKey KEY_FUEL           = new NamespacedKey(NS, "fuel");
-    private static final NamespacedKey KEY_OUTPUT         = new NamespacedKey(NS, "output");
-    private static final NamespacedKey KEY_COOK_PROGRESS  = new NamespacedKey(NS, "cook_progress");
-    private static final NamespacedKey KEY_FUEL_REMAINING = new NamespacedKey(NS, "fuel_remaining");
 
     private CookingStationPdc() {}
 
@@ -69,7 +72,11 @@ public final class CookingStationPdc {
         }
 
         writeItem(pdc, KEY_FUEL, cookingState.getFuel());
-        writeItem(pdc, KEY_OUTPUT, cookingState.getOutput());
+
+        for (int i = 0; i < CookingStationState.OUTPUT_COUNT; i++) {
+            writeItem(pdc, OUTPUT_KEYS[i], cookingState.getOutput(i));
+        }
+
         pdc.set(KEY_COOK_PROGRESS,  PersistentDataType.INTEGER, cookingState.getCookProgress());
         pdc.set(KEY_FUEL_REMAINING, PersistentDataType.INTEGER, cookingState.getFuelRemaining());
 
@@ -95,9 +102,12 @@ public final class CookingStationPdc {
         }
 
         cookingState.setFuel(readItem(pdc, KEY_FUEL));
-        cookingState.setOutput(readItem(pdc, KEY_OUTPUT));
 
-        cookingState.setCookProgress(pdc.getOrDefault(KEY_COOK_PROGRESS, PersistentDataType.INTEGER, 0));
+        for (int i = 0; i < CookingStationState.OUTPUT_COUNT; i++) {
+            cookingState.setOutput(i, readItem(pdc, OUTPUT_KEYS[i]));
+        }
+
+        cookingState.setCookProgress(pdc.getOrDefault(KEY_COOK_PROGRESS,  PersistentDataType.INTEGER, 0));
         cookingState.setFuelRemaining(pdc.getOrDefault(KEY_FUEL_REMAINING, PersistentDataType.INTEGER, 0));
 
         return cookingState;
@@ -116,7 +126,7 @@ public final class CookingStationPdc {
         PersistentDataContainer pdc = tileState.getPersistentDataContainer();
         for (NamespacedKey key : INGREDIENT_KEYS) pdc.remove(key);
         pdc.remove(KEY_FUEL);
-        pdc.remove(KEY_OUTPUT);
+        for (NamespacedKey key : OUTPUT_KEYS) pdc.remove(key);
         pdc.remove(KEY_COOK_PROGRESS);
         pdc.remove(KEY_FUEL_REMAINING);
 

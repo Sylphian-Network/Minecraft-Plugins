@@ -13,7 +13,7 @@
 #                   for custom items registered via Sylphian-Items ItemRegistry.
 #                   The plugin that owns the item must stamp a PDC key
 #                   matching its namespace and item ID on the ItemStack.
-#               Order does not matter — ingredients are matched as a multiset.
+#               Order does not matter; ingredients are matched as a multiset.
 #
 # cook-time:    How long the recipe takes in ticks (20 ticks = 1 second).
 #

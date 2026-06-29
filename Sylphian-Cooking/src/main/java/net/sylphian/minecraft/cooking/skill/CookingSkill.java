@@ -4,6 +4,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.cooking.SylphianCooking;
 import net.sylphian.minecraft.cooking.event.CookingCompleteEvent;
 import net.sylphian.minecraft.cooking.event.CookingStartEvent;
+import net.sylphian.minecraft.cooking.event.CookingXpEvent;
 import net.sylphian.minecraft.cooking.skill.trigger.CookingCompleteTrigger;
 import net.sylphian.minecraft.cooking.skill.trigger.CookingStartTrigger;
 import net.sylphian.minecraft.skills.api.SkillsAPI;
@@ -18,19 +19,9 @@ import org.bukkit.plugin.Plugin;
 import java.util.UUID;
 
 /**
- * The Cooking skill contributed to Sylphian-Skills by Sylphian-Cooking.
- *
- * <p>Acts as the event coordinator: listens to {@link CookingStartEvent} and
- * {@link CookingCompleteEvent} fired by {@link net.sylphian.minecraft.cooking.station.CookingStationService},
- * routes them through the passive ability framework, awards XP on completion,
- * and propagates bonus output back to the event for the service to drop.</p>
- *
- * <p>Active ability selection (sneak + right-click with a held item) is handled
- * generically by {@code ActiveAbilityCoordinator} in Sylphian-Skills. This skill
- * does not override {@link #activationMaterial()} because cooking abilities are
- * triggered from within the station GUI rather than through an item gesture.</p>
- *
- * <p>All state maps and event handlers are accessed on the main thread only.</p>
+ * The Cooking skill. Handles {@link CookingStartEvent} and {@link CookingCompleteEvent}
+ * to fire passives, and {@link CookingXpEvent} to award XP.
+ * All event handlers run on the main thread.
  */
 public final class CookingSkill extends AbstractSkill {
 
@@ -39,42 +30,23 @@ public final class CookingSkill extends AbstractSkill {
     private final SylphianCooking plugin;
     private volatile CookingSkillConfig config;
 
-    /**
-     * @param plugin the owning Cooking plugin instance
-     */
     public CookingSkill(SylphianCooking plugin) {
         super("cooking", "Cooking");
         this.plugin = plugin;
     }
 
-    /**
-     * Constructs abilities with their injected dependencies, registers them in
-     * unlock-level order, reads the initial config snapshot, and registers this
-     * skill as a Bukkit listener via the parent.
-     */
     @Override
     public void registerListeners(Plugin owningPlugin, SkillsAPI api) {
         this.config = CookingSkillConfig.from(plugin.getConfig());
-
         super.registerListeners(owningPlugin, api);
     }
 
-    /**
-     * Swaps the config snapshot on a Cooking plugin reload.
-     */
     @Override
     public void reload() {
         this.config = CookingSkillConfig.from(plugin.getConfig());
     }
 
-    /**
-     * Handles the start of a new cook cycle. Fires passive start triggers to accumulate
-     * cook-time reductions, then applies the combined reduction to the event so the
-     * service uses the modified cook time for this cycle.
-     *
-     * <p>Runs at {@link EventPriority#HIGH} so it applies reductions before any other
-     * plugin might observe the effective cook time.</p>
-     */
+    /** Fires passive start triggers and applies any accumulated cook-time reduction to the event. */
     @EventHandler(priority = EventPriority.HIGH)
     public void onCookingStart(CookingStartEvent event) {
         UUID uuid = event.getLastInteractor();
@@ -94,11 +66,9 @@ public final class CookingSkill extends AbstractSkill {
     }
 
     /**
-     * Handles the completion of a cook cycle. Fires passive complete triggers to
-     * accumulate XP multipliers and bonus output, awards XP to the last interactor,
-     * and propagates any bonus output back to the event for the service to drop.
-     *
-     * <p>Runs at {@link EventPriority#HIGH}.</p>
+     * Fires passive complete triggers and writes quality shifts, XP multiplier, and
+     * any bonus output back to the event. Quality rolling happens in the service after
+     * this handler returns.
      */
     @EventHandler(priority = EventPriority.HIGH)
     public void onCookingComplete(CookingCompleteEvent event) {
@@ -109,15 +79,30 @@ public final class CookingSkill extends AbstractSkill {
         CookingCompleteTrigger trigger = new CookingCompleteTrigger(event.getRecipe());
         firePassives(trigger, player, uuid);
 
-        long baseXp  = config.xpPerRecipe();
-        long finalXp = Math.max(1L, (long) (baseXp * trigger.xpMultiplier()));
-        skillsApi.awardXP(player, "cooking", finalXp);
+        trigger.qualityShifts().forEach(event::addQualityShift);
+        event.multiplyXp(trigger.xpMultiplier());
 
         if (trigger.bonusOutput() != null) {
             event.setBonusOutput(trigger.bonusOutput());
         }
 
-        if (isWatched(uuid)) sendCookingCompleteTrace(player, trigger, baseXp, finalXp);
+        if (isWatched(uuid)) sendCookingCompleteTrace(player, trigger);
+    }
+
+    /**
+     * Awards XP once the service has rolled quality and fired {@link CookingXpEvent}.
+     */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onCookingXp(CookingXpEvent event) {
+        Player player = plugin.getServer().getPlayer(event.getPlayerUuid());
+        if (player == null) return;
+
+        CookingSkillConfig cfg = config;
+        long baseXp  = cfg.xpPerRecipe();
+        long finalXp = Math.max(1L, (long) (baseXp * event.getQuality().xpMultiplier() * event.getXpMultiplier()));
+        skillsApi.awardXP(player, "cooking", finalXp);
+
+        if (isWatched(event.getPlayerUuid())) sendXpTrace(player, event, baseXp, finalXp);
     }
 
     /** Clears any debug watch session where the quitting player is the subject. */
@@ -143,8 +128,7 @@ public final class CookingSkill extends AbstractSkill {
                 + String.format("%.0f%%", combined * 100) + "<gray> reduction)"));
     }
 
-    private void sendCookingCompleteTrace(Player player, CookingCompleteTrigger trigger,
-                                          long baseXp, long finalXp) {
+    private void sendCookingCompleteTrace(Player player, CookingCompleteTrigger trigger) {
         UUID uuid = player.getUniqueId();
         int level = skillsApi.getCachedLevel(uuid, "cooking");
         sendTrace(uuid,
@@ -155,7 +139,19 @@ public final class CookingSkill extends AbstractSkill {
         CommandSender watcher = getWatcher(uuid);
         if (watcher == null) return;
         watcher.sendMessage(MINI.deserialize(
-                "<gray>  XP: <white>" + baseXp + " <gray>base -> <white>" + finalXp + " <gray>awarded"
-                + (trigger.bonusOutput() != null ? " <dark_gray>| <yellow>bonus yield dropped" : "")));
+                "<gray>  Shifts: <white>" + trigger.qualityShifts()
+                + (trigger.bonusOutput() != null ? " <dark_gray>| <yellow>bonus drop queued" : "")));
+    }
+
+    private void sendXpTrace(Player player, CookingXpEvent event, long baseXp, long finalXp) {
+        UUID uuid = player.getUniqueId();
+        CommandSender watcher = getWatcher(uuid);
+        if (watcher == null) return;
+        watcher.sendMessage(MINI.deserialize(
+                "<gray>  Quality: <white>" + event.getQuality().name()
+                + " <dark_gray>| <gray>XP: <white>" + baseXp
+                + " <gray>x" + String.format("%.1f", event.getQuality().xpMultiplier())
+                + " <gray>x" + String.format("%.2f", event.getXpMultiplier())
+                + " <gray>= <white>" + finalXp));
     }
 }

@@ -1,6 +1,7 @@
 package net.sylphian.minecraft.cooking.skill;
 
 import net.sylphian.minecraft.cooking.SylphianCooking;
+import net.sylphian.minecraft.cooking.station.CookingStationService;
 import net.sylphian.minecraft.skills.api.SkillsProvider;
 
 /**
@@ -16,14 +17,20 @@ public final class SkillsBridge {
     private final CookingSkill cookingSkill;
 
     /**
-     * Registers the cooking skill with the skills framework.
-     * Called from {@link SylphianCooking#onEnable()} behind the null check.
+     * Registers the cooking skill with the skills framework and wires the level
+     * provider into the station service so quality rolls use the player's skill level.
      *
-     * @param plugin the owning Cooking plugin
+     * @param plugin  the owning Cooking plugin
+     * @param service the cooking station service
      */
-    public SkillsBridge(SylphianCooking plugin) {
+    public SkillsBridge(SylphianCooking plugin, CookingStationService service) {
         this.cookingSkill = new CookingSkill(plugin);
         SkillsProvider.get().registerSkill(cookingSkill, plugin);
+
+        service.setLevelProvider(uuid ->
+                SkillsProvider.isAvailable()
+                        ? SkillsProvider.get().getCachedLevel(uuid, "cooking")
+                        : 0);
     }
 
     /**

@@ -1,5 +1,6 @@
 package net.sylphian.minecraft.cooking.event;
 
+import net.sylphian.minecraft.cooking.quality.CookingQuality;
 import net.sylphian.minecraft.cooking.recipe.CookingRecipe;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
@@ -7,18 +8,24 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
  * Fired on the main thread when a cooking station completes a recipe, before
- * the output is committed to the station state.
+ * quality is rolled and output is committed.
  *
- * <p>Listeners (e.g. the cooking skill) may set a {@link #bonusOutput} item
- * to be dropped naturally at the station block when the cycle finishes.
- * XP is also awarded by the skill listener reading this event.</p>
+ * <p>Listeners (e.g. Sylphian-Skills passives) may add per-tier quality weight
+ * deltas via {@link #addQualityShift}, scale XP via {@link #multiplyXp}, and
+ * provide a bonus drop via {@link #setBonusOutput}. After all listeners return,
+ * the service reads these values, rolls quality, and places the output.</p>
  *
- * <p>The {@link #lastInteractor} is the player who last mutated an ingredient
- * or fuel slot, and is the player who receives skill XP and bonus effects.</p>
+ * <pre>
+ *   Listener (HIGH): add quality shifts, set xpMultiplier, set bonusOutput
+ *   Service  (after callEvent): roll quality using shifts, place output, fire CookingXpEvent
+ * </pre>
  */
 public final class CookingCompleteEvent extends Event {
 
@@ -27,6 +34,9 @@ public final class CookingCompleteEvent extends Event {
     private final Location location;
     private final CookingRecipe recipe;
     private final UUID lastInteractor;
+
+    private final Map<CookingQuality, Double> qualityShifts = new EnumMap<>(CookingQuality.class);
+    private double xpMultiplier = 1.0;
     private @Nullable ItemStack bonusOutput;
 
     /**
@@ -50,19 +60,60 @@ public final class CookingCompleteEvent extends Event {
     public UUID getLastInteractor() { return lastInteractor; }
 
     /**
-     * Returns the bonus output item to be dropped at the station, or null if none.
+     * Adds a weight delta for the given quality tier.
+     * Positive values increase the chance of that tier; negative values decrease it.
+     * Deltas from multiple listeners accumulate additively.
      *
-     * @return bonus output, or null
+     * @param tier  the tier to shift
+     * @param delta the weight delta to add
      */
-    public @Nullable ItemStack getBonusOutput() { return bonusOutput; }
+    public void addQualityShift(CookingQuality tier, double delta) {
+        qualityShifts.merge(tier, delta, Double::sum);
+    }
+
+    /**
+     * Returns all accumulated per-tier quality weight deltas.
+     * The service passes these to {@link net.sylphian.minecraft.cooking.quality.QualityRoller}
+     * after the event returns.
+     *
+     * @return unmodifiable view of quality shifts, keyed by tier
+     */
+    public Map<CookingQuality, Double> getQualityShifts() {
+        return Collections.unmodifiableMap(qualityShifts);
+    }
+
+    /**
+     * Multiplies the accumulated XP multiplier by the given factor.
+     * The result is carried to the subsequent {@link CookingXpEvent}.
+     *
+     * @param factor the multiplier to apply, e.g. {@code 1.5} for +50% XP
+     */
+    public void multiplyXp(double factor) {
+        xpMultiplier *= factor;
+    }
+
+    /**
+     * Returns the accumulated XP multiplier from all listeners.
+     * Starts at {@code 1.0}; each call to {@link #multiplyXp} compounds it.
+     *
+     * @return the final XP multiplier
+     */
+    public double getXpMultiplier() { return xpMultiplier; }
 
     /**
      * Sets a bonus item to be dropped naturally at the station block.
-     * Called by the cooking skill listener when a bonus yield passive triggers.
+     * Only the last listener to call this wins.
      *
      * @param bonusOutput the item to drop, or null to clear
      */
     public void setBonusOutput(@Nullable ItemStack bonusOutput) { this.bonusOutput = bonusOutput; }
+
+    /**
+     * Returns the bonus item to be dropped naturally at the station, or null if none was set.
+     *
+     * @return bonus output, or null
+     */
+    public @Nullable ItemStack getBonusOutput() { return bonusOutput; }
 
     @Override
     public HandlerList getHandlers() { return HANDLERS; }
