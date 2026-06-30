@@ -6,19 +6,24 @@ import net.sylphian.minecraft.cooking.quality.QualityWeights;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 /**
  * Immutable snapshot of all core cooking configuration values.
  * Parse via {@link #from(FileConfiguration)}. Swap the reference on reload.
  *
- * @param baseWeights      base probability weights for quality tier rolls
- * @param levelBonus       weight shifted from Burnt to Perfect per skill level
- * @param slotBonus        weight shifted from Burnt to Good per ingredient slot above one
- * @param burntFormat      lore rule for the Burnt tier
- * @param plainFormat      lore rule for the Plain tier
- * @param goodFormat       lore rule for the Good tier
- * @param perfectFormat    lore rule for the Perfect tier
- * @param masteryThreshold cook count at which a recipe is considered mastered
- * @param masteryBonus     quality weight shifted from Burnt to Perfect on mastered recipes
+ * @param baseWeights       base probability weights for quality tier rolls
+ * @param levelBonus        weight shifted from Burnt to Perfect per skill level
+ * @param slotBonus         weight shifted from Burnt to Good per ingredient slot above one
+ * @param burntFormat       lore rule for the Burnt tier
+ * @param plainFormat       lore rule for the Plain tier
+ * @param goodFormat        lore rule for the Good tier
+ * @param perfectFormat     lore rule for the Perfect tier
+ * @param masteryThreshold  cook count at which a recipe is considered mastered
+ * @param masteryBonus      quality weight shifted from Burnt to Perfect on mastered recipes
+ * @param masteryMilestones cook counts at which a mastery milestone event fires
  */
 public record CookingConfig(
         QualityWeights baseWeights,
@@ -29,7 +34,8 @@ public record CookingConfig(
         QualityFormat  goodFormat,
         QualityFormat  perfectFormat,
         int            masteryThreshold,
-        double         masteryBonus
+        double         masteryBonus,
+        Set<Integer>   masteryMilestones
 ) {
 
     /**
@@ -75,9 +81,13 @@ public record CookingConfig(
         int masteryThreshold = config.getInt("mastery.threshold", 50);
         double masteryBonus  = config.getDouble("mastery.bonus",  5.0);
 
+        List<Integer> milestoneList = config.getIntegerList("mastery.milestones");
+        if (milestoneList.isEmpty()) milestoneList = List.of(50, 100);
+        Set<Integer> masteryMilestones = new LinkedHashSet<>(milestoneList);
+
         return new CookingConfig(
                 baseWeights, levelBonus, slotBonus,
                 burntFormat, plainFormat, goodFormat, perfectFormat,
-                masteryThreshold, masteryBonus);
+                masteryThreshold, masteryBonus, masteryMilestones);
     }
 }

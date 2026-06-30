@@ -74,12 +74,17 @@ quality:
 #   Cook count at which a recipe is considered mastered.
 # bonus:
 #   Weight shifted from Burnt toward Perfect on mastered recipes.
+# milestones:
+#   Cook counts that fire a mastery milestone event (rewarded by Sylphian-Skills).
 #
 # =============================================================
 
 mastery:
   threshold: 50
   bonus: 5.0
+  milestones:
+    - 50
+    - 100
 
 # =============================================================
 # Cooking Skill
@@ -89,8 +94,14 @@ mastery:
 #
 # xp-per-recipe:
 #   Base XP awarded on recipe completion, before quality and passive multipliers.
+# discovery-xp:
+#   One-time XP awarded the first time a player cooks a recipe.
+# milestone-xp:
+#   XP awarded each time a player reaches a mastery milestone for a recipe.
 #
 # =============================================================
 
 cooking-skill:
   xp-per-recipe: 10
+  discovery-xp: 100
+  milestone-xp: 250

@@ -14,18 +14,9 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Fired on the main thread when a cooking station completes a recipe, before
- * quality is rolled and output is committed.
- *
- * <p>Listeners (e.g. Sylphian-Skills passives) may add per-tier quality weight
- * deltas via {@link #addQualityShift}, scale XP via {@link #multiplyXp}, and
- * provide a bonus drop via {@link #setBonusOutput}. After all listeners return,
- * the service reads these values, rolls quality, and places the output.</p>
- *
- * <pre>
- *   Listener (HIGH): add quality shifts, set xpMultiplier, set bonusOutput
- *   Service  (after callEvent): roll quality using shifts, place output, fire CookingXpEvent
- * </pre>
+ * Fired on the main thread when a station completes a recipe, before quality is rolled.
+ * Listeners may add quality shifts ({@link #addQualityShift}), scale XP ({@link #multiplyXp}),
+ * and set a bonus drop ({@link #setBonusOutput}); the service then rolls quality and places output.
  */
 public final class CookingCompleteEvent extends Event {
 

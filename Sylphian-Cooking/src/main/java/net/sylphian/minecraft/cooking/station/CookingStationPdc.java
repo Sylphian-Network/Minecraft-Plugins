@@ -9,13 +9,9 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 /**
- * Handles serialization and deserialization of {@link CookingStationState} to and
- * from the {@link PersistentDataContainer} of a block entity (furnace or campfire).
- *
- * <p>All keys live under the {@code sylphian-cooking} namespace. Items are serialized
- * using Paper's {@link ItemStack#serializeAsBytes()} / {@link ItemStack#deserializeBytes(byte[])}.</p>
- *
- * <p>An empty byte array is used as a sentinel for an absent (null / air) item slot.</p>
+ * Serializes {@link CookingStationState} to and from a block entity's {@link PersistentDataContainer}
+ * under the {@code sylphian-cooking} namespace. Items use Paper's byte serialization; an empty byte
+ * array marks an absent slot.
  */
 public final class CookingStationPdc {
 

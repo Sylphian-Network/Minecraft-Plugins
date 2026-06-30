@@ -1,6 +1,7 @@
 package net.sylphian.minecraft.cooking.mastery;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Provides read and write access to per-player cooking mastery counts.
@@ -18,10 +19,12 @@ public interface MasteryAccessor {
     int getCount(UUID playerUuid, String recipeId);
 
     /**
-     * Increments the cook count for the player and recipe by one.
+     * Increments the cook count for the player and recipe by one and returns the new count.
      *
      * @param playerUuid the player's UUID
      * @param recipeId   the recipe identifier
+     * @return a future containing the authoritative cook count after the increment,
+     *         or a non-positive value if the count could not be determined
      */
-    void increment(UUID playerUuid, String recipeId);
+    CompletableFuture<Integer> increment(UUID playerUuid, String recipeId);
 }

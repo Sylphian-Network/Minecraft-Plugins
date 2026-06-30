@@ -3,6 +3,8 @@ package net.sylphian.minecraft.cooking.skill;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.cooking.SylphianCooking;
 import net.sylphian.minecraft.cooking.event.CookingCompleteEvent;
+import net.sylphian.minecraft.cooking.event.CookingDiscoveryEvent;
+import net.sylphian.minecraft.cooking.event.CookingMasteryMilestoneEvent;
 import net.sylphian.minecraft.cooking.event.CookingStartEvent;
 import net.sylphian.minecraft.cooking.event.CookingXpEvent;
 import net.sylphian.minecraft.cooking.skill.trigger.CookingCompleteTrigger;
@@ -103,6 +105,34 @@ public final class CookingSkill extends AbstractSkill {
         skillsApi.awardXP(player, "cooking", finalXp);
 
         if (isWatched(event.getPlayerUuid())) sendXpTrace(player, event, baseXp, finalXp);
+    }
+
+    /** Awards the one-time discovery bonus the first time a player cooks a recipe. */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onCookingDiscovery(CookingDiscoveryEvent event) {
+        Player player = plugin.getServer().getPlayer(event.getPlayerUuid());
+        if (player == null) return;
+
+        long xp = config.discoveryXp();
+        if (xp > 0) skillsApi.awardXP(player, "cooking", xp);
+
+        player.sendMessage(MINI.deserialize(
+                "<gold>New recipe discovered! <gray>(<white>" + event.getRecipe().id()
+                + "<gray>) <yellow>+" + xp + " XP"));
+    }
+
+    /** Awards the milestone bonus when a player reaches a configured mastery milestone. */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onCookingMilestone(CookingMasteryMilestoneEvent event) {
+        Player player = plugin.getServer().getPlayer(event.getPlayerUuid());
+        if (player == null) return;
+
+        long xp = config.milestoneXp();
+        if (xp > 0) skillsApi.awardXP(player, "cooking", xp);
+
+        player.sendMessage(MINI.deserialize(
+                "<gold>Mastery milestone! <gray>(<white>" + event.getRecipe().id()
+                + " <gray>x<white>" + event.getMilestone() + "<gray>) <yellow>+" + xp + " XP"));
     }
 
     /** Clears any debug watch session where the quitting player is the subject. */

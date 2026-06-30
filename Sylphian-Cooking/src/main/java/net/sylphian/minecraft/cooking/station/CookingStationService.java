@@ -2,6 +2,8 @@ package net.sylphian.minecraft.cooking.station;
 
 import net.sylphian.minecraft.cooking.config.CookingConfig;
 import net.sylphian.minecraft.cooking.event.CookingCompleteEvent;
+import net.sylphian.minecraft.cooking.event.CookingDiscoveryEvent;
+import net.sylphian.minecraft.cooking.event.CookingMasteryMilestoneEvent;
 import net.sylphian.minecraft.cooking.event.CookingStartEvent;
 import net.sylphian.minecraft.cooking.event.CookingXpEvent;
 import net.sylphian.minecraft.cooking.gui.CookingStationGui;
@@ -22,30 +24,16 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * Manages the lifecycle of all active cooking stations.
- *
- * <p>Stations are loaded from PDC on first interaction and held in an in-memory map
- * for the duration of their activity. The service runs a tick loop every 20 game
- * ticks (once per second) that advances cook progress and consumes fuel for any
- * station that has a matching recipe and remaining fuel.</p>
- *
- * <p>When a station becomes fully idle (no ingredients, no fuel, no output, no
- * viewers) it is evicted from memory and its PDC is cleared.</p>
- *
- * <p>At the start of each new cook cycle the service fires {@link CookingStartEvent},
- * allowing skill listeners to reduce the effective cook time. When a recipe completes
- * it fires {@link CookingCompleteEvent}, allowing skill listeners to award XP, set a
- * quality tier, and set a bonus output item to be dropped at the station.</p>
- *
- * <p>Output is distributed across five independent output slots. The service finds
- * the first slot with a stackable identical item, or the first empty slot. If all
- * five are full with incompatible items, cooking is blocked until the player takes
- * some output. Items produced while output is full are dropped naturally at the
- * station block.</p>
+ * Manages all active cooking stations: loads state from block PDC, runs the once-per-second tick
+ * loop that advances cooking and consumes fuel, and fires {@link CookingStartEvent} /
+ * {@link CookingCompleteEvent} so skills can adjust cook time, quality, and XP. Output fills five
+ * slots; when none can take the result the item drops at the block. Stations with no viewers that
+ * cannot progress are persisted to PDC and evicted.
  */
 public class CookingStationService {
 
@@ -71,7 +59,9 @@ public class CookingStationService {
     /** Provides mastery counts; defaults to no-op until {@link net.sylphian.minecraft.cooking.mastery.CookingMasteryManager} is wired in. */
     private MasteryAccessor masteryAccessor = new MasteryAccessor() {
         public int getCount(UUID playerUuid, String recipeId) { return 0; }
-        public void increment(UUID playerUuid, String recipeId) {}
+        public CompletableFuture<Integer> increment(UUID playerUuid, String recipeId) {
+            return CompletableFuture.completedFuture(0);
+        }
     };
 
     /** Active stations keyed by their block's location. */
@@ -411,15 +401,9 @@ public class CookingStationService {
     }
 
     /**
-     * Completes a cook cycle: fires {@link CookingCompleteEvent} to collect passive
-     * contributions, rolls quality, places the formatted output, drops any bonus drop,
-     * decrements matched ingredients, resets progress, and refreshes viewer GUIs.
-     *
-     * <p>Quality is always rolled, regardless of whether Sylphian-Skills is loaded.
-     * If no interactor is recorded, level is treated as 0 and no passive shifts apply.</p>
-     *
-     * <p>Output slot selection: first slot with an identical stackable item; otherwise
-     * the first empty slot; otherwise drop the item naturally at the station.</p>
+     * Completes a cook cycle: fires {@link CookingCompleteEvent}, rolls quality, places the output,
+     * decrements matched ingredients, records the cook, and resets progress. With no interactor,
+     * quality rolls at level 0 with no passive shifts.
      */
     private void finishCooking(Location location, CookingStationState state, CookingRecipe recipe) {
         CookingConfig cfg = config; // snapshot for consistent reads
@@ -466,7 +450,20 @@ public class CookingStationService {
 
         // Record this cook in the count (cache + async DB write).
         if (interactor != null) {
-            masteryAccessor.increment(interactor, recipe.id());
+            masteryAccessor.increment(interactor, recipe.id())
+                    .thenAccept(newCount -> {
+                        if (newCount <= 0 || !plugin.isEnabled()) return;
+                        plugin.getServer().getScheduler().runTask(plugin, () -> {
+                            if (newCount == 1) {
+                                plugin.getServer().getPluginManager().callEvent(
+                                        new CookingDiscoveryEvent(interactor, recipe));
+                            }
+                            if (cfg.masteryMilestones().contains(newCount)) {
+                                plugin.getServer().getPluginManager().callEvent(
+                                        new CookingMasteryMilestoneEvent(interactor, recipe, newCount));
+                            }
+                        });
+                    });
         }
 
         // Fire XP event so Skills (or any other listener) can award XP.
@@ -505,7 +502,6 @@ public class CookingStationService {
      * Drops naturally at the station if all slots are occupied.
      */
     private void placeOutput(Location location, CookingStationState state, ItemStack outputItem) {
-        // Pass 1: find a slot with an identical stackable item.
         for (int i = 0; i < CookingStationState.OUTPUT_COUNT; i++) {
             ItemStack existing = state.getOutput(i);
             if (existing != null && !existing.getType().isAir()
@@ -515,7 +511,6 @@ public class CookingStationService {
                 return;
             }
         }
-        // Pass 2: find an empty slot.
         for (int i = 0; i < CookingStationState.OUTPUT_COUNT; i++) {
             ItemStack existing = state.getOutput(i);
             if (existing == null || existing.getType().isAir()) {
@@ -523,7 +518,6 @@ public class CookingStationService {
                 return;
             }
         }
-        // All slots occupied: drop the item so it's not lost.
         dropItem(location.clone().add(0.5, 0.5, 0.5), outputItem);
     }
 

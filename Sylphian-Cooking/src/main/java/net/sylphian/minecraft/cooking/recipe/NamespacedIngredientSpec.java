@@ -6,15 +6,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 /**
- * Matches a custom item registered via Sylphian-Items ItemRegistry by checking
- * the PDC key {@code <plugin-namespace>:item_id} stamped on the ItemStack.
- *
- * <p>For example, an ingredient spec for {@code sylphian-fishing:fish/common_cod}
- * will match any ItemStack that has the PDC key {@code sylphian-fishing:item_id}
- * set to {@code "fish/common_cod"}.</p>
- *
- * <p>The owning plugin is responsible for stamping this key when it builds the
- * item. Sylphian-Fishing stamps {@code sylphian-fishing:item_id} on all fish items.</p>
+ * Matches a custom Sylphian-Items item by its PDC key {@code <namespace>:item_id}.
+ * E.g. {@code sylphian-fishing:fish/common_cod} matches an item whose
+ * {@code sylphian-fishing:item_id} equals {@code "fish/common_cod"}. The owning plugin stamps the key.
  */
 public final class NamespacedIngredientSpec implements IngredientSpec {
 

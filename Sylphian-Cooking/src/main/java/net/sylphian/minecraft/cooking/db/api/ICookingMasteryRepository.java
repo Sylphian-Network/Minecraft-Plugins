@@ -33,11 +33,11 @@ public interface ICookingMasteryRepository {
 
     /**
      * Increments the cook count for a player and recipe by one,
-     * creating a new record if none exists.
+     * creating a new record if none exists, and returns the new count.
      *
      * @param playerUuid the player's UUID
      * @param recipeId   the recipe identifier
-     * @return a CompletableFuture that completes when the record is saved
+     * @return a CompletableFuture containing the new cook count after the increment
      */
-    CompletableFuture<Void> incrementCount(UUID playerUuid, String recipeId);
+    CompletableFuture<Integer> incrementCount(UUID playerUuid, String recipeId);
 }

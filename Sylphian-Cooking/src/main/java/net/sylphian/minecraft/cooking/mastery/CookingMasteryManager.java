@@ -10,18 +10,14 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 /**
  * In-memory cache of per-player cooking mastery counts, backed by {@link ICookingMasteryRepository}.
- *
- * <p>On player join the cache is seeded from the database asynchronously.
- * Increment writes update the cache synchronously and persist to the database
- * asynchronously. On quit the player's entry is evicted.</p>
- *
- * <p>This class implements {@link MasteryAccessor} for use by {@link
- * net.sylphian.minecraft.cooking.station.CookingStationService}.</p>
+ * Seeded from the database on join and evicted on quit; increments update the cache synchronously and
+ * persist asynchronously.
  */
 public final class CookingMasteryManager implements MasteryAccessor, Listener {
 
@@ -64,15 +60,15 @@ public final class CookingMasteryManager implements MasteryAccessor, Listener {
     }
 
     @Override
-    public void increment(UUID playerUuid, String recipeId) {
+    public CompletableFuture<Integer> increment(UUID playerUuid, String recipeId) {
         cache.computeIfAbsent(playerUuid, _ -> new ConcurrentHashMap<>())
                 .merge(recipeId, 1, Integer::sum);
 
-        repository.incrementCount(playerUuid, recipeId)
+        return repository.incrementCount(playerUuid, recipeId)
                 .exceptionally(ex -> {
                     logger.warning("Failed to persist mastery increment for " + playerUuid
                             + " recipe " + recipeId + ": " + ex.getMessage());
-                    return null;
+                    return -1;
                 });
     }
 

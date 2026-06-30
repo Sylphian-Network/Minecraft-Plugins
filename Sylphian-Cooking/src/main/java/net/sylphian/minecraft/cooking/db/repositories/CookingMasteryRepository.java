@@ -48,11 +48,15 @@ public class CookingMasteryRepository implements ICookingMasteryRepository {
     }
 
     @Override
-    public CompletableFuture<Void> incrementCount(UUID playerUuid, String recipeId) {
-        return CompletableFuture.runAsync(() ->
-                jdbi.useExtension(CookingMasteryDao.class, dao ->
-                        dao.incrementCount(playerUuid.toString(), recipeId)
-                ), executor);
+    public CompletableFuture<Integer> incrementCount(UUID playerUuid, String recipeId) {
+        return CompletableFuture.supplyAsync(() ->
+                jdbi.inTransaction(handle -> {
+                    CookingMasteryDao dao = handle.attach(CookingMasteryDao.class);
+                    dao.incrementCount(playerUuid.toString(), recipeId);
+                    return dao.findEntry(playerUuid.toString(), recipeId)
+                            .map(CookingMasteryDao.MasteryRow::cookCount)
+                            .orElse(0);
+                }), executor);
     }
 
     private CookingMasteryModel toModel(CookingMasteryDao.MasteryRow row) {

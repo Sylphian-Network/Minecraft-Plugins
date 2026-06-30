@@ -8,15 +8,9 @@ import org.bukkit.event.HandlerList;
 import java.util.UUID;
 
 /**
- * Fired on the main thread at the start of the first tick of a new cook cycle:
- * when a station transitions from no active recipe to a matching one.
- *
- * <p>Listeners (e.g. the cooking skill) may reduce {@link #effectiveCookTime}
- * to apply passive cook-speed bonuses. The service stores the result on the
- * station state and uses it for the rest of that cycle.</p>
- *
- * <p>The {@link #lastInteractor} is the player who last mutated an ingredient
- * or fuel slot, and is the player whose skill levels are applied.</p>
+ * Fired on the main thread at the start of a new cook cycle. Listeners may reduce
+ * {@link #getEffectiveCookTime()} to apply cook-speed bonuses; the service uses the result for the
+ * whole cycle. {@code lastInteractor} is the player whose skill levels apply.
  */
 public final class CookingStartEvent extends Event {
 
