@@ -7,10 +7,20 @@ import net.sylphian.minecraft.cooking.event.CookingDiscoveryEvent;
 import net.sylphian.minecraft.cooking.event.CookingMasteryMilestoneEvent;
 import net.sylphian.minecraft.cooking.event.CookingStartEvent;
 import net.sylphian.minecraft.cooking.event.CookingXpEvent;
+import net.sylphian.minecraft.cooking.listener.CookingStationListener;
+import net.sylphian.minecraft.cooking.quality.CookingQuality;
+import net.sylphian.minecraft.cooking.skill.ability.Banquet;
+import net.sylphian.minecraft.cooking.skill.ability.CookStreak;
+import net.sylphian.minecraft.cooking.skill.ability.EfficientCook;
+import net.sylphian.minecraft.cooking.skill.ability.PerfectSear;
+import net.sylphian.minecraft.cooking.skill.ability.QuickPrep;
+import net.sylphian.minecraft.cooking.skill.ability.SeasonedHands;
+import net.sylphian.minecraft.cooking.skill.ability.SecondWind;
 import net.sylphian.minecraft.cooking.skill.trigger.CookingCompleteTrigger;
 import net.sylphian.minecraft.cooking.skill.trigger.CookingStartTrigger;
 import net.sylphian.minecraft.skills.api.SkillsAPI;
 import net.sylphian.minecraft.skills.skill.AbstractSkill;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,7 +28,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * The Cooking skill. Handles {@link CookingStartEvent} and {@link CookingCompleteEvent}
@@ -32,6 +46,9 @@ public final class CookingSkill extends AbstractSkill {
     private final SylphianCooking plugin;
     private volatile CookingSkillConfig config;
 
+    /** Seasoned Hands streak state, keyed by player UUID. Main-thread access only. */
+    private final Map<UUID, CookStreak> streaks = new HashMap<>();
+
     public CookingSkill(SylphianCooking plugin) {
         super("cooking", "Cooking");
         this.plugin = plugin;
@@ -40,7 +57,23 @@ public final class CookingSkill extends AbstractSkill {
     @Override
     public void registerListeners(Plugin owningPlugin, SkillsAPI api) {
         this.config = CookingSkillConfig.from(plugin.getConfig());
+
+        var service = plugin.getStationService();
+
+        addAbility(new Banquet(() -> config, api.getCooldownManager()));
+        addAbility(new EfficientCook(() -> config));
+        addAbility(new SecondWind(() -> config, api.getCooldownManager(), service));
+        addAbility(new SeasonedHands(() -> config, streaks));
+        addAbility(new PerfectSear(() -> config, api.getCooldownManager(), service));
+        addAbility(new QuickPrep(() -> config));
+
         super.registerListeners(owningPlugin, api);
+    }
+
+    /** Sneak-right-clicking any cooking station block opens the active-ability menu. */
+    @Override
+    public Set<Material> activationBlocks() {
+        return CookingStationListener.STATION_BLOCKS;
     }
 
     @Override
@@ -86,6 +119,9 @@ public final class CookingSkill extends AbstractSkill {
 
         if (trigger.bonusOutput() != null) {
             event.setBonusOutput(trigger.bonusOutput());
+        }
+        if (trigger.shouldPreserveIngredient()) {
+            event.setPreserveIngredient(true);
         }
 
         if (isWatched(uuid)) sendCookingCompleteTrace(player, trigger);
@@ -135,10 +171,12 @@ public final class CookingSkill extends AbstractSkill {
                 + " <gray>x<white>" + event.getMilestone() + "<gray>) <yellow>+" + xp + " XP"));
     }
 
-    /** Clears any debug watch session where the quitting player is the subject. */
+    /** Clears the player's streak state and any debug watch session where they are the subject. */
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        unwatch(event.getPlayer().getUniqueId());
+        UUID uuid = event.getPlayer().getUniqueId();
+        streaks.remove(uuid);
+        unwatch(uuid);
     }
 
     private void sendCookingStartTrace(Player player, CookingStartTrigger trigger, CookingStartEvent event) {
@@ -155,7 +193,7 @@ public final class CookingSkill extends AbstractSkill {
         watcher.sendMessage(MINI.deserialize(
                 "<gray>  Result: <white>" + event.getEffectiveCookTime()
                 + "<gray>t <dark_gray>(<gray>combined <white>"
-                + String.format("%.0f%%", combined * 100) + "<gray> reduction)"));
+                + String.format("%.0f%%", combined * 100) + "<gray>)"));
     }
 
     private void sendCookingCompleteTrace(Player player, CookingCompleteTrigger trigger) {
@@ -169,7 +207,9 @@ public final class CookingSkill extends AbstractSkill {
         CommandSender watcher = getWatcher(uuid);
         if (watcher == null) return;
         watcher.sendMessage(MINI.deserialize(
-                "<gray>  Shifts: <white>" + trigger.qualityShifts()
+                "<gray>  Shifts: <white>" + formatShifts(trigger.qualityShifts())
+                + " <dark_gray>| <gray>XP <white>x" + String.format("%.2f", trigger.xpMultiplier())
+                + (trigger.shouldPreserveIngredient() ? " <dark_gray>| <green>ingredient spared" : "")
                 + (trigger.bonusOutput() != null ? " <dark_gray>| <yellow>bonus drop queued" : "")));
     }
 
@@ -179,9 +219,17 @@ public final class CookingSkill extends AbstractSkill {
         if (watcher == null) return;
         watcher.sendMessage(MINI.deserialize(
                 "<gray>  Quality: <white>" + event.getQuality().name()
-                + " <dark_gray>| <gray>XP: <white>" + baseXp
+                + " <dark_gray>| <gray>XP: <white>" + baseXp + " <gray>base"
                 + " <gray>x" + String.format("%.1f", event.getQuality().xpMultiplier())
                 + " <gray>x" + String.format("%.2f", event.getXpMultiplier())
-                + " <gray>= <white>" + finalXp));
+                + " <gray>-> <white>" + finalXp + " <gray>awarded"));
+    }
+
+    /** Formats quality weight shifts as a readable list, e.g. {@code PERFECT +10.0, GOOD +2.0}. */
+    private static String formatShifts(Map<CookingQuality, Double> shifts) {
+        if (shifts.isEmpty()) return "none";
+        return shifts.entrySet().stream()
+                .map(e -> e.getKey().name() + " " + (e.getValue() >= 0 ? "+" : "") + String.format("%.1f", e.getValue()))
+                .collect(Collectors.joining(", "));
     }
 }

@@ -24,6 +24,7 @@ public final class CookingCompleteTrigger implements PassiveTrigger {
     private double xpMultiplier = 1.0;
     private final Map<CookingQuality, Double> qualityShifts = new EnumMap<>(CookingQuality.class);
     private @Nullable ItemStack bonusOutput;
+    private boolean preserveIngredient;
     private final List<TraceEntry> traceLog = new ArrayList<>();
 
     /**
@@ -35,6 +36,12 @@ public final class CookingCompleteTrigger implements PassiveTrigger {
 
     /** @return the recipe that completed */
     public CookingRecipe recipe() { return recipe; }
+
+    /** Marks that one matched ingredient should not be consumed by this cook. */
+    public void preserveIngredient() { this.preserveIngredient = true; }
+
+    /** @return true if one ingredient should be preserved this cook */
+    public boolean shouldPreserveIngredient() { return preserveIngredient; }
 
     /**
      * Multiplies the accumulated XP multiplier by the given factor.

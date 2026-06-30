@@ -99,9 +99,38 @@ mastery:
 # milestone-xp:
 #   XP awarded each time a player reaches a mastery milestone for a recipe.
 #
+# Passive abilities (unlocked as the cooking skill levels):
+#   efficient-cook (Lv 10):  chance-percent to spare one ingredient per cook.
+#   seasoned-hands (Lv 20):  consecutive cooks build stacks raising quality and XP.
+#   quick-prep     (Lv 30):  reduction-percent flat cook-time reduction.
+#
+# Active abilities (sneak + right-click a cooking station to open the menu):
+#   banquet      (Lv 5):  AoE haste/regen/saturation buff for nearby players.
+#   second-wind  (Lv 15): instantly finishes the cook at the station.
+#   perfect-sear (Lv 25): the next dish cooked at the station rolls Perfect.
+#
 # =============================================================
 
 cooking-skill:
   xp-per-recipe: 10
   discovery-xp: 100
   milestone-xp: 250
+  efficient-cook:
+    chance-percent: 15.0
+  quick-prep:
+    reduction-percent: 20.0
+  seasoned-hands:
+    max-stacks: 5
+    quality-per-stack: 2.0
+    xp-per-stack-percent: 5.0
+    reset-seconds: 30
+    reset-distance: 10.0
+  banquet:
+    radius: 8.0
+    duration-seconds: 30
+    amplifier: 0
+    cooldown-seconds: 600
+  second-wind:
+    cooldown-seconds: 60
+  perfect-sear:
+    cooldown-seconds: 300

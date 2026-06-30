@@ -298,6 +298,36 @@ public class CookingStationService {
         finishCooking(location, state, state.getActiveRecipe());
     }
 
+    /**
+     * Immediately completes the current recipe at the given station block, attributing the
+     * completion to {@code activatorUuid}. Loads the station from PDC if it is not resident.
+     * Used by the Second Wind active ability.
+     *
+     * @return true if a recipe was active and completed, false if there was nothing to cook
+     */
+    public boolean rushCookAt(Block block, UUID activatorUuid) {
+        Location location = block.getLocation();
+        CookingStationState state = getOrLoad(block);
+        updateActiveRecipe(state);
+        if (state.getActiveRecipe() == null) return false;
+        state.setLastInteractor(activatorUuid);
+        finishCooking(location, state, state.getActiveRecipe());
+        return true;
+    }
+
+    /**
+     * Primes the given station so its next completed quality cook rolls Perfect.
+     * Loads the station from PDC if it is not resident. Used by the Perfect Sear active ability.
+     */
+    public void armPerfectSear(Block block) {
+        getOrLoad(block).setForceNextPerfect(true);
+    }
+
+    /** Returns the resident station state for the block, loading it from PDC into the map if needed. */
+    private CookingStationState getOrLoad(Block block) {
+        return stations.computeIfAbsent(block.getLocation(), _ -> CookingStationPdc.load(block));
+    }
+
     private void tickAll() {
         for (Map.Entry<Location, CookingStationState> entry : new ArrayList<>(stations.entrySet())) {
             tickStation(entry.getKey(), entry.getValue());
@@ -307,6 +337,7 @@ public class CookingStationService {
 
     private void evictIfDormant(Location location, CookingStationState state) {
         if (!state.getViewers().isEmpty()) return;
+        if (state.isForceNextPerfect()) return; // keep a primed Perfect Sear station resident
         if (canSelfProgress(state)) return;
         CookingStationPdc.save(location.getBlock(), state);
         stations.remove(location);
@@ -413,6 +444,7 @@ public class CookingStationService {
         EnumMap<CookingQuality, Double> qualityShifts = new EnumMap<>(CookingQuality.class);
         double xpMultiplier = 1.0;
         ItemStack bonusOutput = null;
+        boolean preserveIngredient = false;
 
         if (interactor != null) {
             CookingCompleteEvent completeEvent =
@@ -421,6 +453,7 @@ public class CookingStationService {
             qualityShifts.putAll(completeEvent.getQualityShifts());
             xpMultiplier  = completeEvent.getXpMultiplier();
             bonusOutput   = completeEvent.getBonusOutput();
+            preserveIngredient = completeEvent.isPreserveIngredient();
         }
 
         // Apply mastery quality bonus if enabled for this recipe and the player has cooked it enough times.
@@ -428,13 +461,21 @@ public class CookingStationService {
             qualityShifts.merge(CookingQuality.PERFECT, cfg.masteryBonus(), Double::sum);
         }
 
+        // Perfect Sear forces the next quality cook; consumed on any completed cook.
+        boolean forcePerfect = state.isForceNextPerfect();
+        state.setForceNextPerfect(false);
+
         // Roll quality for quality-eligible recipes; skip entirely for non-food/material recipes.
         CookingQuality quality;
         ItemStack outputItem;
         if (recipe.qualityBonusEnabled()) {
-            int level    = interactor != null ? levelProvider.apply(interactor) : 0;
-            int slotCount = recipe.ingredients().size();
-            quality = QualityRoller.roll(cfg.baseWeights(), level, slotCount, qualityShifts, cfg.levelBonus(), cfg.slotBonus());
+            if (forcePerfect) {
+                quality = CookingQuality.PERFECT;
+            } else {
+                int level    = interactor != null ? levelProvider.apply(interactor) : 0;
+                int slotCount = recipe.ingredients().size();
+                quality = QualityRoller.roll(cfg.baseWeights(), level, slotCount, qualityShifts, cfg.levelBonus(), cfg.slotBonus());
+            }
             outputItem = quality.applyTo(recipe.output(), cfg.formatFor(quality));
         } else {
             quality = CookingQuality.PLAIN;
@@ -474,9 +515,16 @@ public class CookingStationService {
 
         // Decrement matched ingredients.
         boolean[] consumed = new boolean[CookingStationState.INGREDIENT_COUNT];
+        int preserveRemaining = preserveIngredient ? 1 : 0;
         for (var spec : recipe.ingredients()) {
             for (int i = 0; i < CookingStationState.INGREDIENT_COUNT; i++) {
                 if (!consumed[i] && spec.matches(state.getIngredient(i))) {
+                    if (preserveRemaining > 0) {
+                        // Efficient Cook: this spec is satisfied but its ingredient is spared.
+                        preserveRemaining--;
+                        consumed[i] = true;
+                        break;
+                    }
                     ItemStack ing = state.getIngredient(i);
                     if (ing.getAmount() > 1) {
                         ing.setAmount(ing.getAmount() - 1);

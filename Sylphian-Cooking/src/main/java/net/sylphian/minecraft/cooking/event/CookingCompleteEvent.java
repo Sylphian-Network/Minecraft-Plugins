@@ -29,6 +29,7 @@ public final class CookingCompleteEvent extends Event {
     private final Map<CookingQuality, Double> qualityShifts = new EnumMap<>(CookingQuality.class);
     private double xpMultiplier = 1.0;
     private @Nullable ItemStack bonusOutput;
+    private boolean preserveIngredient;
 
     /**
      * @param location       the location of the cooking station block
@@ -105,6 +106,16 @@ public final class CookingCompleteEvent extends Event {
      * @return bonus output, or null
      */
     public @Nullable ItemStack getBonusOutput() { return bonusOutput; }
+
+    /**
+     * Marks whether one matched ingredient should be spared from consumption this cook.
+     *
+     * @param preserveIngredient true to preserve one ingredient
+     */
+    public void setPreserveIngredient(boolean preserveIngredient) { this.preserveIngredient = preserveIngredient; }
+
+    /** @return true if one matched ingredient should not be consumed this cook */
+    public boolean isPreserveIngredient() { return preserveIngredient; }
 
     @Override
     public HandlerList getHandlers() { return HANDLERS; }

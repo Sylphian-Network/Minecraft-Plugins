@@ -43,6 +43,9 @@ public class CookingStationState {
     /** Quality tier of the last completed cycle. Not persisted to PDC. Null if no cycle has completed. */
     private @Nullable CookingQuality lastQuality;
 
+    /** When true, the next completed quality cook is forced to Perfect (Perfect Sear). Not persisted to PDC. */
+    private boolean forceNextPerfect;
+
     /** UUIDs of players currently viewing this station's GUI. */
     private final Set<UUID> viewers = new HashSet<>();
 
@@ -144,6 +147,12 @@ public class CookingStationState {
 
     /** @param lastQuality the rolled quality, or null to clear */
     public void setLastQuality(@Nullable CookingQuality lastQuality) { this.lastQuality = lastQuality; }
+
+    /** @return true if the next quality cook is forced to Perfect */
+    public boolean isForceNextPerfect() { return forceNextPerfect; }
+
+    /** @param forceNextPerfect true to force the next quality cook to Perfect */
+    public void setForceNextPerfect(boolean forceNextPerfect) { this.forceNextPerfect = forceNextPerfect; }
 
     public Set<UUID> getViewers() { return viewers; }
     public void addViewer(UUID uuid) { viewers.add(uuid); }

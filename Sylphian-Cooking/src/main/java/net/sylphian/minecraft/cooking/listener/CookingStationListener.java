@@ -29,7 +29,8 @@ import java.util.Set;
  */
 public class CookingStationListener implements Listener {
 
-    private static final Set<Material> STATION_BLOCKS = EnumSet.of(
+    /** Block types treated as cooking stations. */
+    public static final Set<Material> STATION_BLOCKS = EnumSet.of(
             Material.FURNACE,
             Material.BLAST_FURNACE,
             Material.SMOKER,
