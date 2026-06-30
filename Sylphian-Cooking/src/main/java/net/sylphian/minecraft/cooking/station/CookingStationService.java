@@ -311,7 +311,22 @@ public class CookingStationService {
     private void tickAll() {
         for (Map.Entry<Location, CookingStationState> entry : new ArrayList<>(stations.entrySet())) {
             tickStation(entry.getKey(), entry.getValue());
+            evictIfDormant(entry.getKey(), entry.getValue());
         }
+    }
+
+    private void evictIfDormant(Location location, CookingStationState state) {
+        if (!state.getViewers().isEmpty()) return;
+        if (canSelfProgress(state)) return;
+        CookingStationPdc.save(location.getBlock(), state);
+        stations.remove(location);
+    }
+
+    private boolean canSelfProgress(CookingStationState state) {
+        CookingRecipe recipe = state.getActiveRecipe();
+        if (recipe == null) return false;
+        boolean hasFuel = state.getFuelRemaining() > 0 || isValidFuel(state.getFuel());
+        return hasFuel && hasOutputCapacity(state, recipe);
     }
 
     private void tickStation(Location location, CookingStationState state) {
