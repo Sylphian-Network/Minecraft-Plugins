@@ -71,7 +71,13 @@ public class RecipeConfigLoader {
             boolean valid = true;
             for (String raw : rawIngredients) {
                 if (raw.contains(":")) {
-                    specs.add(new NamespacedIngredientSpec(raw));
+                    try {
+                        specs.add(new NamespacedIngredientSpec(raw));
+                    } catch (IllegalArgumentException e) {
+                        logger.warning("Recipe '" + id + "' has invalid namespaced ingredient '" + raw + "', skipping recipe.");
+                        valid = false;
+                        break;
+                    }
                 } else {
                     try {
                         Material mat = Material.valueOf(raw.toUpperCase());
