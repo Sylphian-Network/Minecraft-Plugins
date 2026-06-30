@@ -7,6 +7,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -56,6 +57,18 @@ public interface Skill {
      */
     default Optional<Material> activationMaterial() {
         return Optional.empty();
+    }
+
+    /**
+     * Block types that trigger the active-ability coordinator when a player
+     * sneak-right-clicks them, regardless of the item held. The clicked block is
+     * passed to {@link ActiveAbility#onActivate(Player, UUID, org.bukkit.block.Block)}.
+     * Return an empty set for skills that activate from a held item instead.
+     *
+     * @return the trigger block types, or an empty set if not applicable
+     */
+    default Set<Material> activationBlocks() {
+        return Set.of();
     }
 
     /**

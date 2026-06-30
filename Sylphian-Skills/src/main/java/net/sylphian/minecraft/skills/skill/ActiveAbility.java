@@ -1,6 +1,8 @@
 package net.sylphian.minecraft.skills.skill;
 
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -42,6 +44,20 @@ public interface ActiveAbility extends Ability {
      * @param uuid   the player's UUID
      */
     void onActivate(Player player, UUID uuid);
+
+    /**
+     * Block-aware activation. Called by the framework with the block the player
+     * sneak-right-clicked when the skill declares {@link Skill#activationBlocks()};
+     * {@code target} is null when the ability was triggered by a held item instead.
+     * Defaults to {@link #onActivate(Player, UUID)} for abilities that ignore the target.
+     *
+     * @param player the player who triggered the ability
+     * @param uuid   the player's UUID
+     * @param target the clicked block, or null if not block-triggered
+     */
+    default void onActivate(Player player, UUID uuid, @Nullable Block target) {
+        onActivate(player, uuid);
+    }
 
     /**
      * Short MiniMessage string reflecting this ability's current state, shown as
