@@ -143,6 +143,7 @@ public final class SylphianCooking extends JavaPlugin {
             CookingConfig cookingConfig = CookingConfig.from(getConfig());
             stationService.reload(recipes, fuels, cookingConfig);
             recipeBookMenu.reload(recipes, cookingConfig);
+            itemProvider.reload(recipes);
             if (skillsBridge != null) skillsBridge.reload();
 
             getLogger().info("Configuration reloaded successfully.");
