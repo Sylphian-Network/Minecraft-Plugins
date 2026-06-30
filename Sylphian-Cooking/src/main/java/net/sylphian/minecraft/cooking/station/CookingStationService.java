@@ -183,22 +183,40 @@ public class CookingStationService {
     }
 
     /**
-     * Syncs only the output slots from an open GUI inventory into the station state.
-     * Call this after a player takes an item from an output slot.
+     * Removes up to {@code amount} items from the given output slot of the station the
+     * player has open and returns the removed stack. The station state is updated
+     * synchronously and viewers are refreshed, so a removed item cannot be repainted
+     * back by a concurrent tick refresh.
      *
-     * @param player the player who interacted with an output slot
-     * @param inv    the open GUI inventory
+     * @param player the player taking the output
+     * @param idx    the output slot index (0–4)
+     * @param amount the maximum number of items to remove
+     * @return the removed stack, or null if nothing could be taken
      */
-    public void syncOutputSlots(Player player, Inventory inv) {
+    public @Nullable ItemStack takeOutput(Player player, int idx, int amount) {
         Location location = playerStationMap.get(player.getUniqueId());
-        if (location == null) return;
+        if (location == null) return null;
         CookingStationState state = stations.get(location);
-        if (state == null) return;
+        if (state == null) return null;
 
-        for (int i = 0; i < CookingStationGui.OUTPUT_SLOTS.length; i++) {
-            ItemStack out = inv.getItem(CookingStationGui.OUTPUT_SLOTS[i]);
-            state.setOutput(i, realItem(out));
+        ItemStack out = state.getOutput(idx);
+        if (out == null || out.getType().isAir()) return null;
+
+        int take = Math.min(amount, out.getAmount());
+        if (take <= 0) return null;
+
+        ItemStack taken = out.clone();
+        taken.setAmount(take);
+
+        int remaining = out.getAmount() - take;
+        if (remaining > 0) {
+            out.setAmount(remaining);
+        } else {
+            state.setOutput(idx, null);
         }
+
+        refreshViewers(location, state);
+        return taken;
     }
 
     /** @return null if the item is null, air, or a GUI placeholder */

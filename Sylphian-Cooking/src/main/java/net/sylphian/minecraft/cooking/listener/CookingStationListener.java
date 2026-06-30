@@ -178,20 +178,72 @@ public class CookingStationListener implements Listener {
     }
 
     private void handleOutputClick(InventoryClickEvent event, Player player, Inventory topInv) {
-        // Block placing items into output slots.
+        event.setCancelled(true);
+
+        int rawSlot = event.getRawSlot();
+        int outIdx = CookingStationGui.outputIndex(rawSlot);
+        if (outIdx < 0) return;
+
+        ItemStack slotItem = topInv.getItem(rawSlot);
+        if (slotItem == null || slotItem.getType().isAir() || CookingStationGui.isPlaceholder(slotItem)) {
+            return;
+        }
+
         ItemStack cursor = event.getCursor();
-        if (cursor != null && !cursor.getType().isAir()) {
-            event.setCancelled(true);
-            return;
+        if (cursor != null && !cursor.getType().isAir()) return;
+
+        int total = slotItem.getAmount();
+
+        switch (event.getAction()) {
+            case MOVE_TO_OTHER_INVENTORY -> {
+                ItemStack taken = service.takeOutput(player, outIdx, total);
+                if (taken != null) giveToInventory(player, taken);
+            }
+            case HOTBAR_SWAP -> {
+                ItemStack taken = service.takeOutput(player, outIdx, total);
+                if (taken != null) giveToHotbarOrInventory(player, event.getHotbarButton(), taken);
+            }
+            case DROP_ONE_SLOT -> {
+                ItemStack taken = service.takeOutput(player, outIdx, 1);
+                if (taken != null) dropAtPlayer(player, taken);
+            }
+            case DROP_ALL_SLOT -> {
+                ItemStack taken = service.takeOutput(player, outIdx, total);
+                if (taken != null) dropAtPlayer(player, taken);
+            }
+            case PICKUP_HALF -> {
+                ItemStack taken = service.takeOutput(player, outIdx, (total + 1) / 2);
+                if (taken != null) player.setItemOnCursor(taken);
+            }
+            default -> {
+                ItemStack taken = service.takeOutput(player, outIdx, total);
+                if (taken != null) player.setItemOnCursor(taken);
+            }
         }
-        // Placeholders in output slots are display-only: cannot be taken.
-        ItemStack slotItem = topInv.getItem(event.getRawSlot());
-        if (CookingStationGui.isPlaceholder(slotItem)) {
-            event.setCancelled(true);
-            return;
+    }
+
+    /** Adds an item to the player's inventory, dropping any overflow at their feet. */
+    private void giveToInventory(Player player, ItemStack item) {
+        for (ItemStack overflow : player.getInventory().addItem(item).values()) {
+            dropAtPlayer(player, overflow);
         }
-        // Player is taking an item: sync output slots after the click resolves.
-        scheduleOutputSync(player, topInv);
+    }
+
+    /** Places an item into the given hotbar slot if empty, otherwise adds it to the inventory. */
+    private void giveToHotbarOrInventory(Player player, int hotbarButton, ItemStack item) {
+        if (hotbarButton >= 0 && hotbarButton <= 8) {
+            ItemStack existing = player.getInventory().getItem(hotbarButton);
+            if (existing == null || existing.getType().isAir()) {
+                player.getInventory().setItem(hotbarButton, item);
+                return;
+            }
+        }
+        giveToInventory(player, item);
+    }
+
+    /** Drops an item naturally at the player's location. */
+    private void dropAtPlayer(Player player, ItemStack item) {
+        player.getWorld().dropItemNaturally(player.getLocation(), item);
     }
 
     private void handleShiftClickFromPlayer(Player player, ItemStack item, Inventory topInv) {
@@ -219,12 +271,6 @@ public class CookingStationListener implements Listener {
                 return;
             }
         }
-    }
-
-    /** Schedules a 1-tick delayed sync of all output slots back to the service. */
-    private void scheduleOutputSync(Player player, Inventory topInv) {
-        player.getServer().getScheduler().runTask(
-                plugin, () -> service.syncOutputSlots(player, topInv));
     }
 
     /** Schedules a 1-tick delayed sync of the fuel slot back to the service. */
