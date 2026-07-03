@@ -153,31 +153,79 @@ public abstract class AbstractSkill implements Skill, Listener, Watchable {
     }
 
     /**
-     * Sends a trace header line followed by per-ability contribution lines to the
-     * watching admin for this player. Does nothing if the player is not being watched.
+     * Renders one trace block to the watching admin in the standard layout shared by every
+     * skill: a header line, the per-ability contribution lines, then any result lines.
+     * Does nothing if the player is not being watched.
      *
-     * <p>Subclasses call this after firing passives, passing their own header string
-     * and the trigger's {@link TraceEntry} list. Any event-specific footer lines
-     * (e.g. final hook times, awarded XP) should be appended by the caller via
-     * {@link #getWatcher}.</p>
-     *
-     * @param uuid    the target player's UUID
-     * @param header  a MiniMessage string summarising the event
-     * @param entries the ability contributions recorded on the trigger token
+     * @param uuid   the target player's UUID
+     * @param report the structured trace block to render
      */
-    protected void sendTrace(UUID uuid, String header, List<TraceEntry> entries) {
+    protected void sendTrace(UUID uuid, TraceReport report) {
         CommandSender watcher = getWatcher(uuid);
         if (watcher == null) return;
-        watcher.sendMessage(MINI.deserialize(header));
-        if (entries.isEmpty()) {
-            watcher.sendMessage(MINI.deserialize("<gray>  (no abilities contributed)"));
-        } else {
-            for (TraceEntry entry : entries) {
-                String line = entry.active()
-                        ? "<gray>  <yellow>- [Active] <white>" + entry.source() + " <white>" + entry.description()
-                        : "<gray>  <aqua>- [Passive] <aqua>" + entry.source() + " <white>" + entry.description();
-                watcher.sendMessage(MINI.deserialize(line));
+
+        StringBuilder header = new StringBuilder(report.color() + "- " + report.event() + " <white>" + report.subject());
+        if (report.level() >= 0) {
+            header.append(" <dark_gray>| <gray>Lv <white>").append(report.level());
+        }
+        if (report.context() != null && !report.context().isEmpty()) {
+            header.append(" <dark_gray>| ").append(report.context());
+        }
+        watcher.sendMessage(MINI.deserialize(header.toString()));
+
+        if (report.hasEntrySection()) {
+            if (report.entries().isEmpty()) {
+                watcher.sendMessage(MINI.deserialize("<gray>  <dark_gray>(no abilities contributed)"));
+            } else {
+                for (TraceEntry entry : report.entries()) {
+                    watcher.sendMessage(MINI.deserialize(formatEntry(entry)));
+                }
             }
         }
+
+        for (TraceReport.Result result : report.results()) {
+            watcher.sendMessage(MINI.deserialize(resultLine(result.label(), result.value())));
+        }
+    }
+
+    /**
+     * Emits a standard one-line {@code Active} trace block when the player is being watched.
+     * Active abilities call this from {@code onActivate} so their use appears in the watch trace,
+     * the way passive contributions appear as {@code [Passive]} lines.
+     *
+     * @param uuid    the activating player's UUID
+     * @param subject the player name shown in the line
+     * @param ability the ability's display name
+     * @param detail  a short MiniMessage description of what happened
+     */
+    public void traceActiveUse(UUID uuid, String subject, String ability, String detail) {
+        sendTrace(uuid, TraceReport.of("<yellow>", "Active")
+                .subject(subject)
+                .level(skillsApi.getCachedLevel(uuid, getId()))
+                .context("<yellow>" + ability + " <dark_gray>| <gray>" + detail));
+    }
+
+    /**
+     * Sends a single standalone result line in the standard trace layout. Use for results
+     * that arrive in a later event than the block header (e.g. XP awarded after a roll).
+     *
+     * @param uuid  the target player's UUID
+     * @param label the result label
+     * @param value the MiniMessage value string
+     */
+    protected void sendTraceResult(UUID uuid, String label, String value) {
+        CommandSender watcher = getWatcher(uuid);
+        if (watcher == null) return;
+        watcher.sendMessage(MINI.deserialize(resultLine(label, value)));
+    }
+
+    private static String formatEntry(TraceEntry entry) {
+        return entry.active()
+                ? "<gray>  <yellow>- [Active] <white>" + entry.source() + " <white>" + entry.description()
+                : "<gray>  <aqua>- [Passive] <aqua>" + entry.source() + " <white>" + entry.description();
+    }
+
+    private static String resultLine(String label, String value) {
+        return "<gray>  " + label + ": " + value;
     }
 }

@@ -1,6 +1,5 @@
 package net.sylphian.minecraft.fishing.skill;
 
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.sylphian.minecraft.fishing.SylphianFishing;
 import net.sylphian.minecraft.fishing.skill.ability.CatchMomentum;
@@ -14,9 +13,9 @@ import net.sylphian.minecraft.fishing.skill.trigger.FishCastTrigger;
 import net.sylphian.minecraft.fishing.skill.trigger.FishCatchTrigger;
 import net.sylphian.minecraft.skills.api.SkillsAPI;
 import net.sylphian.minecraft.skills.skill.AbstractSkill;
+import net.sylphian.minecraft.skills.skill.TraceReport;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Item;
@@ -48,8 +47,6 @@ import java.util.*;
  * <p>All state maps are accessed on the main thread only.</p>
  */
 public final class FishingSkill extends AbstractSkill {
-
-    private static final MiniMessage MINI = MiniMessage.miniMessage();
 
     /** PDC key stamped on every Sylphian fish by LootService. */
     private static final NamespacedKey FISH_KEY = new NamespacedKey("sylphian-fishing", "item_id");
@@ -224,8 +221,7 @@ public final class FishingSkill extends AbstractSkill {
     }
 
     /**
-     * Sends the cast trace header and ability contributions via
-     * {@link #sendTrace}, then appends the fishing-specific result footer.
+     * Sends the cast trace block: header, ability contributions, and the final hook-time result.
      *
      * @param player   the player who cast
      * @param trigger  the populated cast trigger
@@ -236,22 +232,18 @@ public final class FishingSkill extends AbstractSkill {
     private void sendCastTrace(Player player, FishCastTrigger trigger, FishHook hook, int priorMin, int priorMax) {
         UUID uuid = player.getUniqueId();
         int level = skillsApi.getCachedLevel(uuid, "fishing");
-        sendTrace(uuid,
-                "<dark_aqua>- Cast <white>" + player.getName()
-                + " <dark_gray>| <gray>Lv <white>" + level
-                + " <dark_gray>| <gray>Hook <white>" + priorMin + "<gray>-<white>" + priorMax + "<gray>t",
-                trigger.traceEntries());
-        CommandSender watcher = getWatcher(uuid);
-        if (watcher == null) return;
         double combined = Math.min(0.90, trigger.totalReduction());
-        watcher.sendMessage(MINI.deserialize(
-                "<gray>  Result: <white>" + hook.getMinWaitTime() + "<gray>-<white>" + hook.getMaxWaitTime()
-                + "<gray>t <dark_gray>(<gray>combined <white>" + String.format("%.0f%%", combined * 100) + "<gray>)"));
+        sendTrace(uuid, TraceReport.of("<dark_aqua>", "Cast")
+                .subject(player.getName())
+                .level(level)
+                .context("<gray>Hook <white>" + priorMin + "<gray>-<white>" + priorMax + "<gray>t")
+                .entries(trigger.traceEntries())
+                .result("Result", "<white>" + hook.getMinWaitTime() + "<gray>-<white>" + hook.getMaxWaitTime()
+                        + "<gray>t <dark_gray>(<gray>combined <white>" + String.format("%.0f%%", combined * 100) + "<gray>)"));
     }
 
     /**
-     * Sends the catch trace header and ability contributions via
-     * {@link #sendTrace}, then appends the fishing-specific XP footer.
+     * Sends the catch trace block: header, ability contributions, and the awarded-XP result.
      *
      * @param player  the player who caught
      * @param trigger the populated catch trigger
@@ -265,15 +257,12 @@ public final class FishingSkill extends AbstractSkill {
         String itemName = caught.hasItemMeta() && caught.getItemMeta().hasDisplayName()
                 ? PlainTextComponentSerializer.plainText().serialize(Objects.requireNonNull(caught.getItemMeta().displayName()))
                 : caught.getType().name();
-        sendTrace(uuid,
-                "<green>- Catch <white>" + player.getName()
-                + " <dark_gray>| <gray>Lv <white>" + level
-                + " <dark_gray>| <white>" + itemName,
-                trigger.traceEntries());
-        CommandSender watcher = getWatcher(uuid);
-        if (watcher == null) return;
-        watcher.sendMessage(MINI.deserialize(
-                "<gray>  XP: <white>" + baseXp + " <gray>base -> <white>" + finalXp + " <gray>awarded"));
+        sendTrace(uuid, TraceReport.of("<green>", "Catch")
+                .subject(player.getName())
+                .level(level)
+                .context("<white>" + itemName)
+                .entries(trigger.traceEntries())
+                .result("XP", "<white>" + baseXp + " <gray>base -> <white>" + finalXp + " <gray>awarded"));
     }
 
     /**

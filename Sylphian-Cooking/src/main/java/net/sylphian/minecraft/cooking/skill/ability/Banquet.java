@@ -3,6 +3,7 @@ package net.sylphian.minecraft.cooking.skill.ability;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.cooking.skill.CookingSkillConfig;
 import net.sylphian.minecraft.skills.service.CooldownManager;
+import net.sylphian.minecraft.skills.skill.AbstractSkill;
 import net.sylphian.minecraft.skills.skill.ActiveAbility;
 import net.sylphian.minecraft.skills.skill.StatusLevel;
 import org.bukkit.Location;
@@ -29,14 +30,17 @@ public final class Banquet implements ActiveAbility {
 
     private final Supplier<CookingSkillConfig> config;
     private final CooldownManager cooldownManager;
+    private final AbstractSkill skill;
 
     /**
      * @param config          supplier for the current config snapshot
      * @param cooldownManager the shared cooldown manager
+     * @param skill           the owning skill, used to emit watch-trace lines
      */
-    public Banquet(Supplier<CookingSkillConfig> config, CooldownManager cooldownManager) {
+    public Banquet(Supplier<CookingSkillConfig> config, CooldownManager cooldownManager, AbstractSkill skill) {
         this.config = config;
         this.cooldownManager = cooldownManager;
+        this.skill = skill;
     }
 
     @Override public String id()          { return COOLDOWN_ID; }
@@ -74,6 +78,8 @@ public final class Banquet implements ActiveAbility {
 
         cooldownManager.setCooldown(uuid, COOLDOWN_ID, Duration.ofSeconds(cfg.banquetCooldownSeconds()));
         player.sendActionBar(MINI.deserialize("<gold>Banquet! <white>Buffed " + count + " player" + (count == 1 ? "" : "s") + "."));
+        skill.traceActiveUse(uuid, player.getName(), name(),
+                "buffed " + count + " player" + (count == 1 ? "" : "s"));
     }
 
     @Override

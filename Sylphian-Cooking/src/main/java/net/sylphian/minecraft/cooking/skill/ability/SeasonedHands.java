@@ -51,11 +51,14 @@ public final class SeasonedHands implements PassiveAbility {
 
         int stacks = updateStreak(player, uuid, cfg);
 
-        complete.shiftQuality(CookingQuality.PERFECT, stacks * cfg.seasonedHandsQualityPerStack());
+        double qualityShift = stacks * cfg.seasonedHandsQualityPerStack();
+        complete.shiftQuality(CookingQuality.PERFECT, qualityShift);
         double xpFactor = 1.0 + stacks * (cfg.seasonedHandsXpPerStackPercent() / 100.0);
         complete.multiplyXp(xpFactor);
 
-        trigger.record(name(), "streak " + stacks + "/" + cfg.seasonedHandsMaxStacks(), false);
+        trigger.record(name(), "streak " + stacks + "/" + cfg.seasonedHandsMaxStacks()
+                + " (+" + String.format("%.1f", qualityShift) + " perfect, x"
+                + String.format("%.2f", xpFactor) + " xp)", false);
         player.sendActionBar(MINI.deserialize(
                 "<gold>Seasoned Hands: <white>" + stacks + "<gray>/<white>" + cfg.seasonedHandsMaxStacks()
                 + " <gray>stacks"));

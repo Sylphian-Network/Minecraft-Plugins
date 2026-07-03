@@ -8,7 +8,6 @@ import net.sylphian.minecraft.cooking.event.CookingMasteryMilestoneEvent;
 import net.sylphian.minecraft.cooking.event.CookingStartEvent;
 import net.sylphian.minecraft.cooking.event.CookingXpEvent;
 import net.sylphian.minecraft.cooking.listener.CookingStationListener;
-import net.sylphian.minecraft.cooking.quality.CookingQuality;
 import net.sylphian.minecraft.cooking.skill.ability.Banquet;
 import net.sylphian.minecraft.cooking.skill.ability.CookStreak;
 import net.sylphian.minecraft.cooking.skill.ability.EfficientCook;
@@ -20,8 +19,8 @@ import net.sylphian.minecraft.cooking.skill.trigger.CookingCompleteTrigger;
 import net.sylphian.minecraft.cooking.skill.trigger.CookingStartTrigger;
 import net.sylphian.minecraft.skills.api.SkillsAPI;
 import net.sylphian.minecraft.skills.skill.AbstractSkill;
+import net.sylphian.minecraft.skills.skill.TraceReport;
 import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -32,7 +31,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * The Cooking skill. Handles {@link CookingStartEvent} and {@link CookingCompleteEvent}
@@ -60,11 +58,11 @@ public final class CookingSkill extends AbstractSkill {
 
         var service = plugin.getStationService();
 
-        addAbility(new Banquet(() -> config, api.getCooldownManager()));
+        addAbility(new Banquet(() -> config, api.getCooldownManager(), this));
         addAbility(new EfficientCook(() -> config));
-        addAbility(new SecondWind(() -> config, api.getCooldownManager(), service));
+        addAbility(new SecondWind(() -> config, api.getCooldownManager(), service, this));
         addAbility(new SeasonedHands(() -> config, streaks));
-        addAbility(new PerfectSear(() -> config, api.getCooldownManager(), service));
+        addAbility(new PerfectSear(() -> config, api.getCooldownManager(), service, this));
         addAbility(new QuickPrep(() -> config));
 
         super.registerListeners(owningPlugin, api);
@@ -182,54 +180,33 @@ public final class CookingSkill extends AbstractSkill {
     private void sendCookingStartTrace(Player player, CookingStartTrigger trigger, CookingStartEvent event) {
         UUID uuid = player.getUniqueId();
         int level = skillsApi.getCachedLevel(uuid, "cooking");
-        sendTrace(uuid,
-                "<gold>- Cook Start <white>" + player.getName()
-                + " <dark_gray>| <gray>Lv <white>" + level
-                + " <dark_gray>| <white>" + trigger.recipe().id(),
-                trigger.traceEntries());
-        CommandSender watcher = getWatcher(uuid);
-        if (watcher == null) return;
         double combined = Math.min(CookingStartTrigger.MAX_REDUCTION, trigger.totalReduction());
-        watcher.sendMessage(MINI.deserialize(
-                "<gray>  Result: <white>" + event.getEffectiveCookTime()
-                + "<gray>t <dark_gray>(<gray>combined <white>"
-                + String.format("%.0f%%", combined * 100) + "<gray>)"));
+        sendTrace(uuid, TraceReport.of("<gold>", "Cook Start")
+                .subject(player.getName())
+                .level(level)
+                .context("<white>" + trigger.recipe().id())
+                .entries(trigger.traceEntries())
+                .result("Result", "<white>" + event.getEffectiveCookTime()
+                        + "<gray>t <dark_gray>(<gray>combined <white>"
+                        + String.format("%.0f%%", combined * 100) + "<gray>)"));
     }
 
     private void sendCookingCompleteTrace(Player player, CookingCompleteTrigger trigger) {
         UUID uuid = player.getUniqueId();
         int level = skillsApi.getCachedLevel(uuid, "cooking");
-        sendTrace(uuid,
-                "<green>- Cook Complete <white>" + player.getName()
-                + " <dark_gray>| <gray>Lv <white>" + level
-                + " <dark_gray>| <white>" + trigger.recipe().id(),
-                trigger.traceEntries());
-        CommandSender watcher = getWatcher(uuid);
-        if (watcher == null) return;
-        watcher.sendMessage(MINI.deserialize(
-                "<gray>  Shifts: <white>" + formatShifts(trigger.qualityShifts())
-                + " <dark_gray>| <gray>XP <white>x" + String.format("%.2f", trigger.xpMultiplier())
-                + (trigger.shouldPreserveIngredient() ? " <dark_gray>| <green>ingredient spared" : "")
-                + (trigger.bonusOutput() != null ? " <dark_gray>| <yellow>bonus drop queued" : "")));
+        sendTrace(uuid, TraceReport.of("<green>", "Cook Complete")
+                .subject(player.getName())
+                .level(level)
+                .context("<white>" + trigger.recipe().id())
+                .entries(trigger.traceEntries()));
     }
 
     private void sendXpTrace(Player player, CookingXpEvent event, long baseXp, long finalXp) {
         UUID uuid = player.getUniqueId();
-        CommandSender watcher = getWatcher(uuid);
-        if (watcher == null) return;
-        watcher.sendMessage(MINI.deserialize(
-                "<gray>  Quality: <white>" + event.getQuality().name()
-                + " <dark_gray>| <gray>XP: <white>" + baseXp + " <gray>base"
+        sendTraceResult(uuid, "Quality", "<white>" + event.getQuality().name());
+        sendTraceResult(uuid, "XP", "<white>" + baseXp + " <gray>base"
                 + " <gray>x" + String.format("%.1f", event.getQuality().xpMultiplier())
                 + " <gray>x" + String.format("%.2f", event.getXpMultiplier())
-                + " <gray>-> <white>" + finalXp + " <gray>awarded"));
-    }
-
-    /** Formats quality weight shifts as a readable list, e.g. {@code PERFECT +10.0, GOOD +2.0}. */
-    private static String formatShifts(Map<CookingQuality, Double> shifts) {
-        if (shifts.isEmpty()) return "none";
-        return shifts.entrySet().stream()
-                .map(e -> e.getKey().name() + " " + (e.getValue() >= 0 ? "+" : "") + String.format("%.1f", e.getValue()))
-                .collect(Collectors.joining(", "));
+                + " <gray>-> <white>" + finalXp + " <gray>awarded");
     }
 }
