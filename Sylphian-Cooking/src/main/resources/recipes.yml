@@ -6,25 +6,30 @@
 #
 # Fields:
 # -------
-# ingredients:  A list of 1–5 ingredient specifications.
-#               Each entry is either:
-#                 - A plain Bukkit Material name (e.g. POTATO), for vanilla items.
-#                 - A namespaced item ID (e.g. sylphian-fishing:fish/common_cod),
-#                   for custom items registered via Sylphian-Items ItemRegistry.
-#                   The plugin that owns the item must stamp a PDC key
-#                   matching its namespace and item ID on the ItemStack.
-#               Order does not matter — ingredients are matched as a multiset.
+# ingredients:   A list of 1–5 ingredient specifications.
+#                Each entry is either:
+#                  - A plain Bukkit Material name (e.g. POTATO), for vanilla items.
+#                  - A namespaced item ID (e.g. sylphian-fishing:fish/common_cod),
+#                    for custom items registered via Sylphian-Items ItemRegistry.
+#                    The plugin that owns the item must stamp a PDC key
+#                    matching its namespace and item ID on the ItemStack.
+#                Order does not matter; ingredients are matched as a multiset.
 #
-# cook-time:    How long the recipe takes in ticks (20 ticks = 1 second).
+# cook-time:     How long the recipe takes in ticks (20 ticks = 1 second).
+#
+# quality-bonus: Whether mastery cook-count tracking grants a quality bonus
+#                and whether mastery progress is shown in the recipe book.
+#                Default: true. Set to false for non-food recipes (materials,
+#                charcoal) where quality is not meaningful.
 #
 # output:
-#   item:         Bukkit Material name for the output item.
-#   display-name: MiniMessage formatted display name.
-#   description:  MiniMessage lore text. Use \n for line breaks.
-#   amount:       Stack size of the output (default: 1).
+#   item:          Bukkit Material name for the output item.
+#   display-name:  MiniMessage formatted display name.
+#   description:   MiniMessage lore text. Use \n for line breaks.
+#   amount:        Stack size of the output (default: 1).
 #
 # custom-model-data: (Optional) Float value passed to the item's CustomModelData
-#                   component for resource pack model overrides.
+#                    component for resource pack model overrides.
 #
 # =============================================================
 
@@ -154,6 +159,7 @@ recipes:
   # ===========================================================
 
   iron_ingot:
+    quality-bonus: false
     ingredients:
       - RAW_IRON
     cook-time: 200
@@ -161,6 +167,7 @@ recipes:
       item: IRON_INGOT
 
   gold_ingot:
+    quality-bonus: false
     ingredients:
       - RAW_GOLD
     cook-time: 200
@@ -168,6 +175,7 @@ recipes:
       item: GOLD_INGOT
 
   copper_ingot:
+    quality-bonus: false
     ingredients:
       - RAW_COPPER
     cook-time: 200
@@ -175,6 +183,7 @@ recipes:
       item: COPPER_INGOT
 
   netherite_scrap:
+    quality-bonus: false
     ingredients:
       - ANCIENT_DEBRIS
     cook-time: 400
@@ -182,6 +191,7 @@ recipes:
       item: NETHERITE_SCRAP
 
   glass:
+    quality-bonus: false
     ingredients:
       - SAND
     cook-time: 200
@@ -189,6 +199,7 @@ recipes:
       item: GLASS
 
   stone:
+    quality-bonus: false
     ingredients:
       - COBBLESTONE
     cook-time: 200
@@ -200,6 +211,7 @@ recipes:
   # ===========================================================
 
   charcoal_from_oak:
+    quality-bonus: false
     ingredients:
       - OAK_LOG
     cook-time: 200
@@ -207,6 +219,7 @@ recipes:
       item: CHARCOAL
 
   charcoal_from_spruce:
+    quality-bonus: false
     ingredients:
       - SPRUCE_LOG
     cook-time: 200
@@ -214,6 +227,7 @@ recipes:
       item: CHARCOAL
 
   charcoal_from_birch:
+    quality-bonus: false
     ingredients:
       - BIRCH_LOG
     cook-time: 200
@@ -221,6 +235,7 @@ recipes:
       item: CHARCOAL
 
   charcoal_from_jungle:
+    quality-bonus: false
     ingredients:
       - JUNGLE_LOG
     cook-time: 200
@@ -228,6 +243,7 @@ recipes:
       item: CHARCOAL
 
   charcoal_from_acacia:
+    quality-bonus: false
     ingredients:
       - ACACIA_LOG
     cook-time: 200
@@ -235,6 +251,7 @@ recipes:
       item: CHARCOAL
 
   charcoal_from_dark_oak:
+    quality-bonus: false
     ingredients:
       - DARK_OAK_LOG
     cook-time: 200
@@ -242,6 +259,7 @@ recipes:
       item: CHARCOAL
 
   charcoal_from_mangrove:
+    quality-bonus: false
     ingredients:
       - MANGROVE_LOG
     cook-time: 200
@@ -249,6 +267,7 @@ recipes:
       item: CHARCOAL
 
   charcoal_from_cherry:
+    quality-bonus: false
     ingredients:
       - CHERRY_LOG
     cook-time: 200

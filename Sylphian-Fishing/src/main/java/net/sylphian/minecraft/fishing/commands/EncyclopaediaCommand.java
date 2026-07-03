@@ -1,21 +1,21 @@
 package net.sylphian.minecraft.fishing.commands;
 
-import io.papermc.paper.command.brigadier.BasicCommand;
-import io.papermc.paper.command.brigadier.CommandSourceStack;
+import dev.jorel.commandapi.CommandTree;
+import dev.jorel.commandapi.executors.CommandArguments;
 import net.sylphian.minecraft.fishing.gui.EncyclopaediaMenu;
 import org.bukkit.entity.Player;
 
 /**
- * Command to open the fish encyclopaedia GUI for a player.
- * Usage: /encyclopaedia
+ * Builds and registers the player-facing {@code /encyclopaedia} CommandAPI command.
+ * Opens the first page of the fish encyclopaedia for the executing player.
  */
-public class EncyclopaediaCommand implements BasicCommand {
+public final class EncyclopaediaCommand {
+
+    private static final String PERMISSION = "sylphian.fishing.encyclopaedia";
 
     private final EncyclopaediaMenu menu;
 
     /**
-     * Constructs a new EncyclopaediaCommand.
-     *
      * @param menu the encyclopaedia menu to open
      */
     public EncyclopaediaCommand(EncyclopaediaMenu menu) {
@@ -23,31 +23,12 @@ public class EncyclopaediaCommand implements BasicCommand {
     }
 
     /**
-     * Executes the /encyclopaedia command.
-     * Opens the first page of the encyclopaedia for the player.
-     *
-     * @param stack the command source stack
-     * @param args  command arguments (none expected)
+     * Builds the {@code /encyclopaedia} tree and registers it with the CommandAPI.
      */
-    @Override
-    public void execute(CommandSourceStack stack, String[] args) {
-
-        if (!(stack.getSender() instanceof Player player)) {
-            stack.getSender().sendPlainMessage("Players only.");
-            return;
-        }
-
-        menu.open(player, 0);
-    }
-
-    /**
-     * The permission required to open the encyclopaedia. Declared in
-     * paper-plugin.yml with {@code default: true}, so all players have it.
-     *
-     * @return the permission node for this command
-     */
-    @Override
-    public String permission() {
-        return "sylphian.fishing.encyclopaedia";
+    public void register() {
+        new CommandTree("encyclopaedia")
+                .withPermission(PERMISSION)
+                .executesPlayer((Player player, CommandArguments _) -> menu.open(player, 0))
+                .register();
     }
 }

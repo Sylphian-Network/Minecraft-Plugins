@@ -8,9 +8,11 @@ import net.sylphian.minecraft.skills.skill.Skill;
 import net.sylphian.minecraft.skills.skill.StatusLevel;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -75,11 +77,15 @@ public final class ActiveAbilityCoordinator implements Listener {
         if (!player.isSneaking()) return;
 
         Material held = player.getInventory().getItemInMainHand().getType();
+        Block clickedBlock = event.getClickedBlock();
         UUID uuid = player.getUniqueId();
 
         for (Skill skill : service.getSkills()) {
-            Optional<Material> mat = skill.activationMaterial();
-            if (mat.isEmpty() || mat.get() != held) continue;
+            boolean materialMatch = skill.activationMaterial().map(m -> m == held).orElse(false);
+            boolean blockMatch = event.getAction() == Action.RIGHT_CLICK_BLOCK
+                    && clickedBlock != null
+                    && skill.activationBlocks().contains(clickedBlock.getType());
+            if (!materialMatch && !blockMatch) continue;
 
             if (!skill.canInteract(player, uuid)) return;
 
@@ -88,7 +94,7 @@ public final class ActiveAbilityCoordinator implements Listener {
             if (actives.isEmpty()) return;
 
             event.setCancelled(true);
-            openAbilityMenu(player, uuid, actives);
+            openAbilityMenu(player, uuid, actives, blockMatch ? clickedBlock : null);
             return;
         }
     }
@@ -109,7 +115,7 @@ public final class ActiveAbilityCoordinator implements Listener {
         if (ability == null) return;
 
         player.closeInventory();
-        ability.onActivate(player, player.getUniqueId());
+        ability.onActivate(player, player.getUniqueId(), holder.getTargetBlock());
     }
 
     /** Cancels all drag events inside an ability selection menu. */
@@ -133,8 +139,8 @@ public final class ActiveAbilityCoordinator implements Listener {
         if (task != null) task.cancel();
     }
 
-    private void openAbilityMenu(Player player, UUID uuid, List<ActiveAbility> actives) {
-        AbilitySelectionHolder holder = new AbilitySelectionHolder(actives, uuid);
+    private void openAbilityMenu(Player player, UUID uuid, List<ActiveAbility> actives, Block targetBlock) {
+        AbilitySelectionHolder holder = new AbilitySelectionHolder(actives, uuid, targetBlock);
         Inventory inv = Bukkit.createInventory(holder, 9,
                 MINI.deserialize("<dark_aqua>Select Ability"));
 

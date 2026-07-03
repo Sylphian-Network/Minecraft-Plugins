@@ -2,13 +2,14 @@ package net.sylphian.minecraft.cooking.gui;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.sylphian.minecraft.cooking.quality.CookingQuality;
 import net.sylphian.minecraft.cooking.station.CookingStationState;
+import net.sylphian.minecraft.items.util.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import net.sylphian.minecraft.items.util.ItemBuilder;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -16,35 +17,47 @@ import java.util.Set;
 
 /**
  * Builds and updates the custom cooking station inventory GUI.
+ *
+ * <p>Layout (4-row chest, 36 slots):</p>
+ * <pre>
+ *  Row 0: [X][X][I][I][I][I][I][X][X]   slots 2-6,  ingredient inputs
+ *  Row 1: [X][X][O][O][O][O][O][X][X]   slots 11-15, output buffer (5 slots)
+ *  Row 2: [X][X][X][X][P][X][X][X][X]   slot 22,    progress indicator
+ *  Row 3: [X][X][X][X][F][X][X][X][X]   slot 31,    fuel input
+ * </pre>
  */
 public class CookingStationGui {
 
-    /** Inventory slots that hold ingredients (internal indices into the 27-slot chest). */
-    public static final int[] INGREDIENT_SLOTS = {1, 2, 3, 4, 5};
+    /** Inventory slots that hold ingredients. */
+    public static final int[] INGREDIENT_SLOTS = {2, 3, 4, 5, 6};
 
-    /** Slot index of the fuel input. */
-    public static final int FUEL_SLOT = 22;
+    /** Inventory slots that hold output items; take-only. */
+    public static final int[] OUTPUT_SLOTS = {11, 12, 13, 14, 15};
 
     /** Slot index of the progress indicator (read-only). */
-    public static final int PROGRESS_SLOT = 16;
+    public static final int PROGRESS_SLOT = 22;
 
-    /** Slot index of the recipe output (take-only). */
-    public static final int OUTPUT_SLOT = 8;
+    /** Slot index of the fuel input. */
+    public static final int FUEL_SLOT = 31;
 
-    /** Slot index of the arrow separator between ingredient slots and the output (read-only). */
-    public static final int SEPARATOR_SLOT = 6;
+    /** PDC key stamped on placeholder glass pane items. */
+    public static final NamespacedKey PLACEHOLDER_KEY =
+            new NamespacedKey("sylphian-cooking", "placeholder");
 
-    /**
-     * PDC key stamped on all placeholder glass pane items.
-     * Used to distinguish placeholders from real items placed by players.
-     */
-    public static final NamespacedKey PLACEHOLDER_KEY = new NamespacedKey("sylphian-cooking", "placeholder");
-
-    /** All editable slot indices (ingredients, fuel, output). */
-    private static final Set<Integer> EDITABLE_SLOTS = Set.of(
+    /** Slots the player can place items into: ingredients and fuel only. */
+    private static final Set<Integer> PLACEABLE_SLOTS = Set.of(
             INGREDIENT_SLOTS[0], INGREDIENT_SLOTS[1], INGREDIENT_SLOTS[2],
             INGREDIENT_SLOTS[3], INGREDIENT_SLOTS[4],
-            FUEL_SLOT, OUTPUT_SLOT
+            FUEL_SLOT
+    );
+
+    /** All slots the player may interact with: ingredients, outputs (take-only), and fuel. */
+    private static final Set<Integer> INTERACTIVE_SLOTS = Set.of(
+            INGREDIENT_SLOTS[0], INGREDIENT_SLOTS[1], INGREDIENT_SLOTS[2],
+            INGREDIENT_SLOTS[3], INGREDIENT_SLOTS[4],
+            OUTPUT_SLOTS[0], OUTPUT_SLOTS[1], OUTPUT_SLOTS[2],
+            OUTPUT_SLOTS[3], OUTPUT_SLOTS[4],
+            FUEL_SLOT
     );
 
     private static final MiniMessage MINI = MiniMessage.miniMessage();
@@ -54,33 +67,35 @@ public class CookingStationGui {
      * Builds a fresh GUI inventory pre-populated from the given station state.
      *
      * @param state       the current station state
-     * @param stationType the Material of the block (used to locate it on close)
+     * @param stationType the block material
      * @return the constructed inventory
      */
     public Inventory build(CookingStationState state, Material stationType) {
         CookingStationHolder holder = new CookingStationHolder(null);
-        Inventory inv = Bukkit.createInventory(holder, 27, TITLE);
+        Inventory inv = Bukkit.createInventory(holder, 36, TITLE);
         holder.setInventory(inv);
 
         ItemStack filler = fillerPane();
-        for (int i = 0; i < 27; i++) {
-            if (!EDITABLE_SLOTS.contains(i) && i != PROGRESS_SLOT && i != SEPARATOR_SLOT) {
+        for (int i = 0; i < 36; i++) {
+            if (!INTERACTIVE_SLOTS.contains(i) && i != PROGRESS_SLOT) {
                 inv.setItem(i, filler);
             }
         }
 
-        inv.setItem(SEPARATOR_SLOT, separatorItem());
-
         for (int i = 0; i < CookingStationState.INGREDIENT_COUNT; i++) {
             ItemStack ing = state.getIngredient(i);
-            inv.setItem(INGREDIENT_SLOTS[i], (ing != null && !ing.getType().isAir()) ? ing.clone() : ingredientPlaceholder());
+            inv.setItem(INGREDIENT_SLOTS[i],
+                    isPresent(ing) ? ing.clone() : ingredientPlaceholder());
+        }
+
+        for (int i = 0; i < CookingStationState.OUTPUT_COUNT; i++) {
+            ItemStack out = state.getOutput(i);
+            inv.setItem(OUTPUT_SLOTS[i],
+                    isPresent(out) ? out.clone() : outputPlaceholder());
         }
 
         ItemStack fuel = state.getFuel();
-        inv.setItem(FUEL_SLOT, (fuel != null && !fuel.getType().isAir()) ? fuel.clone() : fuelPlaceholder());
-
-        ItemStack output = state.getOutput();
-        inv.setItem(OUTPUT_SLOT, (output != null && !output.getType().isAir()) ? output.clone() : outputPlaceholder());
+        inv.setItem(FUEL_SLOT, isPresent(fuel) ? fuel.clone() : fuelPlaceholder());
 
         inv.setItem(PROGRESS_SLOT, progressItem(state));
 
@@ -88,8 +103,7 @@ public class CookingStationGui {
     }
 
     /**
-     * Refreshes only the mutable display slots (output, fuel, ingredients, progress)
-     * without rebuilding the entire inventory. Safe to call from the tick loop.
+     * Refreshes the mutable display slots in an already-open inventory.
      *
      * @param inv   the open inventory to update
      * @param state the current station state
@@ -97,23 +111,24 @@ public class CookingStationGui {
     public void update(Inventory inv, CookingStationState state) {
         for (int i = 0; i < CookingStationState.INGREDIENT_COUNT; i++) {
             ItemStack ing = state.getIngredient(i);
-            inv.setItem(INGREDIENT_SLOTS[i], (ing != null && !ing.getType().isAir()) ? ing.clone() : ingredientPlaceholder());
+            inv.setItem(INGREDIENT_SLOTS[i],
+                    isPresent(ing) ? ing.clone() : ingredientPlaceholder());
+        }
+
+        for (int i = 0; i < CookingStationState.OUTPUT_COUNT; i++) {
+            ItemStack out = state.getOutput(i);
+            inv.setItem(OUTPUT_SLOTS[i],
+                    isPresent(out) ? out.clone() : outputPlaceholder());
         }
 
         ItemStack fuel = state.getFuel();
-        inv.setItem(FUEL_SLOT, (fuel != null && !fuel.getType().isAir()) ? fuel.clone() : fuelPlaceholder());
-
-        ItemStack output = state.getOutput();
-        inv.setItem(OUTPUT_SLOT, (output != null && !output.getType().isAir()) ? output.clone() : outputPlaceholder());
+        inv.setItem(FUEL_SLOT, isPresent(fuel) ? fuel.clone() : fuelPlaceholder());
 
         inv.setItem(PROGRESS_SLOT, progressItem(state));
     }
 
     /**
-     * Returns the ingredient slot index (0–4) for the given GUI slot, or -1 if not an ingredient slot.
-     *
-     * @param guiSlot the inventory slot index
-     * @return ingredient array index (0–4), or -1
+     * Returns the ingredient array index (0–4) for the given GUI slot, or -1 if not an ingredient slot.
      */
     public static int ingredientIndex(int guiSlot) {
         for (int i = 0; i < INGREDIENT_SLOTS.length; i++) {
@@ -123,23 +138,33 @@ public class CookingStationGui {
     }
 
     /**
-     * Returns true if items can be freely placed into and taken from this slot.
-     * The output slot is editable for taking but placement is handled separately.
+     * Returns the output array index (0–4) for the given GUI slot, or -1 if not an output slot.
      */
-    public static boolean isEditable(int guiSlot) {
-        return EDITABLE_SLOTS.contains(guiSlot);
+    public static int outputIndex(int guiSlot) {
+        for (int i = 0; i < OUTPUT_SLOTS.length; i++) {
+            if (OUTPUT_SLOTS[i] == guiSlot) return i;
+        }
+        return -1;
     }
 
-    private static ItemStack fillerPane() {
-        return new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build();
+    /** Returns true if the slot can be interacted with (place or take). */
+    public static boolean isInteractive(int guiSlot) {
+        return INTERACTIVE_SLOTS.contains(guiSlot);
+    }
+
+    /** Returns true if items can be placed into the slot (ingredients and fuel only). */
+    public static boolean isPlaceable(int guiSlot) {
+        return PLACEABLE_SLOTS.contains(guiSlot);
+    }
+
+    /** Returns true if the slot is one of the five output slots. */
+    public static boolean isOutputSlot(int guiSlot) {
+        return outputIndex(guiSlot) >= 0;
     }
 
     /**
-     * Builds the progress indicator item. Shows a flame / arrow symbol and
-     * current progress as a percentage in the lore.
-     *
-     * @param state the station state to read progress from
-     * @return the progress ItemStack
+     * Builds the progress indicator item showing cook progress, fuel status,
+     * and (when available) the quality tier of the last completed cycle.
      */
     private static ItemStack progressItem(CookingStationState state) {
         double fraction = state.cookProgressFraction();
@@ -152,10 +177,19 @@ public class CookingStationGui {
         String fuelLore;
         if (state.getFuelRemaining() > 0) {
             fuelLore = "<red>Fuel: " + formatTicks(state.getFuelRemaining());
-        } else if (state.getFuel() != null && !state.getFuel().getType().isAir()) {
+        } else if (isPresent(state.getFuel())) {
             fuelLore = "<gray>Fuel: ready to ignite";
         } else {
             fuelLore = "<dark_gray>No fuel";
+        }
+
+        CookingQuality lastQuality = state.getLastQuality();
+        if (lastQuality != null) {
+            return new ItemBuilder(mat)
+                    .name("<gold>Progress")
+                    .lore("<yellow>" + bar + " " + percent + "%", fuelLore,
+                            "<dark_gray>Last result: " + qualityLabel(lastQuality))
+                    .build();
         }
 
         return new ItemBuilder(mat)
@@ -164,14 +198,22 @@ public class CookingStationGui {
                 .build();
     }
 
+    private static String qualityLabel(CookingQuality quality) {
+        return switch (quality) {
+            case BURNT   -> "<dark_red>Burnt";
+            case PLAIN   -> "<gray>Plain";
+            case GOOD    -> "<green>Good";
+            case PERFECT -> "<gold>Perfect";
+        };
+    }
+
     private static String formatTicks(int ticks) {
         int seconds = ticks / 20;
         int minutes = seconds / 60;
-        int remainingSeconds = seconds % 60;
-        return minutes > 0 ? minutes + "m " + remainingSeconds + "s" : remainingSeconds + "s";
+        int remaining = seconds % 60;
+        return minutes > 0 ? minutes + "m " + remaining + "s" : remaining + "s";
     }
 
-    /** Builds a Unicode block progress bar of the given length. */
     private static String buildProgressBar(double fraction, int length) {
         int filled = (int) Math.round(fraction * length);
         StringBuilder sb = new StringBuilder("<dark_gray>[");
@@ -182,8 +224,8 @@ public class CookingStationGui {
         return sb.toString();
     }
 
-    private static ItemStack separatorItem() {
-        return new ItemBuilder(Material.ORANGE_STAINED_GLASS_PANE).name("<gray>▶").build();
+    private static ItemStack fillerPane() {
+        return new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build();
     }
 
     private static ItemStack ingredientPlaceholder() {
@@ -221,5 +263,9 @@ public class CookingStationGui {
         ItemMeta meta = item.getItemMeta();
         return meta != null && meta.getPersistentDataContainer()
                 .has(PLACEHOLDER_KEY, PersistentDataType.BOOLEAN);
+    }
+
+    private static boolean isPresent(ItemStack item) {
+        return item != null && !item.getType().isAir();
     }
 }

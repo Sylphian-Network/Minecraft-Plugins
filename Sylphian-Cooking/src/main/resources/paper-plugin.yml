@@ -14,8 +14,20 @@ dependencies:
     Sylphian-Items:
       load: BEFORE
       required: true
+    Sylphian-Skills:
+      load: BEFORE
+      required: false
+    Sylphian-Database:
+      load: BEFORE
+      required: true
+    CommandAPI:
+      load: BEFORE
+      required: true
 
 permissions:
   sylphian.cooking.admin:
     description: Administrative cooking commands (/sylphian-cooking).
     default: op
+  sylphian.cooking.book:
+    description: Open the recipe book (/cookbook).
+    default: true

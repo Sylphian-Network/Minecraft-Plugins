@@ -1,6 +1,7 @@
 package net.sylphian.minecraft.skills.gui;
 
 import net.sylphian.minecraft.skills.skill.ActiveAbility;
+import org.bukkit.block.Block;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.Nullable;
@@ -22,13 +23,16 @@ public final class AbilitySelectionHolder implements InventoryHolder {
 
     private final Map<Integer, ActiveAbility> slotMap;
     private final UUID ownerUuid;
+    private final @Nullable Block targetBlock;
 
     /**
-     * @param abilities the unlocked active abilities to display, in order
-     * @param ownerUuid UUID of the player who opened this menu
+     * @param abilities   the unlocked active abilities to display, in order
+     * @param ownerUuid   UUID of the player who opened this menu
+     * @param targetBlock the block that triggered the menu, or null if item-triggered
      */
-    public AbilitySelectionHolder(List<ActiveAbility> abilities, UUID ownerUuid) {
+    public AbilitySelectionHolder(List<ActiveAbility> abilities, UUID ownerUuid, @Nullable Block targetBlock) {
         this.ownerUuid = ownerUuid;
+        this.targetBlock = targetBlock;
 
         Map<Integer, ActiveAbility> map = new LinkedHashMap<>();
         int startSlot = (9 - abilities.size()) / 2;
@@ -36,6 +40,11 @@ public final class AbilitySelectionHolder implements InventoryHolder {
             map.put(startSlot + i, abilities.get(i));
         }
         this.slotMap = Collections.unmodifiableMap(map);
+    }
+
+    /** @return the block that triggered this menu, or null if it was item-triggered */
+    public @Nullable Block getTargetBlock() {
+        return targetBlock;
     }
 
     /**

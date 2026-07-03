@@ -71,7 +71,13 @@ public class RecipeConfigLoader {
             boolean valid = true;
             for (String raw : rawIngredients) {
                 if (raw.contains(":")) {
-                    specs.add(new NamespacedIngredientSpec(raw));
+                    try {
+                        specs.add(new NamespacedIngredientSpec(raw));
+                    } catch (IllegalArgumentException e) {
+                        logger.warning("Recipe '" + id + "' has invalid namespaced ingredient '" + raw + "', skipping recipe.");
+                        valid = false;
+                        break;
+                    }
                 } else {
                     try {
                         Material mat = Material.valueOf(raw.toUpperCase());
@@ -129,7 +135,9 @@ public class RecipeConfigLoader {
             if (!lore.isEmpty()) builder.loreStrings(lore);
             if (customModelData >= 0) builder.customModelData(customModelData);
 
-            recipes.add(new CookingRecipe(id, List.copyOf(specs), cookTime, builder.build()));
+            boolean qualityBonusEnabled = entry.getBoolean("quality-bonus", true);
+
+            recipes.add(new CookingRecipe(id, List.copyOf(specs), cookTime, builder.build(), qualityBonusEnabled, customModelData));
         }
 
         logger.info("Recipes loaded [" + recipes.size() + "] entries registered.");

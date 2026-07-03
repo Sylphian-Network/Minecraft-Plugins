@@ -3,9 +3,7 @@
 # =============================================================
 #
 # fuels:
-#   A map of Bukkit Material names to burn time in ticks.
-#   1 tick = 0.05 seconds. 20 ticks = 1 second.
-#   Reference: https://minecraft.wiki/w/Smelting#Fuel
+#   Bukkit Material names mapped to burn time in ticks (20 ticks = 1 second).
 #
 # =============================================================
 
@@ -32,3 +30,107 @@ fuels:
   LAVA_BUCKET: 20000
   DRIED_KELP_BLOCK: 4000
   BAMBOO: 50
+
+# =============================================================
+# Quality
+# =============================================================
+#
+# base-weights:
+#   Raw probability weights for each tier. Higher = more likely.
+#   Does not need to sum to any particular value.
+# level-bonus:
+#   Weight shifted from Burnt toward Perfect per skill level.
+#   Has no effect if Sylphian-Skills is not installed.
+# slot-bonus:
+#   Weight shifted from Burnt toward Good per ingredient slot above one.
+# tiers:
+#   lore-line: MiniMessage string appended to the output item's lore.
+#
+# =============================================================
+
+quality:
+  base-weights:
+    burnt:   15.0
+    plain:   55.0
+    good:    25.0
+    perfect:  5.0
+  level-bonus: 0.05
+  slot-bonus:  0.5
+  tiers:
+    burnt:
+      lore-line: "<dark_red>Badly burnt"
+    plain:
+      lore-line: "<gray>Cooked"
+    good:
+      lore-line: "<green>Well cooked"
+    perfect:
+      lore-line: "<gold>Perfectly cooked"
+
+# =============================================================
+# Mastery
+# =============================================================
+#
+# threshold:
+#   Cook count at which a recipe is considered mastered.
+# bonus:
+#   Weight shifted from Burnt toward Perfect on mastered recipes.
+# milestones:
+#   Cook counts that fire a mastery milestone event (rewarded by Sylphian-Skills).
+#
+# =============================================================
+
+mastery:
+  threshold: 50
+  bonus: 5.0
+  milestones:
+    - 50
+    - 100
+
+# =============================================================
+# Cooking Skill
+# =============================================================
+#
+# Ignored if Sylphian-Skills is not installed.
+#
+# xp-per-recipe:
+#   Base XP awarded on recipe completion, before quality and passive multipliers.
+# discovery-xp:
+#   One-time XP awarded the first time a player cooks a recipe.
+# milestone-xp:
+#   XP awarded each time a player reaches a mastery milestone for a recipe.
+#
+# Passive abilities (unlocked as the cooking skill levels):
+#   efficient-cook (Lv 10):  chance-percent to spare one ingredient per cook.
+#   seasoned-hands (Lv 20):  consecutive cooks build stacks raising quality and XP.
+#   quick-prep     (Lv 30):  reduction-percent flat cook-time reduction.
+#
+# Active abilities (sneak + right-click a cooking station to open the menu):
+#   banquet      (Lv 5):  AoE haste/regen/saturation buff for nearby players.
+#   second-wind  (Lv 15): instantly finishes the cook at the station.
+#   perfect-sear (Lv 25): the next dish cooked at the station rolls Perfect.
+#
+# =============================================================
+
+cooking-skill:
+  xp-per-recipe: 10
+  discovery-xp: 100
+  milestone-xp: 250
+  efficient-cook:
+    chance-percent: 15.0
+  quick-prep:
+    reduction-percent: 20.0
+  seasoned-hands:
+    max-stacks: 5
+    quality-per-stack: 2.0
+    xp-per-stack-percent: 5.0
+    reset-seconds: 30
+    reset-distance: 10.0
+  banquet:
+    radius: 8.0
+    duration-seconds: 30
+    amplifier: 0
+    cooldown-seconds: 600
+  second-wind:
+    cooldown-seconds: 60
+  perfect-sear:
+    cooldown-seconds: 300

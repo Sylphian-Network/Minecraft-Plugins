@@ -10,12 +10,15 @@ import java.util.List;
  * <p>A recipe specifies up to five ingredients (matched as an unordered multiset),
  * a cook time in ticks, and the ItemStack produced on completion.</p>
  *
- * @param id          unique recipe identifier from {@code recipes.yml}
- * @param ingredients ordered list of ingredient specs; 1–5 entries
- * @param cookTime    time in ticks required to complete this recipe
- * @param output      the ItemStack produced when cooking completes
+ * @param id                  unique recipe identifier from {@code recipes.yml}
+ * @param ingredients         ordered list of ingredient specs; 1–5 entries
+ * @param cookTime            time in ticks required to complete this recipe
+ * @param output              the ItemStack produced when cooking completes
+ * @param qualityBonusEnabled whether the mastery quality bonus applies to this recipe
+ * @param customModelData     custom model data float to apply to the output icon, or -1 if unset
  */
-public record CookingRecipe(String id, List<IngredientSpec> ingredients, int cookTime, ItemStack output) {
+public record CookingRecipe(String id, List<IngredientSpec> ingredients, int cookTime, ItemStack output,
+                            boolean qualityBonusEnabled, float customModelData) {
 
     /**
      * Returns true if the given ingredient slots satisfy this recipe.
