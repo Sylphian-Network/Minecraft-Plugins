@@ -62,9 +62,7 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#execute(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" tabindex="0">execute(CommandSourceStack, String[])</a></li>
-<li><a href="#suggest(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" tabindex="0">suggest(CommandSourceStack, String[])</a></li>
-<li><a href="#canUse(org.bukkit.command.CommandSender)" tabindex="0">canUse(CommandSender)</a></li>
+<li><a href="#register()" tabindex="0">register()</a></li>
 </ol>
 </li>
 </ol>
@@ -78,24 +76,14 @@ loadScripts(document, 'script');</script>
 <div class="inheritance">net.sylphian.minecraft.fishing.commands.SylphianFishingCommand</div>
 </div>
 <section class="class-description" id="class-description">
-<dl class="notes">
-<dt>All Implemented Interfaces:</dt>
-<dd><code>io.papermc.paper.command.brigadier.BasicCommand</code></dd>
-</dl>
 <hr>
 <div class="horizontal-scroll">
-<div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">SylphianFishingCommand</span>
-<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements io.papermc.paper.command.brigadier.BasicCommand</span></div>
-<div class="block">Root administrative command for Sylphian Fishing.
+<div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">SylphianFishingCommand</span>
+<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Builds and registers the operator-only <code>/sylphian-fishing</code> CommandAPI command tree.
 
-<p>Usage: <code>/sylphian-fishing &lt;subcommand&gt;</code></p>
-
-<ul>
-  <li><code>reload</code> — reloads config.yml and loot_table.yml without restarting</li>
-  <li><code>test-effect &lt;rarity&gt;</code> — triggers rarity catch effects at the player's target location</li>
-  <li><code>test-fishing &lt;count&gt; [biome] [weather] [y] [time]</code> — simulates fishing catches and prints distribution</li>
-</ul></div>
+<p>Subcommands: <code>reload</code>, <code>test-effect</code>, <code>test-fishing</code>.
+Requires <code>sylphian.fishing.admin</code>.</p></div>
 </div>
 </section>
 <section class="summary">
@@ -112,9 +100,7 @@ implements io.papermc.paper.command.brigadier.BasicCommand</span></div>
  <a href="../services/CatchEffectService.html" title="class in net.sylphian.minecraft.fishing.services">CatchEffectService</a>&nbsp;catchEffectService,
  <a href="../services/LootService.html" title="class in net.sylphian.minecraft.fishing.services">LootService</a>&nbsp;lootService,
  <a href="../services/FishMutationService.html" title="class in net.sylphian.minecraft.fishing.services">FishMutationService</a>&nbsp;mutationService)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Constructs a new SylphianFishingCommand.</div>
-</div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -129,22 +115,10 @@ implements io.papermc.paper.command.brigadier.BasicCommand</span></div>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canUse(org.bukkit.command.CommandSender)" class="member-name-link">canUse</a><wbr>(@NotNull org.bukkit.command.CommandSender&nbsp;sender)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#register()" class="member-name-link">register</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Restricts this command to senders with the admin permission.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#execute(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" class="member-name-link">execute</a><wbr>(@NotNull io.papermc.paper.command.brigadier.CommandSourceStack&nbsp;stack,
- @NotNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;args)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Routes execution to the appropriate subcommand handler.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NotNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#suggest(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String%5B%5D)" class="member-name-link">suggest</a><wbr>(@NotNull io.papermc.paper.command.brigadier.CommandSourceStack&nbsp;stack,
- @NotNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;args)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Provides tab completion for all subcommands and their arguments.</div>
+<div class="block">Builds the <code>/sylphian-fishing</code> tree with every admin subcommand and registers it with the CommandAPI.</div>
 </div>
 </div>
 </div>
@@ -152,9 +126,6 @@ implements io.papermc.paper.command.brigadier.BasicCommand</span></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#method-summary" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
-<div class="inherited-list">
-<h3 id="methods-inherited-from-class-io.papermc.paper.command.brigadier.BasicCommand">Methods inherited from interface&nbsp;io.papermc.paper.command.brigadier.BasicCommand</h3>
-<code>permission</code></div>
 </section>
 </li>
 </ul>
@@ -174,10 +145,9 @@ implements io.papermc.paper.command.brigadier.BasicCommand</span></div>
  <a href="../services/CatchEffectService.html" title="class in net.sylphian.minecraft.fishing.services">CatchEffectService</a>&nbsp;catchEffectService,
  <a href="../services/LootService.html" title="class in net.sylphian.minecraft.fishing.services">LootService</a>&nbsp;lootService,
  <a href="../services/FishMutationService.html" title="class in net.sylphian.minecraft.fishing.services">FishMutationService</a>&nbsp;mutationService)</span></div>
-<div class="block">Constructs a new SylphianFishingCommand.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>plugin</code> - the plugin instance used to trigger reloads</dd>
+<dd><code>plugin</code> - the owning plugin, used by the reload subcommand</dd>
 <dd><code>catchEffectService</code> - the service used to apply rarity catch effects</dd>
 <dd><code>lootService</code> - the loot service used for fishing simulations</dd>
 <dd><code>mutationService</code> - the mutation service used for simulation statistics</dd>
@@ -194,61 +164,11 @@ implements io.papermc.paper.command.brigadier.BasicCommand</span></div>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="execute(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String[])">
-<h3>execute</h3>
+<section class="detail" id="register()">
+<h3>register</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">execute</span><wbr><span class="parameters">(@NotNull
- @NotNull io.papermc.paper.command.brigadier.CommandSourceStack&nbsp;stack,
- @NotNull
- @NotNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;args)</span></div>
-<div class="block">Routes execution to the appropriate subcommand handler.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>execute</code>&nbsp;in interface&nbsp;<code>io.papermc.paper.command.brigadier.BasicCommand</code></dd>
-<dt>Parameters:</dt>
-<dd><code>stack</code> - the command source stack</dd>
-<dd><code>args</code> - the command arguments</dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="suggest(io.papermc.paper.command.brigadier.CommandSourceStack,java.lang.String[])">
-<h3>suggest</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="annotations">@NotNull
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NotNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">suggest</span><wbr><span class="parameters">(@NotNull
- @NotNull io.papermc.paper.command.brigadier.CommandSourceStack&nbsp;stack,
- @NotNull
- @NotNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;args)</span></div>
-<div class="block">Provides tab completion for all subcommands and their arguments.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>suggest</code>&nbsp;in interface&nbsp;<code>io.papermc.paper.command.brigadier.BasicCommand</code></dd>
-<dt>Parameters:</dt>
-<dd><code>stack</code> - the command source stack</dd>
-<dd><code>args</code> - the current arguments</dd>
-<dt>Returns:</dt>
-<dd>available suggestions for the current argument position</dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="canUse(org.bukkit.command.CommandSender)">
-<h3>canUse</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">canUse</span><wbr><span class="parameters">(@NotNull
- @NotNull org.bukkit.command.CommandSender&nbsp;sender)</span></div>
-<div class="block">Restricts this command to senders with the admin permission.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>canUse</code>&nbsp;in interface&nbsp;<code>io.papermc.paper.command.brigadier.BasicCommand</code></dd>
-<dt>Parameters:</dt>
-<dd><code>sender</code> - the command sender</dd>
-<dt>Returns:</dt>
-<dd>true if the sender has <code>sylphian.fishing.admin</code></dd>
-</dl>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">register</span>()</div>
+<div class="block">Builds the <code>/sylphian-fishing</code> tree with every admin subcommand and registers it with the CommandAPI.</div>
 </div>
 </section>
 </li>

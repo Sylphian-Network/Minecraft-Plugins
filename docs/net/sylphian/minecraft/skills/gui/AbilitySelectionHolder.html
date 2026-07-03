@@ -57,11 +57,12 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(java.util.List,java.util.UUID)" tabindex="0">AbilitySelectionHolder(List, UUID)</a></li>
+<li><a href="#%3Cinit%3E(java.util.List,java.util.UUID,org.bukkit.block.Block)" tabindex="0">AbilitySelectionHolder(List, UUID, Block)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
+<li><a href="#getTargetBlock()" tabindex="0">getTargetBlock()</a></li>
 <li><a href="#getAbilityAt(int)" tabindex="0">getAbilityAt(int)</a></li>
 <li><a href="#getSlotMap()" tabindex="0">getSlotMap()</a></li>
 <li><a href="#getOwnerUuid()" tabindex="0">getOwnerUuid()</a></li>
@@ -105,8 +106,9 @@ Slot positions are computed at construction time and exposed via
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.List,java.util.UUID)" class="member-name-link">AbilitySelectionHolder</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../skill/ActiveAbility.html" title="interface in net.sylphian.minecraft.skills.skill">ActiveAbility</a>&gt;&nbsp;abilities,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;ownerUuid)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.List,java.util.UUID,org.bukkit.block.Block)" class="member-name-link">AbilitySelectionHolder</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../skill/ActiveAbility.html" title="interface in net.sylphian.minecraft.skills.skill">ActiveAbility</a>&gt;&nbsp;abilities,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;ownerUuid,
+ @Nullable org.bukkit.block.Block&nbsp;targetBlock)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -134,6 +136,9 @@ Slot positions are computed at construction time and exposed via
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>, <a href="../skill/ActiveAbility.html" title="interface in net.sylphian.minecraft.skills.skill">ActiveAbility</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSlotMap()" class="member-name-link">getSlotMap</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable org.bukkit.block.Block</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTargetBlock()" class="member-name-link">getTargetBlock</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -152,15 +157,18 @@ Slot positions are computed at construction time and exposed via
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(java.util.List,java.util.UUID)">
+<section class="detail" id="&lt;init&gt;(java.util.List,java.util.UUID,org.bukkit.block.Block)">
 <h3>AbilitySelectionHolder</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">AbilitySelectionHolder</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../skill/ActiveAbility.html" title="interface in net.sylphian.minecraft.skills.skill">ActiveAbility</a>&gt;&nbsp;abilities,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;ownerUuid)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;ownerUuid,
+ @Nullable
+ @Nullable org.bukkit.block.Block&nbsp;targetBlock)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>abilities</code> - the unlocked active abilities to display, in order</dd>
 <dd><code>ownerUuid</code> - UUID of the player who opened this menu</dd>
+<dd><code>targetBlock</code> - the block that triggered the menu, or null if item-triggered</dd>
 </dl>
 </div>
 </section>
@@ -173,6 +181,19 @@ Slot positions are computed at construction time and exposed via
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="getTargetBlock()">
+<h3>getTargetBlock</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@Nullable
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable org.bukkit.block.Block</span>&nbsp;<span class="element-name">getTargetBlock</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the block that triggered this menu, or null if it was item-triggered</dd>
+</dl>
+</div>
+</section>
+</li>
 <li>
 <section class="detail" id="getAbilityAt(int)">
 <h3>getAbilityAt</h3>

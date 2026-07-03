@@ -61,6 +61,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#registerListeners(org.bukkit.plugin.Plugin,net.sylphian.minecraft.skills.api.SkillsAPI)" tabindex="0">registerListeners(Plugin, SkillsAPI)</a></li>
 <li><a href="#getAbilities()" tabindex="0">getAbilities()</a></li>
 <li><a href="#activationMaterial()" tabindex="0">activationMaterial()</a></li>
+<li><a href="#activationBlocks()" tabindex="0">activationBlocks()</a></li>
 <li><a href="#canInteract(org.bukkit.entity.Player,java.util.UUID)" tabindex="0">canInteract(Player, UUID)</a></li>
 <li><a href="#reload()" tabindex="0">reload()</a></li>
 </ol>
@@ -75,7 +76,7 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Known Implementing Classes:</dt>
-<dd><code><a href="AbstractSkill.html" title="class in net.sylphian.minecraft.skills.skill">AbstractSkill</a>, <a href="../../fishing/skill/FishingSkill.html" title="class in net.sylphian.minecraft.fishing.skill">FishingSkill</a></code></dd>
+<dd><code><a href="AbstractSkill.html" title="class in net.sylphian.minecraft.skills.skill">AbstractSkill</a>, <a href="../../cooking/skill/CookingSkill.html" title="class in net.sylphian.minecraft.cooking.skill">CookingSkill</a>, <a href="../../fishing/skill/FishingSkill.html" title="class in net.sylphian.minecraft.fishing.skill">FishingSkill</a></code></dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
@@ -100,39 +101,45 @@ Bukkit event listeners that award XP by calling back into
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;org.bukkit.Material&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#activationMaterial()" class="member-name-link">activationMaterial</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a><wbr>&lt;org.bukkit.Material&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#activationBlocks()" class="member-name-link">activationBlocks</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block">Block types that trigger the active-ability coordinator when a player
+sneak-right-clicks them, regardless of the item held.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;org.bukkit.Material&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#activationMaterial()" class="member-name-link">activationMaterial</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
 <div class="block">The item material a player must be holding for the framework's active-ability
 coordinator to intercept sneak-right-click gestures.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#canInteract(org.bukkit.entity.Player,java.util.UUID)" class="member-name-link">canInteract</a><wbr>(org.bukkit.entity.Player&nbsp;player,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#canInteract(org.bukkit.entity.Player,java.util.UUID)" class="member-name-link">canInteract</a><wbr>(org.bukkit.entity.Player&nbsp;player,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
 <div class="block">Returns <code>false</code> to suppress active-ability activation for this player
 right now, without cancelling the underlying item interaction.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="Ability.html" title="interface in net.sylphian.minecraft.skills.skill">Ability</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#getAbilities()" class="member-name-link">getAbilities</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="Ability.html" title="interface in net.sylphian.minecraft.skills.skill">Ability</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#getAbilities()" class="member-name-link">getAbilities</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
 <div class="block">Returns the abilities unlocked as the player levels up this skill.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getDisplayName()" class="member-name-link">getDisplayName</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getId()" class="member-name-link">getId</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getDisplayName()" class="member-name-link">getDisplayName</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#registerListeners(org.bukkit.plugin.Plugin,net.sylphian.minecraft.skills.api.SkillsAPI)" class="member-name-link">registerListeners</a><wbr>(org.bukkit.plugin.Plugin&nbsp;plugin,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getId()" class="member-name-link">getId</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#registerListeners(org.bukkit.plugin.Plugin,net.sylphian.minecraft.skills.api.SkillsAPI)" class="member-name-link">registerListeners</a><wbr>(org.bukkit.plugin.Plugin&nbsp;plugin,
  <a href="../api/SkillsAPI.html" title="interface in net.sylphian.minecraft.skills.api">SkillsAPI</a>&nbsp;api)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Registers this skill's Bukkit event listeners with the server.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#reload()" class="member-name-link">reload</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#reload()" class="member-name-link">reload</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
 <div class="block">Called when the owning plugin reloads its config.</div>
 </div>
 </div>
@@ -214,6 +221,22 @@ Return <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/jav
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the trigger material, or empty if not applicable</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="activationBlocks()">
+<h3>activationBlocks</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;org.bukkit.Material&gt;</span>&nbsp;<span class="element-name">activationBlocks</span>()</div>
+<div class="block">Block types that trigger the active-ability coordinator when a player
+sneak-right-clicks them, regardless of the item held. The clicked block is
+passed to <a href="ActiveAbility.html#onActivate(org.bukkit.entity.Player,java.util.UUID,org.bukkit.block.Block)"><code>ActiveAbility.onActivate(Player, UUID, org.bukkit.block.Block)</code></a>.
+Return an empty set for skills that activate from a held item instead.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the trigger block types, or an empty set if not applicable</dd>
 </dl>
 </div>
 </section>

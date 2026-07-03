@@ -57,24 +57,29 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(org.bukkit.plugin.java.JavaPlugin,java.util.List,java.util.Map,net.sylphian.minecraft.cooking.gui.CookingStationGui)" tabindex="0">CookingStationService(JavaPlugin, List, Map, CookingStationGui)</a></li>
+<li><a href="#%3Cinit%3E(org.bukkit.plugin.java.JavaPlugin,java.util.List,java.util.Map,net.sylphian.minecraft.cooking.gui.CookingStationGui,net.sylphian.minecraft.cooking.config.CookingConfig)" tabindex="0">CookingStationService(JavaPlugin, List, Map, CookingStationGui, CookingConfig)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
+<li><a href="#setLevelProvider(java.util.function.Function)" tabindex="0">setLevelProvider(Function)</a></li>
+<li><a href="#setMasteryAccessor(net.sylphian.minecraft.cooking.mastery.MasteryAccessor)" tabindex="0">setMasteryAccessor(MasteryAccessor)</a></li>
 <li><a href="#start()" tabindex="0">start()</a></li>
 <li><a href="#shutdown()" tabindex="0">shutdown()</a></li>
 <li><a href="#openStation(org.bukkit.entity.Player,org.bukkit.block.Block)" tabindex="0">openStation(Player, Block)</a></li>
 <li><a href="#syncFromInventory(org.bukkit.entity.Player,org.bukkit.inventory.Inventory)" tabindex="0">syncFromInventory(Player, Inventory)</a></li>
+<li><a href="#takeOutput(org.bukkit.entity.Player,int,int)" tabindex="0">takeOutput(Player, int, int)</a></li>
 <li><a href="#closeStation(org.bukkit.entity.Player)" tabindex="0">closeStation(Player)</a></li>
 <li><a href="#getOpenStationLocation(java.util.UUID)" tabindex="0">getOpenStationLocation(UUID)</a></li>
 <li><a href="#getState(org.bukkit.Location)" tabindex="0">getState(Location)</a></li>
 <li><a href="#destroyStation(org.bukkit.block.Block)" tabindex="0">destroyStation(Block)</a></li>
 <li><a href="#setIngredient(org.bukkit.entity.Player,int,org.bukkit.inventory.ItemStack)" tabindex="0">setIngredient(Player, int, ItemStack)</a></li>
 <li><a href="#setFuel(org.bukkit.entity.Player,org.bukkit.inventory.ItemStack)" tabindex="0">setFuel(Player, ItemStack)</a></li>
-<li><a href="#clearOutput(org.bukkit.entity.Player)" tabindex="0">clearOutput(Player)</a></li>
 <li><a href="#isValidFuel(org.bukkit.inventory.ItemStack)" tabindex="0">isValidFuel(ItemStack)</a></li>
-<li><a href="#reload(java.util.List,java.util.Map)" tabindex="0">reload(List, Map)</a></li>
+<li><a href="#rushCook(org.bukkit.entity.Player,java.util.UUID)" tabindex="0">rushCook(Player, UUID)</a></li>
+<li><a href="#rushCookAt(org.bukkit.block.Block,java.util.UUID)" tabindex="0">rushCookAt(Block, UUID)</a></li>
+<li><a href="#armPerfectSear(org.bukkit.block.Block)" tabindex="0">armPerfectSear(Block)</a></li>
+<li><a href="#reload(java.util.List,java.util.Map,net.sylphian.minecraft.cooking.config.CookingConfig)" tabindex="0">reload(List, Map, CookingConfig)</a></li>
 </ol>
 </li>
 </ol>
@@ -92,15 +97,11 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">CookingStationService</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Manages the lifecycle of all active cooking stations.
-
-<p>Stations are loaded from PDC on first interaction and held in an in-memory map
-for the duration of their activity. The service runs a tick loop every 20 game
-ticks (once per second) that advances cook progress and consumes fuel for any
-station that has a matching recipe and remaining fuel.</p>
-
-<p>When a station becomes fully idle (no ingredients, no fuel, no output, no
-viewers) it is evicted from memory and its PDC is cleared.</p></div>
+<div class="block">Manages all active cooking stations: loads state from block PDC, runs the once-per-second tick
+loop that advances cooking and consumes fuel, and fires <a href="../event/CookingStartEvent.html" title="class in net.sylphian.minecraft.cooking.event"><code>CookingStartEvent</code></a> /
+<a href="../event/CookingCompleteEvent.html" title="class in net.sylphian.minecraft.cooking.event"><code>CookingCompleteEvent</code></a> so skills can adjust cook time, quality, and XP. Output fills five
+slots; when none can take the result the item drops at the block. Stations with no viewers that
+cannot progress are persisted to PDC and evicted.</div>
 </div>
 </section>
 <section class="summary">
@@ -113,13 +114,12 @@ viewers) it is evicted from memory and its PDC is cleared.</p></div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(org.bukkit.plugin.java.JavaPlugin,java.util.List,java.util.Map,net.sylphian.minecraft.cooking.gui.CookingStationGui)" class="member-name-link">CookingStationService</a><wbr>(org.bukkit.plugin.java.JavaPlugin&nbsp;plugin,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(org.bukkit.plugin.java.JavaPlugin,java.util.List,java.util.Map,net.sylphian.minecraft.cooking.gui.CookingStationGui,net.sylphian.minecraft.cooking.config.CookingConfig)" class="member-name-link">CookingStationService</a><wbr>(org.bukkit.plugin.java.JavaPlugin&nbsp;plugin,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../recipe/CookingRecipe.html" title="class in net.sylphian.minecraft.cooking.recipe">CookingRecipe</a>&gt;&nbsp;recipes,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;org.bukkit.Material, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;fuels,
- <a href="../gui/CookingStationGui.html" title="class in net.sylphian.minecraft.cooking.gui">CookingStationGui</a>&nbsp;gui)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Constructs a new CookingStationService.</div>
-</div>
+ <a href="../gui/CookingStationGui.html" title="class in net.sylphian.minecraft.cooking.gui">CookingStationGui</a>&nbsp;gui,
+ <a href="../config/CookingConfig.html" title="class in net.sylphian.minecraft.cooking.config">CookingConfig</a>&nbsp;config)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -135,9 +135,9 @@ viewers) it is evicted from memory and its PDC is cleared.</p></div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearOutput(org.bukkit.entity.Player)" class="member-name-link">clearOutput</a><wbr>(org.bukkit.entity.Player&nbsp;player)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#armPerfectSear(org.bukkit.block.Block)" class="member-name-link">armPerfectSear</a><wbr>(org.bukkit.block.Block&nbsp;block)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Clears the output slot of the station currently open for the player.</div>
+<div class="block">Primes the given station so its next completed quality cook rolls Perfect.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#closeStation(org.bukkit.entity.Player)" class="member-name-link">closeStation</a><wbr>(org.bukkit.entity.Player&nbsp;player)</code></div>
@@ -149,19 +149,18 @@ viewers) it is evicted from memory and its PDC is cleared.</p></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Handles the destruction of a cooking station block.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.bukkit.Location</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable org.bukkit.Location</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getOpenStationLocation(java.util.UUID)" class="member-name-link">getOpenStationLocation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the location of the station currently open for the given player,
-or null if they have no station open.</div>
+<div class="block">Returns the location of the station currently open for the given player, or null.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CookingStationState.html" title="class in net.sylphian.minecraft.cooking.station">CookingStationState</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable <a href="CookingStationState.html" title="class in net.sylphian.minecraft.cooking.station">CookingStationState</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getState(org.bukkit.Location)" class="member-name-link">getState</a><wbr>(org.bukkit.Location&nbsp;location)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the in-memory state of the station at the given location, or null.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isValidFuel(org.bukkit.inventory.ItemStack)" class="member-name-link">isValidFuel</a><wbr>(org.bukkit.inventory.ItemStack&nbsp;item)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isValidFuel(org.bukkit.inventory.ItemStack)" class="member-name-link">isValidFuel</a><wbr>(@Nullable org.bukkit.inventory.ItemStack&nbsp;item)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns true if the given item is a recognised fuel.</div>
 </div>
@@ -172,23 +171,48 @@ or null if they have no station open.</div>
 <div class="block">Opens the cooking station GUI for the given player at the given block.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reload(java.util.List,java.util.Map)" class="member-name-link">reload</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../recipe/CookingRecipe.html" title="class in net.sylphian.minecraft.cooking.recipe">CookingRecipe</a>&gt;&nbsp;newRecipes,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;org.bukkit.Material, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;newFuels)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reload(java.util.List,java.util.Map,net.sylphian.minecraft.cooking.config.CookingConfig)" class="member-name-link">reload</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../recipe/CookingRecipe.html" title="class in net.sylphian.minecraft.cooking.recipe">CookingRecipe</a>&gt;&nbsp;newRecipes,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;org.bukkit.Material, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;newFuels,
+ <a href="../config/CookingConfig.html" title="class in net.sylphian.minecraft.cooking.config">CookingConfig</a>&nbsp;newConfig)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Replaces the recipe and fuel lists used for future ticks.</div>
+<div class="block">Replaces the recipe list, fuel list, and config used for future ticks.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rushCook(org.bukkit.entity.Player,java.util.UUID)" class="member-name-link">rushCook</a><wbr>(org.bukkit.entity.Player&nbsp;player,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;activatorUuid)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Immediately completes the current recipe at the station the given player has open,
+attributing the completion to <code>activatorUuid</code>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rushCookAt(org.bukkit.block.Block,java.util.UUID)" class="member-name-link">rushCookAt</a><wbr>(org.bukkit.block.Block&nbsp;block,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;activatorUuid)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Immediately completes the current recipe at the given station block, attributing the
+completion to <code>activatorUuid</code>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setFuel(org.bukkit.entity.Player,org.bukkit.inventory.ItemStack)" class="member-name-link">setFuel</a><wbr>(org.bukkit.entity.Player&nbsp;player,
- org.bukkit.inventory.ItemStack&nbsp;item)</code></div>
+ @Nullable org.bukkit.inventory.ItemStack&nbsp;item)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Applies a change to the fuel slot of the station currently open for the player.</div>
+<div class="block">Applies a change to the fuel slot of the station the player has open.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setIngredient(org.bukkit.entity.Player,int,org.bukkit.inventory.ItemStack)" class="member-name-link">setIngredient</a><wbr>(org.bukkit.entity.Player&nbsp;player,
  int&nbsp;ingredientIdx,
- org.bukkit.inventory.ItemStack&nbsp;item)</code></div>
+ @Nullable org.bukkit.inventory.ItemStack&nbsp;item)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Applies a change to an ingredient slot of the station currently open for the player.</div>
+<div class="block">Applies a change to an ingredient slot of the station the player has open.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setLevelProvider(java.util.function.Function)" class="member-name-link">setLevelProvider</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;levelProvider)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the provider used to look up a player's cooking skill level.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMasteryAccessor(net.sylphian.minecraft.cooking.mastery.MasteryAccessor)" class="member-name-link">setMasteryAccessor</a><wbr>(<a href="../mastery/MasteryAccessor.html" title="interface in net.sylphian.minecraft.cooking.mastery">MasteryAccessor</a>&nbsp;masteryAccessor)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the mastery accessor used to read and record per-player recipe cook counts.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#shutdown()" class="member-name-link">shutdown</a>()</code></div>
@@ -206,6 +230,14 @@ or null if they have no station open.</div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Flushes the current contents of an open GUI inventory directly into the in-memory
 station state.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable org.bukkit.inventory.ItemStack</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#takeOutput(org.bukkit.entity.Player,int,int)" class="member-name-link">takeOutput</a><wbr>(org.bukkit.entity.Player&nbsp;player,
+ int&nbsp;idx,
+ int&nbsp;amount)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Removes up to <code>amount</code> items from the given output slot of the station the
+player has open and returns the removed stack.</div>
 </div>
 </div>
 </div>
@@ -225,20 +257,21 @@ station state.</div>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(org.bukkit.plugin.java.JavaPlugin,java.util.List,java.util.Map,net.sylphian.minecraft.cooking.gui.CookingStationGui)">
+<section class="detail" id="&lt;init&gt;(org.bukkit.plugin.java.JavaPlugin,java.util.List,java.util.Map,net.sylphian.minecraft.cooking.gui.CookingStationGui,net.sylphian.minecraft.cooking.config.CookingConfig)">
 <h3>CookingStationService</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CookingStationService</span><wbr><span class="parameters">(org.bukkit.plugin.java.JavaPlugin&nbsp;plugin,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../recipe/CookingRecipe.html" title="class in net.sylphian.minecraft.cooking.recipe">CookingRecipe</a>&gt;&nbsp;recipes,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;org.bukkit.Material, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;fuels,
- <a href="../gui/CookingStationGui.html" title="class in net.sylphian.minecraft.cooking.gui">CookingStationGui</a>&nbsp;gui)</span></div>
-<div class="block">Constructs a new CookingStationService.</div>
+ <a href="../gui/CookingStationGui.html" title="class in net.sylphian.minecraft.cooking.gui">CookingStationGui</a>&nbsp;gui,
+ <a href="../config/CookingConfig.html" title="class in net.sylphian.minecraft.cooking.config">CookingConfig</a>&nbsp;config)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>plugin</code> - the owning plugin</dd>
 <dd><code>recipes</code> - all loaded cooking recipes</dd>
-<dd><code>fuels</code> - map of fuel material → burn time in ticks</dd>
+<dd><code>fuels</code> - map of fuel material to burn time in ticks</dd>
 <dd><code>gui</code> - the GUI factory used to open and update station inventories</dd>
+<dd><code>config</code> - the core cooking config (quality weights, formats, mastery)</dd>
 </dl>
 </div>
 </section>
@@ -251,6 +284,34 @@ station state.</div>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="setLevelProvider(java.util.function.Function)">
+<h3>setLevelProvider</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setLevelProvider</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;levelProvider)</span></div>
+<div class="block">Sets the provider used to look up a player's cooking skill level.
+Call from <code>SkillsBridge</code> once Sylphian-Skills is confirmed present.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>levelProvider</code> - function returning the skill level for a given UUID</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setMasteryAccessor(net.sylphian.minecraft.cooking.mastery.MasteryAccessor)">
+<h3>setMasteryAccessor</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setMasteryAccessor</span><wbr><span class="parameters">(<a href="../mastery/MasteryAccessor.html" title="interface in net.sylphian.minecraft.cooking.mastery">MasteryAccessor</a>&nbsp;masteryAccessor)</span></div>
+<div class="block">Sets the mastery accessor used to read and record per-player recipe cook counts.
+Call from <code>SylphianCooking.onEnable()</code> after the mastery manager is ready.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>masteryAccessor</code> - the mastery accessor</dd>
+</dl>
+</div>
+</section>
+</li>
 <li>
 <section class="detail" id="start()">
 <h3>start</h3>
@@ -265,8 +326,7 @@ station state.</div>
 <h3>shutdown</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">shutdown</span>()</div>
-<div class="block">Stops the tick loop and persists all active station states to PDC.
-Call from <code>JavaPlugin.onDisable()</code>.</div>
+<div class="block">Stops the tick loop and persists all active station states to PDC.</div>
 </div>
 </section>
 </li>
@@ -278,11 +338,6 @@ Call from <code>JavaPlugin.onDisable()</code>.</div>
  org.bukkit.block.Block&nbsp;block)</span></div>
 <div class="block">Opens the cooking station GUI for the given player at the given block.
 Loads PDC state if this is the first time the station is being accessed.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>player</code> - the player opening the station</dd>
-<dd><code>block</code> - the furnace or campfire block</dd>
-</dl>
 </div>
 </section>
 </li>
@@ -294,15 +349,28 @@ Loads PDC state if this is the first time the station is being accessed.</div>
  org.bukkit.inventory.Inventory&nbsp;inv)</span></div>
 <div class="block">Flushes the current contents of an open GUI inventory directly into the in-memory
 station state. Call this before <a href="#closeStation(org.bukkit.entity.Player)"><code>closeStation(Player)</code></a> to guarantee that any items
-moved in the same tick as the close are captured before the PDC write.
-
-<p>This exists because deferred 1-tick syncs scheduled during click handling race
-against <code>InventoryCloseEvent</code>: the close fires on the same tick as the click,
-so a pending sync task may not have run yet when the state is persisted.</p></div>
+moved in the same tick as the close are captured before the PDC write.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="takeOutput(org.bukkit.entity.Player,int,int)">
+<h3>takeOutput</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable org.bukkit.inventory.ItemStack</span>&nbsp;<span class="element-name">takeOutput</span><wbr><span class="parameters">(org.bukkit.entity.Player&nbsp;player,
+ int&nbsp;idx,
+ int&nbsp;amount)</span></div>
+<div class="block">Removes up to <code>amount</code> items from the given output slot of the station the
+player has open and returns the removed stack. The station state is updated
+synchronously and viewers are refreshed, so a removed item cannot be repainted
+back by a concurrent tick refresh.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>player</code> - the player closing the station</dd>
-<dd><code>inv</code> - the station's GUI inventory at close time</dd>
+<dd><code>player</code> - the player taking the output</dd>
+<dd><code>idx</code> - the output slot index (0–4)</dd>
+<dd><code>amount</code> - the maximum number of items to remove</dd>
+<dt>Returns:</dt>
+<dd>the removed stack, or null if nothing could be taken</dd>
 </dl>
 </div>
 </section>
@@ -312,12 +380,7 @@ so a pending sync task may not have run yet when the state is persisted.</p></di
 <h3>closeStation</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">closeStation</span><wbr><span class="parameters">(org.bukkit.entity.Player&nbsp;player)</span></div>
-<div class="block">Called when a player closes their cooking station GUI.
-Saves state to PDC and evicts the station from memory if it is now idle.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>player</code> - the player who closed the GUI</dd>
-</dl>
+<div class="block">Called when a player closes their cooking station GUI. Saves state to PDC and evicts if idle.</div>
 </div>
 </section>
 </li>
@@ -325,9 +388,8 @@ Saves state to PDC and evicts the station from memory if it is now idle.</div>
 <section class="detail" id="getOpenStationLocation(java.util.UUID)">
 <h3>getOpenStationLocation</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">org.bukkit.Location</span>&nbsp;<span class="element-name">getOpenStationLocation</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid)</span></div>
-<div class="block">Returns the location of the station currently open for the given player,
-or null if they have no station open.</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable org.bukkit.Location</span>&nbsp;<span class="element-name">getOpenStationLocation</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid)</span></div>
+<div class="block">Returns the location of the station currently open for the given player, or null.</div>
 </div>
 </section>
 </li>
@@ -335,7 +397,7 @@ or null if they have no station open.</div>
 <section class="detail" id="getState(org.bukkit.Location)">
 <h3>getState</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CookingStationState.html" title="class in net.sylphian.minecraft.cooking.station">CookingStationState</a></span>&nbsp;<span class="element-name">getState</span><wbr><span class="parameters">(org.bukkit.Location&nbsp;location)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable <a href="CookingStationState.html" title="class in net.sylphian.minecraft.cooking.station">CookingStationState</a></span>&nbsp;<span class="element-name">getState</span><wbr><span class="parameters">(org.bukkit.Location&nbsp;location)</span></div>
 <div class="block">Returns the in-memory state of the station at the given location, or null.</div>
 </div>
 </section>
@@ -346,12 +408,7 @@ or null if they have no station open.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">destroyStation</span><wbr><span class="parameters">(org.bukkit.block.Block&nbsp;block)</span></div>
 <div class="block">Handles the destruction of a cooking station block.
-Closes any open GUIs, drops stored items at the block's location,
-removes in-memory state, and clears PDC.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>block</code> - the block being destroyed</dd>
-</dl>
+Closes any open GUIs, drops stored items, removes in-memory state, and clears PDC.</div>
 </div>
 </section>
 </li>
@@ -361,14 +418,8 @@ removes in-memory state, and clears PDC.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setIngredient</span><wbr><span class="parameters">(org.bukkit.entity.Player&nbsp;player,
  int&nbsp;ingredientIdx,
- org.bukkit.inventory.ItemStack&nbsp;item)</span></div>
-<div class="block">Applies a change to an ingredient slot of the station currently open for the player.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>player</code> - the player interacting</dd>
-<dd><code>ingredientIdx</code> - ingredient slot index (0–4)</dd>
-<dd><code>item</code> - the new item (null to clear)</dd>
-</dl>
+ @Nullable org.bukkit.inventory.ItemStack&nbsp;item)</span></div>
+<div class="block">Applies a change to an ingredient slot of the station the player has open.</div>
 </div>
 </section>
 </li>
@@ -377,17 +428,8 @@ removes in-memory state, and clears PDC.</div>
 <h3>setFuel</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setFuel</span><wbr><span class="parameters">(org.bukkit.entity.Player&nbsp;player,
- org.bukkit.inventory.ItemStack&nbsp;item)</span></div>
-<div class="block">Applies a change to the fuel slot of the station currently open for the player.</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="clearOutput(org.bukkit.entity.Player)">
-<h3>clearOutput</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearOutput</span><wbr><span class="parameters">(org.bukkit.entity.Player&nbsp;player)</span></div>
-<div class="block">Clears the output slot of the station currently open for the player.</div>
+ @Nullable org.bukkit.inventory.ItemStack&nbsp;item)</span></div>
+<div class="block">Applies a change to the fuel slot of the station the player has open.</div>
 </div>
 </section>
 </li>
@@ -395,23 +437,56 @@ removes in-memory state, and clears PDC.</div>
 <section class="detail" id="isValidFuel(org.bukkit.inventory.ItemStack)">
 <h3>isValidFuel</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isValidFuel</span><wbr><span class="parameters">(org.bukkit.inventory.ItemStack&nbsp;item)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isValidFuel</span><wbr><span class="parameters">(@Nullable org.bukkit.inventory.ItemStack&nbsp;item)</span></div>
 <div class="block">Returns true if the given item is a recognised fuel.</div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="reload(java.util.List,java.util.Map)">
+<section class="detail" id="rushCook(org.bukkit.entity.Player,java.util.UUID)">
+<h3>rushCook</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">rushCook</span><wbr><span class="parameters">(org.bukkit.entity.Player&nbsp;player,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;activatorUuid)</span></div>
+<div class="block">Immediately completes the current recipe at the station the given player has open,
+attributing the completion to <code>activatorUuid</code>. Used by active cooking abilities.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="rushCookAt(org.bukkit.block.Block,java.util.UUID)">
+<h3>rushCookAt</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">rushCookAt</span><wbr><span class="parameters">(org.bukkit.block.Block&nbsp;block,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;activatorUuid)</span></div>
+<div class="block">Immediately completes the current recipe at the given station block, attributing the
+completion to <code>activatorUuid</code>. Loads the station from PDC if it is not resident.
+Used by the Second Wind active ability.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>true if a recipe was active and completed, false if there was nothing to cook</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="armPerfectSear(org.bukkit.block.Block)">
+<h3>armPerfectSear</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">armPerfectSear</span><wbr><span class="parameters">(org.bukkit.block.Block&nbsp;block)</span></div>
+<div class="block">Primes the given station so its next completed quality cook rolls Perfect.
+Loads the station from PDC if it is not resident. Used by the Perfect Sear active ability.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="reload(java.util.List,java.util.Map,net.sylphian.minecraft.cooking.config.CookingConfig)">
 <h3>reload</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">reload</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../recipe/CookingRecipe.html" title="class in net.sylphian.minecraft.cooking.recipe">CookingRecipe</a>&gt;&nbsp;newRecipes,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;org.bukkit.Material, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;newFuels)</span></div>
-<div class="block">Replaces the recipe and fuel lists used for future ticks.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>newRecipes</code> - updated recipe list</dd>
-<dd><code>newFuels</code> - updated fuel map</dd>
-</dl>
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;org.bukkit.Material, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;newFuels,
+ <a href="../config/CookingConfig.html" title="class in net.sylphian.minecraft.cooking.config">CookingConfig</a>&nbsp;newConfig)</span></div>
+<div class="block">Replaces the recipe list, fuel list, and config used for future ticks.</div>
 </div>
 </section>
 </li>

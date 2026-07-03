@@ -64,6 +64,8 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#onEnable()" tabindex="0">onEnable()</a></li>
 <li><a href="#onDisable()" tabindex="0">onDisable()</a></li>
+<li><a href="#getStationService()" tabindex="0">getStationService()</a></li>
+<li><a href="#getMasteryRepository()" tabindex="0">getMasteryRepository()</a></li>
 <li><a href="#reload(org.bukkit.command.CommandSender)" tabindex="0">reload(CommandSender)</a></li>
 </ol>
 </li>
@@ -122,6 +124,12 @@ and the Sylphian-Items item registry on enable; tears everything down on disable
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="db/repositories/CookingMasteryRepository.html" title="class in net.sylphian.minecraft.cooking.db.repositories">CookingMasteryRepository</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMasteryRepository()" class="member-name-link">getMasteryRepository</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="station/CookingStationService.html" title="class in net.sylphian.minecraft.cooking.station">CookingStationService</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getStationService()" class="member-name-link">getStationService</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onDisable()" class="member-name-link">onDisable</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -200,6 +208,30 @@ data into the running service without restarting the plugin.</div>
 <dd><code>onDisable</code>&nbsp;in interface&nbsp;<code>org.bukkit.plugin.Plugin</code></dd>
 <dt>Overrides:</dt>
 <dd><code>onDisable</code>&nbsp;in class&nbsp;<code>org.bukkit.plugin.java.JavaPlugin</code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getStationService()">
+<h3>getStationService</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="station/CookingStationService.html" title="class in net.sylphian.minecraft.cooking.station">CookingStationService</a></span>&nbsp;<span class="element-name">getStationService</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the cooking station service</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getMasteryRepository()">
+<h3>getMasteryRepository</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="db/repositories/CookingMasteryRepository.html" title="class in net.sylphian.minecraft.cooking.db.repositories">CookingMasteryRepository</a></span>&nbsp;<span class="element-name">getMasteryRepository</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the mastery repository</dd>
 </dl>
 </div>
 </section>

@@ -85,12 +85,14 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="CookingStationPdc.html" title="class in net.sylphian.minecraft.cooking.station">CookingStationPdc</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Handles serialization and deserialization of <a href="CookingStationState.html" title="class in net.sylphian.minecraft.cooking.station"><code>CookingStationState</code></a> to and
-from the <code>PersistentDataContainer</code> of a block entity (furnace or campfire).</div>
+<div class="block">Serializes <a href="CookingStationState.html" title="class in net.sylphian.minecraft.cooking.station"><code>CookingStationState</code></a> to and from a block entity's <code>PersistentDataContainer</code>
+under the <code>sylphian-cooking</code> namespace.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CookingStationService.html" title="class in net.sylphian.minecraft.cooking.station">CookingStationService</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Manages the lifecycle of all active cooking stations.</div>
+<div class="block">Manages all active cooking stations: loads state from block PDC, runs the once-per-second tick
+loop that advances cooking and consumes fuel, and fires <a href="../event/CookingStartEvent.html" title="class in net.sylphian.minecraft.cooking.event"><code>CookingStartEvent</code></a> /
+<a href="../event/CookingCompleteEvent.html" title="class in net.sylphian.minecraft.cooking.event"><code>CookingCompleteEvent</code></a> so skills can adjust cook time, quality, and XP.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="CookingStationState.html" title="class in net.sylphian.minecraft.cooking.station">CookingStationState</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">

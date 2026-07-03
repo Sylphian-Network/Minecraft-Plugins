@@ -59,10 +59,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#field-detail" tabindex="0">Field Details</a>
 <ol class="toc-list">
 <li><a href="#INGREDIENT_SLOTS" tabindex="0">INGREDIENT_SLOTS</a></li>
-<li><a href="#FUEL_SLOT" tabindex="0">FUEL_SLOT</a></li>
+<li><a href="#OUTPUT_SLOTS" tabindex="0">OUTPUT_SLOTS</a></li>
 <li><a href="#PROGRESS_SLOT" tabindex="0">PROGRESS_SLOT</a></li>
-<li><a href="#OUTPUT_SLOT" tabindex="0">OUTPUT_SLOT</a></li>
-<li><a href="#SEPARATOR_SLOT" tabindex="0">SEPARATOR_SLOT</a></li>
+<li><a href="#FUEL_SLOT" tabindex="0">FUEL_SLOT</a></li>
 <li><a href="#PLACEHOLDER_KEY" tabindex="0">PLACEHOLDER_KEY</a></li>
 </ol>
 </li>
@@ -76,7 +75,10 @@ loadScripts(document, 'script');</script>
 <li><a href="#build(net.sylphian.minecraft.cooking.station.CookingStationState,org.bukkit.Material)" tabindex="0">build(CookingStationState, Material)</a></li>
 <li><a href="#update(org.bukkit.inventory.Inventory,net.sylphian.minecraft.cooking.station.CookingStationState)" tabindex="0">update(Inventory, CookingStationState)</a></li>
 <li><a href="#ingredientIndex(int)" tabindex="0">ingredientIndex(int)</a></li>
-<li><a href="#isEditable(int)" tabindex="0">isEditable(int)</a></li>
+<li><a href="#outputIndex(int)" tabindex="0">outputIndex(int)</a></li>
+<li><a href="#isInteractive(int)" tabindex="0">isInteractive(int)</a></li>
+<li><a href="#isPlaceable(int)" tabindex="0">isPlaceable(int)</a></li>
+<li><a href="#isOutputSlot(int)" tabindex="0">isOutputSlot(int)</a></li>
 <li><a href="#isPlaceholder(org.bukkit.inventory.ItemStack)" tabindex="0">isPlaceholder(ItemStack)</a></li>
 </ol>
 </li>
@@ -95,7 +97,15 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">CookingStationGui</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Builds and updates the custom cooking station inventory GUI.</div>
+<div class="block">Builds and updates the custom cooking station inventory GUI.
+
+<p>Layout (4-row chest, 36 slots):</p>
+<pre>
+ Row 0: [X][X][I][I][I][I][I][X][X]   slots 2-6,  ingredient inputs
+ Row 1: [X][X][O][O][O][O][O][X][X]   slots 11-15, output buffer (5 slots)
+ Row 2: [X][X][X][X][P][X][X][X][X]   slot 22,    progress indicator
+ Row 3: [X][X][X][X][F][X][X][X][X]   slot 31,    fuel input
+</pre></div>
 </div>
 </section>
 <section class="summary">
@@ -117,27 +127,22 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>static final int[]</code></div>
 <div class="col-second odd-row-color"><code><a href="#INGREDIENT_SLOTS" class="member-name-link">INGREDIENT_SLOTS</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">Inventory slots that hold ingredients (internal indices into the 27-slot chest).</div>
+<div class="block">Inventory slots that hold ingredients.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#OUTPUT_SLOT" class="member-name-link">OUTPUT_SLOT</a></code></div>
+<div class="col-first even-row-color"><code>static final int[]</code></div>
+<div class="col-second even-row-color"><code><a href="#OUTPUT_SLOTS" class="member-name-link">OUTPUT_SLOTS</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Slot index of the recipe output (take-only).</div>
+<div class="block">Inventory slots that hold output items; take-only.</div>
 </div>
 <div class="col-first odd-row-color"><code>static final org.bukkit.NamespacedKey</code></div>
 <div class="col-second odd-row-color"><code><a href="#PLACEHOLDER_KEY" class="member-name-link">PLACEHOLDER_KEY</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">PDC key stamped on all placeholder glass pane items.</div>
+<div class="block">PDC key stamped on placeholder glass pane items.</div>
 </div>
 <div class="col-first even-row-color"><code>static final int</code></div>
 <div class="col-second even-row-color"><code><a href="#PROGRESS_SLOT" class="member-name-link">PROGRESS_SLOT</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Slot index of the progress indicator (read-only).</div>
-</div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#SEPARATOR_SLOT" class="member-name-link">SEPARATOR_SLOT</a></code></div>
-<div class="col-last odd-row-color">
-<div class="block">Slot index of the arrow separator between ingredient slots and the output (read-only).</div>
 </div>
 </div>
 </section>
@@ -175,22 +180,36 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#ingredientIndex(int)" class="member-name-link">ingredientIndex</a><wbr>(int&nbsp;guiSlot)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns the ingredient slot index (0–4) for the given GUI slot, or -1 if not an ingredient slot.</div>
+<div class="block">Returns the ingredient array index (0–4) for the given GUI slot, or -1 if not an ingredient slot.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isEditable(int)" class="member-name-link">isEditable</a><wbr>(int&nbsp;guiSlot)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isInteractive(int)" class="member-name-link">isInteractive</a><wbr>(int&nbsp;guiSlot)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns true if items can be freely placed into and taken from this slot.</div>
+<div class="block">Returns true if the slot can be interacted with (place or take).</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isOutputSlot(int)" class="member-name-link">isOutputSlot</a><wbr>(int&nbsp;guiSlot)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns true if the slot is one of the five output slots.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isPlaceable(int)" class="member-name-link">isPlaceable</a><wbr>(int&nbsp;guiSlot)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns true if items can be placed into the slot (ingredients and fuel only).</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isPlaceholder(org.bukkit.inventory.ItemStack)" class="member-name-link">isPlaceholder</a><wbr>(org.bukkit.inventory.ItemStack&nbsp;item)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update(org.bukkit.inventory.Inventory,net.sylphian.minecraft.cooking.station.CookingStationState)" class="member-name-link">update</a><wbr>(org.bukkit.inventory.Inventory&nbsp;inv,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#outputIndex(int)" class="member-name-link">outputIndex</a><wbr>(int&nbsp;guiSlot)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns the output array index (0–4) for the given GUI slot, or -1 if not an output slot.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update(org.bukkit.inventory.Inventory,net.sylphian.minecraft.cooking.station.CookingStationState)" class="member-name-link">update</a><wbr>(org.bukkit.inventory.Inventory&nbsp;inv,
  <a href="../station/CookingStationState.html" title="class in net.sylphian.minecraft.cooking.station">CookingStationState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Refreshes only the mutable display slots (output, fuel, ingredients, progress)
-without rebuilding the entire inventory.</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Refreshes the mutable display slots in an already-open inventory.</div>
 </div>
 </div>
 </div>
@@ -214,24 +233,16 @@ without rebuilding the entire inventory.</div>
 <h3>INGREDIENT_SLOTS</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int[]</span>&nbsp;<span class="element-name">INGREDIENT_SLOTS</span></div>
-<div class="block">Inventory slots that hold ingredients (internal indices into the 27-slot chest).</div>
+<div class="block">Inventory slots that hold ingredients.</div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="FUEL_SLOT">
-<h3>FUEL_SLOT</h3>
+<section class="detail" id="OUTPUT_SLOTS">
+<h3>OUTPUT_SLOTS</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">FUEL_SLOT</span></div>
-<div class="block">Slot index of the fuel input.</div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><a href="../../../../../constant-values.html#net.sylphian.minecraft.cooking.gui.CookingStationGui.FUEL_SLOT">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int[]</span>&nbsp;<span class="element-name">OUTPUT_SLOTS</span></div>
+<div class="block">Inventory slots that hold output items; take-only.</div>
 </div>
 </section>
 </li>
@@ -253,33 +264,16 @@ without rebuilding the entire inventory.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="OUTPUT_SLOT">
-<h3>OUTPUT_SLOT</h3>
+<section class="detail" id="FUEL_SLOT">
+<h3>FUEL_SLOT</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">OUTPUT_SLOT</span></div>
-<div class="block">Slot index of the recipe output (take-only).</div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">FUEL_SLOT</span></div>
+<div class="block">Slot index of the fuel input.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
 <ul class="tag-list">
-<li><a href="../../../../../constant-values.html#net.sylphian.minecraft.cooking.gui.CookingStationGui.OUTPUT_SLOT">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="SEPARATOR_SLOT">
-<h3>SEPARATOR_SLOT</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">SEPARATOR_SLOT</span></div>
-<div class="block">Slot index of the arrow separator between ingredient slots and the output (read-only).</div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><a href="../../../../../constant-values.html#net.sylphian.minecraft.cooking.gui.CookingStationGui.SEPARATOR_SLOT">Constant Field Values</a></li>
+<li><a href="../../../../../constant-values.html#net.sylphian.minecraft.cooking.gui.CookingStationGui.FUEL_SLOT">Constant Field Values</a></li>
 </ul>
 </dd>
 </dl>
@@ -291,8 +285,7 @@ without rebuilding the entire inventory.</div>
 <h3>PLACEHOLDER_KEY</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">org.bukkit.NamespacedKey</span>&nbsp;<span class="element-name">PLACEHOLDER_KEY</span></div>
-<div class="block">PDC key stamped on all placeholder glass pane items.
-Used to distinguish placeholders from real items placed by players.</div>
+<div class="block">PDC key stamped on placeholder glass pane items.</div>
 </div>
 </section>
 </li>
@@ -330,7 +323,7 @@ Used to distinguish placeholders from real items placed by players.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>state</code> - the current station state</dd>
-<dd><code>stationType</code> - the Material of the block (used to locate it on close)</dd>
+<dd><code>stationType</code> - the block material</dd>
 <dt>Returns:</dt>
 <dd>the constructed inventory</dd>
 </dl>
@@ -343,8 +336,7 @@ Used to distinguish placeholders from real items placed by players.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">update</span><wbr><span class="parameters">(org.bukkit.inventory.Inventory&nbsp;inv,
  <a href="../station/CookingStationState.html" title="class in net.sylphian.minecraft.cooking.station">CookingStationState</a>&nbsp;state)</span></div>
-<div class="block">Refreshes only the mutable display slots (output, fuel, ingredients, progress)
-without rebuilding the entire inventory. Safe to call from the tick loop.</div>
+<div class="block">Refreshes the mutable display slots in an already-open inventory.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>inv</code> - the open inventory to update</dd>
@@ -358,23 +350,43 @@ without rebuilding the entire inventory. Safe to call from the tick loop.</div>
 <h3>ingredientIndex</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">ingredientIndex</span><wbr><span class="parameters">(int&nbsp;guiSlot)</span></div>
-<div class="block">Returns the ingredient slot index (0–4) for the given GUI slot, or -1 if not an ingredient slot.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>guiSlot</code> - the inventory slot index</dd>
-<dt>Returns:</dt>
-<dd>ingredient array index (0–4), or -1</dd>
-</dl>
+<div class="block">Returns the ingredient array index (0–4) for the given GUI slot, or -1 if not an ingredient slot.</div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="isEditable(int)">
-<h3>isEditable</h3>
+<section class="detail" id="outputIndex(int)">
+<h3>outputIndex</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isEditable</span><wbr><span class="parameters">(int&nbsp;guiSlot)</span></div>
-<div class="block">Returns true if items can be freely placed into and taken from this slot.
-The output slot is editable for taking but placement is handled separately.</div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">outputIndex</span><wbr><span class="parameters">(int&nbsp;guiSlot)</span></div>
+<div class="block">Returns the output array index (0–4) for the given GUI slot, or -1 if not an output slot.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isInteractive(int)">
+<h3>isInteractive</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isInteractive</span><wbr><span class="parameters">(int&nbsp;guiSlot)</span></div>
+<div class="block">Returns true if the slot can be interacted with (place or take).</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isPlaceable(int)">
+<h3>isPlaceable</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isPlaceable</span><wbr><span class="parameters">(int&nbsp;guiSlot)</span></div>
+<div class="block">Returns true if items can be placed into the slot (ingredients and fuel only).</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isOutputSlot(int)">
+<h3>isOutputSlot</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isOutputSlot</span><wbr><span class="parameters">(int&nbsp;guiSlot)</span></div>
+<div class="block">Returns true if the slot is one of the five output slots.</div>
 </div>
 </section>
 </li>

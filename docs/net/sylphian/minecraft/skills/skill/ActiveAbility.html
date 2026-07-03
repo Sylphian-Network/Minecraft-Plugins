@@ -58,6 +58,7 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#activation()" tabindex="0">activation()</a></li>
 <li><a href="#onActivate(org.bukkit.entity.Player,java.util.UUID)" tabindex="0">onActivate(Player, UUID)</a></li>
+<li><a href="#onActivate(org.bukkit.entity.Player,java.util.UUID,org.bukkit.block.Block)" tabindex="0">onActivate(Player, UUID, Block)</a></li>
 <li><a href="#selectionStatus(java.util.UUID)" tabindex="0">selectionStatus(UUID)</a></li>
 <li><a href="#statusLevel(java.util.UUID)" tabindex="0">statusLevel(UUID)</a></li>
 </ol>
@@ -76,7 +77,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <dl class="notes">
 <dt>All Known Implementing Classes:</dt>
-<dd><code><a href="../../fishing/skill/ability/DoubleHaul.html" title="class in net.sylphian.minecraft.fishing.skill.ability">DoubleHaul</a>, <a href="../../fishing/skill/ability/FishersFrenzy.html" title="class in net.sylphian.minecraft.fishing.skill.ability">FishersFrenzy</a>, <a href="../../fishing/skill/ability/PatientAngler.html" title="class in net.sylphian.minecraft.fishing.skill.ability">PatientAngler</a></code></dd>
+<dd><code><a href="../../cooking/skill/ability/Banquet.html" title="class in net.sylphian.minecraft.cooking.skill.ability">Banquet</a>, <a href="../../fishing/skill/ability/DoubleHaul.html" title="class in net.sylphian.minecraft.fishing.skill.ability">DoubleHaul</a>, <a href="../../fishing/skill/ability/FishersFrenzy.html" title="class in net.sylphian.minecraft.fishing.skill.ability">FishersFrenzy</a>, <a href="../../fishing/skill/ability/PatientAngler.html" title="class in net.sylphian.minecraft.fishing.skill.ability">PatientAngler</a>, <a href="../../cooking/skill/ability/PerfectSear.html" title="class in net.sylphian.minecraft.cooking.skill.ability">PerfectSear</a>, <a href="../../cooking/skill/ability/SecondWind.html" title="class in net.sylphian.minecraft.cooking.skill.ability">SecondWind</a></code></dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
@@ -122,15 +123,22 @@ to reflect cooldown, pending, or buff state.</p></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Called by the framework when the player selects this ability from the GUI.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#selectionStatus(java.util.UUID)" class="member-name-link">selectionStatus</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#onActivate(org.bukkit.entity.Player,java.util.UUID,org.bukkit.block.Block)" class="member-name-link">onActivate</a><wbr>(org.bukkit.entity.Player&nbsp;player,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid,
+ @Nullable org.bukkit.block.Block&nbsp;target)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block">Block-aware activation.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#selectionStatus(java.util.UUID)" class="member-name-link">selectionStatus</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
 <div class="block">Short MiniMessage string reflecting this ability's current state, shown as
 the item lore in the selection GUI.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="StatusLevel.html" title="enum class in net.sylphian.minecraft.skills.skill">StatusLevel</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#statusLevel(java.util.UUID)" class="member-name-link">statusLevel</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="StatusLevel.html" title="enum class in net.sylphian.minecraft.skills.skill">StatusLevel</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#statusLevel(java.util.UUID)" class="member-name-link">statusLevel</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
 <div class="block">Returns the current state of this ability for GUI display purposes.</div>
 </div>
 </div>
@@ -177,6 +185,27 @@ sending appropriate feedback to the player.</div>
 <dt>Parameters:</dt>
 <dd><code>player</code> - the player who triggered the ability</dd>
 <dd><code>uuid</code> - the player's UUID</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="onActivate(org.bukkit.entity.Player,java.util.UUID,org.bukkit.block.Block)">
+<h3>onActivate</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onActivate</span><wbr><span class="parameters">(org.bukkit.entity.Player&nbsp;player,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid,
+ @Nullable
+ @Nullable org.bukkit.block.Block&nbsp;target)</span></div>
+<div class="block">Block-aware activation. Called by the framework with the block the player
+sneak-right-clicked when the skill declares <a href="Skill.html#activationBlocks()"><code>Skill.activationBlocks()</code></a>;
+<code>target</code> is null when the ability was triggered by a held item instead.
+Defaults to <a href="#onActivate(org.bukkit.entity.Player,java.util.UUID)"><code>onActivate(Player, UUID)</code></a> for abilities that ignore the target.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>player</code> - the player who triggered the ability</dd>
+<dd><code>uuid</code> - the player's UUID</dd>
+<dd><code>target</code> - the clicked block, or null if not block-triggered</dd>
 </dl>
 </div>
 </section>

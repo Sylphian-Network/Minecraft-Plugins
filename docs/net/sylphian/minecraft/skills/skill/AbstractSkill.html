@@ -79,7 +79,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#unwatch(java.util.UUID)" tabindex="0">unwatch(UUID)</a></li>
 <li><a href="#isWatched(java.util.UUID)" tabindex="0">isWatched(UUID)</a></li>
 <li><a href="#getWatcher(java.util.UUID)" tabindex="0">getWatcher(UUID)</a></li>
-<li><a href="#sendTrace(java.util.UUID,java.lang.String,java.util.List)" tabindex="0">sendTrace(UUID, String, List)</a></li>
+<li><a href="#sendTrace(java.util.UUID,net.sylphian.minecraft.skills.skill.TraceReport)" tabindex="0">sendTrace(UUID, TraceReport)</a></li>
+<li><a href="#traceActiveUse(java.util.UUID,java.lang.String,java.lang.String,java.lang.String)" tabindex="0">traceActiveUse(UUID, String, String, String)</a></li>
+<li><a href="#sendTraceResult(java.util.UUID,java.lang.String,java.lang.String)" tabindex="0">sendTraceResult(UUID, String, String)</a></li>
 </ol>
 </li>
 </ol>
@@ -99,7 +101,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <dl class="notes">
 <dt>Direct Known Subclasses:</dt>
-<dd><code><a href="../../fishing/skill/FishingSkill.html" title="class in net.sylphian.minecraft.fishing.skill">FishingSkill</a></code></dd>
+<dd><code><a href="../../cooking/skill/CookingSkill.html" title="class in net.sylphian.minecraft.cooking.skill">CookingSkill</a>, <a href="../../fishing/skill/FishingSkill.html" title="class in net.sylphian.minecraft.fishing.skill">FishingSkill</a></code></dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
@@ -219,12 +221,26 @@ with this skill that accepts it and whose unlock level the player meets.</div>
 listener under <code>owningPlugin</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#sendTrace(java.util.UUID,java.lang.String,java.util.List)" class="member-name-link">sendTrace</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;header,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="TraceEntry.html" title="class in net.sylphian.minecraft.skills.skill">TraceEntry</a>&gt;&nbsp;entries)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#sendTrace(java.util.UUID,net.sylphian.minecraft.skills.skill.TraceReport)" class="member-name-link">sendTrace</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid,
+ <a href="TraceReport.html" title="class in net.sylphian.minecraft.skills.skill">TraceReport</a>&nbsp;report)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sends a trace header line followed by per-ability contribution lines to the
-watching admin for this player.</div>
+<div class="block">Renders one trace block to the watching admin in the standard layout shared by every
+skill: a header line, the per-ability contribution lines, then any result lines.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#sendTraceResult(java.util.UUID,java.lang.String,java.lang.String)" class="member-name-link">sendTraceResult</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;label,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;value)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sends a single standalone result line in the standard trace layout.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#traceActiveUse(java.util.UUID,java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">traceActiveUse</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;subject,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;ability,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;detail)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Emits a standard one-line <code>Active</code> trace block when the player is being watched.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unwatch(java.util.UUID)" class="member-name-link">unwatch</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUuid)</code></div>
@@ -245,7 +261,7 @@ watching admin for this player.</div>
 <code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-net.sylphian.minecraft.skills.skill.Skill">Methods inherited from interface&nbsp;<a href="Skill.html#method-summary" title="interface in net.sylphian.minecraft.skills.skill">Skill</a></h3>
-<code><a href="Skill.html#activationMaterial()" title="activationMaterial()">activationMaterial</a>, <a href="Skill.html#canInteract(org.bukkit.entity.Player,java.util.UUID)" title="canInteract(Player, UUID)">canInteract</a>, <a href="Skill.html#reload()" title="reload()">reload</a></code></div>
+<code><a href="Skill.html#activationBlocks()" title="activationBlocks()">activationBlocks</a>, <a href="Skill.html#activationMaterial()" title="activationMaterial()">activationMaterial</a>, <a href="Skill.html#canInteract(org.bukkit.entity.Player,java.util.UUID)" title="canInteract(Player, UUID)">canInteract</a>, <a href="Skill.html#reload()" title="reload()">reload</a></code></div>
 </section>
 </li>
 </ul>
@@ -475,24 +491,57 @@ Replaces any existing watcher for that player.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="sendTrace(java.util.UUID,java.lang.String,java.util.List)">
+<section class="detail" id="sendTrace(java.util.UUID,net.sylphian.minecraft.skills.skill.TraceReport)">
 <h3>sendTrace</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sendTrace</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;header,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="TraceEntry.html" title="class in net.sylphian.minecraft.skills.skill">TraceEntry</a>&gt;&nbsp;entries)</span></div>
-<div class="block">Sends a trace header line followed by per-ability contribution lines to the
-watching admin for this player. Does nothing if the player is not being watched.
-
-<p>Subclasses call this after firing passives, passing their own header string
-and the trigger's <a href="TraceEntry.html" title="class in net.sylphian.minecraft.skills.skill"><code>TraceEntry</code></a> list. Any event-specific footer lines
-(e.g. final hook times, awarded XP) should be appended by the caller via
-<a href="#getWatcher(java.util.UUID)"><code>getWatcher(UUID)</code></a>.</p></div>
+ <a href="TraceReport.html" title="class in net.sylphian.minecraft.skills.skill">TraceReport</a>&nbsp;report)</span></div>
+<div class="block">Renders one trace block to the watching admin in the standard layout shared by every
+skill: a header line, the per-ability contribution lines, then any result lines.
+Does nothing if the player is not being watched.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>uuid</code> - the target player's UUID</dd>
-<dd><code>header</code> - a MiniMessage string summarising the event</dd>
-<dd><code>entries</code> - the ability contributions recorded on the trigger token</dd>
+<dd><code>report</code> - the structured trace block to render</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="traceActiveUse(java.util.UUID,java.lang.String,java.lang.String,java.lang.String)">
+<h3>traceActiveUse</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">traceActiveUse</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;subject,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;ability,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;detail)</span></div>
+<div class="block">Emits a standard one-line <code>Active</code> trace block when the player is being watched.
+Active abilities call this from <code>onActivate</code> so their use appears in the watch trace,
+the way passive contributions appear as <code>[Passive]</code> lines.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>uuid</code> - the activating player's UUID</dd>
+<dd><code>subject</code> - the player name shown in the line</dd>
+<dd><code>ability</code> - the ability's display name</dd>
+<dd><code>detail</code> - a short MiniMessage description of what happened</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="sendTraceResult(java.util.UUID,java.lang.String,java.lang.String)">
+<h3>sendTraceResult</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sendTraceResult</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;label,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;value)</span></div>
+<div class="block">Sends a single standalone result line in the standard trace layout. Use for results
+that arrive in a later event than the block header (e.g. XP awarded after a roll).</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>uuid</code> - the target player's UUID</dd>
+<dd><code>label</code> - the result label</dd>
+<dd><code>value</code> - the MiniMessage value string</dd>
 </dl>
 </div>
 </section>

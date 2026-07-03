@@ -77,13 +77,9 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">CookingStationPdc</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Handles serialization and deserialization of <a href="CookingStationState.html" title="class in net.sylphian.minecraft.cooking.station"><code>CookingStationState</code></a> to and
-from the <code>PersistentDataContainer</code> of a block entity (furnace or campfire).
-
-<p>All keys live under the <code>sylphian-cooking</code> namespace. Items are serialized
-using Paper's <code>ItemStack.serializeAsBytes()</code> / <code>ItemStack.deserializeBytes(byte[])</code>.</p>
-
-<p>An empty byte array is used as a sentinel for an absent (null / air) item slot.</p></div>
+<div class="block">Serializes <a href="CookingStationState.html" title="class in net.sylphian.minecraft.cooking.station"><code>CookingStationState</code></a> to and from a block entity's <code>PersistentDataContainer</code>
+under the <code>sylphian-cooking</code> namespace. Items use Paper's byte serialization; an empty byte
+array marks an absent slot.</div>
 </div>
 </section>
 <section class="summary">

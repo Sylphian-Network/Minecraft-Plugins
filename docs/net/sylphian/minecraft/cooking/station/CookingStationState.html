@@ -59,6 +59,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#field-detail" tabindex="0">Field Details</a>
 <ol class="toc-list">
 <li><a href="#INGREDIENT_COUNT" tabindex="0">INGREDIENT_COUNT</a></li>
+<li><a href="#OUTPUT_COUNT" tabindex="0">OUTPUT_COUNT</a></li>
 </ol>
 </li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
@@ -71,16 +72,24 @@ loadScripts(document, 'script');</script>
 <li><a href="#getIngredient(int)" tabindex="0">getIngredient(int)</a></li>
 <li><a href="#setIngredient(int,org.bukkit.inventory.ItemStack)" tabindex="0">setIngredient(int, ItemStack)</a></li>
 <li><a href="#ingredientSnapshot()" tabindex="0">ingredientSnapshot()</a></li>
+<li><a href="#getOutput(int)" tabindex="0">getOutput(int)</a></li>
+<li><a href="#setOutput(int,org.bukkit.inventory.ItemStack)" tabindex="0">setOutput(int, ItemStack)</a></li>
 <li><a href="#getFuel()" tabindex="0">getFuel()</a></li>
 <li><a href="#setFuel(org.bukkit.inventory.ItemStack)" tabindex="0">setFuel(ItemStack)</a></li>
-<li><a href="#getOutput()" tabindex="0">getOutput()</a></li>
-<li><a href="#setOutput(org.bukkit.inventory.ItemStack)" tabindex="0">setOutput(ItemStack)</a></li>
 <li><a href="#getCookProgress()" tabindex="0">getCookProgress()</a></li>
 <li><a href="#setCookProgress(int)" tabindex="0">setCookProgress(int)</a></li>
 <li><a href="#getFuelRemaining()" tabindex="0">getFuelRemaining()</a></li>
 <li><a href="#setFuelRemaining(int)" tabindex="0">setFuelRemaining(int)</a></li>
 <li><a href="#getActiveRecipe()" tabindex="0">getActiveRecipe()</a></li>
 <li><a href="#setActiveRecipe(net.sylphian.minecraft.cooking.recipe.CookingRecipe)" tabindex="0">setActiveRecipe(CookingRecipe)</a></li>
+<li><a href="#getLastInteractor()" tabindex="0">getLastInteractor()</a></li>
+<li><a href="#setLastInteractor(java.util.UUID)" tabindex="0">setLastInteractor(UUID)</a></li>
+<li><a href="#getEffectiveCookTime()" tabindex="0">getEffectiveCookTime()</a></li>
+<li><a href="#setEffectiveCookTime(int)" tabindex="0">setEffectiveCookTime(int)</a></li>
+<li><a href="#getLastQuality()" tabindex="0">getLastQuality()</a></li>
+<li><a href="#setLastQuality(net.sylphian.minecraft.cooking.quality.CookingQuality)" tabindex="0">setLastQuality(CookingQuality)</a></li>
+<li><a href="#isForceNextPerfect()" tabindex="0">isForceNextPerfect()</a></li>
+<li><a href="#setForceNextPerfect(boolean)" tabindex="0">setForceNextPerfect(boolean)</a></li>
 <li><a href="#getViewers()" tabindex="0">getViewers()</a></li>
 <li><a href="#addViewer(java.util.UUID)" tabindex="0">addViewer(UUID)</a></li>
 <li><a href="#removeViewer(java.util.UUID)" tabindex="0">removeViewer(UUID)</a></li>
@@ -104,17 +113,7 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">CookingStationState</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Mutable runtime state for a single cooking station (furnace or campfire block).
-
-<p>All state is persisted to the block's <code>PersistentDataContainer</code>
-via <a href="CookingStationPdc.html" title="class in net.sylphian.minecraft.cooking.station"><code>CookingStationPdc</code></a> whenever the station is closed or the tick loop
-detects a state change.</p>
-
-<p>Slot layout (internal indices, not GUI slot indices):</p>
-<ul>
-  <li>0–4 — ingredient slots</li>
-  <li>5 — fuel slot</li>
-  <li>6 — output slot</li>
-</ul></div>
+Persisted to the block's PDC via <a href="CookingStationPdc.html" title="class in net.sylphian.minecraft.cooking.station"><code>CookingStationPdc</code></a> on GUI close and state changes.</div>
 </div>
 </section>
 <section class="summary">
@@ -132,6 +131,11 @@ detects a state change.</p>
 <div class="col-second even-row-color"><code><a href="#INGREDIENT_COUNT" class="member-name-link">INGREDIENT_COUNT</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Number of ingredient slots in a cooking station.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#OUTPUT_COUNT" class="member-name-link">OUTPUT_COUNT</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Number of output slots in a cooking station.</div>
 </div>
 </div>
 </section>
@@ -168,50 +172,76 @@ detects a state change.</p>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the fraction of cook progress as a value between 0.0 and 1.0.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../recipe/CookingRecipe.html" title="class in net.sylphian.minecraft.cooking.recipe">CookingRecipe</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable <a href="../recipe/CookingRecipe.html" title="class in net.sylphian.minecraft.cooking.recipe">CookingRecipe</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getActiveRecipe()" class="member-name-link">getActiveRecipe</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCookProgress()" class="member-name-link">getCookProgress</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.bukkit.inventory.ItemStack</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getFuel()" class="member-name-link">getFuel</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getFuelRemaining()" class="member-name-link">getFuelRemaining</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.bukkit.inventory.ItemStack</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getIngredient(int)" class="member-name-link">getIngredient</a><wbr>(int&nbsp;index)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEffectiveCookTime()" class="member-name-link">getEffectiveCookTime</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the effective cook time in ticks for the current recipe cycle.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable org.bukkit.inventory.ItemStack</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getFuel()" class="member-name-link">getFuel</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getFuelRemaining()" class="member-name-link">getFuelRemaining</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.bukkit.inventory.ItemStack</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getIngredient(int)" class="member-name-link">getIngredient</a><wbr>(int&nbsp;index)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the item in the given ingredient slot.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.bukkit.inventory.ItemStack</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getOutput()" class="member-name-link">getOutput</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getViewers()" class="member-name-link">getViewers</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLastInteractor()" class="member-name-link">getLastInteractor</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.bukkit.inventory.ItemStack[]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#ingredientSnapshot()" class="member-name-link">ingredientSnapshot</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable <a href="../quality/CookingQuality.html" title="enum class in net.sylphian.minecraft.cooking.quality">CookingQuality</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLastQuality()" class="member-name-link">getLastQuality</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the quality tier of the most recently completed cook cycle, or null if none.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable org.bukkit.inventory.ItemStack</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getOutput(int)" class="member-name-link">getOutput</a><wbr>(int&nbsp;index)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the item in the given output slot.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getViewers()" class="member-name-link">getViewers</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.bukkit.inventory.ItemStack[]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#ingredientSnapshot()" class="member-name-link">ingredientSnapshot</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a snapshot copy of all ingredient slots.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEmpty()" class="member-name-link">isEmpty</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns true if every ingredient slot, the fuel slot, and the output slot are all empty.</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEmpty()" class="member-name-link">isEmpty</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns true if every ingredient slot, the fuel slot, and all output slots are empty.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isForceNextPerfect()" class="member-name-link">isForceNextPerfect</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeViewer(java.util.UUID)" class="member-name-link">removeViewer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setActiveRecipe(net.sylphian.minecraft.cooking.recipe.CookingRecipe)" class="member-name-link">setActiveRecipe</a><wbr>(<a href="../recipe/CookingRecipe.html" title="class in net.sylphian.minecraft.cooking.recipe">CookingRecipe</a>&nbsp;activeRecipe)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setActiveRecipe(net.sylphian.minecraft.cooking.recipe.CookingRecipe)" class="member-name-link">setActiveRecipe</a><wbr>(@Nullable <a href="../recipe/CookingRecipe.html" title="class in net.sylphian.minecraft.cooking.recipe">CookingRecipe</a>&nbsp;activeRecipe)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCookProgress(int)" class="member-name-link">setCookProgress</a><wbr>(int&nbsp;cookProgress)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setFuel(org.bukkit.inventory.ItemStack)" class="member-name-link">setFuel</a><wbr>(org.bukkit.inventory.ItemStack&nbsp;fuel)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEffectiveCookTime(int)" class="member-name-link">setEffectiveCookTime</a><wbr>(int&nbsp;effectiveCookTime)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the effective cook time for the current recipe cycle.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setForceNextPerfect(boolean)" class="member-name-link">setForceNextPerfect</a><wbr>(boolean&nbsp;forceNextPerfect)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setFuel(org.bukkit.inventory.ItemStack)" class="member-name-link">setFuel</a><wbr>(@Nullable org.bukkit.inventory.ItemStack&nbsp;fuel)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setFuelRemaining(int)" class="member-name-link">setFuelRemaining</a><wbr>(int&nbsp;fuelRemaining)</code></div>
@@ -223,8 +253,19 @@ detects a state change.</p>
 <div class="block">Sets the item in the given ingredient slot.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setOutput(org.bukkit.inventory.ItemStack)" class="member-name-link">setOutput</a><wbr>(org.bukkit.inventory.ItemStack&nbsp;output)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setLastInteractor(java.util.UUID)" class="member-name-link">setLastInteractor</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;lastInteractor)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Records the player who last mutated an ingredient or fuel slot.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setLastQuality(net.sylphian.minecraft.cooking.quality.CookingQuality)" class="member-name-link">setLastQuality</a><wbr>(@Nullable <a href="../quality/CookingQuality.html" title="enum class in net.sylphian.minecraft.cooking.quality">CookingQuality</a>&nbsp;lastQuality)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setOutput(int,org.bukkit.inventory.ItemStack)" class="member-name-link">setOutput</a><wbr>(int&nbsp;index,
+ @Nullable org.bukkit.inventory.ItemStack&nbsp;item)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the item in the given output slot.</div>
+</div>
 </div>
 </div>
 </div>
@@ -253,6 +294,23 @@ detects a state change.</p>
 <dd>
 <ul class="tag-list">
 <li><a href="../../../../../constant-values.html#net.sylphian.minecraft.cooking.station.CookingStationState.INGREDIENT_COUNT">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="OUTPUT_COUNT">
+<h3>OUTPUT_COUNT</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">OUTPUT_COUNT</span></div>
+<div class="block">Number of output slots in a cooking station.</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../../constant-values.html#net.sylphian.minecraft.cooking.station.CookingStationState.OUTPUT_COUNT">Constant Field Values</a></li>
 </ul>
 </dd>
 </dl>
@@ -318,8 +376,7 @@ detects a state change.</p>
 <h3>ingredientSnapshot</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">org.bukkit.inventory.ItemStack[]</span>&nbsp;<span class="element-name">ingredientSnapshot</span>()</div>
-<div class="block">Returns a snapshot copy of all ingredient slots.
-Modifying the returned array does not affect this state.</div>
+<div class="block">Returns a snapshot copy of all ingredient slots.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>array of length <a href="#INGREDIENT_COUNT"><code>INGREDIENT_COUNT</code></a></dd>
@@ -328,10 +385,40 @@ Modifying the returned array does not affect this state.</div>
 </section>
 </li>
 <li>
+<section class="detail" id="getOutput(int)">
+<h3>getOutput</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable org.bukkit.inventory.ItemStack</span>&nbsp;<span class="element-name">getOutput</span><wbr><span class="parameters">(int&nbsp;index)</span></div>
+<div class="block">Returns the item in the given output slot.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>index</code> - 0–4</dd>
+<dt>Returns:</dt>
+<dd>the item, or null if the slot is empty</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setOutput(int,org.bukkit.inventory.ItemStack)">
+<h3>setOutput</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setOutput</span><wbr><span class="parameters">(int&nbsp;index,
+ @Nullable org.bukkit.inventory.ItemStack&nbsp;item)</span></div>
+<div class="block">Sets the item in the given output slot.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>index</code> - 0–4</dd>
+<dd><code>item</code> - the item to place, or null to clear</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="getFuel()">
 <h3>getFuel</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">org.bukkit.inventory.ItemStack</span>&nbsp;<span class="element-name">getFuel</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable org.bukkit.inventory.ItemStack</span>&nbsp;<span class="element-name">getFuel</span>()</div>
 </div>
 </section>
 </li>
@@ -339,23 +426,7 @@ Modifying the returned array does not affect this state.</div>
 <section class="detail" id="setFuel(org.bukkit.inventory.ItemStack)">
 <h3>setFuel</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setFuel</span><wbr><span class="parameters">(org.bukkit.inventory.ItemStack&nbsp;fuel)</span></div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="getOutput()">
-<h3>getOutput</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">org.bukkit.inventory.ItemStack</span>&nbsp;<span class="element-name">getOutput</span>()</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="setOutput(org.bukkit.inventory.ItemStack)">
-<h3>setOutput</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setOutput</span><wbr><span class="parameters">(org.bukkit.inventory.ItemStack&nbsp;output)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setFuel</span><wbr><span class="parameters">(@Nullable org.bukkit.inventory.ItemStack&nbsp;fuel)</span></div>
 </div>
 </section>
 </li>
@@ -395,7 +466,7 @@ Modifying the returned array does not affect this state.</div>
 <section class="detail" id="getActiveRecipe()">
 <h3>getActiveRecipe</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../recipe/CookingRecipe.html" title="class in net.sylphian.minecraft.cooking.recipe">CookingRecipe</a></span>&nbsp;<span class="element-name">getActiveRecipe</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable <a href="../recipe/CookingRecipe.html" title="class in net.sylphian.minecraft.cooking.recipe">CookingRecipe</a></span>&nbsp;<span class="element-name">getActiveRecipe</span>()</div>
 </div>
 </section>
 </li>
@@ -403,7 +474,105 @@ Modifying the returned array does not affect this state.</div>
 <section class="detail" id="setActiveRecipe(net.sylphian.minecraft.cooking.recipe.CookingRecipe)">
 <h3>setActiveRecipe</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setActiveRecipe</span><wbr><span class="parameters">(<a href="../recipe/CookingRecipe.html" title="class in net.sylphian.minecraft.cooking.recipe">CookingRecipe</a>&nbsp;activeRecipe)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setActiveRecipe</span><wbr><span class="parameters">(@Nullable <a href="../recipe/CookingRecipe.html" title="class in net.sylphian.minecraft.cooking.recipe">CookingRecipe</a>&nbsp;activeRecipe)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getLastInteractor()">
+<h3>getLastInteractor</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a></span>&nbsp;<span class="element-name">getLastInteractor</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the UUID of the player who last mutated an ingredient or fuel slot, or null</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setLastInteractor(java.util.UUID)">
+<h3>setLastInteractor</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setLastInteractor</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;lastInteractor)</span></div>
+<div class="block">Records the player who last mutated an ingredient or fuel slot.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>lastInteractor</code> - the interacting player's UUID</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getEffectiveCookTime()">
+<h3>getEffectiveCookTime</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getEffectiveCookTime</span>()</div>
+<div class="block">Returns the effective cook time in ticks for the current recipe cycle.
+Zero means no cycle is active; use <a href="../recipe/CookingRecipe.html#cookTime()"><code>CookingRecipe.cookTime()</code></a> as the base.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>effective cook time, or 0 if not yet set for the current cycle</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setEffectiveCookTime(int)">
+<h3>setEffectiveCookTime</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setEffectiveCookTime</span><wbr><span class="parameters">(int&nbsp;effectiveCookTime)</span></div>
+<div class="block">Sets the effective cook time for the current recipe cycle.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>effectiveCookTime</code> - the cook time in ticks, or 0 to reset for the next cycle</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getLastQuality()">
+<h3>getLastQuality</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable <a href="../quality/CookingQuality.html" title="enum class in net.sylphian.minecraft.cooking.quality">CookingQuality</a></span>&nbsp;<span class="element-name">getLastQuality</span>()</div>
+<div class="block">Returns the quality tier of the most recently completed cook cycle, or null if none.
+Not persisted to PDC.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setLastQuality(net.sylphian.minecraft.cooking.quality.CookingQuality)">
+<h3>setLastQuality</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setLastQuality</span><wbr><span class="parameters">(@Nullable <a href="../quality/CookingQuality.html" title="enum class in net.sylphian.minecraft.cooking.quality">CookingQuality</a>&nbsp;lastQuality)</span></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>lastQuality</code> - the rolled quality, or null to clear</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isForceNextPerfect()">
+<h3>isForceNextPerfect</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isForceNextPerfect</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>true if the next quality cook is forced to Perfect</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setForceNextPerfect(boolean)">
+<h3>setForceNextPerfect</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setForceNextPerfect</span><wbr><span class="parameters">(boolean&nbsp;forceNextPerfect)</span></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>forceNextPerfect</code> - true to force the next quality cook to Perfect</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -436,7 +605,7 @@ Modifying the returned array does not affect this state.</div>
 <h3>isEmpty</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isEmpty</span>()</div>
-<div class="block">Returns true if every ingredient slot, the fuel slot, and the output slot are all empty.</div>
+<div class="block">Returns true if every ingredient slot, the fuel slot, and all output slots are empty.</div>
 </div>
 </section>
 </li>
@@ -446,6 +615,7 @@ Modifying the returned array does not affect this state.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">cookProgressFraction</span>()</div>
 <div class="block">Returns the fraction of cook progress as a value between 0.0 and 1.0.
+Uses <code>effectiveCookTime</code> when set, falling back to the recipe's base cook time.
 Returns 0.0 if no recipe is active.</div>
 </div>
 </section>

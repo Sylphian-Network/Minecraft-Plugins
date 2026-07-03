@@ -57,7 +57,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(java.lang.String,java.util.List,int,org.bukkit.inventory.ItemStack)" tabindex="0">CookingRecipe(String, List, int, ItemStack)</a></li>
+<li><a href="#%3Cinit%3E(java.lang.String,java.util.List,int,org.bukkit.inventory.ItemStack,boolean,float)" tabindex="0">CookingRecipe(String, List, int, ItemStack, boolean, float)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -70,6 +70,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#ingredients()" tabindex="0">ingredients()</a></li>
 <li><a href="#cookTime()" tabindex="0">cookTime()</a></li>
 <li><a href="#output()" tabindex="0">output()</a></li>
+<li><a href="#qualityBonusEnabled()" tabindex="0">qualityBonusEnabled()</a></li>
+<li><a href="#customModelData()" tabindex="0">customModelData()</a></li>
 </ol>
 </li>
 </ol>
@@ -91,10 +93,12 @@ loadScripts(document, 'script');</script>
 <dd><code><span id="param-ingredients">ingredients</span></code> - ordered list of ingredient specs; 1–5 entries</dd>
 <dd><code><span id="param-cookTime">cookTime</span></code> - time in ticks required to complete this recipe</dd>
 <dd><code><span id="param-output">output</span></code> - the ItemStack produced when cooking completes</dd>
+<dd><code><span id="param-qualityBonusEnabled">qualityBonusEnabled</span></code> - whether the mastery quality bonus applies to this recipe</dd>
+<dd><code><span id="param-customModelData">customModelData</span></code> - custom model data float to apply to the output icon, or -1 if unset</dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
-<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">CookingRecipe</span>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="IngredientSpec.html" title="interface in net.sylphian.minecraft.cooking.recipe">IngredientSpec</a>&gt;&nbsp;ingredients, int&nbsp;cookTime, org.bukkit.inventory.ItemStack&nbsp;output)
+<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">CookingRecipe</span>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="IngredientSpec.html" title="interface in net.sylphian.minecraft.cooking.recipe">IngredientSpec</a>&gt;&nbsp;ingredients, int&nbsp;cookTime, org.bukkit.inventory.ItemStack&nbsp;output, boolean&nbsp;qualityBonusEnabled, float&nbsp;customModelData)
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">Record</a></span></div>
 <div class="block">Represents a single cooking recipe.
 
@@ -112,10 +116,12 @@ a cook time in ticks, and the ItemStack produced on completion.</p></div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,java.util.List,int,org.bukkit.inventory.ItemStack)" class="member-name-link">CookingRecipe</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,java.util.List,int,org.bukkit.inventory.ItemStack,boolean,float)" class="member-name-link">CookingRecipe</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="IngredientSpec.html" title="interface in net.sylphian.minecraft.cooking.recipe">IngredientSpec</a>&gt;&nbsp;ingredients,
  int&nbsp;cookTime,
- org.bukkit.inventory.ItemStack&nbsp;output)</code></div>
+ org.bukkit.inventory.ItemStack&nbsp;output,
+ boolean&nbsp;qualityBonusEnabled,
+ float&nbsp;customModelData)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates an instance of a <code>CookingRecipe</code> record class.</div>
 </div>
@@ -138,35 +144,45 @@ a cook time in ticks, and the ItemStack produced on completion.</p></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <a href="#param-cookTime"><code>cookTime</code></a> record component.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#customModelData()" class="member-name-link">customModelData</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the value of the <a href="#param-customModelData"><code>customModelData</code></a> record component.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a hash code value for this object.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#id()" class="member-name-link">id</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#id()" class="member-name-link">id</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <a href="#param-id"><code>id</code></a> record component.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="IngredientSpec.html" title="interface in net.sylphian.minecraft.cooking.recipe">IngredientSpec</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#ingredients()" class="member-name-link">ingredients</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="IngredientSpec.html" title="interface in net.sylphian.minecraft.cooking.recipe">IngredientSpec</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#ingredients()" class="member-name-link">ingredients</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <a href="#param-ingredients"><code>ingredients</code></a> record component.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matches(org.bukkit.inventory.ItemStack%5B%5D)" class="member-name-link">matches</a><wbr>(org.bukkit.inventory.ItemStack[]&nbsp;slots)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matches(org.bukkit.inventory.ItemStack%5B%5D)" class="member-name-link">matches</a><wbr>(org.bukkit.inventory.ItemStack[]&nbsp;slots)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns true if the given ingredient slots satisfy this recipe.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.bukkit.inventory.ItemStack</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#output()" class="member-name-link">output</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.bukkit.inventory.ItemStack</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#output()" class="member-name-link">output</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <a href="#param-output"><code>output</code></a> record component.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#qualityBonusEnabled()" class="member-name-link">qualityBonusEnabled</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the value of the <a href="#param-qualityBonusEnabled"><code>qualityBonusEnabled</code></a> record component.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
@@ -191,13 +207,15 @@ a cook time in ticks, and the ItemStack produced on completion.</p></div>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(java.lang.String,java.util.List,int,org.bukkit.inventory.ItemStack)">
+<section class="detail" id="&lt;init&gt;(java.lang.String,java.util.List,int,org.bukkit.inventory.ItemStack,boolean,float)">
 <h3>CookingRecipe</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CookingRecipe</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="IngredientSpec.html" title="interface in net.sylphian.minecraft.cooking.recipe">IngredientSpec</a>&gt;&nbsp;ingredients,
  int&nbsp;cookTime,
- org.bukkit.inventory.ItemStack&nbsp;output)</span></div>
+ org.bukkit.inventory.ItemStack&nbsp;output,
+ boolean&nbsp;qualityBonusEnabled,
+ float&nbsp;customModelData)</span></div>
 <div class="block">Creates an instance of a <code>CookingRecipe</code> record class.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -205,6 +223,8 @@ a cook time in ticks, and the ItemStack produced on completion.</p></div>
 <dd><code>ingredients</code> - the value for the <a href="#param-ingredients"><code>ingredients</code></a> record component</dd>
 <dd><code>cookTime</code> - the value for the <a href="#param-cookTime"><code>cookTime</code></a> record component</dd>
 <dd><code>output</code> - the value for the <a href="#param-output"><code>output</code></a> record component</dd>
+<dd><code>qualityBonusEnabled</code> - the value for the <a href="#param-qualityBonusEnabled"><code>qualityBonusEnabled</code></a> record component</dd>
+<dd><code>customModelData</code> - the value for the <a href="#param-customModelData"><code>customModelData</code></a> record component</dd>
 </dl>
 </div>
 </section>
@@ -331,6 +351,32 @@ one slot. Slots beyond the recipe's ingredient count must be empty.</p></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the value of the <a href="#param-output"><code>output</code></a> record component</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="qualityBonusEnabled()">
+<h3>qualityBonusEnabled</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">qualityBonusEnabled</span>()</div>
+<div class="block">Returns the value of the <a href="#param-qualityBonusEnabled"><code>qualityBonusEnabled</code></a> record component.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the value of the <a href="#param-qualityBonusEnabled"><code>qualityBonusEnabled</code></a> record component</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="customModelData()">
+<h3>customModelData</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">customModelData</span>()</div>
+<div class="block">Returns the value of the <a href="#param-customModelData"><code>customModelData</code></a> record component.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the value of the <a href="#param-customModelData"><code>customModelData</code></a> record component</dd>
 </dl>
 </div>
 </section>
