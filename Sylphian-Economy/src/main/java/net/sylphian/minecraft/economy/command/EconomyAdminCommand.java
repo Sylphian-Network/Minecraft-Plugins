@@ -58,7 +58,8 @@ public class EconomyAdminCommand implements BasicCommand {
         }
 
         BigDecimal amount = MoneyFormat.parse(args[2]);
-        if (amount == null || amount.signum() < 0) {
+        boolean requiresPositive = action.equals("give") || action.equals("take");
+        if (amount == null || (requiresPositive ? amount.signum() <= 0 : amount.signum() < 0)) {
             sender.sendMessage(MINI.deserialize("<red>'" + args[2] + "' is not a valid amount."));
             return;
         }
