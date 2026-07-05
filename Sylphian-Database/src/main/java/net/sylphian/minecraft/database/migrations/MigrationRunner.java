@@ -121,47 +121,4 @@ public class MigrationRunner {
             }
         });
     }
-
-    /**
-     * Rolls back database schema to a specific target version.
-     * Useful for debugging or reverting updates.
-     *
-     * @param targetVersion the version to roll back to (exclusive, migrations > targetVersion are reverted)
-     * @param logger        the logger for reporting progress
-     */
-    public void rollbackTo(int targetVersion, Logger logger) {
-        jdbi.useHandle(handle -> {
-            // Identify currently applied migrations
-            Set<Integer> applied = new HashSet<>(
-                handle.createQuery("SELECT version FROM schema_migrations WHERE plugin = :plugin")
-                      .bind("plugin", pluginName)
-                      .mapTo(Integer.class)
-                      .list()
-            );
-
-            // Filter migrations that need to be rolled back and sort them in reverse order (newest first)
-            List<Migration> toRollback = migrations.stream()
-                .filter(m -> m.version() > targetVersion && applied.contains(m.version()))
-                .sorted(Comparator.comparingInt(Migration::version).reversed())
-                .toList();
-
-            for (Migration migration : toRollback) {
-                logger.info("[" + pluginName + "] Rolling back V" + migration.version() + " (" + migration.name() + ")");
-                try {
-                    // Execute the rollback logic
-                    migration.down(handle);
-                    // Remove the record from the tracking table
-                    handle.execute(
-                        "DELETE FROM schema_migrations WHERE plugin = ? AND version = ?",
-                        pluginName,
-                        migration.version()
-                    );
-                    logger.info("[" + pluginName + "] V" + migration.version() + " rolled back successfully.");
-                } catch (Exception e) {
-                    logger.severe("[" + pluginName + "] Failed to rollback V" + migration.version() + ": " + e.getMessage());
-                    throw new RuntimeException("Rollback of V" + migration.version() + " failed", e);
-                }
-            }
-        });
-    }
 }
