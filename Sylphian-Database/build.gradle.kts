@@ -9,6 +9,12 @@ dependencies {
     implementation(libs.jdbi.sqlobject)
     implementation(libs.hikari)
     implementation(libs.mariadb)
+
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.launcher)
+    testRuntimeOnly(libs.slf4j.simple)
+    testImplementation(libs.assertj.core)
+    testImplementation(libs.h2)
 }
 
 tasks {

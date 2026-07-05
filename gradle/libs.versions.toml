@@ -7,6 +7,10 @@ caffeine = "3.1.8"
 velocity = "3.5.0-SNAPSHOT"
 command-api = "11.2.0"
 placeholderapi = "2.11.6"
+junit   = "6.1.1"
+assertj = "3.27.7"
+h2      = "2.4.240"
+slf4j   = "2.0.18"
 
 [libraries]
 paper-api        = { module = "io.papermc.paper:paper-api",                   version.ref = "paper" }
@@ -17,7 +21,12 @@ mariadb          = { module = "org.mariadb.jdbc:mariadb-java-client",         ve
 caffeine         = { module = "com.github.ben-manes.caffeine:caffeine",       version.ref = "caffeine" }
 velocity-api     = { module = "com.velocitypowered:velocity-api",             version.ref = "velocity" }
 command-api      = { module = "dev.jorel:commandapi-paper-core",              version.ref = "command-api"}
-placeholderapi = { module = "me.clip:placeholderapi", version.ref = "placeholderapi" }
+placeholderapi   = { module = "me.clip:placeholderapi",                       version.ref = "placeholderapi" }
+junit-jupiter    = { module = "org.junit.jupiter:junit-jupiter",              version.ref = "junit" }
+junit-launcher   = { module = "org.junit.platform:junit-platform-launcher",   version.ref = "junit" }
+assertj-core     = { module = "org.assertj:assertj-core",                     version.ref = "assertj" }
+h2               = { module = "com.h2database:h2",                            version.ref = "h2" }
+slf4j-simple     = { module = "org.slf4j:slf4j-simple",                       version.ref = "slf4j" }
 
 [plugins]
 shadow = { id = "com.gradleup.shadow", version = "9.4.1" }

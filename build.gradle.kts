@@ -22,6 +22,10 @@ subprojects {
     tasks.withType<JavaCompile> {
         options.encoding = "UTF-8"
     }
+
+    tasks.withType<Test> {
+        useJUnitPlatform()
+    }
 }
 
 tasks.register<Javadoc>("combineJavadoc") {
