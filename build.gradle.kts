@@ -35,7 +35,7 @@ tasks.register<Javadoc>("combineJavadoc") {
     description = "Generates combined Javadoc for all subprojects."
     group = "documentation"
 
-    destinationDir = file("$rootDir/docs")
+    destinationDir = layout.buildDirectory.dir("docs").get().asFile
 
     val javaSubprojects = subprojects.filter {
         it.plugins.hasPlugin("java") || it.plugins.hasPlugin("java-library")
