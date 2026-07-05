@@ -5,6 +5,22 @@ dependencies {
     compileOnly(libs.jdbi.core)
     compileOnly(libs.jdbi.sqlobject)
     compileOnly(libs.placeholderapi)
+
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.launcher)
+    testRuntimeOnly(libs.slf4j.simple)
+    testImplementation(libs.assertj.core)
+    testImplementation(libs.h2)
+    testImplementation(libs.jdbi.core)
+    testImplementation(libs.jdbi.sqlobject)
+    testImplementation(project(":Sylphian-Database")) {
+        attributes {
+            attribute(
+                LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE,
+                objects.named(LibraryElements::class.java, LibraryElements.CLASSES)
+            )
+        }
+    }
 }
 
 tasks {
