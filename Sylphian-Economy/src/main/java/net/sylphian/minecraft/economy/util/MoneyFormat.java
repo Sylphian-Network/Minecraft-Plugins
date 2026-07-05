@@ -40,16 +40,21 @@ public final class MoneyFormat {
     }
 
     /**
-     * Parses a user-entered amount string into a BigDecimal.
+     * Parses a user-entered amount string into a BigDecimal. Accepts plain decimal
+     * notation, commas as grouping, and the configured symbol; rejects scientific
+     * notation.
      *
-     * @param input the raw input (e.g. {@code "100"} or {@code "12.50"})
-     * @return the parsed amount, or {@code null} if the input is not a valid number
+     * @param input the raw input (e.g. {@code "100"}, {@code "1,250.50"} or {@code "$5"})
+     * @return the parsed amount, or {@code null} if the input is not a valid plain number
      */
     public static BigDecimal parse(String input) {
-        try {
-            return new BigDecimal(input.replace(",", "").replace(symbol, "").trim());
-        } catch (NumberFormatException e) {
+        if (input == null) {
             return null;
         }
+        String cleaned = input.replace(",", "").replace(symbol, "").trim();
+        if (!cleaned.matches("-?(\\d+(\\.\\d+)?|\\.\\d+)")) {
+            return null;
+        }
+        return new BigDecimal(cleaned);
     }
 }
