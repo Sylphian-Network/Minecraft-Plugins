@@ -1,7 +1,7 @@
 package net.sylphian.minecraft.profile.command;
 
-import io.papermc.paper.command.brigadier.BasicCommand;
-import io.papermc.paper.command.brigadier.CommandSourceStack;
+import dev.jorel.commandapi.CommandTree;
+import dev.jorel.commandapi.executors.CommandArguments;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.sylphian.minecraft.profile.service.PlayerService;
@@ -9,16 +9,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 /**
- * Command to view a player's total cumulative playtime.
- * Uses the PlayerService to calculate real-time playtime including the current session.
+ * Builds and registers the player-facing {@code /playtime} CommandAPI command.
+ * Shows a player's total cumulative playtime, calculated in real time including
+ * the current session.
  */
-public class PlaytimeCommand implements BasicCommand {
+public final class PlaytimeCommand {
+
+    private static final String PERMISSION = "sylphian.profile.playtime";
+
     private final PlayerService playerService;
     private final Plugin plugin;
 
     /**
-     * Constructs a new PlaytimeCommand.
-     *
      * @param playerService the player service for playtime lookups
      * @param plugin        the plugin logger for error reporting
      */
@@ -28,20 +30,17 @@ public class PlaytimeCommand implements BasicCommand {
     }
 
     /**
-     * Executes the playtime command.
-     * Fetches playtime asynchronously and sends a formatted message to the player.
-     *
-     * @param stack the command source stack
-     * @param args  command arguments (currently unused)
+     * Builds the {@code /playtime} tree and registers it with the CommandAPI.
      */
-    @Override
-    public void execute(CommandSourceStack stack, String[] args) {
-        if (!(stack.getSender() instanceof Player player)) {
-            stack.getSender().sendMessage(Component.text("Only players can use this command.", NamedTextColor.RED));
-            return;
-        }
+    public void register() {
+        new CommandTree("playtime")
+                .withPermission(PERMISSION)
+                .withShortDescription("View your playtime on the server.")
+                .executesPlayer((Player player, CommandArguments _) -> execute(player))
+                .register();
+    }
 
-        // Fetch playtime from database + current session
+    private void execute(Player player) {
         playerService.getTotalPlaytime(player.getUniqueId())
                 .thenAccept(totalPlaytime ->
                         player.getServer().getScheduler().runTask(plugin, () -> sendPlaytime(player, player.getName(), totalPlaytime)))
@@ -53,17 +52,6 @@ public class PlaytimeCommand implements BasicCommand {
     }
 
     /**
-     * The permission required to view playtime. Declared in paper-plugin.yml
-     * with {@code default: true}, so all players have it.
-     *
-     * @return the permission node for this command
-     */
-    @Override
-    public String permission() {
-        return "sylphian.profile.playtime";
-    }
-
-    /**
      * Formats and sends the playtime message to a player.
      *
      * @param player       the recipient
@@ -71,7 +59,6 @@ public class PlaytimeCommand implements BasicCommand {
      * @param totalSeconds the total playtime in seconds
      */
     private void sendPlaytime(Player player, String username, long totalSeconds) {
-        // Break down seconds into days, hours, minutes, and seconds
         long days    = totalSeconds / 86400;
         long hours   = (totalSeconds % 86400) / 3600;
         long minutes = (totalSeconds % 3600) / 60;

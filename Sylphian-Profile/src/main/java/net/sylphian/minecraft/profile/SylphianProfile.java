@@ -1,6 +1,5 @@
 package net.sylphian.minecraft.profile;
 
-import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.sylphian.minecraft.database.DatabaseService;
 import net.sylphian.minecraft.profile.command.PlaytimeCommand;
 import net.sylphian.minecraft.profile.db.migrations.Migration001CreatePlayers;
@@ -85,11 +84,8 @@ public final class SylphianProfile extends JavaPlugin {
         getServer().getPluginManager().registerEvents(profileListener, this);
         getServer().getPluginManager().registerEvents(new ChatListener(this, profileManager), this);
 
-        // Register commands using Paper's command lifecycle
-        getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event ->
-                event.registrar().register("playtime", "View your playtime on the server.",
-                        new PlaytimeCommand(playerService, this))
-        );
+        // Register commands using the CommandAPI
+        new PlaytimeCommand(playerService, this).register();
 
         PlaceholderResolver resolver = null;
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
