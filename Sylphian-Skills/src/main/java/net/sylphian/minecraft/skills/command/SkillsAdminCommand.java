@@ -41,6 +41,7 @@ public final class SkillsAdminCommand {
     public void register() {
         CommandTree tree = new CommandTree("sylphian-skills")
                 .withPermission(PERMISSION)
+                .withShortDescription("Administrative skills commands.")
                 .executes((CommandSender sender, CommandArguments _) -> sendUsage(sender));
 
         for (SubCommand sub : subCommands) {

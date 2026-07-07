@@ -1,178 +1,47 @@
 package net.sylphian.minecraft.items.command;
 
-import io.papermc.paper.command.brigadier.BasicCommand;
-import io.papermc.paper.command.brigadier.CommandSourceStack;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import dev.jorel.commandapi.CommandTree;
+import dev.jorel.commandapi.executors.CommandArguments;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.sylphian.minecraft.items.item.ItemRegistry;
-import org.bukkit.Bukkit;
+import net.sylphian.minecraft.items.command.admin.GiveSubCommand;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.jspecify.annotations.NonNull;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 /**
- * Root administrative command for Sylphian Items.
+ * Builds and registers the operator-only {@code /sylphian-items} CommandAPI command tree.
  *
- * <p>Usage: {@code /sylphian-items <subcommand>}</p>
- *
- * <ul>
- *   <li>{@code give <player> <item-id> [amount]} — gives a player any item registered
- *       in the cross-plugin {@link ItemRegistry}, referenced by its namespaced ID
- *       (e.g. {@code sylphian-crates:legendary_key} or
- *       {@code sylphian-fishing:bait/ocean_bait})</li>
- * </ul>
- *
- * <p>Requires the {@code sylphian.items.admin} permission.</p>
+ * <p>Provides give operations for items registered in the cross-plugin
+ * {@code ItemRegistry}. Requires {@code sylphian.items.admin}.</p>
  */
-public class SylphianItemsCommand implements BasicCommand {
+public final class SylphianItemsCommand {
 
-    private static final MiniMessage MINI = MiniMessage.miniMessage();
+    private static final String PERMISSION = "sylphian.items.admin";
+
+    public static final MiniMessage MINI = MiniMessage.miniMessage();
+
+    private final List<SubCommand> subCommands = List.of(
+            new GiveSubCommand());
 
     /**
-     * Routes execution to the appropriate subcommand handler.
-     *
-     * @param stack the command source stack
-     * @param args  the command arguments
+     * Builds the {@code /sylphian-items} tree with every admin subcommand and registers it with the CommandAPI.
      */
-    @Override
-    public void execute(@NonNull CommandSourceStack stack, @NonNull String[] args) {
-        CommandSender sender = stack.getSender();
+    public void register() {
+        CommandTree tree = new CommandTree("sylphian-items")
+                .withPermission(PERMISSION)
+                .withShortDescription("Administrative item commands.")
+                .executes((CommandSender sender, CommandArguments _) -> sendUsage(sender));
 
-        if (args.length == 0) {
-            sendUsage(sender);
-            return;
+        for (SubCommand sub : subCommands) {
+            tree.then(sub.branch());
         }
 
-        if (args[0].equalsIgnoreCase("give")) {
-            handleGive(sender, args);
-        } else {
-            sendUsage(sender);
-        }
+        tree.register();
     }
 
-    /**
-     * Gives a player one or more items resolved from the cross-plugin item registry.
-     * Usage: {@code /sylphian-items give <player> <item-id> [amount]}
-     *
-     * @param sender the command sender
-     * @param args   the full args array
-     */
-    private void handleGive(CommandSender sender, String[] args) {
-        if (args.length < 3) {
-            sender.sendMessage(Component.text(
-                    "Usage: /sylphian-items give <player> <item-id> [amount]", NamedTextColor.RED));
-            return;
-        }
-
-        Player target = Bukkit.getPlayer(args[1]);
-        if (target == null) {
-            sender.sendMessage(Component.text("Player '" + args[1] + "' is not online.", NamedTextColor.RED));
-            return;
-        }
-
-        String itemId = args[2];
-        Optional<ItemStack> resolved = ItemRegistry.get(itemId);
-        if (resolved.isEmpty()) {
-            sender.sendMessage(Component.text(
-                    "Unknown item '" + itemId + "'. Use tab completion to see available items.",
-                    NamedTextColor.RED));
-            return;
-        }
-
-        int amount = 1;
-        if (args.length >= 4) {
-            try {
-                amount = Integer.parseInt(args[3]);
-                if (amount < 1 || amount > 64) {
-                    sender.sendMessage(Component.text("Amount must be between 1 and 64.", NamedTextColor.RED));
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                sender.sendMessage(Component.text("Invalid amount: '" + args[3] + "'.", NamedTextColor.RED));
-                return;
-            }
-        }
-
-        ItemStack item = resolved.get().clone();
-        item.setAmount(amount);
-
-        target.getInventory().addItem(item).values()
-                .forEach(leftover -> target.getWorld().dropItemNaturally(target.getLocation(), leftover));
-
-        String displayName = getDisplayName(item, itemId);
-        sender.sendMessage(MINI.deserialize(
-                "<gray>Gave <white>" + amount + "x " + displayName + " <gray>to <white>" + target.getName() + "<gray>."));
-        target.sendMessage(MINI.deserialize(
-                "<gray>You received <white>" + amount + "x " + displayName + "<gray>."));
-    }
-
-    /**
-     * Returns the display name of an item as a MiniMessage string.
-     * Falls back to the namespaced item ID if no display name is set on the item.
-     *
-     * @param item   the item to read the name from
-     * @param itemId the namespaced item ID used as a fallback
-     * @return the display name string
-     */
-    private String getDisplayName(ItemStack item, String itemId) {
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null && meta.hasDisplayName()) {
-            Component name = meta.displayName();
-            if (name != null) return MiniMessage.miniMessage().serialize(name);
-        }
-        return "<white>" + itemId;
-    }
-
-    /**
-     * Sends usage information listing all available subcommands.
-     *
-     * @param sender the command sender to notify
-     */
     private void sendUsage(CommandSender sender) {
-        sender.sendMessage(Component.text("Usage:", NamedTextColor.RED));
-        sender.sendMessage(Component.text("  /sylphian-items give <player> <item-id> [amount]", NamedTextColor.RED));
-    }
-
-    /**
-     * Provides tab completion for all subcommands and their arguments.
-     * Item IDs are sourced live from the {@link ItemRegistry}.
-     *
-     * @param stack the command source stack
-     * @param args  the current arguments
-     * @return available suggestions for the current argument position
-     */
-    @Override
-    public @NonNull Collection<String> suggest(@NonNull CommandSourceStack stack, @NonNull String[] args) {
-        if (args.length <= 1) return List.of("give");
-
-        if (!args[0].equalsIgnoreCase("give")) return List.of();
-        return switch (args.length) {
-            case 2 -> Bukkit.getOnlinePlayers().stream()
-                    .map(Player::getName)
-                    .toList();
-            case 3 -> ItemRegistry.allNamespacedIds().stream()
-                    .filter(id -> id.startsWith(args[2]))
-                    .toList();
-            case 4 -> List.of("1", "4", "8", "16", "32", "64");
-            default -> List.of();
-        };
-    }
-
-    /**
-     * Restricts this command to senders with the admin permission.
-     *
-     * @param sender the command sender
-     * @return true if the sender has {@code sylphian.items.admin}
-     */
-    @Override
-    public boolean canUse(@NonNull CommandSender sender) {
-        return sender.hasPermission("sylphian.items.admin");
+        sender.sendMessage(MINI.deserialize("""
+                <yellow>--- /sylphian-items commands ---
+                <white>/sylphian-items give <player> <item-id> [amount]"""));
     }
 }

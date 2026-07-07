@@ -1,7 +1,5 @@
 package net.sylphian.minecraft.items;
 
-import io.papermc.paper.command.brigadier.Commands;
-import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.sylphian.minecraft.items.command.SylphianItemsCommand;
 import net.sylphian.minecraft.items.item.ItemRegistry;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -18,10 +16,7 @@ public final class SylphianItems extends JavaPlugin {
     public void onEnable() {
         ItemRegistry.init(getLogger());
 
-        getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
-            Commands commands = event.registrar();
-            commands.register("sylphian-items", new SylphianItemsCommand());
-        });
+        new SylphianItemsCommand().register();
 
         getLogger().info("Sylphian Items enabled!");
     }

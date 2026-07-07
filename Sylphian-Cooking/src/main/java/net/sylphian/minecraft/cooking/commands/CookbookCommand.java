@@ -28,6 +28,7 @@ public final class CookbookCommand {
     public void register() {
         new CommandTree("cookbook")
                 .withPermission(PERMISSION)
+                .withShortDescription("Open the recipe book.")
                 .executesPlayer((Player player, CommandArguments _) -> menu.open(player, 0))
                 .register();
     }

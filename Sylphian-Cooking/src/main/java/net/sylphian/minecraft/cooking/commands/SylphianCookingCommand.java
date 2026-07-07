@@ -32,6 +32,7 @@ public final class SylphianCookingCommand {
     public void register() {
         new CommandTree("sylphian-cooking")
                 .withPermission(PERMISSION)
+                .withShortDescription("Administrative cooking commands.")
                 .executes((CommandSender sender, CommandArguments _) -> sendUsage(sender))
                 .then(new LiteralArgument("reload")
                         .executes((CommandSender sender, CommandArguments _) -> plugin.reload(sender)))

@@ -69,6 +69,7 @@ public final class ClanCommand {
     public void register() {
         CommandTree tree = new CommandTree("clan")
                 .withPermission(PERMISSION)
+                .withShortDescription("Use clan commands.")
                 .executesPlayer((Player player, CommandArguments _) -> sendUsage(player));
 
         for (SubCommand sub : subCommands) {

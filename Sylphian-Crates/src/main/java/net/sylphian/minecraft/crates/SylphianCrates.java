@@ -1,7 +1,5 @@
 package net.sylphian.minecraft.crates;
 
-import io.papermc.paper.command.brigadier.Commands;
-import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.sylphian.minecraft.items.item.ItemRegistry;
@@ -58,11 +56,8 @@ public final class SylphianCrates extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new CrateEconomyReloadListener(this), this);
         }
 
-        getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
-            Commands commands = event.registrar();
-            commands.register("sylphian-crates", new SylphianCratesCommand(this));
-            commands.register("crates", new CratesCommand());
-        });
+        new SylphianCratesCommand(this).register();
+        new CratesCommand().register();
 
         getLogger().info("Sylphian Crates enabled!");
     }

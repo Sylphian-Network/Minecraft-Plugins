@@ -48,6 +48,7 @@ public final class ClanAdminCommand {
     public void register() {
         CommandTree tree = new CommandTree("sylphian-clans")
                 .withPermission(PERMISSION)
+                .withShortDescription("Administrative clan commands.")
                 .executes((CommandSender sender, CommandArguments _) -> sendUsage(sender));
 
         for (SubCommand sub : subCommands) {

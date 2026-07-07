@@ -9,6 +9,12 @@ load: POSTWORLD
 authors: [QuackieMackie]
 website: https://sylphian.net
 
+dependencies:
+  server:
+    CommandAPI:
+      load: BEFORE
+      required: true
+
 permissions:
   sylphian.items.admin:
     description: Administrative item commands (/sylphian-items).
