@@ -32,6 +32,7 @@ public final class SkillsPlayerCommand {
     public void register() {
         new CommandTree("skills")
                 .withPermission(PERMISSION)
+                .withShortDescription("View your skill levels and XP progress.")
                 .executesPlayer((Player player, CommandArguments _) ->
                         skillsMenu.open(player))
                 .register();
