@@ -5,6 +5,7 @@ dependencies {
     compileOnly(libs.jdbi.core)
     compileOnly(libs.jdbi.sqlobject)
     compileOnly(libs.placeholderapi)
+    compileOnly(libs.command.api)
 
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.launcher)

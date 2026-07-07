@@ -1,7 +1,5 @@
 package net.sylphian.minecraft.economy;
 
-import io.papermc.paper.command.brigadier.Commands;
-import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.sylphian.minecraft.database.DatabaseService;
 import net.sylphian.minecraft.economy.api.EconomyProvider;
 import net.sylphian.minecraft.economy.command.BalanceCommand;
@@ -58,15 +56,9 @@ public final class SylphianEconomy extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EconomyListener(economyService, this), this);
         Bukkit.getOnlinePlayers().forEach(player -> economyService.load(player.getUniqueId()));
 
-        getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
-            Commands commands = event.registrar();
-            commands.register("balance", "View your or another player's balance.",
-                    List.of("bal", "money"), new BalanceCommand(economyService));
-            commands.register("pay", "Send money to another online player.",
-                    new PayCommand(economyService, this));
-            commands.register("economy", "Administrative economy commands.",
-                    new EconomyAdminCommand(economyService, this::reload));
-        });
+        new BalanceCommand(economyService).register();
+        new PayCommand(economyService, this).register();
+        new EconomyAdminCommand(economyService, this::reload).register();
 
         getLogger().info("Sylphian-Economy initialized.");
     }

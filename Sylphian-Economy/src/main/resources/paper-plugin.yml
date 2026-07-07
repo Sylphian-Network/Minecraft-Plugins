@@ -17,6 +17,9 @@ dependencies:
     PlaceholderAPI:
       load: BEFORE
       required: false
+    CommandAPI:
+      load: BEFORE
+      required: true
 
 permissions:
   sylphian.economy.balance:

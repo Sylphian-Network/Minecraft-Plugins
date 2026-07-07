@@ -1,24 +1,25 @@
 package net.sylphian.minecraft.economy.command;
 
-import io.papermc.paper.command.brigadier.BasicCommand;
-import io.papermc.paper.command.brigadier.CommandSourceStack;
+import dev.jorel.commandapi.CommandTree;
+import dev.jorel.commandapi.arguments.EntitySelectorArgument;
+import dev.jorel.commandapi.arguments.StringArgument;
+import dev.jorel.commandapi.executors.CommandArguments;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.economy.api.EconomyAPI;
 import net.sylphian.minecraft.economy.util.MoneyFormat;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jspecify.annotations.NonNull;
 
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.List;
+import java.util.Objects;
 
-/** {@code /pay <player> <amount>} — transfers money to another online player. */
-public class PayCommand implements BasicCommand {
+/** Builds and registers {@code /pay <player> <amount>}, transferring money to another online player. */
+public final class PayCommand {
 
+    private static final String PERMISSION = "sylphian.economy.pay";
     private static final MiniMessage MINI = MiniMessage.miniMessage();
+
     private final EconomyAPI economy;
     private final JavaPlugin plugin;
 
@@ -27,32 +28,33 @@ public class PayCommand implements BasicCommand {
         this.plugin = plugin;
     }
 
-    @Override
-    public void execute(@NonNull CommandSourceStack source, @NonNull String[] args) {
-        CommandSender sender = source.getSender();
+    /**
+     * Builds the {@code /pay} tree and registers it with the CommandAPI.
+     */
+    public void register() {
+        new CommandTree("pay")
+                .withPermission(PERMISSION)
+                .withShortDescription("Send money to another online player.")
+                .executesPlayer((Player player, CommandArguments _) ->
+                        player.sendMessage(MINI.deserialize("<red>Usage: /pay <player> <amount>")))
+                .then(new EntitySelectorArgument.OnePlayer("player")
+                        .executesPlayer((Player player, CommandArguments _) ->
+                                player.sendMessage(MINI.deserialize("<red>Usage: /pay <player> <amount>")))
+                        .then(new StringArgument("amount")
+                                .executesPlayer((Player payer, CommandArguments args) ->
+                                        handlePay(payer, (Player) Objects.requireNonNull(args.get("player")), (String) args.get("amount")))))
+                .register();
+    }
 
-        if (!(sender instanceof Player payer)) {
-            sender.sendMessage(MINI.deserialize("<red>Only players can send money."));
-            return;
-        }
-        if (args.length < 2) {
-            sender.sendMessage(MINI.deserialize("<red>Usage: /pay <player> <amount>"));
-            return;
-        }
-
-        Player target = Bukkit.getPlayerExact(args[0]);
-        if (target == null) {
-            sender.sendMessage(MINI.deserialize("<red>Player '" + args[0] + "' is not online."));
-            return;
-        }
+    private void handlePay(Player payer, Player target, String rawAmount) {
         if (target.getUniqueId().equals(payer.getUniqueId())) {
-            sender.sendMessage(MINI.deserialize("<red>You cannot pay yourself."));
+            payer.sendMessage(MINI.deserialize("<red>You cannot pay yourself."));
             return;
         }
 
-        BigDecimal amount = MoneyFormat.parse(args[1]);
+        BigDecimal amount = MoneyFormat.parse(rawAmount);
         if (amount == null || amount.signum() <= 0) {
-            sender.sendMessage(MINI.deserialize("<red>'" + args[1] + "' is not a valid positive amount."));
+            payer.sendMessage(MINI.deserialize("<red>'" + rawAmount + "' is not a valid positive amount."));
             return;
         }
 
@@ -60,30 +62,11 @@ public class PayCommand implements BasicCommand {
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     if (success) {
                         String formatted = MoneyFormat.format(amount);
-                        payer.sendMessage(MINI.deserialize(
-                                "<green>You paid <gold>" + formatted + "</gold> to " + target.getName() + ".</green>"));
-                        target.sendMessage(MINI.deserialize(
-                                "<green>You received <gold>" + formatted + "</gold> from " + payer.getName() + ".</green>"));
+                        payer.sendMessage(MINI.deserialize("<green>You paid <gold>" + formatted + "</gold> to " + target.getName() + ".</green>"));
+                        target.sendMessage(MINI.deserialize("<green>You received <gold>" + formatted + "</gold> from " + payer.getName() + ".</green>"));
                     } else {
                         payer.sendMessage(MINI.deserialize("<red>You don't have enough money for that."));
                     }
                 }));
-    }
-
-    @Override
-    public @NonNull Collection<String> suggest(@NonNull CommandSourceStack source, @NonNull String[] args) {
-        if (args.length <= 1) {
-            String prefix = (args.length == 0 ? "" : args[0]).toLowerCase();
-            return Bukkit.getOnlinePlayers().stream()
-                    .map(Player::getName)
-                    .filter(name -> name.toLowerCase().startsWith(prefix))
-                    .toList();
-        }
-        return List.of();
-    }
-
-    @Override
-    public @NonNull String permission() {
-        return "sylphian.economy.pay";
     }
 }
