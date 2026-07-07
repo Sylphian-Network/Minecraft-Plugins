@@ -28,6 +28,7 @@ public final class EncyclopaediaCommand {
     public void register() {
         new CommandTree("encyclopaedia")
                 .withPermission(PERMISSION)
+                .withShortDescription("Open the fish encyclopaedia.")
                 .executesPlayer((Player player, CommandArguments _) -> menu.open(player, 0))
                 .register();
     }

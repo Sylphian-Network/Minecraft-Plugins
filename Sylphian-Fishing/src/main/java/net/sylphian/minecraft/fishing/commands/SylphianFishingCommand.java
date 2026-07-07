@@ -47,6 +47,7 @@ public final class SylphianFishingCommand {
     public void register() {
         CommandTree tree = new CommandTree("sylphian-fishing")
                 .withPermission(PERMISSION)
+                .withShortDescription("Administrative fishing commands.")
                 .executes((CommandSender sender, CommandArguments _) -> sendUsage(sender));
 
         for (SubCommand sub : subCommands) {
