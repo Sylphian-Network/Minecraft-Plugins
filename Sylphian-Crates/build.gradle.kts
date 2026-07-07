@@ -1,6 +1,7 @@
 
 dependencies {
     compileOnly(libs.paper.api)
+    compileOnly(libs.command.api)
     compileOnly(project(":Sylphian-Items"))
     compileOnly(project(":Sylphian-Economy"))
 }
