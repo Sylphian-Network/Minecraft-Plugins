@@ -1,6 +1,7 @@
 // Sylphian-Items
 dependencies {
     compileOnly(libs.paper.api)
+    compileOnly(libs.command.api)
 }
 
 tasks {
