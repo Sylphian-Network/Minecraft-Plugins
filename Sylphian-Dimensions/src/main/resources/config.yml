@@ -18,6 +18,7 @@
 #  dimension-rules (fallback if a key is omitted)
 #    pvp: false                players can damage each other
 #    building: false           players can place and break blocks
+#    claiming: false           clans can claim chunks here (needs Sylphian-Clans)
 #    damage-enabled: true      players can take damage (false = death impossible)
 #    keep-inventory: true      players keep inventory and XP on death
 #    login-redirect: false     players who log out here rejoin at the hub

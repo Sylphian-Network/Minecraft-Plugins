@@ -94,6 +94,7 @@ public record DimensionsConfig(String hubName, Map<String, Dimension> dimensions
         return new DimensionRuleset(
                 rules.getBoolean("pvp", defaults.pvpEnabled()),
                 rules.getBoolean("building", defaults.buildingEnabled()),
+                rules.getBoolean("claiming", defaults.claimingEnabled()),
                 rules.getBoolean("damage-enabled", defaults.damageEnabled()),
                 rules.getBoolean("keep-inventory", defaults.keepInventory()),
                 rules.getBoolean("login-redirect", defaults.loginRedirect()),

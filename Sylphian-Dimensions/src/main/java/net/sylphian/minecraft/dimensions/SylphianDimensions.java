@@ -5,6 +5,7 @@ import net.sylphian.minecraft.dimensions.command.DimensionCommand;
 import net.sylphian.minecraft.dimensions.command.HubCommand;
 import net.sylphian.minecraft.dimensions.command.SylphianDimensionsCommand;
 import net.sylphian.minecraft.dimensions.config.DimensionsConfig;
+import net.sylphian.minecraft.dimensions.listener.ClanClaimListener;
 import net.sylphian.minecraft.dimensions.listener.DimensionDeathListener;
 import net.sylphian.minecraft.dimensions.listener.DimensionProtectionListener;
 import net.sylphian.minecraft.dimensions.listener.PlayerConnectionListener;
@@ -60,6 +61,11 @@ public final class SylphianDimensions extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new DimensionProtectionListener(dimensionManager), this);
         getServer().getPluginManager().registerEvents(new DimensionDeathListener(dimensionManager), this);
         getServer().getPluginManager().registerEvents(new PlayerConnectionListener(dimensionManager), this);
+
+        if (getServer().getPluginManager().getPlugin("Sylphian-Clans") != null) {
+            getServer().getPluginManager().registerEvents(new ClanClaimListener(dimensionManager), this);
+            getLogger().info("Sylphian-Clans detected; the claiming rule is active.");
+        }
 
         new DimensionCommand(dimensionManager).register();
         new HubCommand(dimensionManager).register();

@@ -14,6 +14,9 @@ dependencies:
     CommandAPI:
       load: BEFORE
       required: true
+    Sylphian-Clans:
+      load: BEFORE
+      required: false
 
 permissions:
   sylphian.dimensions.use:

@@ -61,17 +61,25 @@ public class TerritoryService {
     /**
      * Claims a chunk on behalf of a clan.
      *
-     * <p>Fails silently (returned future completes exceptionally) if the chunk is
-     * already claimed or the clan has reached its claim limit.</p>
+     * <p>Fires {@link ClanClaimEvent.Pre} first; a cancelled event blocks the claim.
+     * Fails (returned future completes exceptionally) if the event is cancelled, the
+     * chunk is already claimed, or the clan has reached its claim limit.</p>
      *
      * @param clanId the clan claiming the chunk
      * @param world  the world name
      * @param chunkX the chunk X coordinate
      * @param chunkZ the chunk Z coordinate
      * @return a future that completes when the claim is persisted and cached
-     * @throws IllegalStateException if the chunk is already claimed or the clan is at its limit
+     * @throws IllegalStateException if the claim is blocked, the chunk is already claimed, or the clan is at its limit
      */
     public CompletableFuture<Void> claimChunk(UUID clanId, String world, int chunkX, int chunkZ) {
+        ClanClaimEvent.Pre pre = new ClanClaimEvent.Pre(clanId, world, chunkX, chunkZ);
+        plugin.getServer().getPluginManager().callEvent(pre);
+        if (pre.isCancelled()) {
+            return CompletableFuture.failedFuture(
+                    new IllegalStateException("Claiming is not allowed here."));
+        }
+
         if (territoryCache.isClaimed(world, chunkX, chunkZ)) {
             return CompletableFuture.failedFuture(
                     new IllegalStateException("Chunk " + world + ":" + chunkX + ":" + chunkZ + " is already claimed."));
