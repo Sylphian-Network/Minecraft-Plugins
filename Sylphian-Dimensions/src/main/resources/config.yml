@@ -1,0 +1,42 @@
+# ============================================================
+#  Sylphian-Dimensions
+# ============================================================
+#
+#  Templates
+#    A template is a pre-built world folder in
+#    plugins/Sylphian-Dimensions/templates/<template>.
+#    It is copied to world/dimensions/sylphian/<name> when the
+#    dimension is created, when template or template-version
+#    changes, or on /sylphian-dimensions migrate <name>.
+#
+#  Dimension keys
+#    template          template folder name        (default: dimension name)
+#    template-version  bump to force a fresh copy on next startup  (default: 1)
+#    spawn-point       [x, y, z] or [x, y, z, yaw, pitch]
+#    chunk-bounds      built area in chunks, centered on 0,0
+#
+#  dimension-rules (fallback if a key is omitted)
+#    pvp: false                players can damage each other
+#    building: false           players can place and break blocks
+#    damage-enabled: true      players can take damage (false = death impossible)
+#    keep-inventory: true      players keep inventory and XP on death
+#    login-redirect: false     players who log out here rejoin at the hub
+#    death-loss-chance: 0.0    chance per gathered item lost on death
+# ============================================================
+
+# The lobby dimension. Must exist under 'dimensions' or the plugin disables
+# itself. Target of /hub, bed-less respawns, first joins, and login redirects.
+hub-dimension: hub
+
+dimensions:
+  hub:
+    template: hub_template
+    template-version: 1
+    spawn-point: [0.5, 65.0, 0.5]
+    chunk-bounds: [10, 10]
+    dimension-rules:
+      pvp: false
+      building: false
+      damage-enabled: false
+      keep-inventory: true
+      login-redirect: false

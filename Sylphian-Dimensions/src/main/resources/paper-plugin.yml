@@ -1,0 +1,24 @@
+name: Sylphian-Dimensions
+prefix: Sylphian-Dimensions
+version: '${version}'
+
+main: net.sylphian.minecraft.dimensions.SylphianDimensions
+api-version: '26.1.2'
+load: POSTWORLD
+
+authors: [QuackieMackie]
+website: https://sylphian.net
+
+dependencies:
+  server:
+    CommandAPI:
+      load: BEFORE
+      required: true
+
+permissions:
+  sylphian.dimensions.use:
+    description: Use dimension travel commands (/dimension, /hub).
+    default: true
+  sylphian.dimensions.admin:
+    description: Administrative dimension commands (/sylphian-dimensions) and build bypass.
+    default: op
