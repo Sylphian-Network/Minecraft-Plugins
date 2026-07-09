@@ -14,7 +14,9 @@ import net.sylphian.minecraft.dimensions.world.TemplateManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Main plugin class for Sylphian-Dimensions.
@@ -29,8 +31,15 @@ public final class SylphianDimensions extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        //noinspection ResultOfMethodCallIgnored
-        new File(getDataFolder(), "templates").mkdirs();
+
+        Path templatesDir = getDataFolder().toPath().resolve("templates");
+        try {
+            Files.createDirectories(templatesDir);
+        } catch (IOException e) {
+            getLogger().severe("Could not create the templates folder: " + e);
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
 
         DimensionsConfig config = DimensionsConfig.from(getConfig(), getLogger());
         if (!config.dimensions().containsKey(config.hubName())) {
@@ -42,7 +51,7 @@ public final class SylphianDimensions extends JavaPlugin {
         // Unified world storage (Paper 26.1+): dimensions are keyed sylphian:<name>,
         // so their data lives under `world/dimensions/sylphian/<name>`
         TemplateManager templates = new TemplateManager(
-                getDataFolder().toPath().resolve("templates"),
+                templatesDir,
                 getServer().getWorldContainer().toPath()
                         .resolve(getServer().getWorlds().getFirst().getName())
                         .resolve("dimensions")
