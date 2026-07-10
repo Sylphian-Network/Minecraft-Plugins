@@ -8,6 +8,7 @@ import net.sylphian.minecraft.dimensions.config.DimensionsConfig;
 import net.sylphian.minecraft.dimensions.listener.ClanClaimListener;
 import net.sylphian.minecraft.dimensions.listener.DimensionDeathListener;
 import net.sylphian.minecraft.dimensions.listener.DimensionProtectionListener;
+import net.sylphian.minecraft.dimensions.listener.NaturalSpawnListener;
 import net.sylphian.minecraft.dimensions.listener.PlayerConnectionListener;
 import net.sylphian.minecraft.dimensions.world.DimensionManager;
 import net.sylphian.minecraft.dimensions.world.TemplateManager;
@@ -69,6 +70,7 @@ public final class SylphianDimensions extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new DimensionProtectionListener(dimensionManager), this);
         getServer().getPluginManager().registerEvents(new DimensionDeathListener(dimensionManager), this);
+        getServer().getPluginManager().registerEvents(new NaturalSpawnListener(dimensionManager), this);
         getServer().getPluginManager().registerEvents(new PlayerConnectionListener(dimensionManager), this);
 
         if (getServer().getPluginManager().getPlugin("Sylphian-Clans") != null) {

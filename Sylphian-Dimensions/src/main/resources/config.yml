@@ -18,6 +18,10 @@
 #  dimension-rules (fallback if a key is omitted)
 #    pvp: false                players can damage each other
 #    building: false           players can place and break blocks
+#    natural-spawning: true    vanilla environmental mob spawning; false blocks
+#                              natural, patrol, raid, reinforcement, jockey,
+#                              mount, trap, nether-portal and slime-split spawns
+#                              (player/plugin spawns are unaffected)
 #    claiming: false           clans can claim chunks here (needs Sylphian-Clans)
 #    damage-enabled: true      players can take damage (false = death impossible)
 #    keep-inventory: true      players keep inventory and XP on death
@@ -38,6 +42,7 @@ dimensions:
     dimension-rules:
       pvp: false
       building: false
+      natural-spawning: false
       damage-enabled: false
       keep-inventory: true
       login-redirect: false
