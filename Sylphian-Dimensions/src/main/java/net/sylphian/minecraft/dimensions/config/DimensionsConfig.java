@@ -2,12 +2,17 @@ package net.sylphian.minecraft.dimensions.config;
 
 import net.sylphian.minecraft.dimensions.model.Dimension;
 import net.sylphian.minecraft.dimensions.model.DimensionRuleset;
+import net.sylphian.minecraft.dimensions.spawn.SpawnEntry;
+import net.sylphian.minecraft.dimensions.spawn.SpawnSettings;
+import net.sylphian.minecraft.dimensions.spawn.TimeWindow;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -15,10 +20,11 @@ import java.util.logging.Logger;
  * Immutable holder for all Sylphian-Dimensions configuration.
  * Rebuilt on reload and swapped by reference.
  *
- * @param hubName    the dimension used as the lobby and redirect target
- * @param dimensions all defined dimensions, keyed by name
+ * @param hubName            the dimension used as the lobby and redirect target
+ * @param spawnIntervalTicks the tick interval between custom-spawner cycles
+ * @param dimensions         all defined dimensions, keyed by name
  */
-public record DimensionsConfig(String hubName, Map<String, Dimension> dimensions) {
+public record DimensionsConfig(String hubName, int spawnIntervalTicks, Map<String, Dimension> dimensions) {
 
     /**
      * Parses the configuration, skipping and logging invalid entries.
@@ -30,11 +36,12 @@ public record DimensionsConfig(String hubName, Map<String, Dimension> dimensions
      */
     public static DimensionsConfig from(FileConfiguration config, Logger logger) {
         String hubName = config.getString("hub-dimension", "hub");
+        int spawnIntervalTicks = Math.max(1, config.getInt("spawning.interval-ticks", 20));
 
         ConfigurationSection section = config.getConfigurationSection("dimensions");
         if (section == null) {
             logger.warning("No 'dimensions' section found in config.yml; no dimensions will be loaded.");
-            return new DimensionsConfig(hubName, Map.of());
+            return new DimensionsConfig(hubName, spawnIntervalTicks, Map.of());
         }
 
         Map<String, Dimension> dimensions = new LinkedHashMap<>();
@@ -58,14 +65,15 @@ public record DimensionsConfig(String hubName, Map<String, Dimension> dimensions
                     parseSpawnPoint(dim.getDoubleList("spawn-point")),
                     boundsAt(dim.getIntegerList("chunk-bounds"), 0),
                     boundsAt(dim.getIntegerList("chunk-bounds"), 1),
-                    parseRuleset(dim)));
+                    parseRuleset(dim),
+                    parseSpawns(dim.getConfigurationSection("spawns"), name, logger)));
         }
 
         if (!dimensions.containsKey(hubName)) {
             logger.severe("Hub dimension '" + hubName + "' is not defined under 'dimensions'.");
         }
 
-        return new DimensionsConfig(hubName, Collections.unmodifiableMap(dimensions));
+        return new DimensionsConfig(hubName, spawnIntervalTicks, Collections.unmodifiableMap(dimensions));
     }
 
     /**
@@ -100,5 +108,71 @@ public record DimensionsConfig(String hubName, Map<String, Dimension> dimensions
                 rules.getBoolean("keep-inventory", defaults.keepInventory()),
                 rules.getBoolean("login-redirect", defaults.loginRedirect()),
                 rules.getDouble("death-loss-chance", defaults.deathLossChance()));
+    }
+
+    /**
+     * Parses the {@code spawns} section of a dimension. A missing section
+     * disables custom spawning; invalid entries are skipped and logged.
+     */
+    private static SpawnSettings parseSpawns(ConfigurationSection spawns, String dimensionName, Logger logger) {
+        if (spawns == null) return SpawnSettings.DISABLED;
+
+        List<SpawnEntry> entries = new ArrayList<>();
+        List<Map<?, ?>> rawEntries = spawns.getMapList("entries");
+        for (Map<?, ?> raw : rawEntries) {
+            SpawnEntry entry = parseSpawnEntry(raw, dimensionName, logger);
+            if (entry != null) entries.add(entry);
+        }
+
+        boolean enabled = spawns.getBoolean("enabled", true) && !entries.isEmpty();
+        return new SpawnSettings(
+                enabled,
+                Math.max(0, spawns.getInt("mob-cap", 20)),
+                Math.max(1, spawns.getInt("per-chunk-cap", 4)),
+                Math.max(1, spawns.getInt("spawn-range-chunks", 8)),
+                Collections.unmodifiableList(entries));
+    }
+
+    /**
+     * Parses one spawn-table row from a map. A missing or invalid entity
+     * reference or time window skips the row; numeric fields fall back to
+     * sensible defaults.
+     */
+    private static SpawnEntry parseSpawnEntry(Map<?, ?> raw, String dimensionName, Logger logger) {
+        Object entityId = raw.get("entity");
+        if (!(entityId instanceof String id) || id.indexOf(':') == -1) {
+            logger.warning("Dimension '" + dimensionName + "' has a spawn entry with a missing or malformed 'entity' (expected 'namespace:id'); skipping.");
+            return null;
+        }
+
+        TimeWindow time;
+        Object rawTime = raw.get("time");
+        try {
+            time = rawTime == null ? TimeWindow.ANY : TimeWindow.valueOf(rawTime.toString().trim().toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            logger.warning("Dimension '" + dimensionName + "' spawn entry '" + id + "' has unknown time '" + rawTime + "'; skipping.");
+            return null;
+        }
+
+        int minGroup = Math.max(1, intOr(raw.get("min-group"), 1));
+        int maxGroup = Math.max(minGroup, intOr(raw.get("max-group"), minGroup));
+        return new SpawnEntry(
+                id,
+                Math.max(1, intOr(raw.get("weight"), 1)),
+                time,
+                minGroup,
+                maxGroup,
+                clampLight(intOr(raw.get("min-light"), 0)),
+                clampLight(intOr(raw.get("max-light"), 7)),
+                intOr(raw.get("min-y"), -64),
+                intOr(raw.get("max-y"), 320));
+    }
+
+    private static int intOr(Object value, int fallback) {
+        return value instanceof Number number ? number.intValue() : fallback;
+    }
+
+    private static int clampLight(int value) {
+        return Math.clamp(value, 0, 15);
     }
 }

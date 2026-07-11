@@ -27,7 +27,30 @@
 #    keep-inventory: true      players keep inventory and XP on death
 #    login-redirect: false     players who log out here rejoin at the hub
 #    death-loss-chance: 0.0    chance per gathered item lost on death
+#
+#  spawns (custom entity spawning; needs Sylphian-Entities)
+#    Drives vanilla-like spawning from a weighted table. Entities are
+#    referenced by their central ID from Sylphian-Entities. With
+#    natural-spawning: false, this table fully replaces vanilla mobs.
+#    enabled: true             master switch (also off if no entries)
+#    mob-cap: 20               base cap, scaled by player-loaded chunks
+#    per-chunk-cap: 4          max tracked spawns per chunk
+#    spawn-range-chunks: 8     chunk radius around a player to spawn in
+#    entries:                  the weighted table; each row:
+#      - entity: "sylphian-entities:rift_zombie"
+#        weight: 10            relative pick weight
+#        time: NIGHT           DAY | NIGHT | ANY
+#        min-group: 1          pack size range
+#        max-group: 3
+#        min-light: 0          block (artificial) light range (0-15); day/night
+#        max-light: 7          is controlled by 'time', this avoids lit areas
+#        min-y: 50             Y band scanned for valid floors; mobs spawn on any
+#        max-y: 90             standing spot in range (caves, under trees, surface)
 # ============================================================
+
+# Ticks between custom-spawner cycles. Only used when Sylphian-Entities is present.
+spawning:
+  interval-ticks: 20
 
 # The lobby dimension. Must exist under 'dimensions' or the plugin disables
 # itself. Target of /hub, bed-less respawns, first joins, and login redirects.
@@ -37,7 +60,7 @@ dimensions:
   hub:
     template: hub_template
     template-version: 1
-    spawn-point: [0.5, 65.0, 0.5]
+    spawn-point: [0.5, -58.0, 0.5]
     chunk-bounds: [10, 10]
     dimension-rules:
       pvp: false
@@ -46,3 +69,46 @@ dimensions:
       damage-enabled: false
       keep-inventory: true
       login-redirect: false
+  rift1:
+    template: rift1_template
+    template-version: 1
+    spawn-point: [8.5, -60, 6.5]
+    chunk-bounds: [10, 10]
+    dimension-rules:
+      pvp: true
+      building: false
+      natural-spawning: false
+      damage-enabled: true
+      login-redirect: true
+    spawns:
+      mob-cap: 24
+      per-chunk-cap: 4
+      spawn-range-chunks: 8
+      entries:
+        - entity: "sylphian-entities:rift_zombie"
+          weight: 10
+          time: ANY
+          min-group: 2
+          max-group: 4
+          min-light: 0
+          max-light: 7
+          min-y: -64
+          max-y: -40
+        - entity: "sylphian-entities:rift_archer"
+          weight: 6
+          time: ANY
+          min-group: 1
+          max-group: 2
+          min-light: 0
+          max-light: 7
+          min-y: -64
+          max-y: -40
+        - entity: "sylphian-entities:rift_brute"
+          weight: 3
+          time: ANY
+          min-group: 1
+          max-group: 1
+          min-light: 0
+          max-light: 7
+          min-y: -64
+          max-y: -40

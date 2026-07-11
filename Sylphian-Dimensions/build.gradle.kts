@@ -3,6 +3,7 @@ dependencies {
     compileOnly(libs.paper.api)
     compileOnly(libs.command.api)
     compileOnly(project(":Sylphian-Clans"))
+    compileOnly(project(":Sylphian-Entities"))
 }
 
 tasks {

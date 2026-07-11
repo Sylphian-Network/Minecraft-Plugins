@@ -17,6 +17,9 @@ dependencies:
     Sylphian-Clans:
       load: BEFORE
       required: false
+    Sylphian-Entities:
+      load: BEFORE
+      required: false
 
 permissions:
   sylphian.dimensions.use:

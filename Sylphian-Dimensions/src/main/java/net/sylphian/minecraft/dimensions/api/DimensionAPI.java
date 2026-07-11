@@ -19,7 +19,7 @@ public interface DimensionAPI {
     /**
      * Returns the dimension with the given config name.
      *
-     * @param name the dimension name, e.g. {@code "ashfen-gathering"}
+     * @param name the dimension name, e.g. {@code "rift-gathering"}
      * @return the dimension, or empty if not defined
      */
     Optional<Dimension> getDimension(String name);

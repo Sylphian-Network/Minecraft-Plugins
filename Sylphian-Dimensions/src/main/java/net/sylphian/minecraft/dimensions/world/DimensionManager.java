@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -248,6 +249,25 @@ public class DimensionManager implements DimensionAPI {
      */
     public String hubName() {
         return config.hubName();
+    }
+
+    /**
+     * Returns every configured dimension. Reflects the current config, so a
+     * caller iterating each tick always sees the latest reloaded definitions.
+     *
+     * @return the configured dimensions
+     */
+    public Collection<Dimension> dimensions() {
+        return config.dimensions().values();
+    }
+
+    /**
+     * Returns the tick interval between custom-spawner cycles.
+     *
+     * @return the spawn interval in ticks
+     */
+    public int spawnIntervalTicks() {
+        return config.spawnIntervalTicks();
     }
 
     // Templates are built centered on world 0,0; the border matches the built area

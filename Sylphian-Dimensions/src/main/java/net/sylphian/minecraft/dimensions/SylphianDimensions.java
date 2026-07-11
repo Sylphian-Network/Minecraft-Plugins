@@ -10,10 +10,12 @@ import net.sylphian.minecraft.dimensions.listener.DimensionDeathListener;
 import net.sylphian.minecraft.dimensions.listener.DimensionProtectionListener;
 import net.sylphian.minecraft.dimensions.listener.NaturalSpawnListener;
 import net.sylphian.minecraft.dimensions.listener.PlayerConnectionListener;
+import net.sylphian.minecraft.dimensions.spawn.DimensionSpawner;
 import net.sylphian.minecraft.dimensions.world.DimensionManager;
 import net.sylphian.minecraft.dimensions.world.TemplateManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,6 +30,7 @@ import java.nio.file.Path;
 public final class SylphianDimensions extends JavaPlugin {
 
     private DimensionManager dimensionManager;
+    private @Nullable DimensionSpawner dimensionSpawner;
 
     @Override
     public void onEnable() {
@@ -78,6 +81,14 @@ public final class SylphianDimensions extends JavaPlugin {
             getLogger().info("Sylphian-Clans detected; the claiming rule is active.");
         }
 
+        if (getServer().getPluginManager().getPlugin("Sylphian-Entities") != null) {
+            dimensionSpawner = new DimensionSpawner(this, dimensionManager);
+            dimensionSpawner.start();
+            getLogger().info("Sylphian-Entities detected; custom dimension spawning is active.");
+        } else {
+            getLogger().info("Sylphian-Entities not present; dimension spawn tables are inactive.");
+        }
+
         new DimensionCommand(dimensionManager).register();
         new HubCommand(dimensionManager).register();
         new SylphianDimensionsCommand(this, dimensionManager, templates).register();
@@ -100,6 +111,7 @@ public final class SylphianDimensions extends JavaPlugin {
                 throw new IllegalStateException("Hub dimension '" + newConfig.hubName() + "' is not defined.");
             }
             dimensionManager.reload(newConfig);
+            if (dimensionSpawner != null) dimensionSpawner.reload();
             sender.sendMessage(SylphianDimensionsCommand.MINI.deserialize("<green>Sylphian-Dimensions configuration reloaded."));
             return true;
         } catch (Exception e) {
@@ -111,6 +123,7 @@ public final class SylphianDimensions extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (dimensionSpawner != null) dimensionSpawner.stop();
         DimensionProvider.unregister();
         if (dimensionManager != null) dimensionManager.unloadAll();
         getLogger().info("Sylphian Dimensions disabled!");
