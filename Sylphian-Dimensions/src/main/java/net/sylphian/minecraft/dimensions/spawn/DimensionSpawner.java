@@ -280,7 +280,10 @@ public final class DimensionSpawner {
 
     private boolean tooCloseToPlayer(List<Player> players, int x, int y, int z) {
         for (Player player : players) {
-            if (player.getLocation().distanceSquared(new Location(player.getWorld(), x, y, z)) < NO_SPAWN_RADIUS_SQUARED) {
+            double dx = player.getX() - x;
+            double dy = player.getY() - y;
+            double dz = player.getZ() - z;
+            if (dx * dx + dy * dy + dz * dz < NO_SPAWN_RADIUS_SQUARED) {
                 return true;
             }
         }
