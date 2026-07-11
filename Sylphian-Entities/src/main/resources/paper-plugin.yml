@@ -1,0 +1,24 @@
+name: Sylphian-Entities
+prefix: Sylphian-Entities
+version: '${version}'
+
+main: net.sylphian.minecraft.entities.SylphianEntities
+api-version: '26.1.2'
+load: POSTWORLD
+
+authors: [QuackieMackie]
+website: https://sylphian.net
+
+dependencies:
+  server:
+    CommandAPI:
+      load: BEFORE
+      required: true
+    Sylphian-Items:
+      load: BEFORE
+      required: false
+
+permissions:
+  sylphian.entities.admin:
+    description: Administrative entity commands (/sylphian-entities).
+    default: op
