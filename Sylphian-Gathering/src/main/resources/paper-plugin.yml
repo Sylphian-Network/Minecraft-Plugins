@@ -1,0 +1,10 @@
+name: Sylphian-Gathering
+prefix: Sylphian-Gathering
+version: '${version}'
+
+main: net.sylphian.minecraft.gathering.SylphianGathering
+api-version: '26.1.2'
+load: POSTWORLD
+
+authors: [QuackieMackie]
+website: https://sylphian.net

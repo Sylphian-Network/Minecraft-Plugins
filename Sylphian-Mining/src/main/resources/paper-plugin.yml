@@ -1,0 +1,10 @@
+name: Sylphian-Mining
+prefix: Sylphian-Mining
+version: '${version}'
+
+main: net.sylphian.minecraft.gathering.mining.SylphianMining
+api-version: '26.1.2'
+load: POSTWORLD
+
+authors: [QuackieMackie]
+website: https://sylphian.net

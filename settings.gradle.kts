@@ -14,3 +14,6 @@ include("Sylphian-Fishing")
 include("Sylphian-Cooking")
 include("Sylphian-Verify-Velocity")
 include("Sylphian-Verify-Paper")
+
+include("Sylphian-Gathering")
+include("Sylphian-Mining")
