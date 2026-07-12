@@ -1,0 +1,80 @@
+# ============================================================
+#  Sylphian-Entities
+# ============================================================
+#
+#  Central definitions for custom entities. Every entity here is
+#  registered under the 'sylphian-entities' namespace and can be
+#  referenced elsewhere as 'sylphian-entities:<id>', e.g. by the
+#  Sylphian-Dimensions spawn tables or /sylphian-entities spawn.
+#
+#  Entity keys
+#    type            base vanilla EntityType, e.g. ZOMBIE, SKELETON (required)
+#    name            MiniMessage custom name (optional)
+#    health          max health          (optional; leaves vanilla if omitted)
+#    damage          attack damage       (optional)
+#    armor           armor value         (optional)
+#    equipment       slot -> item (head, chest, legs, feet, hand, off-hand).
+#                    An item is a vanilla Material (e.g. IRON_SWORD) or a custom
+#                    'namespace:id' resolved through Sylphian-Items (e.g.
+#                    sylphian-items:flame_sword). Give the slot the item directly,
+#                    or a section with 'item' plus an optional 'drop-chance'
+#                    (0.0-1.0) controlling the chance it drops on death.
+#
+#  properties
+#    glowing: false            the glowing outline
+#    baby: false               spawn as a baby where the type supports it
+#    name-visible: true        whether the custom name floats above the entity
+#    persistent: false         when false the mob despawns naturally like a
+#                              vanilla mob; set true for a mob that never despawns
+#    potion-effects            list of "TYPE:amplifier:duration"; duration is a
+#                              tick count or 'infinite'; amplifier 0 = level I.
+#                              amplifier and duration are optional.
+# ============================================================
+
+entities:
+  rift_zombie:
+    type: ZOMBIE
+    name: "<dark_red>Rift Zombie"
+    health: 40
+    damage: 8
+    armor: 4
+    equipment:
+      hand: IRON_SWORD
+    properties:
+      glowing: false
+      baby: false
+      name-visible: true
+      potion-effects:
+        - "SPEED:0:infinite"
+
+  rift_archer:
+    type: SKELETON
+    name: "<gray>Rift Archer"
+    health: 24
+    damage: 3
+    armor: 2
+    equipment:
+      hand: BOW
+    properties:
+      glowing: false
+      baby: false
+      name-visible: true
+      potion-effects:
+        - "SPEED:0:infinite"
+
+  rift_brute:
+    type: WITHER_SKELETON
+    name: "<dark_gray>Rift Brute"
+    health: 70
+    damage: 14
+    armor: 8
+    equipment:
+      hand:
+        item: STONE_SWORD
+        drop-chance: 0.25
+    properties:
+      glowing: false
+      baby: false
+      name-visible: true
+      potion-effects:
+        - "RESISTANCE:0:infinite"
