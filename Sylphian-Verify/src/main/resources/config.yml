@@ -12,10 +12,10 @@ ip_attempt_limit: 10
 api_timeout_seconds: 10
 strike_on_api_failure: true
 
-# Kick and warning messages
+# Kick and warning messages (MiniMessage format)
 messages:
-  not_linked: "Your account has not been linked to the forum. Please visit sylphian.net to link your account."
-  not_confirmed: "Your forum account is linked but not confirmed. Please confirm it at sylphian.net."
-  brute_force_blocked: "Too many failed attempts. Please try again in {time}."
-  re_verification_failed: "Your account is no longer verified. Please ensure your account is linked at sylphian.net."
-  api_error: "An error occurred while verifying your account. Please try again later."
+  not_linked: "<red><bold>Your account has not been linked to the forum. Please visit sylphian.net to link your account."
+  not_confirmed: "<red><bold>Your forum account is linked but not confirmed. Please confirm it at sylphian.net."
+  brute_force_blocked: "<red>Too many failed attempts. Please try again in <time>."
+  re_verification_failed: "<red><bold>Your account is no longer verified. Please ensure your account is linked at sylphian.net."
+  api_error: "<red>An error occurred while verifying your account. Please try again later."

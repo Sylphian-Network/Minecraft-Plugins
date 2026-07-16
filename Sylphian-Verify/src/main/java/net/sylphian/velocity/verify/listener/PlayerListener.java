@@ -49,6 +49,7 @@ public class PlayerListener {
                     // Cache the identity for plugin messaging and periodic checks
                     if (result.identity() != null) {
                         verifiedPlayers.put(uuid, result.identity());
+                        player.sendMessage(MessageUtils.buildVerificationMessage(result.identity()));
                     }
                 }
             } catch (Exception e) {
