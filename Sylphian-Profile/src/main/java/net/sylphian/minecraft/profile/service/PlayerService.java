@@ -5,6 +5,7 @@ import net.sylphian.minecraft.profile.db.api.ISessionRepository;
 import net.sylphian.minecraft.profile.db.models.PlayerModel;
 import net.sylphian.minecraft.profile.UserProfile;
 import net.sylphian.minecraft.profile.utils.ProfileManager;
+import org.jspecify.annotations.Nullable;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -114,6 +115,38 @@ public class PlayerService {
             }
             return CompletableFuture.completedFuture(null);
         }).thenAccept(v -> profileManager.invalidate(uuid)); // Remove from memory cache
+    }
+
+    /**
+     * Ensures a player row exists in {@code mc_players}.
+     * If the row exists, updates {@code xf_user_id}, {@code mc_username}, {@code forum_username}
+     * and {@code last_seen}; otherwise inserts a new row with default playtime and offline status.
+     *
+     * <p>Executes asynchronously on the database executor.</p>
+     *
+     * @param uuid          the player's Mojang UUID
+     * @param xfUserId      the linked XenForo user ID, or {@code null} if unknown
+     * @param mcUsername    the player's current Minecraft username
+     * @param forumUsername the player's XenForo username, or {@code null} if unknown
+     * @return a future that completes when the upsert is done
+     */
+    public CompletableFuture<Void> ensurePlayerExists(UUID uuid, @Nullable Integer xfUserId,
+                                                      String mcUsername, @Nullable String forumUsername) {
+        long now = Instant.now().getEpochSecond();
+        return playerRepository.findByUuid(uuid).thenCompose(opt -> {
+            if (opt.isPresent()) {
+                PlayerModel existing = opt.get();
+                PlayerModel updated = new PlayerModel(
+                        uuid, xfUserId, mcUsername, forumUsername,
+                        existing.firstJoined(), now, existing.playtime(), existing.isOnline());
+                return playerRepository.update(updated);
+            } else {
+                PlayerModel inserted = new PlayerModel(
+                        uuid, xfUserId, mcUsername, forumUsername,
+                        now, now, 0, false);
+                return playerRepository.insert(inserted);
+            }
+        });
     }
 
     /**
