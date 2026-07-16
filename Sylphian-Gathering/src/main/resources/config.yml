@@ -1,0 +1,32 @@
+# ============================================================
+#  Sylphian-Gathering
+# ============================================================
+#
+#  This plugin owns the gathering mechanics only. Node types and their loot are
+#  contributed by content plugins (e.g. Sylphian-Mining); node placements are
+#  declared here, keyed by the world they live in.
+#
+#  default-respawn-seconds fallback respawn delay for a node type that sets none
+#
+#  placements (resource nodes; needs a content plugin for the node types)
+#    Fixed-position resource nodes placed at explicit block coordinates. The
+#    first-level key is a world key (dimension worlds are keyed "sylphian:<name>").
+#    Under it, each key is an opaque "namespace:id" node type registered by a
+#    content plugin; this engine never resolves it, it just looks it up in the
+#    node registry. Absence of the section disables gathering.
+#    placements:
+#      "sylphian:rift1":
+#        "sylphian-mining:iron_vein":   node type id -> list of [x, y, z]
+#          - [12, -58, 40]
+#          - [15, -58, 44]
+# ============================================================
+
+default-respawn-seconds: 60
+
+placements:
+  "sylphian:rift1":
+    "sylphian-mining:iron_vein":
+      - [12, -58, 40]
+      - [15, -58, 44]
+    "sylphian-mining:coal_seam":
+      - [20, -58, 50]

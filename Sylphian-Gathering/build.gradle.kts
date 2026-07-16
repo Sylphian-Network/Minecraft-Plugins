@@ -1,6 +1,10 @@
 // Sylphian-Gathering
 dependencies {
     compileOnly(libs.paper.api)
+    compileOnly(libs.command.api)
+    compileOnly(project(":Sylphian-Items"))
+    compileOnly(project(":Sylphian-Dimensions"))
+    compileOnly(project(":Sylphian-Skills"))
 }
 
 tasks {
