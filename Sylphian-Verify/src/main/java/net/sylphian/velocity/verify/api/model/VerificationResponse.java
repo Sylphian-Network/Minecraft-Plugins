@@ -7,41 +7,31 @@ import com.google.gson.annotations.SerializedName;
  * Contains decision logic (allowed status) and linked account details.
  */
 public class VerificationResponse {
-    /** Whether the player is allowed to connect. */
     @SerializedName("allowed")
     private boolean allowed;
 
-    /** The reason for the current status. */
     private VerificationReason reason;
-    
-    /** A temporary link code, if the account is not yet linked. */
+
+    /** Only populated if the account is not yet linked. */
     private String passcode;
 
-    /** The unique ID of the linked forum user. */
     @SerializedName("forum_user_id")
     private int xfUserId;
 
-    /** The username of the linked forum user. */
     @SerializedName("forum_username")
     private String forumUsername;
 
-    /** The Minecraft username linked to the forum account. */
     @SerializedName("minecraft_username")
     private String mcUsername;
 
-    /** The timestamp when the link was confirmed, if applicable. */
     @SerializedName("confirmed_date")
     private Long confirmedDate;
 
-    /**
-     * Default constructor for JSON deserialization.
-     */
+    /** Used by Gson for deserialization. */
     public VerificationResponse() {
     }
 
     /**
-     * Constructs a response with an explicit status and reason.
-     *
      * @param allowed whether access is granted
      * @param reason  the reason for the status
      */
@@ -50,58 +40,37 @@ public class VerificationResponse {
         this.reason = reason;
     }
 
-    /**
-     * Gets the access status.
-     * @return true if allowed, false otherwise
-     */
+    /** @return true if the player is allowed to connect */
     public boolean isAllowed() {
         return allowed;
     }
 
-    /**
-     * Gets the verification reason.
-     * @return the reason enum
-     */
+    /** @return the reason for the current status */
     public VerificationReason getReason() {
         return reason;
     }
 
-    /**
-     * Gets the link passcode.
-     * @return the passcode string
-     */
+    /** @return the link passcode, or null if the account is already linked */
     public String getPasscode() {
         return passcode;
     }
 
-    /**
-     * Gets the forum user ID.
-     * @return the ID
-     */
+    /** @return the linked forum user's ID */
     public int getXfUserId() {
         return xfUserId;
     }
 
-    /**
-     * Gets the forum username.
-     * @return the username
-     */
+    /** @return the linked forum username */
     public String getForumUsername() {
         return forumUsername;
     }
 
-    /**
-     * Gets the linked Minecraft username.
-     * @return the username
-     */
+    /** @return the linked Minecraft username */
     public String getMcUsername() {
         return mcUsername;
     }
 
-    /**
-     * Checks if the link is confirmed.
-     * @return true if confirmedDate is not null
-     */
+    /** @return true if the linked account has a confirmation timestamp */
     public boolean isConfirmed() {
         return confirmedDate != null;
     }

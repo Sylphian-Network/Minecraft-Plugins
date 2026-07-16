@@ -20,24 +20,15 @@ import java.util.UUID;
  */
 public class PlayerListener {
 
-    /** The plugin instance. */
     private final VerifyVelocity plugin;
-    /** Reference to the shared map of verified player identities. */
     private final Map<UUID, PlayerIdentity> verifiedPlayers;
 
-    /**
-     * Constructs a new PlayerListener.
-     *
-     * @param plugin          the plugin instance
-     * @param verifiedPlayers the shared identity cache
-     */
     public PlayerListener(VerifyVelocity plugin, Map<UUID, PlayerIdentity> verifiedPlayers) {
         this.plugin = plugin;
         this.verifiedPlayers = verifiedPlayers;
     }
 
     /**
-     * Intercepts the login process to verify the player's status.
      * Uses an {@link EventTask} to perform the API check asynchronously without blocking the proxy.
      *
      * @param event the login event
@@ -51,10 +42,8 @@ public class PlayerListener {
 
         return EventTask.async(() -> {
             try {
-                // Perform the verification check
                 VerificationResult result = plugin.getVerifyManager().checkPlayer(uuid, ip).join();
                 if (!result.allowed()) {
-                    // Deny connection if verification failed
                     event.setResult(LoginEvent.ComponentResult.denied(result.kickMessage()));
                 } else {
                     // Cache the identity for plugin messaging and periodic checks
@@ -70,11 +59,6 @@ public class PlayerListener {
         });
     }
 
-    /**
-     * Synchronizes identity data to the backend server when a player successfully connects to one.
-     *
-     * @param event the post-connect event
-     */
     @Subscribe
     public void onServerPostConnect(ServerPostConnectEvent event) {
         Player player = event.getPlayer();
@@ -88,11 +72,6 @@ public class PlayerListener {
         }
     }
 
-    /**
-     * Cleans up cached data and state when a player disconnects from the proxy.
-     *
-     * @param event the disconnect event
-     */
     @Subscribe
     public void onDisconnect(DisconnectEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();

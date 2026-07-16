@@ -10,53 +10,34 @@ import java.util.Map;
  * @param <T> the type of the contained data
  */
 public class ApiEnvelope<T> {
-    /** Whether the API request was successful. */
     private boolean success;
-    /** The primary data payload of the response. */
     private T data;
-    /** An optional message accompanying the response. */
     private String message;
-    /** Detailed error messages, usually for validation failures. */
+    /** Usually populated for validation failures. */
     private Map<String, List<String>> errors;
-    /** Metadata about the request or response. */
     private Map<String, Object> meta;
 
-    /**
-     * Checks if the request failed.
-     * @return true if success is false, false otherwise
-     */
+    /** @return true if the request did not succeed */
     public boolean isFailed() {
         return !success;
     }
 
-    /**
-     * Gets the data payload.
-     * @return the data object
-     */
+    /** @return the data payload */
     public T getData() {
         return data;
     }
 
-    /**
-     * Gets the response message.
-     * @return the message string
-     */
+    /** @return the response message */
     public String getMessage() {
         return message;
     }
 
-    /**
-     * Gets any error details.
-     * @return a map of error lists
-     */
+    /** @return the error details, keyed by field */
     public Map<String, List<String>> getErrors() {
         return errors;
     }
 
-    /**
-     * Gets the response metadata.
-     * @return a map of metadata
-     */
+    /** @return the response metadata */
     public Map<String, Object> getMeta() {
         return meta;
     }

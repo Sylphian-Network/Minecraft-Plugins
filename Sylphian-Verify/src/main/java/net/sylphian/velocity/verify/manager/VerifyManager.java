@@ -23,36 +23,24 @@ import java.util.concurrent.TimeUnit;
  * Uses Caffeine for performant in-memory caching of attempts and state.
  */
 public class VerifyManager {
-    /** The service used for API communication. */
+
     private final VerifyService verifyService;
-    /** The configuration map. */
     private final Map<String, Object> config;
 
-    /** Tracks consecutive API failures (strikes) per player. */
+    /** Consecutive failed verification checks per player; reaching the limit kicks the player. */
     private final Cache<UUID, Integer> uuidStrikes;
-    /** Tracks failed login attempts by Mojang UUID. */
     private final Cache<UUID, Integer> uuidAttempts;
-    /** Tracks failed login attempts by IP address. */
     private final Cache<String, Integer> ipAttempts;
-    /** Stores the expiration time for UUID-based cooldowns. */
     private final Cache<UUID, Long> uuidCooldown;
-    /** Stores the expiration time for IP-based cooldowns. */
     private final Cache<String, Long> ipCooldown;
 
-    /**
-     * Constructs a new VerifyManager.
-     *
-     * @param verifyService the verification service
-     * @param config        the configuration map
-     */
     public VerifyManager(VerifyService verifyService, Map<String, Object> config) {
         this.verifyService = verifyService;
         this.config = config;
 
-        int attemptExpiry = (Integer) config.getOrDefault("attempt_expiry_minutes", 30);
-        int cooldown = (Integer) config.getOrDefault("cooldown_minutes", 15);
+        int attemptExpiry = configInt("attempt_expiry_minutes", 30);
+        int cooldown = configInt("cooldown_minutes", 15);
 
-        // Initialize caches with configurable expiration times
         this.uuidStrikes = Caffeine.newBuilder()
                 .expireAfterWrite(attemptExpiry, TimeUnit.MINUTES)
                 .build();
@@ -82,7 +70,6 @@ public class VerifyManager {
      * @return a future containing the verification result
      */
     public CompletableFuture<VerificationResult> checkPlayer(UUID uuid, String ip) {
-        // Check for active cooldowns before hitting the API
         Long uuidExpiry = uuidCooldown.getIfPresent(uuid);
         if (uuidExpiry != null && uuidExpiry > System.currentTimeMillis()) {
             return CompletableFuture.completedFuture(VerificationResult.denied(MessageUtils.buildCooldownMessage(uuidExpiry, config)));
@@ -95,11 +82,9 @@ public class VerifyManager {
 
         return verifyService.checkVerification(uuid).thenApply(response -> {
             if (response.isAllowed()) {
-                // Reset rate limits on successful verification
                 resetAttempts(uuid, ip);
                 return VerificationResult.allowed(PlayerIdentity.from(response, uuid));
             } else {
-                // Track failure and return a denied result
                 handleFailedAttempt(uuid, ip);
                 return VerificationResult.denied(MessageUtils.buildKickMessage(response, config));
             }
@@ -115,14 +100,14 @@ public class VerifyManager {
     private void handleFailedAttempt(UUID uuid, String ip) {
         int uAttempts = uuidAttempts.get(uuid, k -> 0) + 1;
         uuidAttempts.put(uuid, uAttempts);
-        if (uAttempts >= (Integer) config.getOrDefault("uuid_attempt_limit", 5)) {
-            uuidCooldown.put(uuid, System.currentTimeMillis() + TimeUnit.MINUTES.toMillis((Integer) config.getOrDefault("cooldown_minutes", 15)));
+        if (uAttempts >= configInt("uuid_attempt_limit", 5)) {
+            uuidCooldown.put(uuid, System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(configInt("cooldown_minutes", 15)));
         }
 
         int iAttempts = ipAttempts.get(ip, k -> 0) + 1;
         ipAttempts.put(ip, iAttempts);
-        if (iAttempts >= (Integer) config.getOrDefault("ip_attempt_limit", 10)) {
-            ipCooldown.put(ip, System.currentTimeMillis() + TimeUnit.MINUTES.toMillis((Integer) config.getOrDefault("cooldown_minutes", 15)));
+        if (iAttempts >= configInt("ip_attempt_limit", 10)) {
+            ipCooldown.put(ip, System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(configInt("cooldown_minutes", 15)));
         }
     }
 
@@ -140,7 +125,7 @@ public class VerifyManager {
     }
 
     /**
-     * Adds a strike (technical failure) for a player and returns if the max limit was reached.
+     * Adds a strike for a player and returns whether the max limit was reached.
      *
      * @param uuid the player's UUID
      * @return true if the strike limit was reached
@@ -148,7 +133,18 @@ public class VerifyManager {
     public boolean addStrike(UUID uuid) {
         int strikes = uuidStrikes.get(uuid, k -> 0) + 1;
         uuidStrikes.put(uuid, strikes);
-        return strikes >= (Integer) config.getOrDefault("max_strikes", 3);
+        return strikes >= configInt("max_strikes", 3);
+    }
+
+    /**
+     * Reads an integer config value, tolerating any numeric type SnakeYAML produced.
+     *
+     * @param key          the config key
+     * @param defaultValue the value to use when the key is absent
+     * @return the configured integer, or {@code defaultValue} if absent
+     */
+    private int configInt(String key, int defaultValue) {
+        return ((Number) config.getOrDefault(key, defaultValue)).intValue();
     }
 
     /**
@@ -175,13 +171,11 @@ public class VerifyManager {
         return verifyService.checkVerificationBatch(uuids)
                 .handle((responses, ex) -> {
                     Map<UUID, VerificationResult> results = new HashMap<>();
-                    
-                    // Handle batch API failure
+
                     if (ex != null || responses == null || responses.isEmpty()) {
                         for (UUID uuid : uuids) {
                             if (Boolean.TRUE.equals(config.getOrDefault("strike_on_api_failure", true))) {
                                 if (addStrike(uuid)) {
-                                    // Kick player if they've reached the technical failure limit
                                     resetStrikes(uuid);
                                     results.put(uuid, VerificationResult.denied(MessageUtils.buildReverificationFailureMessage(config)));
                                     continue;
@@ -193,11 +187,10 @@ public class VerifyManager {
                         return results;
                     }
 
-                    // Process each player from the batch response
                     for (UUID uuid : uuids) {
                         VerificationResponse response = responses.get(uuid.toString());
                         if (response == null) {
-                            // If player not in response, assume status hasn't changed
+                            // Player missing from the batch response: assume status hasn't changed
                             results.put(uuid, VerificationResult.allowed(null));
                             continue;
                         }
@@ -207,7 +200,7 @@ public class VerifyManager {
                             resetStrikes(uuid);
                             results.put(uuid, VerificationResult.allowed(identity));
                         } else {
-                            // Enforce kicks only after multiple failed checks (strikes)
+                            // Kick only once the failure has repeated across multiple checks (strikes)
                             if (addStrike(uuid)) {
                                 resetStrikes(uuid);
                                 results.put(uuid, VerificationResult.denied(MessageUtils.buildReverificationFailureMessage(config)));
@@ -221,10 +214,8 @@ public class VerifyManager {
     }
 
     /**
-     * Gets the current strike count for a player.
-     *
      * @param uuid the player's UUID
-     * @return the strike count
+     * @return the current strike count, or 0 if none recorded
      */
     public int getStrikeCount(UUID uuid) {
         Integer strikes = uuidStrikes.getIfPresent(uuid);

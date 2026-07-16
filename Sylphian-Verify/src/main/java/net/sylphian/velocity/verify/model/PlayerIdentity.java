@@ -17,8 +17,6 @@ public record PlayerIdentity(UUID uuid, int xfUserId, String forumUsername, Stri
     public static final String CHANNEL = "sylphian:verify";
 
     /**
-     * Creates a PlayerIdentity from an API VerificationResponse.
-     *
      * @param response the API response data
      * @param uuid     the player's UUID
      * @return a new PlayerIdentity instance

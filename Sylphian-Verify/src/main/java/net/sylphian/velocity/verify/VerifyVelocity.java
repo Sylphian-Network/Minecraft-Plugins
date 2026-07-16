@@ -5,11 +5,13 @@ import com.google.gson.GsonBuilder;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
+import com.velocitypowered.api.scheduler.ScheduledTask;
 import net.sylphian.velocity.verify.api.VerifyClient;
 import net.sylphian.velocity.verify.api.VerifyService;
 import net.sylphian.velocity.verify.listener.PlayerListener;
@@ -31,44 +33,33 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
- * Main plugin class for Sylphian-Verify-Velocity.
+ * Main plugin class for Sylphian-Verify.
  * Handles player verification at the proxy level.
  * Features a periodic verification task to ensure currently online players maintain their link status.
  */
 @Plugin(
-        id = "sylphian-verify-velocity",
-        name = "Sylphian-Verify-Velocity",
-        version = "1.0.0",
+        id = "sylphian-verify",
+        name = "Sylphian-Verify",
+        version = BuildConstants.VERSION,
         url = "https://sylphian.net",
         authors = {"QuackieMackie"}
 )
 public class VerifyVelocity {
-    /** The plugin messaging channel identifier. */
+
     public static final MinecraftChannelIdentifier IDENTIFIER = MinecraftChannelIdentifier.from(PlayerIdentity.CHANNEL);
 
-    /** The Velocity proxy server instance. */
     private final ProxyServer proxy;
-    /** The logger instance. */
     private final Logger logger;
-    /** The plugin data directory path. */
     private final Path dataDirectory;
-    /** Gson instance for JSON handling. */
     private final Gson gson;
-    /** Cache of verified player identities, keyed by UUID. */
     private final Map<UUID, PlayerIdentity> verifiedPlayers = new ConcurrentHashMap<>();
-    /** The plugin configuration map. */
     private Map<String, Object> config;
-    /** The verification manager handling logic and rate limits. */
     private VerifyManager verifyManager;
+    /** The API client, retained so it can be closed on shutdown. */
+    private VerifyClient client;
+    /** The periodic re-verification task, retained so it can be cancelled on shutdown. */
+    private ScheduledTask verificationTask;
 
-    /**
-     * Constructs a new VerifyVelocity instance.
-     * Uses Google Guice for dependency injection.
-     *
-     * @param proxy         the proxy server
-     * @param logger        the logger
-     * @param dataDirectory the data directory
-     */
     @Inject
     public VerifyVelocity(ProxyServer proxy, Logger logger, @DataDirectory Path dataDirectory) {
         this.proxy = proxy;
@@ -80,14 +71,12 @@ public class VerifyVelocity {
     }
 
     /**
-     * Handles the proxy initialization event.
      * Sets up the config, channel registrar, verification manager, and listeners.
      *
      * @param event the initialization event
      */
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        // Ensure the config file exists
         Path configPath = dataDirectory.resolve("config.yml");
         if (!Files.exists(configPath)) {
             try {
@@ -102,7 +91,6 @@ public class VerifyVelocity {
             }
         }
 
-        // Load config using SnakeYAML
         Yaml yaml = new Yaml();
         try (InputStream in = Files.newInputStream(configPath)) {
             this.config = yaml.load(in);
@@ -111,27 +99,46 @@ public class VerifyVelocity {
             this.config = Map.of();
         }
 
-        // Register the plugin messaging channel for backend synchronization
         proxy.getChannelRegistrar().register(IDENTIFIER);
 
-        // Initialize API client and service
         String apiKey = String.valueOf(config.getOrDefault("api_key", ""));
-        VerifyClient client = new VerifyClient(
+        int timeoutSeconds = ((Number) config.getOrDefault("api_timeout_seconds", 10)).intValue();
+        this.client = new VerifyClient(
                 String.valueOf(config.getOrDefault("api_base_url", "http://localhost")),
                 apiKey,
                 gson,
-                logger
+                logger,
+                timeoutSeconds
         );
         VerifyService service = new VerifyService(client);
         this.verifyManager = new VerifyManager(service, config);
 
-        // Register event listener for player joins
         proxy.getEventManager().register(this, new PlayerListener(this, verifiedPlayers));
 
-        // Start the background re-verification task
         startVerificationTask();
 
-        logger.info("Sylphian-Verify-Velocity initialised successfully");
+        logger.info("Sylphian-Verify initialised successfully");
+    }
+
+    /**
+     * Tears down everything registered in {@link #onProxyInitialization}: cancels
+     * the periodic task, unregisters the plugin channel, clears the identity cache,
+     * and closes the API client.
+     *
+     * @param event the proxy shutdown event
+     */
+    @Subscribe
+    public void onProxyShutdown(ProxyShutdownEvent event) {
+        if (verificationTask != null) {
+            verificationTask.cancel();
+            verificationTask = null;
+        }
+        proxy.getChannelRegistrar().unregister(IDENTIFIER);
+        verifiedPlayers.clear();
+        if (client != null) {
+            client.close();
+            client = null;
+        }
     }
 
     /**
@@ -147,7 +154,7 @@ public class VerifyVelocity {
 
         logger.info("Scheduling verification task to run every {} minutes", interval);
 
-        proxy.getScheduler().buildTask(this, () -> {
+        this.verificationTask = proxy.getScheduler().buildTask(this, () -> {
                     Collection<Player> allPlayers = proxy.getAllPlayers();
                     if (allPlayers.isEmpty()) return;
 
@@ -155,7 +162,6 @@ public class VerifyVelocity {
                             .map(Player::getUniqueId)
                             .collect(Collectors.toList());
 
-                    // Perform a batch check for all online players
                     verifyManager.checkPeriodicBatch(uuids)
                             .thenAccept(results -> {
                                 for (Player player : allPlayers) {
@@ -166,12 +172,10 @@ public class VerifyVelocity {
                                     if (result == null) continue;
 
                                     if (!result.allowed()) {
-                                        // Kick players who failed re-verification
                                         logger.warn("Player {} ({}) failed periodic verification. Disconnecting.", player.getUsername(), uuid);
                                         verifiedPlayers.remove(uuid);
                                         player.disconnect(result.kickMessage());
                                     } else if (result.identity() != null) {
-                                        // Update cached identity
                                         verifiedPlayers.put(uuid, result.identity());
                                     }
                                 }
@@ -182,42 +186,27 @@ public class VerifyVelocity {
                 .schedule();
     }
 
-    /**
-     * Gets the proxy server instance.
-     * @return the proxy server
-     */
+    /** @return the proxy server */
     public ProxyServer getProxy() {
         return proxy;
     }
 
-    /**
-     * Gets the Gson instance.
-     * @return the Gson instance
-     */
+    /** @return the Gson instance */
     public Gson getGson() {
         return gson;
     }
 
-    /**
-     * Gets the verification manager.
-     * @return the VerifyManager instance
-     */
+    /** @return the VerifyManager instance */
     public VerifyManager getVerifyManager() {
         return verifyManager;
     }
 
-    /**
-     * Gets the plugin configuration.
-     * @return the configuration map
-     */
+    /** @return the configuration map */
     public Map<String, Object> getConfig() {
         return config;
     }
 
-    /**
-     * Gets the logger instance.
-     * @return the logger
-     */
+    /** @return the logger */
     public Logger getLogger() {
         return logger;
     }

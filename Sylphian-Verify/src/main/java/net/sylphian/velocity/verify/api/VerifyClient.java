@@ -19,35 +19,37 @@ import java.util.concurrent.CompletableFuture;
  * HTTP client for communicating with the Sylphian verification API from the Velocity proxy.
  * Handles asynchronous requests to fetch player link status and identity data.
  */
-public class VerifyClient {
-    /** The base URL of the API endpoint. */
+public class VerifyClient implements AutoCloseable {
+
     private final String baseUrl;
-    /** The API key for XenForo API authentication. */
     private final String apiKey;
-    /** The shared HttpClient instance. */
     private final HttpClient httpClient;
-    /** Gson instance for JSON deserialization. */
     private final Gson gson;
-    /** SLF4J logger for the proxy plugin. */
     private final Logger logger;
+    private final Duration timeout;
 
     /**
-     * Constructs a new VerifyClient.
-     *
-     * @param baseUrl the API base URL
-     * @param apiKey  the API authentication key
-     * @param gson    the Gson instance
-     * @param logger  the logger instance
+     * @param baseUrl        the API base URL
+     * @param apiKey         the API authentication key
+     * @param gson           the Gson instance
+     * @param logger         the logger instance
+     * @param timeoutSeconds the connect and per-request timeout, in seconds
      */
-    public VerifyClient(String baseUrl, String apiKey, Gson gson, Logger logger) {
+    public VerifyClient(String baseUrl, String apiKey, Gson gson, Logger logger, int timeoutSeconds) {
         this.baseUrl = baseUrl.endsWith("/") ? baseUrl.substring(0, baseUrl.length() - 1) : baseUrl;
         this.apiKey = apiKey;
         this.gson = gson;
         this.logger = logger;
+        this.timeout = Duration.ofSeconds(timeoutSeconds);
         this.httpClient = HttpClient.newBuilder()
                 .followRedirects(HttpClient.Redirect.ALWAYS)
-                .connectTimeout(Duration.ofSeconds(10))
+                .connectTimeout(timeout)
                 .build();
+    }
+
+    @Override
+    public void close() {
+        httpClient.close();
     }
 
     /**
@@ -65,7 +67,7 @@ public class VerifyClient {
                 .header("Accept", "application/json")
                 .header("User-Agent", "VerifyPlugin/1.0")
                 .header("XF-Api-Key", apiKey)
-                .timeout(Duration.ofSeconds(10))
+                .timeout(timeout)
                 .GET()
                 .build();
 
@@ -93,7 +95,6 @@ public class VerifyClient {
      * @return a future containing the API envelope with a map of verification results
      */
     public CompletableFuture<ApiEnvelope<Map<String, VerificationResponse>>> checkVerificationBatch(java.util.Collection<UUID> uuids) {
-        // Build the query string with multiple uuid[] parameters
         String query = uuids.stream()
                 .map(uuid -> "uuids[]=" + uuid.toString())
                 .collect(java.util.stream.Collectors.joining("&"));
@@ -105,7 +106,7 @@ public class VerifyClient {
                 .header("Accept", "application/json")
                 .header("User-Agent", "VerifyPlugin/1.0")
                 .header("XF-Api-Key", apiKey)
-                .timeout(Duration.ofSeconds(10))
+                .timeout(timeout)
                 .GET()
                 .build();
 
