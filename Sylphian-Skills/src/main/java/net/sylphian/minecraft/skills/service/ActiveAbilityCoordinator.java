@@ -11,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -65,7 +66,7 @@ public final class ActiveAbilityCoordinator implements Listener {
      * events for tools like fishing rods before custom handlers run, so we must handle
      * the event regardless and apply our own cancellation.</p>
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onInteract(PlayerInteractEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
         switch (event.getAction()) {
@@ -84,7 +85,7 @@ public final class ActiveAbilityCoordinator implements Listener {
             boolean materialMatch = skill.activationMaterial().map(m -> m == held).orElse(false);
             boolean blockMatch = event.getAction() == Action.RIGHT_CLICK_BLOCK
                     && clickedBlock != null
-                    && skill.activationBlocks().contains(clickedBlock.getType());
+                    && skill.isActivationTarget(clickedBlock);
             if (!materialMatch && !blockMatch) continue;
 
             if (!skill.canInteract(player, uuid)) return;

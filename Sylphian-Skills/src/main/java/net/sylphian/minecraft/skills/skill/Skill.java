@@ -2,6 +2,7 @@ package net.sylphian.minecraft.skills.skill;
 
 import net.sylphian.minecraft.skills.api.SkillsAPI;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -69,6 +70,18 @@ public interface Skill {
      */
     default Set<Material> activationBlocks() {
         return Set.of();
+    }
+
+    /**
+     * Returns true if the sneak-right-clicked block should trigger this skill's
+     * ability menu. Defaults to a material match against {@link #activationBlocks()};
+     * override to scope activation more narrowly than block type alone.
+     *
+     * @param block the sneak-right-clicked block
+     * @return true if the gesture should open this skill's ability menu
+     */
+    default boolean isActivationTarget(Block block) {
+        return activationBlocks().contains(block.getType());
     }
 
     /**
