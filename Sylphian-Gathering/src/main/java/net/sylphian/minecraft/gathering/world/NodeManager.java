@@ -122,6 +122,19 @@ public final class NodeManager implements Listener {
     }
 
     /**
+     * Re-rolls the node's modifier, returns it to available, and re-asserts its
+     * block. Shared by the respawn scheduler and by content plugins refreshing a
+     * node through {@code GatheringNodeService}. Does not check the current state.
+     *
+     * @param node the node to refresh
+     */
+    public void refresh(LiveNode node) {
+        node.setActiveModifier(node.type().rollModifier(random));
+        node.setState(LiveNode.State.AVAILABLE);
+        applyBlockState(node);
+    }
+
+    /**
      * Sets the node's block to match its current state and modifier, if the chunk
      * is loaded and the block is not already correct. Physics updates are
      * suppressed to avoid cascading changes.

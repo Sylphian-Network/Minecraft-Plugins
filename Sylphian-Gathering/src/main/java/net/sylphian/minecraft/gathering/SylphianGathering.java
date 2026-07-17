@@ -7,6 +7,7 @@ import net.sylphian.minecraft.gathering.harvest.HarvestService;
 import net.sylphian.minecraft.gathering.listener.DeathLossListener;
 import net.sylphian.minecraft.gathering.listener.GatheringListener;
 import net.sylphian.minecraft.gathering.registry.GatheringNodeRegistry;
+import net.sylphian.minecraft.gathering.registry.GatheringNodeService;
 import net.sylphian.minecraft.gathering.world.NodeManager;
 import net.sylphian.minecraft.gathering.world.RespawnScheduler;
 import org.bukkit.Bukkit;
@@ -32,6 +33,8 @@ public final class SylphianGathering extends JavaPlugin {
         respawnScheduler = new RespawnScheduler(this, nodeManager);
         harvestService = new HarvestService(nodeManager, respawnScheduler, config, getLogger());
 
+        GatheringNodeService.init(nodeManager);
+
         getServer().getPluginManager().registerEvents(nodeManager, this);
         getServer().getPluginManager().registerEvents(new GatheringListener(nodeManager, harvestService), this);
         getServer().getPluginManager().registerEvents(new DeathLossListener(), this);
@@ -47,6 +50,7 @@ public final class SylphianGathering extends JavaPlugin {
     @Override
     public void onDisable() {
         GatheringNodeRegistry.setChangeListener(null);
+        GatheringNodeService.shutdown();
         if (respawnScheduler != null) respawnScheduler.clear();
         if (nodeManager != null) nodeManager.clearAll();
         getLogger().info("Sylphian Gathering disabled.");

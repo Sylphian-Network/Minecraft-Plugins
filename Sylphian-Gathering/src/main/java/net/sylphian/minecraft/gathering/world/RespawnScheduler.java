@@ -5,7 +5,6 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
-import java.util.Random;
 
 /**
  * Returns depleted nodes to available once their respawn deadline passes,
@@ -15,7 +14,6 @@ public final class RespawnScheduler {
 
     private final Plugin plugin;
     private final NodeManager nodeManager;
-    private final Random random = new Random();
     private final PriorityQueue<LiveNode> pending = new PriorityQueue<>(Comparator.comparingLong(LiveNode::respawnDeadline));
 
     private int wakeTaskId = -1;
@@ -72,9 +70,7 @@ public final class RespawnScheduler {
 
     private void respawn(LiveNode node) {
         if (node.state() != LiveNode.State.DEPLETED) return;
-        node.setActiveModifier(node.type().rollModifier(random));
-        node.setState(LiveNode.State.AVAILABLE);
-        nodeManager.applyBlockState(node);
+        nodeManager.refresh(node);
     }
 
     private void cancelWake() {
