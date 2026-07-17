@@ -43,3 +43,9 @@ placements:
       - [15, -58, 44]
     "sylphian-mining:coal_seam":
       - [20, -58, 50]
+
+    "sylphian-logging:birch_stand":
+      - [ 11, -59, 15 ]
+      - [ 7, -59, 15 ]
+    "sylphian-logging:dark_oak_bole":
+      - [ 10, -59, 15 ]

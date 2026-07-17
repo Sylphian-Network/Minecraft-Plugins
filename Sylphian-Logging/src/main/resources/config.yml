@@ -1,0 +1,173 @@
+# =============================================================
+# Sylphian Logging (content plugin for Sylphian-Gathering)
+# =============================================================
+#
+# items:
+#   Wood items exposed to Sylphian-Items as "sylphian-logging:<key>".
+#   material: Bukkit name.  name / lore: MiniMessage.
+# nodes:
+#   Resource-node types; placements live in Sylphian-Gathering's config.
+#   interaction     BREAK | INTERACT
+#   block           shown while available; depleted-block while depleted
+#   tool            PICKAXE | AXE | SHOVEL | HOE | ANY (omit for none)
+#   min-tool-tier   WOOD | GOLD | STONE | IRON | DIAMOND | NETHERITE
+#   respawn-seconds seconds until respawn (0 = engine default)
+#   skill / xp      skill to award XP in and amount (needs Sylphian-Skills)
+#   min-skill-level minimum level to harvest (0 = none)
+#   loot            rows of { item, weight, min-amount, max-amount }
+#   modifiers       variants { id, chance, yield-multiplier, block-override,
+#                   bonus-loot }; first chance hit wins
+#
+# =============================================================
+
+items:
+  oak_timber:
+    material: OAK_WOOD
+    name: "<gold>Oak Timber"
+    lore:
+      - "<gray>A sturdy length of seasoned oak."
+  birch_timber:
+    material: BIRCH_WOOD
+    name: "<white>Birch Timber"
+    lore:
+      - "<gray>A pale, straight-grained birch beam."
+  dark_timber:
+    material: DARK_OAK_WOOD
+    name: "<dark_gray>Dark Timber"
+    lore:
+      - "<gray>Dense, shadowed dark-oak heartwood."
+  tree_sap:
+    material: HONEY_BOTTLE
+    name: "<yellow>Tree Sap"
+    lore:
+      - "<gray>Sticky sap tapped from a living trunk."
+  heartwood:
+    material: RESIN_CLUMP
+    name: "<red>Heartwood"
+    lore:
+      - "<gray>The rare, resin-rich core of an ancient tree."
+
+nodes:
+  oak_grove:
+    interaction: BREAK
+    block: OAK_LOG
+    depleted-block: STRIPPED_OAK_LOG
+    tool: AXE
+    min-tool-tier: WOOD
+    respawn-seconds: 50
+    skill: logging
+    xp: 8
+    min-skill-level: 0
+    loot:
+      - item: "sylphian-logging:oak_timber"
+        weight: 1
+        min-amount: 1
+        max-amount: 3
+    modifiers:
+      - id: gnarled
+        chance: 0.15
+        yield-multiplier: 1.5
+        block-override: OAK_WOOD
+      - id: ancient
+        chance: 0.05
+        yield-multiplier: 2.0
+        block-override: STRIPPED_OAK_WOOD
+        bonus-loot:
+          - item: "sylphian-logging:heartwood"
+            weight: 1
+            min-amount: 1
+            max-amount: 1
+
+  birch_stand:
+    interaction: BREAK
+    block: BIRCH_LOG
+    depleted-block: STRIPPED_BIRCH_LOG
+    tool: AXE
+    min-tool-tier: WOOD
+    respawn-seconds: 45
+    skill: logging
+    xp: 7
+    min-skill-level: 0
+    loot:
+      - item: "sylphian-logging:birch_timber"
+        weight: 1
+        min-amount: 1
+        max-amount: 3
+    modifiers:
+      - id: gnarled
+        chance: 0.15
+        yield-multiplier: 1.5
+        block-override: BIRCH_WOOD
+
+  dark_oak_bole:
+    interaction: BREAK
+    block: DARK_OAK_LOG
+    depleted-block: STRIPPED_DARK_OAK_LOG
+    tool: AXE
+    min-tool-tier: STONE
+    respawn-seconds: 70
+    skill: logging
+    xp: 12
+    min-skill-level: 0
+    loot:
+      - item: "sylphian-logging:dark_timber"
+        weight: 10
+        min-amount: 1
+        max-amount: 3
+      - item: "sylphian-logging:heartwood"
+        weight: 1
+        min-amount: 1
+        max-amount: 1
+    modifiers:
+      - id: gnarled
+        chance: 0.15
+        yield-multiplier: 1.5
+        block-override: DARK_OAK_WOOD
+      - id: ancient
+        chance: 0.05
+        yield-multiplier: 2.0
+        block-override: STRIPPED_DARK_OAK_WOOD
+        bonus-loot:
+          - item: "sylphian-logging:heartwood"
+            weight: 1
+            min-amount: 1
+            max-amount: 2
+
+# =============================================================
+# Logging Skill (Sylphian-Skills integration)
+# =============================================================
+#
+# Ignored if Sylphian-Skills is not installed.
+# Abilities activate on sneak + right-click of a real logging node.
+#
+#   5  - Passive: Timber Fall        - chance the whole trunk falls (x3 yield)
+#   10 - Active:  Heartwood Strike   - next harvest drops the rarest loot entry
+#   12 - Passive: Sap Tapper         - chance to also drop tree sap
+#   18 - Active:  Woodcutter's Frenzy- buff: Haste II + double XP
+#   20 - Passive: Woodsman's Rhythm  - consecutive logging stacks an XP bonus
+#   28 - Active:  Ancient Timber     - next harvest doubles yield and does not deplete
+#
+# =============================================================
+
+logging-skill:
+  timber-fall:
+    base-chance: 0.15
+    chance-per-level: 0.005
+    yield-multiplier: 3.0
+  sap-tapper:
+    chance: 0.20
+    item: "sylphian-logging:tree_sap"
+  woodsmans-rhythm:
+    window-seconds: 8
+    xp-per-stack: 0.10
+    max-stacks: 5
+  heartwood-strike:
+    cooldown-seconds: 120
+  woodcutters-frenzy:
+    cooldown-seconds: 240
+    duration-seconds: 30
+    xp-multiplier: 2.0
+    haste-amplifier: 1
+  ancient-timber:
+    cooldown-seconds: 300
+    yield-multiplier: 2.0
