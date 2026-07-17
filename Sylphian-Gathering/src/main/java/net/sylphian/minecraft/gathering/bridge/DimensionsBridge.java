@@ -23,4 +23,14 @@ public final class DimensionsBridge {
     public static Optional<Dimension> getDimensionByWorld(World world) {
         return DimensionProvider.isAvailable() ? DimensionProvider.get().getDimensionByWorld(world) : Optional.empty();
     }
+
+    /**
+     * Returns the dimension name backing the given world.
+     *
+     * @param world the Bukkit world
+     * @return the dimension name, or empty if the world is unmanaged or Dimensions is absent
+     */
+    public static Optional<String> getDimensionName(World world) {
+        return getDimensionByWorld(world).map(Dimension::name);
+    }
 }

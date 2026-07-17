@@ -5,6 +5,7 @@ import dev.jorel.commandapi.arguments.LiteralArgument;
 import dev.jorel.commandapi.executors.CommandArguments;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.gathering.SylphianGathering;
+import net.sylphian.minecraft.gathering.bridge.DimensionsBridge;
 import net.sylphian.minecraft.gathering.world.LiveNode;
 import net.sylphian.minecraft.gathering.world.NodeManager;
 import org.bukkit.command.CommandSender;
@@ -47,24 +48,30 @@ public final class SylphianGatheringCommand {
     }
 
     private void sendList(CommandSender sender) {
-        Map<String, int[]> byType = new TreeMap<>();
+        Map<String, Map<String, int[]>> byDimension = new TreeMap<>();
         int total = 0;
         for (LiveNode node : nodeManager.liveNodes()) {
-            int[] counts = byType.computeIfAbsent(node.type().id(), _ -> new int[2]);
+            String dimension = DimensionsBridge.getDimensionName(node.world())
+                    .orElse(node.world().getName());
+            int[] counts = byDimension.computeIfAbsent(dimension, _ -> new TreeMap<>())
+                    .computeIfAbsent(node.type().id(), _ -> new int[2]);
             if (node.state() == LiveNode.State.AVAILABLE) counts[0]++;
             else counts[1]++;
             total++;
         }
 
         sender.sendMessage(MINI.deserialize("<gold>Gathering nodes <gray>(<white>" + total + "</white> live):"));
-        if (byType.isEmpty()) {
+        if (byDimension.isEmpty()) {
             sender.sendMessage(MINI.deserialize("<gray>  (none)"));
             return;
         }
-        for (Map.Entry<String, int[]> entry : byType.entrySet()) {
-            sender.sendMessage(MINI.deserialize("<gray>  <white>" + entry.getKey()
-                    + "</white>: <green>" + entry.getValue()[0] + "</green> available, <red>"
-                    + entry.getValue()[1] + "</red> depleted"));
+        for (Map.Entry<String, Map<String, int[]>> dimEntry : byDimension.entrySet()) {
+            sender.sendMessage(MINI.deserialize("<yellow>  " + dimEntry.getKey() + "<gray>:"));
+            for (Map.Entry<String, int[]> entry : dimEntry.getValue().entrySet()) {
+                sender.sendMessage(MINI.deserialize("<gray>    <white>" + entry.getKey()
+                        + "</white>: <green>" + entry.getValue()[0] + "</green> available, <red>"
+                        + entry.getValue()[1] + "</red> depleted"));
+            }
         }
     }
 }
