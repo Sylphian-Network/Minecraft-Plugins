@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.Nullable;
 
@@ -42,13 +43,20 @@ public final class NodeManager implements Listener {
     private final Map<NodeKey, LiveNode> nodes = new HashMap<>();
     private final Map<ChunkKey, List<LiveNode>> nodesByChunk = new HashMap<>();
     private final NodeMarkers markers;
+    private final Runnable resolveRequester;
 
     private GatheringConfig config;
 
-    public NodeManager(Plugin plugin, GatheringConfig config) {
+    /**
+     * @param plugin           the owning plugin
+     * @param config           the current engine config
+     * @param resolveRequester requests a debounced re-resolve, run when a world with placements loads
+     */
+    public NodeManager(Plugin plugin, GatheringConfig config, Runnable resolveRequester) {
         this.plugin = plugin;
         this.logger = plugin.getLogger();
         this.config = config;
+        this.resolveRequester = resolveRequester;
         this.markers = new NodeMarkers(plugin, config.markers());
     }
 
@@ -153,6 +161,18 @@ public final class NodeManager implements Listener {
         Material desired = node.currentBlock();
         if (block.getType() != desired) block.setType(desired, false);
         markers.sync(node);
+    }
+
+    /**
+     * Requests a re-resolve when a world holding placements loads, so nodes rebind
+     * to the fresh {@link World} instance after a dimension migration or any other
+     * world reload. Worlds without placements are ignored.
+     */
+    @EventHandler
+    public void onWorldLoad(WorldLoadEvent event) {
+        if (config.placements().containsKey(event.getWorld().getKey().asString())) {
+            resolveRequester.run();
+        }
     }
 
     /**

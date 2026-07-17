@@ -29,7 +29,7 @@ public final class SylphianGathering extends JavaPlugin {
 
         config = GatheringConfig.from(getConfig(), getLogger());
 
-        nodeManager = new NodeManager(this, config);
+        nodeManager = new NodeManager(this, config, this::requestResolve);
         respawnScheduler = new RespawnScheduler(this, nodeManager);
         harvestService = new HarvestService(nodeManager, respawnScheduler, config, getLogger());
 
