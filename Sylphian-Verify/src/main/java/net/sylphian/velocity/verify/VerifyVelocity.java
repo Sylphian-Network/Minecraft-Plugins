@@ -14,6 +14,7 @@ import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import com.velocitypowered.api.scheduler.ScheduledTask;
 import net.sylphian.velocity.verify.api.VerifyClient;
 import net.sylphian.velocity.verify.api.VerifyService;
+import net.sylphian.velocity.verify.command.VerifyCommand;
 import net.sylphian.velocity.verify.listener.PlayerListener;
 import net.sylphian.velocity.verify.manager.VerifyManager;
 import net.sylphian.velocity.verify.model.PlayerIdentity;
@@ -47,13 +48,15 @@ import java.util.stream.Collectors;
 public class VerifyVelocity {
 
     public static final MinecraftChannelIdentifier IDENTIFIER = MinecraftChannelIdentifier.from(PlayerIdentity.CHANNEL);
+    private static final String COMMAND_ALIAS = "verify";
 
     private final ProxyServer proxy;
     private final Logger logger;
     private final Path dataDirectory;
     private final Gson gson;
     private final Map<UUID, PlayerIdentity> verifiedPlayers = new ConcurrentHashMap<>();
-    private Map<String, Object> config;
+    /** Swapped wholesale by {@link #reload()}; read from the async login path too. */
+    private volatile Map<String, Object> config;
     private VerifyManager verifyManager;
     /** The API client, retained so it can be closed on shutdown. */
     private VerifyClient client;
@@ -71,33 +74,14 @@ public class VerifyVelocity {
     }
 
     /**
-     * Sets up the config, channel registrar, verification manager, and listeners.
+     * Sets up the config, channel registrar, verification manager, listeners, and admin command.
      *
      * @param event the initialization event
      */
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        Path configPath = dataDirectory.resolve("config.yml");
-        if (!Files.exists(configPath)) {
-            try {
-                Files.createDirectories(dataDirectory);
-                try (InputStream in = getClass().getResourceAsStream("/config.yml")) {
-                    if (in != null) {
-                        Files.copy(in, configPath);
-                    }
-                }
-            } catch (Exception e) {
-                logger.error("Could not create default config", e);
-            }
-        }
-
-        Yaml yaml = new Yaml();
-        try (InputStream in = Files.newInputStream(configPath)) {
-            this.config = yaml.load(in);
-        } catch (Exception e) {
-            logger.error("Could not load config, using empty map", e);
-            this.config = Map.of();
-        }
+        this.config = loadConfig();
+        validateConfig(config);
 
         proxy.getChannelRegistrar().register(IDENTIFIER);
 
@@ -115,6 +99,10 @@ public class VerifyVelocity {
 
         proxy.getEventManager().register(this, new PlayerListener(this, verifiedPlayers));
 
+        proxy.getCommandManager().register(
+                proxy.getCommandManager().metaBuilder(COMMAND_ALIAS).plugin(this).build(),
+                new VerifyCommand(this));
+
         startVerificationTask();
 
         logger.info("Sylphian-Verify initialised successfully");
@@ -122,8 +110,8 @@ public class VerifyVelocity {
 
     /**
      * Tears down everything registered in {@link #onProxyInitialization}: cancels
-     * the periodic task, unregisters the plugin channel, clears the identity cache,
-     * and closes the API client.
+     * the periodic task, unregisters the plugin channel and command, clears the
+     * identity cache, and closes the API client.
      *
      * @param event the proxy shutdown event
      */
@@ -133,11 +121,61 @@ public class VerifyVelocity {
             verificationTask.cancel();
             verificationTask = null;
         }
+        proxy.getCommandManager().unregister(COMMAND_ALIAS);
         proxy.getChannelRegistrar().unregister(IDENTIFIER);
         verifiedPlayers.clear();
         if (client != null) {
             client.close();
             client = null;
+        }
+    }
+
+    /**
+     * Reloads config.yml from disk and pushes the new rate-limit thresholds and messages into
+     * the verification manager. The API client (api_key, api_base_url, api_timeout_seconds) and
+     * the Caffeine cache expiry windows (attempt_expiry_minutes, cooldown_minutes) are fixed at
+     * startup and are not affected by this; changing those still requires a restart.
+     */
+    public void reload() {
+        this.config = loadConfig();
+        validateConfig(config);
+        verifyManager.reloadConfig(config);
+    }
+
+    private Map<String, Object> loadConfig() {
+        Path configPath = dataDirectory.resolve("config.yml");
+        if (!Files.exists(configPath)) {
+            try {
+                Files.createDirectories(dataDirectory);
+                try (InputStream in = getClass().getResourceAsStream("/config.yml")) {
+                    if (in != null) {
+                        Files.copy(in, configPath);
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("Could not create default config", e);
+            }
+        }
+
+        Yaml yaml = new Yaml();
+        try (InputStream in = Files.newInputStream(configPath)) {
+            Map<String, Object> loaded = yaml.load(in);
+            return loaded != null ? loaded : Map.of();
+        } catch (Exception e) {
+            logger.error("Could not load config, using empty map", e);
+            return Map.of();
+        }
+    }
+
+    private void validateConfig(Map<String, Object> config) {
+        String apiKey = String.valueOf(config.getOrDefault("api_key", ""));
+        if (apiKey.isBlank()) {
+            logger.error("api_key is not set in config.yml — every verification check will fail until this is configured.");
+        }
+
+        String apiBaseUrl = String.valueOf(config.getOrDefault("api_base_url", "http://localhost"));
+        if (apiBaseUrl.isBlank() || apiBaseUrl.equals("http://localhost")) {
+            logger.error("api_base_url is still set to the default in config.yml — every verification check will fail until this is configured.");
         }
     }
 

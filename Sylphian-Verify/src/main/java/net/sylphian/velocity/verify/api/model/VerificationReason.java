@@ -23,5 +23,13 @@ public enum VerificationReason {
     API_SUCCESS_NO_DATA,
     
     /** The API reported a failure but provided no specific error message. */
-    API_FAILURE_NO_MESSAGE
+    API_FAILURE_NO_MESSAGE;
+
+    /**
+     * @return true if this reason means the API call itself failed, rather than
+     *         the account genuinely not being linked or confirmed
+     */
+    public boolean isTechnicalFailure() {
+        return this == API_ERROR || this == API_FAILURE_NO_MESSAGE || this == API_SUCCESS_NO_DATA;
+    }
 }

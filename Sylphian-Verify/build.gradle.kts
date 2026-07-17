@@ -2,6 +2,13 @@
 dependencies {
     compileOnly(libs.velocity.api)
     annotationProcessor(libs.velocity.api)
+
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.launcher)
+    testRuntimeOnly(libs.slf4j.simple)
+    testImplementation(libs.assertj.core)
+    testImplementation(libs.velocity.api)
+    testImplementation(libs.caffeine)
 }
 
 val generateBuildConstants by tasks.registering {

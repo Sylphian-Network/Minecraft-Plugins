@@ -6,8 +6,10 @@ import net.sylphian.velocity.verify.model.PlayerIdentity;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import net.sylphian.velocity.verify.api.VerifyService;
+import net.sylphian.velocity.verify.api.model.VerificationReason;
 import net.sylphian.velocity.verify.api.model.VerificationResponse;
 import net.sylphian.velocity.verify.model.VerificationResult;
+import net.sylphian.velocity.verify.model.VerificationStatus;
 import net.sylphian.velocity.verify.util.MessageUtils;
 
 import java.util.Collection;
@@ -25,7 +27,8 @@ import java.util.concurrent.TimeUnit;
 public class VerifyManager {
 
     private final VerifyService verifyService;
-    private final Map<String, Object> config;
+    /** Swappable via {@link #reloadConfig}; read from both the async login path and the periodic task. */
+    private volatile Map<String, Object> config;
 
     /** Consecutive failed verification checks per player; reaching the limit kicks the player. */
     private final Cache<UUID, Integer> uuidStrikes;
@@ -83,11 +86,23 @@ public class VerifyManager {
         return verifyService.checkVerification(uuid).thenApply(response -> {
             if (response.isAllowed()) {
                 resetAttempts(uuid, ip);
+                resetStrikes(uuid);
                 return VerificationResult.allowed(PlayerIdentity.from(response, uuid));
-            } else {
-                handleFailedAttempt(uuid, ip);
-                return VerificationResult.denied(MessageUtils.buildKickMessage(response, config));
             }
+
+            VerificationReason reason = response.getReason();
+            if (reason != null && reason.isTechnicalFailure()) {
+                // Don't let API outages burn down the brute-force limiter for legitimate
+                // players; use the strike system instead, same as the periodic re-check path.
+                if (addStrike(uuid)) {
+                    resetStrikes(uuid);
+                    return VerificationResult.denied(MessageUtils.buildReverificationFailureMessage(config));
+                }
+                return VerificationResult.allowed(null);
+            }
+
+            handleFailedAttempt(uuid, ip);
+            return VerificationResult.denied(MessageUtils.buildKickMessage(response, config));
         });
     }
 
@@ -220,5 +235,39 @@ public class VerifyManager {
     public int getStrikeCount(UUID uuid) {
         Integer strikes = uuidStrikes.getIfPresent(uuid);
         return strikes == null ? 0 : strikes;
+    }
+
+    /**
+     * Swaps the config used for rate-limit thresholds and messages. Cache expiry windows
+     * ({@code attempt_expiry_minutes}, {@code cooldown_minutes}) are fixed when the caches are
+     * built above and are not affected by this; changing those still requires a restart.
+     *
+     * @param config the newly loaded config
+     */
+    public void reloadConfig(Map<String, Object> config) {
+        this.config = config;
+    }
+
+    /**
+     * Clears UUID-keyed attempt, cooldown, and strike state for a player. IP-based limits are
+     * left untouched, since an offline player's IP may not be known to the caller.
+     *
+     * @param uuid the player's UUID
+     */
+    public void resetAll(UUID uuid) {
+        uuidAttempts.invalidate(uuid);
+        uuidCooldown.invalidate(uuid);
+        uuidStrikes.invalidate(uuid);
+    }
+
+    /**
+     * @param uuid the player's UUID
+     * @return a snapshot of the player's current rate-limit state, for admin tooling
+     */
+    public VerificationStatus getStatus(UUID uuid) {
+        Integer attempts = uuidAttempts.getIfPresent(uuid);
+        Long cooldownExpiry = uuidCooldown.getIfPresent(uuid);
+        long cooldownRemaining = cooldownExpiry != null ? Math.max(0, cooldownExpiry - System.currentTimeMillis()) : 0;
+        return new VerificationStatus(attempts == null ? 0 : attempts, getStrikeCount(uuid), cooldownRemaining);
     }
 }
