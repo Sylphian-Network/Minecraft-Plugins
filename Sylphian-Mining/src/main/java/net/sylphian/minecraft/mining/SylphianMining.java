@@ -61,6 +61,7 @@ public final class SylphianMining extends JavaPlugin {
             List<NodeType> nodeTypes = new NodeTypeConfigLoader(getLogger()).load(getConfig().getConfigurationSection("nodes"));
             GatheringNodeRegistry.register(nodeTypes);
             itemProvider.reload(getConfig().getConfigurationSection("items"));
+            if (skillsBridge != null) skillsBridge.reload();
             sender.sendMessage(MiniMessage.miniMessage().deserialize(
                     "<green>Sylphian-Mining reloaded [" + nodeTypes.size() + " node type(s)]."));
         } catch (Exception e) {

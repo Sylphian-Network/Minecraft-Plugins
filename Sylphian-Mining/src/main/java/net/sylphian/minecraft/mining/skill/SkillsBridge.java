@@ -1,7 +1,7 @@
 package net.sylphian.minecraft.mining.skill;
 
+import net.sylphian.minecraft.mining.SylphianMining;
 import net.sylphian.minecraft.skills.api.SkillsProvider;
-import org.bukkit.plugin.Plugin;
 
 /**
  * Isolates all Sylphian-Skills class references so they are only linked when
@@ -16,9 +16,14 @@ public final class SkillsBridge {
      *
      * @param plugin the owning Mining plugin
      */
-    public SkillsBridge(Plugin plugin) {
-        this.miningSkill = new MiningSkill();
+    public SkillsBridge(SylphianMining plugin) {
+        this.miningSkill = new MiningSkill(plugin);
         SkillsProvider.get().registerSkill(miningSkill, plugin);
+    }
+
+    /** Re-reads the skill's config snapshot after a plugin reload. */
+    public void reload() {
+        miningSkill.reload();
     }
 
     /**

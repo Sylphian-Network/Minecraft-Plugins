@@ -1,30 +1,24 @@
-# ============================================================
-#  Sylphian-Mining (content plugin for Sylphian-Gathering)
-# ============================================================
+# =============================================================
+# Sylphian Mining (content plugin for Sylphian-Gathering)
+# =============================================================
 #
-#  items: the ore items this plugin exposes to Sylphian-Items. Each is
-#         addressable as "sylphian-mining:<key>" and stamped so consumers
-#         (e.g. Sylphian-Cooking) can match it as an ingredient.
-#    material  a Bukkit material name
-#    name      MiniMessage display name
-#    lore      MiniMessage lore lines
+# items:
+#   Ore items exposed to Sylphian-Items as "sylphian-mining:<key>".
+#   material: Bukkit name.  name / lore: MiniMessage.
+# nodes:
+#   Resource-node types; placements live in Sylphian-Gathering's config.
+#   interaction     BREAK | INTERACT
+#   block           shown while available; depleted-block while depleted
+#   tool            PICKAXE | AXE | SHOVEL | HOE | ANY (omit for none)
+#   min-tool-tier   WOOD | GOLD | STONE | IRON | DIAMOND | NETHERITE
+#   respawn-seconds seconds until respawn (0 = engine default)
+#   skill / xp      skill to award XP in and amount (needs Sylphian-Skills)
+#   min-skill-level minimum level to harvest (0 = none)
+#   loot            rows of { item, weight, min-amount, max-amount }
+#   modifiers       variants { id, chance, yield-multiplier, block-override,
+#                   bonus-loot }; first chance hit wins
 #
-#  nodes: the resource-node types. Placements (which node, and where) live in
-#         Sylphian-Dimensions' config under each dimension's 'gathering' block,
-#         keyed "sylphian-mining:<node-key>".
-#    interaction     BREAK (mine the block) | INTERACT (right-click)
-#    block           block shown while available
-#    depleted-block  block shown while depleted
-#    tool            PICKAXE | AXE | SHOVEL | HOE | ANY  (omit for no tool needed)
-#    min-tool-tier   WOOD | GOLD | STONE | IRON | DIAMOND | NETHERITE
-#    respawn-seconds seconds before a depleted node returns (0 = engine default)
-#    skill           skill id to award XP in (needs Sylphian-Skills)
-#    xp              XP awarded per harvest
-#    min-skill-level minimum skill level required to harvest (0 = none)
-#    loot            weighted table: each row is { item, weight, min-amount, max-amount }
-#    modifiers       rollable variants; each { id, chance, yield-multiplier,
-#                    block-override, bonus-loot } - first whose chance hits wins
-# ============================================================
+# =============================================================
 
 items:
   iron_ore_chunk:
@@ -89,3 +83,40 @@ nodes:
         chance: 0.15
         yield-multiplier: 2.0
         block-override: DEEPSLATE_COAL_ORE
+
+# =============================================================
+# Mining Skill (Sylphian-Skills integration)
+# =============================================================
+#
+# Ignored if Sylphian-Skills is not installed.
+# Abilities activate on sneak + right-click of a real mining node.
+#
+#   5  - Active:  Vein Surge       - next harvest yields double
+#   10 - Passive: Ore Sense        - chance to drop a bonus ore unit
+#   15 - Active:  Prospector's Eye - buff: harvests drop modifier bonus loot
+#   20 - Passive: Mineralogist     - bonus XP on enriched (modified) veins
+#   25 - Active:  Motherlode       - next harvest rolls the loot table extra times
+#   30 - Passive: Steady Rhythm    - consecutive mines stack a yield bonus
+#
+# =============================================================
+
+mining-skill:
+  ore-sense:
+    base-chance: 0.10
+    chance-per-level: 0.005
+  mineralogist:
+    base-bonus: 0.20        # XP bonus on any enriched (modified) node
+    per-yield-bonus: 0.20   # extra XP bonus per +1.0 of the modifier's yield multiplier
+  steady-rhythm:
+    window-seconds: 8
+    yield-per-stack: 0.10
+    max-stacks: 5
+  vein-surge:
+    cooldown-seconds: 90
+    yield-multiplier: 2.0
+  prospectors-eye:
+    duration-seconds: 45
+    cooldown-seconds: 180
+  motherlode:
+    cooldown-seconds: 300
+    extra-rolls: 2
