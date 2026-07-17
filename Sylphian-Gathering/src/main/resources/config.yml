@@ -1,27 +1,40 @@
-# ============================================================
-#  Sylphian-Gathering
-# ============================================================
+# =============================================================
+# Sylphian Gathering
+# =============================================================
 #
-#  This plugin owns the gathering mechanics only. Node types and their loot are
-#  contributed by content plugins (e.g. Sylphian-Mining); node placements are
-#  declared here, keyed by the world they live in.
+# Owns the gathering mechanics only. Node types and loot come from content
+# plugins (e.g. Sylphian-Mining); placements are declared here, per world.
 #
-#  default-respawn-seconds fallback respawn delay for a node type that sets none
+# default-respawn-seconds:
+#   Fallback respawn delay for a node type that sets none.
+# markers:
+#   Glowing outline around available nodes, hidden while depleted.
+#   enabled     show markers at all
+#   scale       display size vs the block (below 1.0 tucks it inside)
+#   view-range  render distance in blocks
+#   colors      skill id -> glow colour (DyeColor name or "#rrggbb");
+#               an unset skill falls back to white
+# placements:
+#   Fixed nodes at explicit coordinates. First key is a world (dimension
+#   worlds keyed "sylphian:<name>"); under it each opaque "namespace:id"
+#   node type maps to a list of [x, y, z]. No section disables gathering.
+#     placements:
+#       "sylphian:rift1":
+#         "sylphian-mining:iron_vein":
+#           - [12, -58, 40]
 #
-#  placements (resource nodes; needs a content plugin for the node types)
-#    Fixed-position resource nodes placed at explicit block coordinates. The
-#    first-level key is a world key (dimension worlds are keyed "sylphian:<name>").
-#    Under it, each key is an opaque "namespace:id" node type registered by a
-#    content plugin; this engine never resolves it, it just looks it up in the
-#    node registry. Absence of the section disables gathering.
-#    placements:
-#      "sylphian:rift1":
-#        "sylphian-mining:iron_vein":   node type id -> list of [x, y, z]
-#          - [12, -58, 40]
-#          - [15, -58, 44]
-# ============================================================
+# =============================================================
 
 default-respawn-seconds: 60
+
+markers:
+  enabled: true
+  scale: 0.98
+  view-range: 6
+  colors:
+    mining: light_blue
+    logging: lime
+    foraging: yellow
 
 placements:
   "sylphian:rift1":

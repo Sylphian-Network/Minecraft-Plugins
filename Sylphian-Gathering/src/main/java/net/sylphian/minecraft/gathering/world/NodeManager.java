@@ -12,6 +12,7 @@ import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.Nullable;
 
@@ -40,6 +41,7 @@ public final class NodeManager implements Listener {
     private final Random random = new Random();
     private final Map<NodeKey, LiveNode> nodes = new HashMap<>();
     private final Map<ChunkKey, List<LiveNode>> nodesByChunk = new HashMap<>();
+    private final NodeMarkers markers;
 
     private GatheringConfig config;
 
@@ -47,6 +49,7 @@ public final class NodeManager implements Listener {
         this.plugin = plugin;
         this.logger = plugin.getLogger();
         this.config = config;
+        this.markers = new NodeMarkers(plugin, config.markers());
     }
 
     /**
@@ -56,6 +59,7 @@ public final class NodeManager implements Listener {
      */
     public void reload(GatheringConfig newConfig) {
         this.config = newConfig;
+        this.markers.reload(newConfig.markers());
     }
 
     /**
@@ -68,6 +72,7 @@ public final class NodeManager implements Listener {
         restoreAll();
         nodes.clear();
         nodesByChunk.clear();
+        markers.removeAll();
 
         int resolved = 0;
         for (Map.Entry<String, List<NodePlacement>> entry : config.placements().entrySet()) {
@@ -147,6 +152,7 @@ public final class NodeManager implements Listener {
         Block block = world.getBlockAt(node.x(), node.y(), node.z());
         Material desired = node.currentBlock();
         if (block.getType() != desired) block.setType(desired, false);
+        markers.sync(node);
     }
 
     /**
@@ -168,6 +174,18 @@ public final class NodeManager implements Listener {
     }
 
     /**
+     * Drops marker references for a chunk being unloaded. The display entities are
+     * non-persistent and removed by the server on unload; this clears the stale
+     * references so they are re-spawned cleanly when the chunk loads again.
+     */
+    @EventHandler
+    public void onChunkUnload(ChunkUnloadEvent event) {
+        ChunkKey key = new ChunkKey(event.getWorld().getKey().asString(), event.getChunk().getX(), event.getChunk().getZ());
+        List<LiveNode> inChunk = nodesByChunk.get(key);
+        if (inChunk != null) markers.forget(inChunk);
+    }
+
+    /**
      * Restores every depleted node to its available block and clears the indexes.
      * Call from onDisable.
      */
@@ -175,10 +193,9 @@ public final class NodeManager implements Listener {
         restoreAll();
         nodes.clear();
         nodesByChunk.clear();
+        markers.removeAll();
     }
 
-    // Sets any depleted node's block back to its plain available block so the
-    // world is not left showing depleted blocks after a disable or reload.
     private void restoreAll() {
         for (LiveNode node : nodes.values()) {
             if (node.state() != LiveNode.State.DEPLETED) continue;
@@ -188,7 +205,6 @@ public final class NodeManager implements Listener {
         }
     }
 
-    // Registers a node in both the exact-block index and the per-chunk index.
     private void index(LiveNode node) {
         String worldKey = node.world().getKey().asString();
         nodes.put(new NodeKey(worldKey, node.x(), node.y(), node.z()), node);

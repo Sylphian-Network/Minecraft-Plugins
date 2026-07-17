@@ -8,7 +8,7 @@ import java.util.Random;
 
 /**
  * An immutable resource-node definition registered by a content plugin. Node
- * placements in the Dimensions config reference these by {@link #id()}.
+ * placements in the Sylphian-Gathering config reference these by {@link #id()}.
  *
  * @param id            the node type id in {@code "namespace:id"} form
  * @param interaction   how the node is harvested
