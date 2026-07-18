@@ -4,7 +4,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.cooking.skill.CookingSkillConfig;
 import net.sylphian.minecraft.cooking.station.CookingStationService;
 import net.sylphian.minecraft.skills.service.CooldownManager;
-import net.sylphian.minecraft.skills.skill.AbstractSkill;
+import net.sylphian.minecraft.skills.skill.ActivationResult;
 import net.sylphian.minecraft.skills.skill.ActiveAbility;
 import net.sylphian.minecraft.skills.skill.StatusLevel;
 import org.bukkit.block.Block;
@@ -29,20 +29,17 @@ public final class PerfectSear implements ActiveAbility {
     private final Supplier<CookingSkillConfig> config;
     private final CooldownManager cooldownManager;
     private final CookingStationService service;
-    private final AbstractSkill skill;
 
     /**
      * @param config          supplier for the current config snapshot
      * @param cooldownManager the shared cooldown manager
      * @param service         the cooking station service
-     * @param skill           the owning skill, used to emit watch-trace lines
      */
     public PerfectSear(Supplier<CookingSkillConfig> config, CooldownManager cooldownManager,
-                       CookingStationService service, AbstractSkill skill) {
+                       CookingStationService service) {
         this.config = config;
         this.cooldownManager = cooldownManager;
         this.service = service;
-        this.skill = skill;
     }
 
     @Override public String id()          { return COOLDOWN_ID; }
@@ -51,25 +48,25 @@ public final class PerfectSear implements ActiveAbility {
     @Override public int    unlockLevel() { return 25; }
 
     @Override
-    public void onActivate(Player player, UUID uuid) {
-        onActivate(player, uuid, null);
+    public ActivationResult onActivate(Player player, UUID uuid) {
+        return onActivate(player, uuid, null);
     }
 
     @Override
-    public void onActivate(Player player, UUID uuid, @Nullable Block target) {
+    public ActivationResult onActivate(Player player, UUID uuid, @Nullable Block target) {
         if (target == null) {
             player.sendActionBar(MINI.deserialize("<red>Perfect Sear: <white>aim at a cooking station."));
-            return;
+            return ActivationResult.blocked();
         }
         long remaining = cooldownManager.getRemainingSeconds(uuid, COOLDOWN_ID);
         if (remaining > 0) {
             player.sendActionBar(MINI.deserialize("<red>Perfect Sear: <white>" + remaining + "s remaining."));
-            return;
+            return ActivationResult.blocked();
         }
         service.armPerfectSear(target);
         cooldownManager.setCooldown(uuid, COOLDOWN_ID, Duration.ofSeconds(config.get().perfectSearCooldownSeconds()));
         player.sendActionBar(MINI.deserialize("<gold>Perfect Sear! <white>The next dish here will be perfect."));
-        skill.traceActiveUse(uuid, player.getName(), name(), "primed the next dish");
+        return ActivationResult.used("primed the next dish");
     }
 
     @Override

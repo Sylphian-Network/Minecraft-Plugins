@@ -3,7 +3,7 @@ package net.sylphian.minecraft.cooking.skill.ability;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.cooking.skill.CookingSkillConfig;
 import net.sylphian.minecraft.skills.service.CooldownManager;
-import net.sylphian.minecraft.skills.skill.AbstractSkill;
+import net.sylphian.minecraft.skills.skill.ActivationResult;
 import net.sylphian.minecraft.skills.skill.ActiveAbility;
 import net.sylphian.minecraft.skills.skill.StatusLevel;
 import org.bukkit.Location;
@@ -30,17 +30,14 @@ public final class Banquet implements ActiveAbility {
 
     private final Supplier<CookingSkillConfig> config;
     private final CooldownManager cooldownManager;
-    private final AbstractSkill skill;
 
     /**
      * @param config          supplier for the current config snapshot
      * @param cooldownManager the shared cooldown manager
-     * @param skill           the owning skill, used to emit watch-trace lines
      */
-    public Banquet(Supplier<CookingSkillConfig> config, CooldownManager cooldownManager, AbstractSkill skill) {
+    public Banquet(Supplier<CookingSkillConfig> config, CooldownManager cooldownManager) {
         this.config = config;
         this.cooldownManager = cooldownManager;
-        this.skill = skill;
     }
 
     @Override public String id()          { return COOLDOWN_ID; }
@@ -49,21 +46,21 @@ public final class Banquet implements ActiveAbility {
     @Override public int    unlockLevel() { return 5; }
 
     @Override
-    public void onActivate(Player player, UUID uuid) {
-        onActivate(player, uuid, null);
+    public ActivationResult onActivate(Player player, UUID uuid) {
+        return onActivate(player, uuid, null);
     }
 
     @Override
-    public void onActivate(Player player, UUID uuid, @Nullable Block target) {
+    public ActivationResult onActivate(Player player, UUID uuid, @Nullable Block target) {
         long remaining = cooldownManager.getRemainingSeconds(uuid, COOLDOWN_ID);
         if (remaining > 0) {
             player.sendActionBar(MINI.deserialize("<red>Banquet: <white>" + remaining + "s remaining."));
-            return;
+            return ActivationResult.blocked();
         }
 
         CookingSkillConfig cfg = config.get();
         Location center = target != null ? target.getLocation().add(0.5, 0.5, 0.5) : player.getLocation();
-        if (center.getWorld() == null) return;
+        if (center.getWorld() == null) return ActivationResult.blocked();
 
         int durationTicks = cfg.banquetDurationSeconds() * 20;
         int amplifier = cfg.banquetAmplifier();
@@ -78,8 +75,7 @@ public final class Banquet implements ActiveAbility {
 
         cooldownManager.setCooldown(uuid, COOLDOWN_ID, Duration.ofSeconds(cfg.banquetCooldownSeconds()));
         player.sendActionBar(MINI.deserialize("<gold>Banquet! <white>Buffed " + count + " player" + (count == 1 ? "" : "s") + "."));
-        skill.traceActiveUse(uuid, player.getName(), name(),
-                "buffed " + count + " player" + (count == 1 ? "" : "s"));
+        return ActivationResult.used("buffed " + count + " player" + (count == 1 ? "" : "s"));
     }
 
     @Override
