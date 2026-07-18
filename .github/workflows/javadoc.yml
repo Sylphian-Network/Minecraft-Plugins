@@ -1,13 +1,13 @@
 name: Generate Javadoc
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - '**.java'
-      - 'build.gradle.kts'
-      - '**/build.gradle.kts'
+#  push:
+#    branches:
+#      - master
+#    paths:
+#      - '**.java'
+#      - 'build.gradle.kts'
+#      - '**/build.gradle.kts'
 
   workflow_dispatch:
 
