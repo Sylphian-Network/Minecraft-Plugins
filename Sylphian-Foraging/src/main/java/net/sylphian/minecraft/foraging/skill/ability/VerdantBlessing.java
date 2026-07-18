@@ -8,9 +8,6 @@ import net.sylphian.minecraft.skills.service.CooldownManager;
 import net.sylphian.minecraft.skills.skill.ActivationResult;
 import net.sylphian.minecraft.skills.skill.ActiveAbility;
 import net.sylphian.minecraft.skills.skill.StatusLevel;
-import org.bukkit.Location;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.time.Duration;
@@ -68,9 +65,6 @@ public final class VerdantBlessing implements ActiveAbility {
 
         for (LiveNode node : depleted) {
             GatheringNodeService.refresh(node);
-            Location centre = new Location(node.world(), node.x() + 0.5, node.y() + 0.5, node.z() + 0.5);
-            node.world().spawnParticle(Particle.HAPPY_VILLAGER, centre, 15, 0.4, 0.4, 0.4, 0.0);
-            node.world().playSound(centre, Sound.ITEM_BONE_MEAL_USE, 1.0f, 1.0f);
         }
 
         cooldowns.setCooldown(uuid, COOLDOWN_ID, Duration.ofSeconds(cfg.verdantBlessingCooldownSeconds()));
