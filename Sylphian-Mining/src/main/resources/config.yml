@@ -1,0 +1,122 @@
+# =============================================================
+# Sylphian Mining (content plugin for Sylphian-Gathering)
+# =============================================================
+#
+# items:
+#   Ore items exposed to Sylphian-Items as "sylphian-mining:<key>".
+#   material: Bukkit name.  name / lore: MiniMessage.
+# nodes:
+#   Resource-node types; placements live in Sylphian-Gathering's config.
+#   interaction     BREAK | INTERACT
+#   block           shown while available; depleted-block while depleted
+#   tool            PICKAXE | AXE | SHOVEL | HOE | ANY (omit for none)
+#   min-tool-tier   WOOD | GOLD | STONE | IRON | DIAMOND | NETHERITE
+#   respawn-seconds seconds until respawn (0 = engine default)
+#   skill / xp      skill to award XP in and amount (needs Sylphian-Skills)
+#   min-skill-level minimum level to harvest (0 = none)
+#   loot            rows of { item, weight, min-amount, max-amount }
+#   modifiers       variants { id, chance, yield-multiplier, block-override,
+#                   bonus-loot }; first chance hit wins
+#
+# =============================================================
+
+items:
+  iron_ore_chunk:
+    material: RAW_IRON
+    name: "<white>Iron Ore Chunk"
+    lore:
+      - "<gray>A rough chunk of raw iron, torn from a rift vein."
+  coal_lump:
+    material: COAL
+    name: "<dark_gray>Coal Lump"
+    lore:
+      - "<gray>A dense lump of coal from a rift seam."
+
+nodes:
+  iron_vein:
+    interaction: BREAK
+    block: IRON_ORE
+    depleted-block: STONE
+    tool: PICKAXE
+    min-tool-tier: STONE
+    respawn-seconds: 60
+    skill: mining
+    xp: 10
+    min-skill-level: 0
+    loot:
+      - item: "sylphian-mining:iron_ore_chunk"
+        weight: 1
+        min-amount: 1
+        max-amount: 3
+    modifiers:
+      - id: rich
+        chance: 0.15
+        yield-multiplier: 2.0
+        block-override: DEEPSLATE_IRON_ORE
+      - id: pristine
+        chance: 0.05
+        yield-multiplier: 1.0
+        block-override: RAW_IRON_BLOCK
+        bonus-loot:
+          - item: "sylphian-mining:iron_ore_chunk"
+            weight: 1
+            min-amount: 2
+            max-amount: 4
+
+  coal_seam:
+    interaction: BREAK
+    block: COAL_ORE
+    depleted-block: STONE
+    tool: PICKAXE
+    min-tool-tier: WOOD
+    respawn-seconds: 45
+    skill: mining
+    xp: 6
+    min-skill-level: 0
+    loot:
+      - item: "sylphian-mining:coal_lump"
+        weight: 1
+        min-amount: 1
+        max-amount: 4
+    modifiers:
+      - id: rich
+        chance: 0.15
+        yield-multiplier: 2.0
+        block-override: DEEPSLATE_COAL_ORE
+
+# =============================================================
+# Mining Skill (Sylphian-Skills integration)
+# =============================================================
+#
+# Ignored if Sylphian-Skills is not installed.
+# Abilities activate on sneak + right-click of a real mining node.
+#
+#   5  - Active:  Vein Surge       - next harvest yields double
+#   10 - Passive: Ore Sense        - chance to drop a bonus ore unit
+#   15 - Active:  Prospector's Eye - buff: harvests drop modifier bonus loot
+#   20 - Passive: Mineralogist     - bonus XP on enriched (modified) veins
+#   25 - Active:  Motherlode       - next harvest rolls the loot table extra times
+#   30 - Passive: Steady Rhythm    - consecutive mines stack a yield bonus
+#
+# =============================================================
+
+mining-skill:
+  ore-sense:
+    base-chance: 0.10
+    chance-per-level: 0.005
+  mineralogist:
+    base-bonus: 0.20        # XP bonus on any enriched (modified) node
+    per-yield-bonus: 0.20   # extra XP bonus per +1.0 of the modifier's yield multiplier
+  steady-rhythm:
+    window-seconds: 8
+    yield-per-stack: 0.10
+    max-stacks: 5
+  vein-surge:
+    cooldown-seconds: 90
+    yield-multiplier: 2.0
+  prospectors-eye:
+    duration-seconds: 45
+    cooldown-seconds: 180
+  motherlode:
+    cooldown-seconds: 300
+    extra-rolls: 2

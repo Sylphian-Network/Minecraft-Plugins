@@ -4,7 +4,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.cooking.skill.CookingSkillConfig;
 import net.sylphian.minecraft.cooking.station.CookingStationService;
 import net.sylphian.minecraft.skills.service.CooldownManager;
-import net.sylphian.minecraft.skills.skill.AbstractSkill;
+import net.sylphian.minecraft.skills.skill.ActivationResult;
 import net.sylphian.minecraft.skills.skill.ActiveAbility;
 import net.sylphian.minecraft.skills.skill.StatusLevel;
 import org.bukkit.block.Block;
@@ -28,20 +28,17 @@ public final class SecondWind implements ActiveAbility {
     private final Supplier<CookingSkillConfig> config;
     private final CooldownManager cooldownManager;
     private final CookingStationService service;
-    private final AbstractSkill skill;
 
     /**
      * @param config          supplier for the current config snapshot
      * @param cooldownManager the shared cooldown manager
      * @param service         the cooking station service
-     * @param skill           the owning skill, used to emit watch-trace lines
      */
     public SecondWind(Supplier<CookingSkillConfig> config, CooldownManager cooldownManager,
-                      CookingStationService service, AbstractSkill skill) {
+                      CookingStationService service) {
         this.config = config;
         this.cooldownManager = cooldownManager;
         this.service = service;
-        this.skill = skill;
     }
 
     @Override public String id()          { return COOLDOWN_ID; }
@@ -50,28 +47,28 @@ public final class SecondWind implements ActiveAbility {
     @Override public int    unlockLevel() { return 15; }
 
     @Override
-    public void onActivate(Player player, UUID uuid) {
-        onActivate(player, uuid, null);
+    public ActivationResult onActivate(Player player, UUID uuid) {
+        return onActivate(player, uuid, null);
     }
 
     @Override
-    public void onActivate(Player player, UUID uuid, @Nullable Block target) {
+    public ActivationResult onActivate(Player player, UUID uuid, @Nullable Block target) {
         if (target == null) {
             player.sendActionBar(MINI.deserialize("<red>Second Wind: <white>aim at a cooking station."));
-            return;
+            return ActivationResult.blocked();
         }
         long remaining = cooldownManager.getRemainingSeconds(uuid, COOLDOWN_ID);
         if (remaining > 0) {
             player.sendActionBar(MINI.deserialize("<red>Second Wind: <white>" + remaining + "s remaining."));
-            return;
+            return ActivationResult.blocked();
         }
         if (!service.rushCookAt(target, uuid)) {
             player.sendActionBar(MINI.deserialize("<yellow>Second Wind: <white>nothing is cooking here."));
-            return;
+            return ActivationResult.blocked();
         }
         cooldownManager.setCooldown(uuid, COOLDOWN_ID, Duration.ofSeconds(config.get().secondWindCooldownSeconds()));
         player.sendActionBar(MINI.deserialize("<aqua>Second Wind! <white>The dish is ready."));
-        skill.traceActiveUse(uuid, player.getName(), name(), "finished the cook");
+        return ActivationResult.used("finished the cook");
     }
 
     @Override

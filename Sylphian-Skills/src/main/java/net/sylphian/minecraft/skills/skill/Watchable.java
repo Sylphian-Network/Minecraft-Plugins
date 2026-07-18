@@ -48,4 +48,15 @@ public interface Watchable {
      * @return the watching admin, or {@code null}
      */
     @Nullable CommandSender getWatcher(UUID playerUuid);
+
+    /**
+     * Emits a one-line {@code Active} trace block for a successful ability activation.
+     * No-op when the player is not being watched.
+     *
+     * @param uuid    the activating player's UUID
+     * @param subject the player name shown in the line
+     * @param ability the ability's display name
+     * @param detail  a short MiniMessage description of what happened
+     */
+    void traceActiveUse(UUID uuid, String subject, String ability, String detail);
 }

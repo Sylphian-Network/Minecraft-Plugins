@@ -9,6 +9,7 @@ package net.sylphian.minecraft.dimensions.model;
  * @param pvpEnabled       whether players can damage each other
  * @param buildingEnabled  whether players can place and break blocks
  * @param naturalSpawning  whether vanilla environmental creature spawning is allowed; false blocks natural, patrol, raid, reinforcement, jockey, mount, trap, nether-portal, and slime-split spawns while leaving player- and plugin-initiated spawns untouched
+ * @param naturalGrowth    whether vanilla plant growth and spread is allowed; false freezes crop, sapling, and tree growth, bonemeal, and grass, vine, mushroom, and fire spread
  * @param claimingEnabled  whether clans can claim chunks here
  * @param damageEnabled    whether players can take damage at all; false makes death impossible
  * @param keepInventory    whether players keep their inventory and experience on death
@@ -19,6 +20,7 @@ public record DimensionRuleset(
         boolean pvpEnabled,
         boolean buildingEnabled,
         boolean naturalSpawning,
+        boolean naturalGrowth,
         boolean claimingEnabled,
         boolean damageEnabled,
         boolean keepInventory,
@@ -27,7 +29,7 @@ public record DimensionRuleset(
 
     /** Fallback values for keys missing from a dimension's config block. */
     public static final DimensionRuleset DEFAULTS =
-            new DimensionRuleset(false, false, true, false, true, true, false, 0.0);
+            new DimensionRuleset(false, false, true, true, false, true, true, false, 0.0);
 
     /**
      * Returns a one-line MiniMessage summary of every rule, for admin tooling.
@@ -38,6 +40,7 @@ public record DimensionRuleset(
         return "pvp " + flag(pvpEnabled)
                 + "<gray>, building " + flag(buildingEnabled)
                 + "<gray>, natural-spawning " + flag(naturalSpawning)
+                + "<gray>, natural-growth " + flag(naturalGrowth)
                 + "<gray>, claiming " + flag(claimingEnabled)
                 + "<gray>, damage " + flag(damageEnabled)
                 + "<gray>, keep-inventory " + flag(keepInventory)

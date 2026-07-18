@@ -44,7 +44,7 @@ public class DimensionProtectionListener implements Listener {
     private void handleBuild(Player player, Cancellable event) {
         Dimension dimension = manager.getDimensionByWorld(player.getWorld()).orElse(null);
         if (dimension == null || dimension.ruleset().buildingEnabled()) return;
-        if (player.hasPermission(ADMIN_PERMISSION)) return;
+        //if (player.hasPermission(ADMIN_PERMISSION)) return;
         event.setCancelled(true);
     }
 

@@ -3,14 +3,17 @@ package net.sylphian.minecraft.skills.service;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.skills.gui.AbilitySelectionHolder;
+import net.sylphian.minecraft.skills.skill.ActivationResult;
 import net.sylphian.minecraft.skills.skill.ActiveAbility;
 import net.sylphian.minecraft.skills.skill.Skill;
 import net.sylphian.minecraft.skills.skill.StatusLevel;
+import net.sylphian.minecraft.skills.skill.Watchable;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -65,7 +68,7 @@ public final class ActiveAbilityCoordinator implements Listener {
      * events for tools like fishing rods before custom handlers run, so we must handle
      * the event regardless and apply our own cancellation.</p>
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onInteract(PlayerInteractEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
         switch (event.getAction()) {
@@ -84,7 +87,7 @@ public final class ActiveAbilityCoordinator implements Listener {
             boolean materialMatch = skill.activationMaterial().map(m -> m == held).orElse(false);
             boolean blockMatch = event.getAction() == Action.RIGHT_CLICK_BLOCK
                     && clickedBlock != null
-                    && skill.activationBlocks().contains(clickedBlock.getType());
+                    && skill.isActivationTarget(clickedBlock);
             if (!materialMatch && !blockMatch) continue;
 
             if (!skill.canInteract(player, uuid)) return;
@@ -94,7 +97,7 @@ public final class ActiveAbilityCoordinator implements Listener {
             if (actives.isEmpty()) return;
 
             event.setCancelled(true);
-            openAbilityMenu(player, uuid, actives, blockMatch ? clickedBlock : null);
+            openAbilityMenu(player, uuid, skill, actives, blockMatch ? clickedBlock : null);
             return;
         }
     }
@@ -115,7 +118,11 @@ public final class ActiveAbilityCoordinator implements Listener {
         if (ability == null) return;
 
         player.closeInventory();
-        ability.onActivate(player, player.getUniqueId(), holder.getTargetBlock());
+        UUID uuid = player.getUniqueId();
+        ActivationResult result = ability.onActivate(player, uuid, holder.getTargetBlock());
+        if (result.activated() && holder.getSkill() instanceof Watchable watchable) {
+            watchable.traceActiveUse(uuid, player.getName(), ability.name(), result.detail());
+        }
     }
 
     /** Cancels all drag events inside an ability selection menu. */
@@ -139,8 +146,8 @@ public final class ActiveAbilityCoordinator implements Listener {
         if (task != null) task.cancel();
     }
 
-    private void openAbilityMenu(Player player, UUID uuid, List<ActiveAbility> actives, Block targetBlock) {
-        AbilitySelectionHolder holder = new AbilitySelectionHolder(actives, uuid, targetBlock);
+    private void openAbilityMenu(Player player, UUID uuid, Skill skill, List<ActiveAbility> actives, Block targetBlock) {
+        AbilitySelectionHolder holder = new AbilitySelectionHolder(actives, skill, uuid, targetBlock);
         Inventory inv = Bukkit.createInventory(holder, 9,
                 MINI.deserialize("<dark_aqua>Select Ability"));
 

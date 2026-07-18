@@ -1,0 +1,30 @@
+name: Sylphian-Mining
+prefix: Sylphian-Mining
+version: '${version}'
+
+main: net.sylphian.minecraft.mining.SylphianMining
+api-version: '26.1.2'
+load: POSTWORLD
+
+authors: [QuackieMackie]
+website: https://sylphian.net
+
+dependencies:
+  server:
+    Sylphian-Gathering:
+      load: BEFORE
+      required: true
+    Sylphian-Items:
+      load: BEFORE
+      required: true
+    Sylphian-Skills:
+      load: BEFORE
+      required: false
+    CommandAPI:
+      load: BEFORE
+      required: true
+
+permissions:
+  sylphian.mining.admin:
+    description: Administrative mining commands (/sylphian-mining).
+    default: op

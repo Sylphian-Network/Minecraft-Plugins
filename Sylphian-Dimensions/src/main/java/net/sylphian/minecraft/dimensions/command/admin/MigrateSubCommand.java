@@ -7,6 +7,7 @@ import dev.jorel.commandapi.arguments.StringArgument;
 import dev.jorel.commandapi.executors.CommandArguments;
 import net.sylphian.minecraft.dimensions.SylphianDimensions;
 import net.sylphian.minecraft.dimensions.command.SubCommand;
+import net.sylphian.minecraft.dimensions.event.DimensionMigratedEvent;
 import net.sylphian.minecraft.dimensions.model.Dimension;
 import net.sylphian.minecraft.dimensions.world.DimensionManager;
 import net.sylphian.minecraft.dimensions.world.TemplateManager;
@@ -68,6 +69,7 @@ public final class MigrateSubCommand implements SubCommand {
                 templates.recopy(dimension);
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     if (manager.loadDimension(dimension)) {
+                        Bukkit.getPluginManager().callEvent(new DimensionMigratedEvent(dimension));
                         sender.sendMessage(MINI.deserialize("<green>Dimension '" + name + "' migrated and reloaded."));
                     } else {
                         sender.sendMessage(MINI.deserialize("<red>Re-copy succeeded but the world failed to load; check the console."));

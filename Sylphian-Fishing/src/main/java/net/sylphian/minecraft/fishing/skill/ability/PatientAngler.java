@@ -3,6 +3,7 @@ package net.sylphian.minecraft.fishing.skill.ability;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.fishing.skill.FishingSkillConfig;
 import net.sylphian.minecraft.skills.service.CooldownManager;
+import net.sylphian.minecraft.skills.skill.ActivationResult;
 import net.sylphian.minecraft.skills.skill.ActiveAbility;
 import net.sylphian.minecraft.skills.skill.PassiveTrigger;
 import net.sylphian.minecraft.skills.skill.StatusLevel;
@@ -53,23 +54,24 @@ public final class PatientAngler implements ActiveAbility {
      * Checks cooldown and pending state before queuing the next fast cast.
      */
     @Override
-    public void onActivate(Player player, UUID uuid) {
+    public ActivationResult onActivate(Player player, UUID uuid) {
         if (pendingSet.contains(uuid)) {
             player.sendActionBar(MINI.deserialize(
                     "<yellow>Patient Angler <white>is already pending your next cast."));
-            return;
+            return ActivationResult.blocked();
         }
         long remaining = cooldownManager.getRemainingMillis(uuid, COOLDOWN_ID);
         if (remaining > 0) {
             player.sendActionBar(MINI.deserialize(
                     "<red>Patient Angler: <white>" + (remaining / 1000) + "s remaining."));
-            return;
+            return ActivationResult.blocked();
         }
         FishingSkillConfig cfg = config.get();
         pendingSet.add(uuid);
         cooldownManager.setCooldown(uuid, COOLDOWN_ID, Duration.ofSeconds(cfg.patientAnglerCooldownSeconds()));
         player.sendActionBar(MINI.deserialize(
                 "<aqua>Patient Angler <white>ready! Your next cast will bite quickly."));
+        return ActivationResult.used("primed: next cast bites quickly");
     }
 
     /**

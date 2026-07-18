@@ -1,0 +1,30 @@
+name: Sylphian-Gathering
+prefix: Sylphian-Gathering
+version: '${version}'
+
+main: net.sylphian.minecraft.gathering.SylphianGathering
+api-version: '26.1.2'
+load: POSTWORLD
+
+authors: [QuackieMackie]
+website: https://sylphian.net
+
+dependencies:
+  server:
+    Sylphian-Dimensions:
+      load: BEFORE
+      required: true
+    Sylphian-Items:
+      load: BEFORE
+      required: true
+    Sylphian-Skills:
+      load: BEFORE
+      required: false
+    CommandAPI:
+      load: BEFORE
+      required: true
+
+permissions:
+  sylphian.gathering.admin:
+    description: Administrative gathering commands (/sylphian-gathering).
+    default: op

@@ -42,8 +42,10 @@ public interface ActiveAbility extends Ability {
      *
      * @param player the player who triggered the ability
      * @param uuid   the player's UUID
+     * @return {@link ActivationResult#used} with a short trace detail when the ability took effect,
+     *         or {@link ActivationResult#blocked} when it did nothing (cooldown, already active, invalid target)
      */
-    void onActivate(Player player, UUID uuid);
+    ActivationResult onActivate(Player player, UUID uuid);
 
     /**
      * Block-aware activation. Called by the framework with the block the player
@@ -54,9 +56,10 @@ public interface ActiveAbility extends Ability {
      * @param player the player who triggered the ability
      * @param uuid   the player's UUID
      * @param target the clicked block, or null if not block-triggered
+     * @return the activation outcome, used by the framework to emit the watch trace
      */
-    default void onActivate(Player player, UUID uuid, @Nullable Block target) {
-        onActivate(player, uuid);
+    default ActivationResult onActivate(Player player, UUID uuid, @Nullable Block target) {
+        return onActivate(player, uuid);
     }
 
     /**

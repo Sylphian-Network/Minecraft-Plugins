@@ -22,6 +22,8 @@
 #                              natural, patrol, raid, reinforcement, jockey,
 #                              mount, trap, nether-portal and slime-split spawns
 #                              (player/plugin spawns are unaffected)
+#    natural-growth: true      vanilla plant growth/spread; false freezes crops,
+#                              saplings, bonemeal and grass/vine/mushroom spread
 #    claiming: false           clans can claim chunks here (needs Sylphian-Clans)
 #    damage-enabled: true      players can take damage (false = death impossible)
 #    keep-inventory: true      players keep inventory and XP on death
@@ -66,6 +68,7 @@ dimensions:
       pvp: false
       building: false
       natural-spawning: false
+      natural-growth: false
       damage-enabled: false
       keep-inventory: true
       login-redirect: false
@@ -78,6 +81,7 @@ dimensions:
       pvp: true
       building: false
       natural-spawning: false
+      natural-growth: false
       damage-enabled: true
       login-redirect: true
     spawns:

@@ -1,0 +1,59 @@
+# =============================================================
+# Sylphian Gathering
+# =============================================================
+#
+# Owns the gathering mechanics only. Node types and loot come from content
+# plugins (e.g. Sylphian-Mining); placements are declared here, per world.
+#
+# default-respawn-seconds:
+#   Fallback respawn delay for a node type that sets none.
+# markers:
+#   Glowing outline around available nodes, hidden while depleted.
+#   enabled     show markers at all
+#   scale       display size vs the block (below 1.0 tucks it inside)
+#   view-range  render distance in blocks
+#   colors      skill id -> glow colour (DyeColor name or "#rrggbb");
+#               an unset skill falls back to white
+# placements:
+#   Fixed nodes at explicit coordinates. First key is a world (dimension
+#   worlds keyed "sylphian:<name>"); under it each opaque "namespace:id"
+#   node type maps to a list of [x, y, z]. No section disables gathering.
+#     placements:
+#       "sylphian:rift1":
+#         "sylphian-mining:iron_vein":
+#           - [12, -58, 40]
+#
+# =============================================================
+
+default-respawn-seconds: 60
+
+markers:
+  enabled: true
+  scale: 0.98
+  view-range: 6
+  colors:
+    mining: light_blue
+    logging: lime
+    foraging: yellow
+
+placements:
+  "sylphian:rift1":
+    "sylphian-mining:iron_vein":
+      - [12, -58, 40]
+      - [15, -58, 44]
+    "sylphian-mining:coal_seam":
+      - [20, -58, 50]
+
+    "sylphian-logging:birch_stand":
+      - [ 11, -59, 15 ]
+      - [ 7, -59, 15 ]
+    "sylphian-logging:dark_oak_bole":
+      - [ 10, -59, 15 ]
+
+    "sylphian-foraging:berry_bush":
+      - [ 3, -60, 18 ]
+      - [ 4, -60, 17 ]
+    "sylphian-foraging:herb_patch":
+      - [ 6, -60, 19 ]
+    "sylphian-foraging:glow_vine":
+      - [ 8, -57, 16 ]

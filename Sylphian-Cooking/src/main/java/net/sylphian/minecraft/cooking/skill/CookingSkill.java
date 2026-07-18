@@ -58,11 +58,11 @@ public final class CookingSkill extends AbstractSkill {
 
         var service = plugin.getStationService();
 
-        addAbility(new Banquet(() -> config, api.getCooldownManager(), this));
+        addAbility(new Banquet(() -> config, api.getCooldownManager()));
         addAbility(new EfficientCook(() -> config));
-        addAbility(new SecondWind(() -> config, api.getCooldownManager(), service, this));
+        addAbility(new SecondWind(() -> config, api.getCooldownManager(), service));
         addAbility(new SeasonedHands(() -> config, streaks));
-        addAbility(new PerfectSear(() -> config, api.getCooldownManager(), service, this));
+        addAbility(new PerfectSear(() -> config, api.getCooldownManager(), service));
         addAbility(new QuickPrep(() -> config));
 
         super.registerListeners(owningPlugin, api);

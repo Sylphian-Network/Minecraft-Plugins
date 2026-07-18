@@ -1,0 +1,30 @@
+name: Sylphian-Logging
+prefix: Sylphian-Logging
+version: '${version}'
+
+main: net.sylphian.minecraft.logging.SylphianLogging
+api-version: '26.1.2'
+load: POSTWORLD
+
+authors: [QuackieMackie]
+website: https://sylphian.net
+
+dependencies:
+  server:
+    Sylphian-Gathering:
+      load: BEFORE
+      required: true
+    Sylphian-Items:
+      load: BEFORE
+      required: true
+    Sylphian-Skills:
+      load: BEFORE
+      required: false
+    CommandAPI:
+      load: BEFORE
+      required: true
+
+permissions:
+  sylphian.logging.admin:
+    description: Administrative logging commands (/sylphian-logging).
+    default: op
