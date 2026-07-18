@@ -1,0 +1,183 @@
+# =============================================================
+# Sylphian Foraging (content plugin for Sylphian-Gathering)
+# =============================================================
+#
+# items:
+#   Foraged items exposed to Sylphian-Items as "sylphian-foraging:<key>".
+#   material: Bukkit name.  name / lore: MiniMessage.
+# nodes:
+#   Resource-node types; placements live in Sylphian-Gathering's config.
+#   Foraging nodes are picked bare-handed (INTERACT, no tool).
+#   interaction     BREAK | INTERACT
+#   block           shown while available; depleted-block while depleted
+#   tool            PICKAXE | AXE | SHOVEL | HOE | ANY (omit for none)
+#   min-tool-tier   WOOD | GOLD | STONE | IRON | DIAMOND | NETHERITE
+#   respawn-seconds seconds until respawn (0 = engine default)
+#   skill / xp      skill to award XP in and amount (needs Sylphian-Skills)
+#   min-skill-level minimum level to harvest (0 = none)
+#   loot            rows of { item, weight, min-amount, max-amount }
+#   modifiers       variants { id, chance, yield-multiplier, block-override,
+#                   bonus-loot }; first chance hit wins
+#
+# =============================================================
+
+items:
+  sweet_berries:
+    material: SWEET_BERRIES
+    name: "<red>Sweet Berries"
+    lore:
+      - "<gray>A handful of plump wild berries."
+  glow_berries:
+    material: GLOW_BERRIES
+    name: "<gold>Glow Berries"
+    lore:
+      - "<gray>Faintly luminous berries from a cave vine."
+  wild_herb:
+    material: FERN
+    name: "<green>Wild Herb"
+    lore:
+      - "<gray>A fragrant sprig of foraged herb."
+  plant_fibre:
+    material: STRING
+    name: "<dark_green>Plant Fibre"
+    lore:
+      - "<gray>Tough fibre stripped from wild growth."
+  wild_mushroom:
+    material: RED_MUSHROOM
+    name: "<red>Wild Mushroom"
+    lore:
+      - "<gray>An earthy mushroom from the forest floor."
+  wild_seed:
+    material: WHEAT_SEEDS
+    name: "<yellow>Wild Seed"
+    lore:
+      - "<gray>A viable seed shaken loose from a thriving plant."
+
+nodes:
+  berry_bush:
+    interaction: INTERACT
+    block: SWEET_BERRY_BUSH
+    depleted-block: AIR
+    respawn-seconds: 40
+    skill: foraging
+    xp: 6
+    min-skill-level: 0
+    loot:
+      - item: "sylphian-foraging:sweet_berries"
+        weight: 1
+        min-amount: 1
+        max-amount: 3
+    modifiers:
+      - id: lush
+        chance: 0.15
+        yield-multiplier: 1.5
+      - id: blooming
+        chance: 0.05
+        yield-multiplier: 2.0
+        bonus-loot:
+          - item: "sylphian-foraging:wild_seed"
+            weight: 1
+            min-amount: 1
+            max-amount: 1
+
+  glow_vine:
+    interaction: INTERACT
+    block: CAVE_VINES
+    depleted-block: AIR
+    respawn-seconds: 45
+    skill: foraging
+    xp: 7
+    min-skill-level: 0
+    loot:
+      - item: "sylphian-foraging:glow_berries"
+        weight: 1
+        min-amount: 1
+        max-amount: 3
+    modifiers:
+      - id: lush
+        chance: 0.15
+        yield-multiplier: 1.5
+
+  herb_patch:
+    interaction: INTERACT
+    block: FERN
+    depleted-block: AIR
+    respawn-seconds: 40
+    skill: foraging
+    xp: 6
+    min-skill-level: 0
+    loot:
+      - item: "sylphian-foraging:wild_herb"
+        weight: 3
+        min-amount: 1
+        max-amount: 2
+      - item: "sylphian-foraging:plant_fibre"
+        weight: 2
+        min-amount: 1
+        max-amount: 2
+    modifiers:
+      - id: lush
+        chance: 0.15
+        yield-multiplier: 1.5
+      - id: blooming
+        chance: 0.05
+        yield-multiplier: 2.0
+        bonus-loot:
+          - item: "sylphian-foraging:wild_seed"
+            weight: 1
+            min-amount: 1
+            max-amount: 1
+
+  mushroom_ring:
+    interaction: INTERACT
+    block: RED_MUSHROOM
+    depleted-block: AIR
+    respawn-seconds: 50
+    skill: foraging
+    xp: 8
+    min-skill-level: 0
+    loot:
+      - item: "sylphian-foraging:wild_mushroom"
+        weight: 1
+        min-amount: 1
+        max-amount: 2
+
+# =============================================================
+# Foraging Skill (Sylphian-Skills integration)
+# =============================================================
+#
+# Ignored if Sylphian-Skills is not installed.
+# Abilities activate on sneak + right-click of a real foraging node.
+#
+#   5  - Passive: Gentle Touch      - chance to pick without depleting the node
+#   10 - Active:  Regrowth          - buff: depleted foraging nodes respawn fast
+#   12 - Passive: Herbalist         - chance to also drop a wild herb
+#   18 - Active:  Forager's Vigour  - buff: double XP + Saturation
+#   20 - Passive: Wild Abundance    - yield scales with recent node variety
+#   28 - Active:  Verdant Blessing  - refresh every depleted foraging node nearby
+#
+# =============================================================
+
+foraging-skill:
+  gentle-touch:
+    base-chance: 0.15
+    chance-per-level: 0.005
+  herbalist:
+    chance: 0.20
+    item: "sylphian-foraging:wild_herb"
+  wild-abundance:
+    window-seconds: 30
+    yield-per-variety: 0.10
+    max-variety: 4
+  regrowth:
+    cooldown-seconds: 120
+    duration-seconds: 30
+    respawn-seconds: 3
+  foragers-vigour:
+    cooldown-seconds: 240
+    duration-seconds: 60
+    xp-multiplier: 2.0
+    saturation-amplifier: 0
+  verdant-blessing:
+    cooldown-seconds: 300
+    radius: 12

@@ -49,3 +49,11 @@ placements:
       - [ 7, -59, 15 ]
     "sylphian-logging:dark_oak_bole":
       - [ 10, -59, 15 ]
+
+    "sylphian-foraging:berry_bush":
+      - [ 3, -60, 18 ]
+      - [ 4, -60, 17 ]
+    "sylphian-foraging:herb_patch":
+      - [ 6, -60, 19 ]
+    "sylphian-foraging:glow_vine":
+      - [ 8, -57, 16 ]
