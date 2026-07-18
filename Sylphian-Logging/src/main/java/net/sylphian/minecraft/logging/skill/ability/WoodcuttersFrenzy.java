@@ -6,6 +6,7 @@ import net.sylphian.minecraft.logging.config.LoggingSkillConfig;
 import net.sylphian.minecraft.logging.skill.trigger.LogHarvestTrigger;
 import net.sylphian.minecraft.skills.service.ActiveBuffTracker;
 import net.sylphian.minecraft.skills.service.CooldownManager;
+import net.sylphian.minecraft.skills.skill.ActivationResult;
 import net.sylphian.minecraft.skills.skill.ActiveAbility;
 import net.sylphian.minecraft.skills.skill.PassiveAbility;
 import net.sylphian.minecraft.skills.skill.PassiveTrigger;
@@ -56,15 +57,15 @@ public final class WoodcuttersFrenzy implements ActiveAbility, PassiveAbility {
     @Override public String triggerCondition() { return "While Woodcutter's Frenzy is active."; }
 
     @Override
-    public void onActivate(Player player, UUID uuid) {
+    public ActivationResult onActivate(Player player, UUID uuid) {
         if (buffs.hasBuff(uuid, BUFF_ID)) {
             player.sendActionBar(MINI.deserialize("<gold>Woodcutter's Frenzy <white>is already active!"));
-            return;
+            return ActivationResult.blocked();
         }
         long remaining = cooldowns.getRemainingMillis(uuid, COOLDOWN_ID);
         if (remaining > 0) {
             player.sendActionBar(MINI.deserialize("<red>Woodcutter's Frenzy: <white>" + (remaining / 1000) + "s remaining."));
-            return;
+            return ActivationResult.blocked();
         }
         LoggingSkillConfig cfg = config.get();
         int durationTicks = cfg.woodcuttersFrenzyDurationSeconds() * 20;
@@ -83,6 +84,7 @@ public final class WoodcuttersFrenzy implements ActiveAbility, PassiveAbility {
         player.sendActionBar(MINI.deserialize(
                 "<gold>Woodcutter's Frenzy! <yellow>" + cfg.woodcuttersFrenzyDurationSeconds()
                 + "s <white>of Haste and double XP."));
+        return ActivationResult.used("buff active " + cfg.woodcuttersFrenzyDurationSeconds() + "s");
     }
 
     @Override

@@ -5,6 +5,7 @@ import net.sylphian.minecraft.gathering.event.NodeHarvestEvent;
 import net.sylphian.minecraft.logging.config.LoggingSkillConfig;
 import net.sylphian.minecraft.logging.skill.trigger.LogHarvestTrigger;
 import net.sylphian.minecraft.skills.service.CooldownManager;
+import net.sylphian.minecraft.skills.skill.ActivationResult;
 import net.sylphian.minecraft.skills.skill.ActiveAbility;
 import net.sylphian.minecraft.skills.skill.StatusLevel;
 import org.bukkit.entity.Player;
@@ -46,19 +47,20 @@ public final class AncientTimber implements ActiveAbility {
     @Override public int    unlockLevel() { return 28; }
 
     @Override
-    public void onActivate(Player player, UUID uuid) {
+    public ActivationResult onActivate(Player player, UUID uuid) {
         if (pending.contains(uuid)) {
             player.sendActionBar(MINI.deserialize("<yellow>Ancient Timber <white>is already pending your next harvest."));
-            return;
+            return ActivationResult.blocked();
         }
         long remaining = cooldowns.getRemainingMillis(uuid, COOLDOWN_ID);
         if (remaining > 0) {
             player.sendActionBar(MINI.deserialize("<red>Ancient Timber: <white>" + (remaining / 1000) + "s remaining."));
-            return;
+            return ActivationResult.blocked();
         }
         pending.add(uuid);
         cooldowns.setCooldown(uuid, COOLDOWN_ID, Duration.ofSeconds(config.get().ancientTimberCooldownSeconds()));
         player.sendActionBar(MINI.deserialize("<aqua>Ancient Timber <white>ready! Your next harvest spares the tree."));
+        return ActivationResult.used("primed: next harvest doubled, tree kept");
     }
 
     /**

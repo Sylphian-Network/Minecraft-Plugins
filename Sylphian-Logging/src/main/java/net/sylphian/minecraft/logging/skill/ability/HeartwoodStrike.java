@@ -6,6 +6,7 @@ import net.sylphian.minecraft.gathering.node.LootTable;
 import net.sylphian.minecraft.logging.config.LoggingSkillConfig;
 import net.sylphian.minecraft.logging.skill.trigger.LogHarvestTrigger;
 import net.sylphian.minecraft.skills.service.CooldownManager;
+import net.sylphian.minecraft.skills.skill.ActivationResult;
 import net.sylphian.minecraft.skills.skill.ActiveAbility;
 import net.sylphian.minecraft.skills.skill.StatusLevel;
 import org.bukkit.entity.Player;
@@ -48,19 +49,20 @@ public final class HeartwoodStrike implements ActiveAbility {
     @Override public int    unlockLevel() { return 10; }
 
     @Override
-    public void onActivate(Player player, UUID uuid) {
+    public ActivationResult onActivate(Player player, UUID uuid) {
         if (pending.contains(uuid)) {
             player.sendActionBar(MINI.deserialize("<yellow>Heartwood Strike <white>is already pending your next harvest."));
-            return;
+            return ActivationResult.blocked();
         }
         long remaining = cooldowns.getRemainingMillis(uuid, COOLDOWN_ID);
         if (remaining > 0) {
             player.sendActionBar(MINI.deserialize("<red>Heartwood Strike: <white>" + (remaining / 1000) + "s remaining."));
-            return;
+            return ActivationResult.blocked();
         }
         pending.add(uuid);
         cooldowns.setCooldown(uuid, COOLDOWN_ID, Duration.ofSeconds(config.get().heartwoodStrikeCooldownSeconds()));
         player.sendActionBar(MINI.deserialize("<aqua>Heartwood Strike <white>ready! Your next harvest bites deep."));
+        return ActivationResult.used("primed: next harvest drops rarest entry");
     }
 
     /**
