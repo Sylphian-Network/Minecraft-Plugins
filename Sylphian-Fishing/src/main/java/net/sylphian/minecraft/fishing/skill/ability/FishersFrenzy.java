@@ -6,6 +6,7 @@ import net.sylphian.minecraft.fishing.skill.trigger.FishCastTrigger;
 import net.sylphian.minecraft.fishing.skill.trigger.FishCatchTrigger;
 import net.sylphian.minecraft.skills.service.ActiveBuffTracker;
 import net.sylphian.minecraft.skills.service.CooldownManager;
+import net.sylphian.minecraft.skills.skill.ActivationResult;
 import net.sylphian.minecraft.skills.skill.ActiveAbility;
 import net.sylphian.minecraft.skills.skill.PassiveAbility;
 import net.sylphian.minecraft.skills.skill.PassiveTrigger;
@@ -61,16 +62,16 @@ public final class FishersFrenzy implements ActiveAbility, PassiveAbility {
      * Applies the buff, starts the cooldown, and schedules buff expiry.
      */
     @Override
-    public void onActivate(Player player, UUID uuid) {
+    public ActivationResult onActivate(Player player, UUID uuid) {
         if (isFrenzyActive(uuid)) {
             player.sendActionBar(MINI.deserialize("<gold>Fisher's Frenzy <white>is already active!"));
-            return;
+            return ActivationResult.blocked();
         }
         long remaining = cooldownManager.getRemainingMillis(uuid, COOLDOWN_ID);
         if (remaining > 0) {
             player.sendActionBar(MINI.deserialize(
                     "<red>Fisher's Frenzy: <white>" + (remaining / 1000) + "s remaining."));
-            return;
+            return ActivationResult.blocked();
         }
         FishingSkillConfig cfg = config.get();
         buffs.addBuff(uuid, BUFF_ID);
@@ -86,6 +87,7 @@ public final class FishersFrenzy implements ActiveAbility, PassiveAbility {
         player.sendActionBar(MINI.deserialize(
                 "<gold>Fisher's Frenzy! <yellow>" + cfg.fishersFrenzyDurationSeconds()
                 + "s <white>of faster bites and double XP."));
+        return ActivationResult.used("buff active " + cfg.fishersFrenzyDurationSeconds() + "s");
     }
 
     /**

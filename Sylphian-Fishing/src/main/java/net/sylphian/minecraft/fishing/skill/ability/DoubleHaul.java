@@ -3,6 +3,7 @@ package net.sylphian.minecraft.fishing.skill.ability;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.fishing.skill.FishingSkillConfig;
 import net.sylphian.minecraft.skills.service.CooldownManager;
+import net.sylphian.minecraft.skills.skill.ActivationResult;
 import net.sylphian.minecraft.skills.skill.ActiveAbility;
 import net.sylphian.minecraft.skills.skill.PassiveTrigger;
 import net.sylphian.minecraft.skills.skill.StatusLevel;
@@ -58,23 +59,24 @@ public final class DoubleHaul implements ActiveAbility {
      * Checks cooldown and pending state, then marks the next catch for duplication.
      */
     @Override
-    public void onActivate(Player player, UUID uuid) {
+    public ActivationResult onActivate(Player player, UUID uuid) {
         if (pendingSet.contains(uuid)) {
             player.sendActionBar(MINI.deserialize(
                     "<yellow>Double Haul <white>is already pending your next catch."));
-            return;
+            return ActivationResult.blocked();
         }
         long remaining = cooldownManager.getRemainingMillis(uuid, COOLDOWN_ID);
         if (remaining > 0) {
             player.sendActionBar(MINI.deserialize(
                     "<red>Double Haul: <white>" + (remaining / 1000) + "s remaining."));
-            return;
+            return ActivationResult.blocked();
         }
         FishingSkillConfig cfg = config.get();
         pendingSet.add(uuid);
         cooldownManager.setCooldown(uuid, COOLDOWN_ID, Duration.ofSeconds(cfg.doubleHaulCooldownSeconds()));
         player.sendActionBar(MINI.deserialize(
                 "<aqua>Double Haul <white>ready! Your next catch will be duplicated."));
+        return ActivationResult.used("primed: next catch duplicated");
     }
 
     /**
