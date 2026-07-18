@@ -27,6 +27,7 @@ public class VerifyClient implements AutoCloseable {
     private final Gson gson;
     private final Logger logger;
     private final Duration timeout;
+    private volatile boolean logAllBatchChecks;
 
     /**
      * @param baseUrl        the API base URL
@@ -50,6 +51,16 @@ public class VerifyClient implements AutoCloseable {
     @Override
     public void close() {
         httpClient.close();
+    }
+
+    /**
+     * Toggles verbose logging of periodic batch checks. When false, a routine batch call
+     * logs nothing on success; HTTP errors are always logged regardless.
+     *
+     * @param logAllBatchChecks true to log every batch call, false to log only failures
+     */
+    public void setLogAllBatchChecks(boolean logAllBatchChecks) {
+        this.logAllBatchChecks = logAllBatchChecks;
     }
 
     /**
@@ -99,7 +110,9 @@ public class VerifyClient implements AutoCloseable {
                 .map(uuid -> "uuids[]=" + uuid.toString())
                 .collect(java.util.stream.Collectors.joining("&"));
         String url = baseUrl + "?" + query;
-        logger.info("Calling Batch API: {}", url);
+        if (logAllBatchChecks) {
+            logger.info("Calling Batch API: {}", url);
+        }
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -112,7 +125,9 @@ public class VerifyClient implements AutoCloseable {
 
         return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(response -> {
-                    logger.info("Verify batch API: {} for {} player(s)", response.statusCode(), uuids.size());
+                    if (logAllBatchChecks) {
+                        logger.info("Verify batch API: {} for {} player(s)", response.statusCode(), uuids.size());
+                    }
                     if (response.statusCode() >= 400) {
                         logger.warn("Verify batch API returned HTTP {} — check API key and endpoint URL. Body: {}",
                                 response.statusCode(), response.body());

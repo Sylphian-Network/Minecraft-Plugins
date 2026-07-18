@@ -94,6 +94,7 @@ public class VerifyVelocity {
                 logger,
                 timeoutSeconds
         );
+        client.setLogAllBatchChecks(configBool("log_all_batch_checks", false));
         VerifyService service = new VerifyService(client);
         this.verifyManager = new VerifyManager(service, config);
 
@@ -140,6 +141,13 @@ public class VerifyVelocity {
         this.config = loadConfig();
         validateConfig(config);
         verifyManager.reloadConfig(config);
+        if (client != null) {
+            client.setLogAllBatchChecks(configBool("log_all_batch_checks", false));
+        }
+    }
+
+    private boolean configBool(String key, boolean defaultValue) {
+        return config.getOrDefault(key, defaultValue) instanceof Boolean b ? b : defaultValue;
     }
 
     private Map<String, Object> loadConfig() {
@@ -202,6 +210,8 @@ public class VerifyVelocity {
 
                     verifyManager.checkPeriodicBatch(uuids)
                             .thenAccept(results -> {
+                                int passed = 0;
+                                int failed = 0;
                                 for (Player player : allPlayers) {
                                     if (!player.isActive()) continue;
 
@@ -210,12 +220,20 @@ public class VerifyVelocity {
                                     if (result == null) continue;
 
                                     if (!result.allowed()) {
+                                        failed++;
                                         logger.warn("Player {} ({}) failed periodic verification. Disconnecting.", player.getUsername(), uuid);
                                         verifiedPlayers.remove(uuid);
                                         player.disconnect(result.kickMessage());
-                                    } else if (result.identity() != null) {
-                                        verifiedPlayers.put(uuid, result.identity());
+                                    } else {
+                                        passed++;
+                                        if (result.identity() != null) {
+                                            verifiedPlayers.put(uuid, result.identity());
+                                        }
                                     }
+                                }
+                                if (configBool("log_all_batch_checks", false)) {
+                                    logger.info("Periodic verification batch: {} passed, {} failed of {} players checked",
+                                            passed, failed, passed + failed);
                                 }
                             });
                 })

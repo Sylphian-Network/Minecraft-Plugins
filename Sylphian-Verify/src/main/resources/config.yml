@@ -11,6 +11,7 @@ uuid_attempt_limit: 5
 ip_attempt_limit: 10
 api_timeout_seconds: 10
 strike_on_api_failure: true
+log_all_batch_checks: false  # true = log every periodic batch check; false = only failures
 
 # Kick and warning messages (MiniMessage format)
 messages:
