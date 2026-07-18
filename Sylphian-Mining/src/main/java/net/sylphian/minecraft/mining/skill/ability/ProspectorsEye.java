@@ -9,6 +9,7 @@ import net.sylphian.minecraft.mining.config.MiningSkillConfig;
 import net.sylphian.minecraft.mining.skill.trigger.OreHarvestTrigger;
 import net.sylphian.minecraft.skills.service.ActiveBuffTracker;
 import net.sylphian.minecraft.skills.service.CooldownManager;
+import net.sylphian.minecraft.skills.skill.ActivationResult;
 import net.sylphian.minecraft.skills.skill.ActiveAbility;
 import net.sylphian.minecraft.skills.skill.PassiveAbility;
 import net.sylphian.minecraft.skills.skill.PassiveTrigger;
@@ -59,15 +60,15 @@ public final class ProspectorsEye implements ActiveAbility, PassiveAbility {
     @Override public String triggerCondition() { return "While Prospector's Eye is active."; }
 
     @Override
-    public void onActivate(Player player, UUID uuid) {
+    public ActivationResult onActivate(Player player, UUID uuid) {
         if (buffs.hasBuff(uuid, BUFF_ID)) {
             player.sendActionBar(MINI.deserialize("<gold>Prospector's Eye <white>is already active!"));
-            return;
+            return ActivationResult.blocked();
         }
         long remaining = cooldowns.getRemainingMillis(uuid, COOLDOWN_ID);
         if (remaining > 0) {
             player.sendActionBar(MINI.deserialize("<red>Prospector's Eye: <white>" + (remaining / 1000) + "s remaining."));
-            return;
+            return ActivationResult.blocked();
         }
         MiningSkillConfig cfg = config.get();
         buffs.addBuff(uuid, BUFF_ID);
@@ -83,6 +84,7 @@ public final class ProspectorsEye implements ActiveAbility, PassiveAbility {
         player.sendActionBar(MINI.deserialize(
                 "<gold>Prospector's Eye! <yellow>" + cfg.prospectorsEyeDurationSeconds()
                 + "s <white>of modifier bonus loot."));
+        return ActivationResult.used("buff active " + cfg.prospectorsEyeDurationSeconds() + "s");
     }
 
     @Override

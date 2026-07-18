@@ -4,6 +4,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.mining.config.MiningSkillConfig;
 import net.sylphian.minecraft.mining.skill.trigger.OreHarvestTrigger;
 import net.sylphian.minecraft.skills.service.CooldownManager;
+import net.sylphian.minecraft.skills.skill.ActivationResult;
 import net.sylphian.minecraft.skills.skill.ActiveAbility;
 import net.sylphian.minecraft.skills.skill.StatusLevel;
 import org.bukkit.entity.Player;
@@ -44,19 +45,20 @@ public final class VeinSurge implements ActiveAbility {
     @Override public int    unlockLevel() { return 5; }
 
     @Override
-    public void onActivate(Player player, UUID uuid) {
+    public ActivationResult onActivate(Player player, UUID uuid) {
         if (pending.contains(uuid)) {
             player.sendActionBar(MINI.deserialize("<yellow>Vein Surge <white>is already pending your next harvest."));
-            return;
+            return ActivationResult.blocked();
         }
         long remaining = cooldowns.getRemainingMillis(uuid, COOLDOWN_ID);
         if (remaining > 0) {
             player.sendActionBar(MINI.deserialize("<red>Vein Surge: <white>" + (remaining / 1000) + "s remaining."));
-            return;
+            return ActivationResult.blocked();
         }
         pending.add(uuid);
         cooldowns.setCooldown(uuid, COOLDOWN_ID, Duration.ofSeconds(config.get().veinSurgeCooldownSeconds()));
         player.sendActionBar(MINI.deserialize("<aqua>Vein Surge <white>ready! Your next harvest is doubled."));
+        return ActivationResult.used("primed: next harvest doubled");
     }
 
     /**
