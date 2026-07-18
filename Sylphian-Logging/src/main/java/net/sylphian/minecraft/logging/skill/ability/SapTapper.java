@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
- * Passive unlocked at level 12.
+ * Passive unlocked at level 20.
  *
  * <p>Rolls a flat chance to also drop tree sap on a logging harvest.</p>
  */
@@ -32,7 +32,7 @@ public final class SapTapper implements PassiveAbility {
     @Override public String id()               { return "logging:sap-tapper"; }
     @Override public String name()             { return "Sap Tapper"; }
     @Override public String description()      { return "A chance to also tap tree sap from the trunk."; }
-    @Override public int    unlockLevel()      { return 12; }
+    @Override public int    unlockLevel()      { return 20; }
     @Override public String triggerCondition() { return "On harvesting a logging node."; }
 
     @Override

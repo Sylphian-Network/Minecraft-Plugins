@@ -16,7 +16,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
- * Active unlocked at level 28.
+ * Active unlocked at level 25.
  *
  * <p>Pending: the player's next logging harvest yields double and leaves the
  * node standing (it does not deplete).</p>
@@ -44,7 +44,7 @@ public final class AncientTimber implements ActiveAbility {
     @Override public String id()          { return COOLDOWN_ID; }
     @Override public String name()        { return "Ancient Timber"; }
     @Override public String description() { return "Your next harvest yields double and leaves the tree standing."; }
-    @Override public int    unlockLevel() { return 28; }
+    @Override public int    unlockLevel() { return 25; }
 
     @Override
     public ActivationResult onActivate(Player player, UUID uuid) {

@@ -19,7 +19,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
- * Active unlocked at level 28.
+ * Active unlocked at level 25.
  *
  * <p>Instantly refreshes every depleted foraging node within range, bringing the
  * whole grove back at once with a burst of particles and sound at each.</p>
@@ -45,7 +45,7 @@ public final class VerdantBlessing implements ActiveAbility {
     @Override public String id()          { return COOLDOWN_ID; }
     @Override public String name()        { return "Verdant Blessing"; }
     @Override public String description() { return "Refresh every depleted foraging node around you at once."; }
-    @Override public int    unlockLevel() { return 28; }
+    @Override public int    unlockLevel() { return 25; }
 
     @Override
     public ActivationResult onActivate(Player player, UUID uuid) {

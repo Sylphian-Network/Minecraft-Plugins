@@ -21,7 +21,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
- * Active unlocked at level 18.
+ * Active unlocked at level 15.
  *
  * <p>For a timed buff, the player gains doubled foraging XP and Saturation.</p>
  */
@@ -53,7 +53,7 @@ public final class ForagersVigour implements ActiveAbility, PassiveAbility {
     @Override public String id()               { return COOLDOWN_ID; }
     @Override public String name()             { return "Forager's Vigour"; }
     @Override public String description()      { return "For a time, gain double foraging XP and Saturation."; }
-    @Override public int    unlockLevel()      { return 18; }
+    @Override public int    unlockLevel()      { return 15; }
     @Override public String triggerCondition() { return "While Forager's Vigour is active."; }
 
     @Override

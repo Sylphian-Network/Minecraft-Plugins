@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 
 /**
- * Passive unlocked at level 5.
+ * Passive unlocked at level 10.
  *
  * <p>Rolls a chance, scaling with level, to pick the node without depleting it,
  * leaving it available to harvest again.</p>
@@ -39,7 +39,7 @@ public final class GentleTouch implements PassiveAbility {
     @Override public String id()               { return "foraging:gentle-touch"; }
     @Override public String name()             { return "Gentle Touch"; }
     @Override public String description()      { return "A chance, growing with level, to pick without killing the plant."; }
-    @Override public int    unlockLevel()      { return 5; }
+    @Override public int    unlockLevel()      { return 10; }
     @Override public String triggerCondition() { return "On harvesting a foraging node."; }
 
     @Override

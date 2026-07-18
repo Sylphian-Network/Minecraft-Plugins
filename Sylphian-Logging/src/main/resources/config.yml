@@ -140,34 +140,39 @@ nodes:
 # Ignored if Sylphian-Skills is not installed.
 # Abilities activate on sneak + right-click of a real logging node.
 #
-#   5  - Passive: Timber Fall        - chance the whole trunk falls (x3 yield)
-#   10 - Active:  Heartwood Strike   - next harvest drops the rarest loot entry
-#   12 - Passive: Sap Tapper         - chance to also drop tree sap
-#   18 - Active:  Woodcutter's Frenzy- buff: Haste II + double XP
-#   20 - Passive: Woodsman's Rhythm  - consecutive logging stacks an XP bonus
-#   28 - Active:  Ancient Timber     - next harvest doubles yield and does not deplete
+#   5  - Active:  Heartwood Strike   - next harvest drops the rarest loot entry
+#   10 - Passive: Timber Fall        - chance the whole trunk falls (x3 yield)
+#   15 - Active:  Woodcutter's Frenzy- buff: Haste II + double XP
+#   20 - Passive: Sap Tapper         - chance to also drop tree sap
+#   25 - Active:  Ancient Timber     - next harvest doubles yield and does not deplete
+#   30 - Passive: Woodsman's Rhythm  - consecutive logging stacks an XP bonus
 #
 # =============================================================
 
 logging-skill:
+  heartwood-strike:
+    cooldown-seconds: 120
+
   timber-fall:
     base-chance: 0.15
     chance-per-level: 0.005
     yield-multiplier: 3.0
-  sap-tapper:
-    chance: 0.20
-    item: "sylphian-logging:tree_sap"
-  woodsmans-rhythm:
-    window-seconds: 8
-    xp-per-stack: 0.10
-    max-stacks: 5
-  heartwood-strike:
-    cooldown-seconds: 120
+
   woodcutters-frenzy:
     cooldown-seconds: 240
     duration-seconds: 30
     xp-multiplier: 2.0
     haste-amplifier: 1
+
+  sap-tapper:
+    chance: 0.20
+    item: "sylphian-logging:tree_sap"
+
   ancient-timber:
     cooldown-seconds: 300
     yield-multiplier: 2.0
+
+  woodsmans-rhythm:
+    window-seconds: 8
+    xp-per-stack: 0.10
+    max-stacks: 5

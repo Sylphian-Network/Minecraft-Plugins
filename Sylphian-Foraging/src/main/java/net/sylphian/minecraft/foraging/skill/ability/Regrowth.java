@@ -19,7 +19,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
- * Active unlocked at level 10.
+ * Active unlocked at level 5.
  *
  * <p>For a timed buff, foraging nodes the player depletes respawn far faster
  * than their configured time.</p>
@@ -52,7 +52,7 @@ public final class Regrowth implements ActiveAbility, PassiveAbility {
     @Override public String id()               { return COOLDOWN_ID; }
     @Override public String name()             { return "Regrowth"; }
     @Override public String description()      { return "For a time, foraging nodes you deplete respawn almost at once."; }
-    @Override public int    unlockLevel()      { return 10; }
+    @Override public int    unlockLevel()      { return 5; }
     @Override public String triggerCondition() { return "While Regrowth is active."; }
 
     @Override

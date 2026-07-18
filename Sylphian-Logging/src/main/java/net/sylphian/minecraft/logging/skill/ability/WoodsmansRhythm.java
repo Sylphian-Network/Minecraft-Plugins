@@ -15,7 +15,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
- * Passive unlocked at level 20.
+ * Passive unlocked at level 30.
  *
  * <p>Consecutive logging harvests within a short window build a streak, each
  * stack adding a flat XP bonus up to a cap. Applied on the pre-harvest trigger
@@ -40,7 +40,7 @@ public final class WoodsmansRhythm implements PassiveAbility {
     @Override public String id()               { return "logging:woodsmans-rhythm"; }
     @Override public String name()             { return "Woodsman's Rhythm"; }
     @Override public String description()      { return "Consecutive logging builds a streak, each stack adding +10% XP (max +50%)."; }
-    @Override public int    unlockLevel()      { return 20; }
+    @Override public int    unlockLevel()      { return 30; }
     @Override public String triggerCondition() { return "On logging nodes in quick succession."; }
 
     @Override

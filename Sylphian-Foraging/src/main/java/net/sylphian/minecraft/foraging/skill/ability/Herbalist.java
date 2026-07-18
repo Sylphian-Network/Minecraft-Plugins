@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
- * Passive unlocked at level 12.
+ * Passive unlocked at level 20.
  *
  * <p>Rolls a flat chance to also drop a wild herb on a foraging harvest.</p>
  */
@@ -32,7 +32,7 @@ public final class Herbalist implements PassiveAbility {
     @Override public String id()               { return "foraging:herbalist"; }
     @Override public String name()             { return "Herbalist"; }
     @Override public String description()      { return "A chance to also gather a wild herb."; }
-    @Override public int    unlockLevel()      { return 12; }
+    @Override public int    unlockLevel()      { return 20; }
     @Override public String triggerCondition() { return "On harvesting a foraging node."; }
 
     @Override

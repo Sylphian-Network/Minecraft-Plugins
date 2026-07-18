@@ -149,35 +149,40 @@ nodes:
 # Ignored if Sylphian-Skills is not installed.
 # Abilities activate on sneak + right-click of a real foraging node.
 #
-#   5  - Passive: Gentle Touch      - chance to pick without depleting the node
-#   10 - Active:  Regrowth          - buff: depleted foraging nodes respawn fast
-#   12 - Passive: Herbalist         - chance to also drop a wild herb
-#   18 - Active:  Forager's Vigour  - buff: double XP + Saturation
-#   20 - Passive: Wild Abundance    - yield scales with recent node variety
-#   28 - Active:  Verdant Blessing  - refresh every depleted foraging node nearby
+#    5 - Active:  Regrowth          - buff: depleted foraging nodes respawn fast
+#   10 - Passive: Gentle Touch      - chance to pick without depleting the node
+#   15 - Active:  Forager's Vigour  - buff: double XP + Saturation
+#   20 - Passive: Herbalist         - chance to also drop a wild herb
+#   25 - Active:  Verdant Blessing  - refresh every depleted foraging node nearby
+#   30 - Passive: Wild Abundance    - yield scales with recent node variety
 #
 # =============================================================
 
 foraging-skill:
-  gentle-touch:
-    base-chance: 0.15
-    chance-per-level: 0.005
-  herbalist:
-    chance: 0.20
-    item: "sylphian-foraging:wild_herb"
-  wild-abundance:
-    window-seconds: 30
-    yield-per-variety: 0.10
-    max-variety: 4
   regrowth:
     cooldown-seconds: 120
     duration-seconds: 30
     respawn-seconds: 3
+
+  gentle-touch:
+    base-chance: 0.15
+    chance-per-level: 0.005
+
   foragers-vigour:
     cooldown-seconds: 240
     duration-seconds: 60
     xp-multiplier: 2.0
     saturation-amplifier: 0
+
+  herbalist:
+    chance: 0.20
+    item: "sylphian-foraging:wild_herb"
+
   verdant-blessing:
     cooldown-seconds: 300
     radius: 12
+
+  wild-abundance:
+    window-seconds: 30
+    yield-per-variety: 0.10
+    max-variety: 4

@@ -21,7 +21,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
- * Active unlocked at level 18.
+ * Active unlocked at level 15.
  *
  * <p>For a timed buff, the player gains Haste and doubled logging XP.</p>
  */
@@ -53,7 +53,7 @@ public final class WoodcuttersFrenzy implements ActiveAbility, PassiveAbility {
     @Override public String id()               { return COOLDOWN_ID; }
     @Override public String name()             { return "Woodcutter's Frenzy"; }
     @Override public String description()      { return "For a time, gain Haste and double logging XP."; }
-    @Override public int    unlockLevel()      { return 18; }
+    @Override public int    unlockLevel()      { return 15; }
     @Override public String triggerCondition() { return "While Woodcutter's Frenzy is active."; }
 
     @Override

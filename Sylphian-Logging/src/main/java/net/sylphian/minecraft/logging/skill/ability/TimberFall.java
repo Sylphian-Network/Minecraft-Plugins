@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 
 /**
- * Passive unlocked at level 5.
+ * Passive unlocked at level 10.
  *
  * <p>Rolls a chance, scaling with level, for the whole trunk to fall at once,
  * multiplying the harvest yield.</p>
@@ -36,7 +36,7 @@ public final class TimberFall implements PassiveAbility {
     @Override public String id()               { return "logging:timber-fall"; }
     @Override public String name()             { return "Timber Fall"; }
     @Override public String description()      { return "A chance, growing with level, to fell the whole trunk for triple yield."; }
-    @Override public int    unlockLevel()      { return 5; }
+    @Override public int    unlockLevel()      { return 10; }
     @Override public String triggerCondition() { return "On harvesting a logging node."; }
 
     @Override

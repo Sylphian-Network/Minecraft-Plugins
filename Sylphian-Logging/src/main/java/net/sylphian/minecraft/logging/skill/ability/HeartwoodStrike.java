@@ -18,7 +18,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
- * Active unlocked at level 10.
+ * Active unlocked at level 5.
  *
  * <p>Pending: the player's next logging harvest additionally drops the rarest
  * entry in the node's loot table (the lowest-weight row, ignoring weighting).</p>
@@ -46,7 +46,7 @@ public final class HeartwoodStrike implements ActiveAbility {
     @Override public String id()          { return COOLDOWN_ID; }
     @Override public String name()        { return "Heartwood Strike"; }
     @Override public String description() { return "Your next harvest also drops the rarest item the tree can yield."; }
-    @Override public int    unlockLevel() { return 10; }
+    @Override public int    unlockLevel() { return 5; }
 
     @Override
     public ActivationResult onActivate(Player player, UUID uuid) {

@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
- * Passive unlocked at level 20.
+ * Passive unlocked at level 30.
  *
  * <p>Yield scales with the variety of foraging nodes harvested recently: each
  * distinct node id gathered within the window adds a flat bonus, up to a cap.
@@ -36,7 +36,7 @@ public final class WildAbundance implements PassiveAbility {
     @Override public String id()               { return "foraging:wild-abundance"; }
     @Override public String name()             { return "Wild Abundance"; }
     @Override public String description()      { return "Yield scales with the variety of nodes you foraged recently (up to +40%)."; }
-    @Override public int    unlockLevel()      { return 20; }
+    @Override public int    unlockLevel()      { return 30; }
     @Override public String triggerCondition() { return "On foraging varied nodes within a short time."; }
 
     @Override
