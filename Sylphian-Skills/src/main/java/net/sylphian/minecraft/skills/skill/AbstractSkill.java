@@ -198,6 +198,7 @@ public abstract class AbstractSkill implements Skill, Listener, Watchable {
      * @param ability the ability's display name
      * @param detail  a short MiniMessage description of what happened
      */
+    @Override
     public void traceActiveUse(UUID uuid, String subject, String ability, String detail) {
         sendTrace(uuid, TraceReport.of("<yellow>", "Active")
                 .subject(subject)
