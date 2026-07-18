@@ -3,7 +3,7 @@ package net.sylphian.minecraft.clans.db.models;
 import java.util.UUID;
 
 /**
- * Raw database row from the {@code clan_members} table.
+ * Raw database row from the {@code sylphian_clan_members} table.
  *
  * @param playerUuid the member's Mojang UUID
  * @param clanId     the clan this member belongs to

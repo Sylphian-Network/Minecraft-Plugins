@@ -3,7 +3,7 @@ package net.sylphian.minecraft.profile.db.models;
 import java.util.UUID;
 
 /**
- * Database model representing a record in the mc_players table.
+ * Database model representing a record in the sylphian_profile_players table.
  *
  * @param uuid           the player's Mojang UUID
  * @param xfUserId       linked XenForo user ID (null if not linked)

@@ -3,7 +3,7 @@ package net.sylphian.minecraft.clans.db.migrations;
 import net.sylphian.minecraft.database.migrations.Migration;
 import org.jdbi.v3.core.Handle;
 
-/** Migration V1: creates the {@code clans} table. */
+/** Migration V1: creates the {@code sylphian_clans} table. */
 public class Migration001CreateClans implements Migration {
 
     @Override
@@ -13,13 +13,13 @@ public class Migration001CreateClans implements Migration {
     public String name() { return "CreateClans"; }
 
     @Override
-    public String description() { return "Create clans table"; }
+    public String description() { return "Create sylphian_clans table"; }
 
     @Override
     public void up(Handle handle) {
         handle.execute("""
-                CREATE TABLE clans (
-                    clan_id    CHAR(36)    NOT NULL PRIMARY KEY,
+                CREATE TABLE sylphian_clans (
+                    clan_id    VARCHAR(36) NOT NULL PRIMARY KEY,
                     server_id  VARCHAR(64) NOT NULL,
                     name       VARCHAR(32) NOT NULL,
                     motd       VARCHAR(1024) NULL,
@@ -32,6 +32,6 @@ public class Migration001CreateClans implements Migration {
 
     @Override
     public void down(Handle handle) {
-        handle.execute("DROP TABLE IF EXISTS clans");
+        handle.execute("DROP TABLE IF EXISTS sylphian_clans");
     }
 }

@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 /**
- * Raw database row from the {@code clan_claims} table.
+ * Raw database row from the {@code sylphian_clan_claims} table.
  *
  * @param world      the name of the world containing the claimed chunk
  * @param chunkX     the chunk's X coordinate

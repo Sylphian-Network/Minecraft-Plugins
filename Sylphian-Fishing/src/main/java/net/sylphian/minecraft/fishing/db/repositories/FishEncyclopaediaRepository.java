@@ -92,7 +92,7 @@ public class FishEncyclopaediaRepository implements IFishEncyclopaediaRepository
      */
     private FishEncyclopaediaModel toModel(FishEncyclopaediaDao.FishEncyclopaediaRow row) {
         return new FishEncyclopaediaModel(
-                UUID.fromString(row.uuid()),
+                UUID.fromString(row.playerUuid()),
                 row.fishId(),
                 row.timesCaught(),
                 row.biggestWeight(),

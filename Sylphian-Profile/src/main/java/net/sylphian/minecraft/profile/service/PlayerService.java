@@ -49,7 +49,7 @@ public class PlayerService {
      */
     public CompletableFuture<UserProfile> handleJoin(UUID uuid, String mcUsername) {
         long now = Instant.now().getEpochSecond();
-        // First, check if player exists in the mc_players table
+        // First, check if player exists in the sylphian_profile_players table
         return playerRepository.findByUuid(uuid).thenCompose(playerOpt -> {
             if (playerOpt.isPresent()) {
                 // Update existing player record with new last_seen and online status
@@ -118,7 +118,7 @@ public class PlayerService {
     }
 
     /**
-     * Ensures a player row exists in {@code mc_players}.
+     * Ensures a player row exists in {@code sylphian_profile_players}.
      * If the row exists, updates {@code xf_user_id}, {@code mc_username}, {@code forum_username}
      * and {@code last_seen}; otherwise inserts a new row with default playtime and offline status.
      *

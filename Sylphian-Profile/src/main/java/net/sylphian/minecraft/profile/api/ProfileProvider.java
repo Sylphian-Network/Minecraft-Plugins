@@ -60,7 +60,7 @@ public final class ProfileProvider {
     public interface ProfileAPI {
 
         /**
-         * Ensures a player row exists in {@code mc_players}.
+         * Ensures a player row exists in {@code sylphian_profile_players}.
          * If the row already exists, updates {@code xf_user_id}, {@code mc_username},
          * and {@code forum_username} to match the supplied values.
          * If the row does not exist, inserts it with sensible defaults.

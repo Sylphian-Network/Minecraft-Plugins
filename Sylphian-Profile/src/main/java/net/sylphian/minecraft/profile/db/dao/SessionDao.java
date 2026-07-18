@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * JDBI DAO for the mc_sessions table.
+ * JDBI DAO for the sylphian_profile_sessions table.
  * Handles persistence for player session login/logout data.
  */
 @RegisterConstructorMapper(SessionDao.SessionRow.class)
@@ -21,7 +21,7 @@ public interface SessionDao {
      * @param sessionId the session ID
      * @return an optional session row
      */
-    @SqlQuery("SELECT * FROM mc_sessions WHERE session_id = :sessionId")
+    @SqlQuery("SELECT * FROM sylphian_profile_sessions WHERE session_id = :sessionId")
     Optional<SessionRow> findById(@Bind("sessionId") int sessionId);
 
     /**
@@ -29,7 +29,7 @@ public interface SessionDao {
      * @param uuid the player's UUID as a string
      * @return a list of session rows
      */
-    @SqlQuery("SELECT * FROM mc_sessions WHERE uuid = :uuid")
+    @SqlQuery("SELECT * FROM sylphian_profile_sessions WHERE player_uuid = :uuid")
     List<SessionRow> findByUuid(@Bind("uuid") String uuid);
 
     /**
@@ -37,7 +37,7 @@ public interface SessionDao {
      * @param uuid the player's UUID as a string
      * @return an optional session row
      */
-    @SqlQuery("SELECT * FROM mc_sessions WHERE uuid = :uuid AND quit_at IS NULL LIMIT 1")
+    @SqlQuery("SELECT * FROM sylphian_profile_sessions WHERE player_uuid = :uuid AND quit_at IS NULL LIMIT 1")
     Optional<SessionRow> findOpenByUuid(@Bind("uuid") String uuid);
 
     /**
@@ -49,7 +49,7 @@ public interface SessionDao {
      * @param duration session duration
      * @return the generated session ID
      */
-    @SqlUpdate("INSERT INTO mc_sessions (uuid, joined_at, quit_at, duration) " +
+    @SqlUpdate("INSERT INTO sylphian_profile_sessions (player_uuid, joined_at, quit_at, duration) " +
             "VALUES (:uuid, :joinedAt, :quitAt, :duration)")
     @GetGeneratedKeys
     int insert(@Bind("uuid") String uuid, @Bind("joinedAt") long joinedAt,
@@ -61,7 +61,7 @@ public interface SessionDao {
      * @param quitAt    quit timestamp
      * @param duration  session duration
      */
-    @SqlUpdate("UPDATE mc_sessions SET quit_at = :quitAt, duration = :duration " +
+    @SqlUpdate("UPDATE sylphian_profile_sessions SET quit_at = :quitAt, duration = :duration " +
             "WHERE session_id = :sessionId")
     void update(@Bind("sessionId") int sessionId, @Bind("quitAt") Long quitAt,
                 @Bind("duration") long duration);
@@ -72,7 +72,7 @@ public interface SessionDao {
      * @param joinedAt join timestamp
      * @return the generated session ID
      */
-    @SqlUpdate("INSERT INTO mc_sessions (uuid, joined_at, duration) VALUES (:uuid, :joinedAt, 0)")
+    @SqlUpdate("INSERT INTO sylphian_profile_sessions (player_uuid, joined_at, duration) VALUES (:uuid, :joinedAt, 0)")
     @GetGeneratedKeys
     int open(@Bind("uuid") String uuid, @Bind("joinedAt") long joinedAt);
 
@@ -82,11 +82,11 @@ public interface SessionDao {
      * @param quitAt    quit timestamp
      * @param duration  total duration
      */
-    @SqlUpdate("UPDATE mc_sessions SET quit_at = :quitAt, duration = :duration WHERE session_id = :sessionId")
+    @SqlUpdate("UPDATE sylphian_profile_sessions SET quit_at = :quitAt, duration = :duration WHERE session_id = :sessionId")
     void close(@Bind("sessionId") int sessionId, @Bind("quitAt") long quitAt, @Bind("duration") long duration);
 
     /**
      * Internal data transfer object for JDBI mapping.
      */
-    record SessionRow(int sessionId, String uuid, long joinedAt, Long quitAt, long duration) {}
+    record SessionRow(int sessionId, String playerUuid, long joinedAt, Long quitAt, long duration) {}
 }

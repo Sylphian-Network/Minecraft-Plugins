@@ -8,7 +8,7 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import java.util.Optional;
 
 /**
- * JDBI DAO for the mc_players table.
+ * JDBI DAO for the sylphian_profile_players table.
  * Handles low-level SQL operations for player records.
  */
 @RegisterConstructorMapper(PlayerDao.PlayerRow.class)
@@ -19,7 +19,7 @@ public interface PlayerDao {
      * @param uuid the player's UUID as a string
      * @return an optional player row
      */
-    @SqlQuery("SELECT * FROM mc_players WHERE uuid = :uuid")
+    @SqlQuery("SELECT * FROM sylphian_profile_players WHERE player_uuid = :uuid")
     Optional<PlayerRow> findByUuid(@Bind("uuid") String uuid);
 
     /**
@@ -27,7 +27,7 @@ public interface PlayerDao {
      * @param xfUserId the XenForo user ID
      * @return an optional player row
      */
-    @SqlQuery("SELECT * FROM mc_players WHERE xf_user_id = :xfUserId")
+    @SqlQuery("SELECT * FROM sylphian_profile_players WHERE xf_user_id = :xfUserId")
     Optional<PlayerRow> findByXfUserId(@Bind("xfUserId") Integer xfUserId);
 
     /**
@@ -42,7 +42,7 @@ public interface PlayerDao {
      * @param playtime      cumulative playtime
      * @param isOnline      online status flag
      */
-    @SqlUpdate("INSERT INTO mc_players (uuid, xf_user_id, mc_username, forum_username, first_joined, last_seen, playtime, is_online) " +
+    @SqlUpdate("INSERT INTO sylphian_profile_players (player_uuid, xf_user_id, mc_username, forum_username, first_joined, last_seen, playtime, is_online) " +
             "VALUES (:uuid, :xfUserId, :mcUsername, :forumUsername, :firstJoined, :lastSeen, :playtime, :isOnline)")
     void insert(@Bind("uuid") String uuid, @Bind("xfUserId") Integer xfUserId,
                 @Bind("mcUsername") String mcUsername, @Bind("forumUsername") String forumUsername,
@@ -60,9 +60,9 @@ public interface PlayerDao {
      * @param playtime      cumulative playtime
      * @param isOnline      online status flag
      */
-    @SqlUpdate("UPDATE mc_players SET xf_user_id = :xfUserId, mc_username = :mcUsername, " +
+    @SqlUpdate("UPDATE sylphian_profile_players SET xf_user_id = :xfUserId, mc_username = :mcUsername, " +
             "forum_username = :forumUsername, last_seen = :lastSeen, playtime = :playtime, " +
-            "is_online = :isOnline WHERE uuid = :uuid")
+            "is_online = :isOnline WHERE player_uuid = :uuid")
     void update(@Bind("uuid") String uuid, @Bind("xfUserId") Integer xfUserId,
                 @Bind("mcUsername") String mcUsername, @Bind("forumUsername") String forumUsername,
                 @Bind("lastSeen") long lastSeen, @Bind("playtime") long playtime,
@@ -71,7 +71,7 @@ public interface PlayerDao {
     /**
      * Internal data transfer object for JDBI mapping.
      */
-    record PlayerRow(String uuid, Integer xfUserId, String mcUsername,
+    record PlayerRow(String playerUuid, Integer xfUserId, String mcUsername,
                      String forumUsername, long firstJoined, long lastSeen,
                      long playtime, boolean isOnline) {}
 }

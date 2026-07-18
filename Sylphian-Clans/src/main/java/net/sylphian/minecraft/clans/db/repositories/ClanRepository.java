@@ -127,9 +127,9 @@ public class ClanRepository implements IClanRepository {
     public CompletableFuture<Void> transferLeader(UUID oldLeaderUuid, UUID newLeaderUuid) {
         return CompletableFuture.runAsync(() ->
                 jdbi.useTransaction(handle -> {
-                    handle.createUpdate("UPDATE clan_members SET is_leader = false WHERE player_uuid = :uuid AND server_id = :serverId")
+                    handle.createUpdate("UPDATE sylphian_clan_members SET is_leader = false WHERE player_uuid = :uuid AND server_id = :serverId")
                             .bind("uuid", oldLeaderUuid.toString()).bind("serverId", serverId).execute();
-                    handle.createUpdate("UPDATE clan_members SET is_leader = true WHERE player_uuid = :uuid AND server_id = :serverId")
+                    handle.createUpdate("UPDATE sylphian_clan_members SET is_leader = true WHERE player_uuid = :uuid AND server_id = :serverId")
                             .bind("uuid", newLeaderUuid.toString()).bind("serverId", serverId).execute();
                 }), executor);
     }

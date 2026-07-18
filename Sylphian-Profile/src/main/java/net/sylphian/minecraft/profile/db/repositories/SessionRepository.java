@@ -95,7 +95,7 @@ public class SessionRepository implements ISessionRepository {
     private SessionModel toModel(SessionDao.SessionRow row) {
         return new SessionModel(
             row.sessionId(),
-            UUID.fromString(row.uuid()),
+            UUID.fromString(row.playerUuid()),
             row.joinedAt(),
             row.quitAt(),
             row.duration()

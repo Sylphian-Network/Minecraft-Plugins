@@ -90,7 +90,7 @@ public class PlayerRepository implements IPlayerRepository {
      */
     private PlayerModel toModel(PlayerDao.PlayerRow row) {
         return new PlayerModel(
-                UUID.fromString(row.uuid()),
+                UUID.fromString(row.playerUuid()),
                 row.xfUserId(),
                 row.mcUsername(),
                 row.forumUsername(),

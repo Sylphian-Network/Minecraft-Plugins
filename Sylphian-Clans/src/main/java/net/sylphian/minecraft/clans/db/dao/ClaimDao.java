@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * JDBI DAO for the {@code clan_claims} table.
+ * JDBI DAO for the {@code sylphian_clan_claims} table.
  */
 @RegisterConstructorMapper(ClaimDao.ClaimRow.class)
 public interface ClaimDao {
@@ -26,7 +26,7 @@ public interface ClaimDao {
      * @param clanId    the owning clan's UUID as a string
      * @param claimedAt epoch-second claim timestamp
      */
-    @SqlUpdate("INSERT INTO clan_claims (server_id, world, chunk_x, chunk_z, clan_id, claimed_at) VALUES (:serverId, :world, :chunkX, :chunkZ, :clanId, :claimedAt)")
+    @SqlUpdate("INSERT INTO sylphian_clan_claims (server_id, world, chunk_x, chunk_z, clan_id, claimed_at) VALUES (:serverId, :world, :chunkX, :chunkZ, :clanId, :claimedAt)")
     void insertClaim(
             @Bind("serverId") String serverId,
             @Bind("world") String world,
@@ -44,7 +44,7 @@ public interface ClaimDao {
      * @param serverId the server these claims belong to
      * @param claims   the rows to insert
      */
-    @SqlBatch("INSERT INTO clan_claims (server_id, world, chunk_x, chunk_z, clan_id, claimed_at) VALUES (:serverId, :world, :chunkX, :chunkZ, :clanId, :claimedAt)")
+    @SqlBatch("INSERT INTO sylphian_clan_claims (server_id, world, chunk_x, chunk_z, clan_id, claimed_at) VALUES (:serverId, :world, :chunkX, :chunkZ, :clanId, :claimedAt)")
     void insertClaims(@Bind("serverId") String serverId, @BindMethods List<ClaimInsert> claims);
 
     /**
@@ -55,7 +55,7 @@ public interface ClaimDao {
      * @param chunkX   the chunk X coordinate
      * @param chunkZ   the chunk Z coordinate
      */
-    @SqlUpdate("DELETE FROM clan_claims WHERE server_id = :serverId AND world = :world AND chunk_x = :chunkX AND chunk_z = :chunkZ")
+    @SqlUpdate("DELETE FROM sylphian_clan_claims WHERE server_id = :serverId AND world = :world AND chunk_x = :chunkX AND chunk_z = :chunkZ")
     void deleteClaim(
             @Bind("serverId") String serverId,
             @Bind("world") String world,
@@ -69,7 +69,7 @@ public interface ClaimDao {
      * @param clanId   the owning clan's UUID as a string
      * @param serverId the server this clan belongs to
      */
-    @SqlUpdate("DELETE FROM clan_claims WHERE clan_id = :clanId AND server_id = :serverId")
+    @SqlUpdate("DELETE FROM sylphian_clan_claims WHERE clan_id = :clanId AND server_id = :serverId")
     void deleteAllClaimsForClan(@Bind("clanId") String clanId, @Bind("serverId") String serverId);
 
     /**
@@ -81,7 +81,7 @@ public interface ClaimDao {
      * @param chunkZ   the chunk Z coordinate
      * @return the claim row, or empty if the chunk is unclaimed on this server
      */
-    @SqlQuery("SELECT server_id, world, chunk_x, chunk_z, clan_id, claimed_at FROM clan_claims WHERE server_id = :serverId AND world = :world AND chunk_x = :chunkX AND chunk_z = :chunkZ")
+    @SqlQuery("SELECT server_id, world, chunk_x, chunk_z, clan_id, claimed_at FROM sylphian_clan_claims WHERE server_id = :serverId AND world = :world AND chunk_x = :chunkX AND chunk_z = :chunkZ")
     Optional<ClaimRow> findClaimByChunk(
             @Bind("serverId") String serverId,
             @Bind("world") String world,
@@ -96,7 +96,7 @@ public interface ClaimDao {
      * @param serverId the server this clan belongs to
      * @return all claim rows for this clan
      */
-    @SqlQuery("SELECT server_id, world, chunk_x, chunk_z, clan_id, claimed_at FROM clan_claims WHERE clan_id = :clanId AND server_id = :serverId")
+    @SqlQuery("SELECT server_id, world, chunk_x, chunk_z, clan_id, claimed_at FROM sylphian_clan_claims WHERE clan_id = :clanId AND server_id = :serverId")
     List<ClaimRow> findClaimsByClan(@Bind("clanId") String clanId, @Bind("serverId") String serverId);
 
     /**
@@ -105,10 +105,10 @@ public interface ClaimDao {
      * @param serverId the server to load claims for
      * @return all claim rows for this server
      */
-    @SqlQuery("SELECT server_id, world, chunk_x, chunk_z, clan_id, claimed_at FROM clan_claims WHERE server_id = :serverId")
+    @SqlQuery("SELECT server_id, world, chunk_x, chunk_z, clan_id, claimed_at FROM sylphian_clan_claims WHERE server_id = :serverId")
     List<ClaimRow> findAllClaims(@Bind("serverId") String serverId);
 
-    /** Raw row from the {@code clan_claims} table. */
+    /** Raw row from the {@code sylphian_clan_claims} table. */
     record ClaimRow(String serverId, String world, int chunkX, int chunkZ, String clanId, long claimedAt) {}
 
     /**

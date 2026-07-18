@@ -9,28 +9,28 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Data Access Object for the cooking_mastery table.
+ * Data Access Object for the sylphian_cooking_mastery table.
  * Uses JDBI SQL Objects to map SQL queries to Java methods.
  */
 @RegisterConstructorMapper(CookingMasteryDao.MasteryRow.class)
 public interface CookingMasteryDao {
 
     /** Finds the mastery record for a player and recipe. */
-    @SqlQuery("SELECT player_uuid, recipe_id, cook_count FROM cooking_mastery WHERE player_uuid = :uuid AND recipe_id = :recipeId")
+    @SqlQuery("SELECT player_uuid, recipe_id, cook_count FROM sylphian_cooking_mastery WHERE player_uuid = :uuid AND recipe_id = :recipeId")
     Optional<MasteryRow> findEntry(@Bind("uuid") String uuid, @Bind("recipeId") String recipeId);
 
     /** Retrieves all mastery records for a player. */
-    @SqlQuery("SELECT player_uuid, recipe_id, cook_count FROM cooking_mastery WHERE player_uuid = :uuid")
+    @SqlQuery("SELECT player_uuid, recipe_id, cook_count FROM sylphian_cooking_mastery WHERE player_uuid = :uuid")
     List<MasteryRow> findAllForPlayer(@Bind("uuid") String uuid);
 
     /** Inserts a new mastery record with cook_count 1, or increments the existing count by one. */
     @SqlUpdate("""
-        INSERT INTO cooking_mastery (player_uuid, recipe_id, cook_count)
+        INSERT INTO sylphian_cooking_mastery (player_uuid, recipe_id, cook_count)
         VALUES (:uuid, :recipeId, 1)
         ON DUPLICATE KEY UPDATE cook_count = cook_count + 1
     """)
     void incrementCount(@Bind("uuid") String uuid, @Bind("recipeId") String recipeId);
 
-    /** Represents a raw row from the cooking_mastery table. */
+    /** Represents a raw row from the sylphian_cooking_mastery table. */
     record MasteryRow(String playerUuid, String recipeId, int cookCount) {}
 }

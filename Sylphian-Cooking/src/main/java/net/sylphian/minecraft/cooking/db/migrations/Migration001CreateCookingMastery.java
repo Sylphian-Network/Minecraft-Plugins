@@ -4,7 +4,7 @@ import net.sylphian.minecraft.database.migrations.Migration;
 import org.jdbi.v3.core.Handle;
 
 /**
- * Migration V1: Creates the cooking_mastery table.
+ * Migration V1: Creates the sylphian_cooking_mastery table.
  */
 public class Migration001CreateCookingMastery implements Migration {
 
@@ -15,12 +15,12 @@ public class Migration001CreateCookingMastery implements Migration {
     public String name() { return "CreateCookingMastery"; }
 
     @Override
-    public String description() { return "Create cooking_mastery table"; }
+    public String description() { return "Create sylphian_cooking_mastery table"; }
 
     @Override
     public void up(Handle handle) {
         handle.execute("""
-            CREATE TABLE IF NOT EXISTS cooking_mastery (
+            CREATE TABLE IF NOT EXISTS sylphian_cooking_mastery (
                 player_uuid VARCHAR(36)  NOT NULL,
                 recipe_id   VARCHAR(64)  NOT NULL,
                 cook_count  INT          NOT NULL DEFAULT 0,
@@ -31,6 +31,6 @@ public class Migration001CreateCookingMastery implements Migration {
 
     @Override
     public void down(Handle handle) {
-        handle.execute("DROP TABLE IF EXISTS cooking_mastery");
+        handle.execute("DROP TABLE IF EXISTS sylphian_cooking_mastery");
     }
 }

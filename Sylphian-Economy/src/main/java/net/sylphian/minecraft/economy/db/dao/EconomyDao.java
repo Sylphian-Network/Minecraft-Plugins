@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 /**
- * JDBI DAO for the mc_economy_balances table.
+ * JDBI DAO for the sylphian_economy_balances table.
  *
  * <p>Credit/debit are relative updates ({@code balance = balance +/- :amount})
  * rather than read-modify-write, keeping them atomic at the row level.</p>
@@ -22,7 +22,7 @@ public interface EconomyDao {
      * @param uuid    the player's UUID as a string
      * @param balance the starting balance for a freshly created row
      */
-    @SqlUpdate("INSERT IGNORE INTO mc_economy_balances (uuid, balance) VALUES (:uuid, :balance)")
+    @SqlUpdate("INSERT IGNORE INTO sylphian_economy_balances (player_uuid, balance) VALUES (:uuid, :balance)")
     void ensureAccount(@Bind("uuid") String uuid, @Bind("balance") BigDecimal balance);
 
     /**
@@ -31,7 +31,7 @@ public interface EconomyDao {
      * @param uuid the player's UUID as a string
      * @return the balance, or empty if no row exists
      */
-    @SqlQuery("SELECT balance FROM mc_economy_balances WHERE uuid = :uuid")
+    @SqlQuery("SELECT balance FROM sylphian_economy_balances WHERE player_uuid = :uuid")
     Optional<BigDecimal> findBalance(@Bind("uuid") String uuid);
 
     /**
@@ -41,7 +41,7 @@ public interface EconomyDao {
      * @param amount the amount to add
      * @return the number of rows affected (1 if the account existed)
      */
-    @SqlUpdate("UPDATE mc_economy_balances SET balance = balance + :amount WHERE uuid = :uuid")
+    @SqlUpdate("UPDATE sylphian_economy_balances SET balance = balance + :amount WHERE player_uuid = :uuid")
     int credit(@Bind("uuid") String uuid, @Bind("amount") BigDecimal amount);
 
     /**
@@ -53,7 +53,7 @@ public interface EconomyDao {
      * @param amount the amount to remove
      * @return the number of rows affected (1 on success, 0 if funds were insufficient)
      */
-    @SqlUpdate("UPDATE mc_economy_balances SET balance = balance - :amount WHERE uuid = :uuid AND balance >= :amount")
+    @SqlUpdate("UPDATE sylphian_economy_balances SET balance = balance - :amount WHERE player_uuid = :uuid AND balance >= :amount")
     int debitIfSufficient(@Bind("uuid") String uuid, @Bind("amount") BigDecimal amount);
 
     /**
@@ -63,6 +63,6 @@ public interface EconomyDao {
      * @param amount the new balance
      * @return the number of rows affected
      */
-    @SqlUpdate("UPDATE mc_economy_balances SET balance = :amount WHERE uuid = :uuid")
+    @SqlUpdate("UPDATE sylphian_economy_balances SET balance = :amount WHERE player_uuid = :uuid")
     int setBalance(@Bind("uuid") String uuid, @Bind("amount") BigDecimal amount);
 }
