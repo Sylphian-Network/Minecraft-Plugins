@@ -1,6 +1,7 @@
 package net.sylphian.minecraft.gathering.world;
 
-import net.sylphian.minecraft.gathering.config.GatheringConfig.MarkerSettings;
+import net.sylphian.minecraft.gathering.config.GatheringConfig.EffectSettings;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -28,18 +29,20 @@ final class NodeMarkers {
     static final String MARKER_TAG = "sylphian_gathering_marker";
 
     private static final Color DEFAULT_COLOR = Color.WHITE;
+    private static final float REPLENISH_PEAK_SCALE = 1.25f;
+    private static final int REPLENISH_DURATION_TICKS = 8;
 
     private final Plugin plugin;
-    private MarkerSettings settings;
+    private EffectSettings settings;
     private final Map<NodeManager.NodeKey, BlockDisplay> markers = new HashMap<>();
 
-    NodeMarkers(Plugin plugin, MarkerSettings settings) {
+    NodeMarkers(Plugin plugin, EffectSettings settings) {
         this.plugin = plugin;
         this.settings = settings;
     }
 
     /** Swaps in reloaded settings; the caller re-syncs every node. */
-    void reload(MarkerSettings settings) {
+    void reload(EffectSettings settings) {
         this.settings = settings;
     }
 
@@ -55,6 +58,30 @@ final class NodeMarkers {
         } else {
             remove(node);
         }
+    }
+
+    /**
+     * Pops the node's glow outward and eases it back to rest, signalling that the
+     * node has replenished. No-op when markers are disabled or the node has no live
+     * marker (e.g. its chunk is unloaded).
+     *
+     * @param node the node that just replenished
+     */
+    void playReplenish(LiveNode node) {
+        if (!settings.enabled()) return;
+        BlockDisplay display = markers.get(keyOf(node));
+        if (display == null || !display.isValid()) return;
+
+        display.setInterpolationDelay(0);
+        display.setInterpolationDuration(0);
+        display.setTransformation(transformationForScale(REPLENISH_PEAK_SCALE));
+
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (!display.isValid()) return;
+            display.setInterpolationDelay(0);
+            display.setInterpolationDuration(REPLENISH_DURATION_TICKS);
+            display.setTransformation(tuckedTransformation());
+        }, 1L);
     }
 
     /** Removes and untracks the marker for one node, if present. */
@@ -105,7 +132,10 @@ final class NodeMarkers {
     }
 
     private Transformation tuckedTransformation() {
-        float scale = settings.scale();
+        return transformationForScale(settings.scale());
+    }
+
+    private Transformation transformationForScale(float scale) {
         float inset = (1.0f - scale) / 2.0f;
         return new Transformation(
                 new Vector3f(inset, inset, inset), new AxisAngle4f(),

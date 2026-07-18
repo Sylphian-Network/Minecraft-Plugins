@@ -15,6 +15,8 @@ import net.sylphian.minecraft.gathering.world.RespawnScheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
@@ -105,6 +107,11 @@ public final class HarvestService {
 
         long xp = Math.max(1L, Math.round(type.xp() * event.getXpMultiplier()));
         SkillsBridge.awardXp(player, type.skillId(), xp);
+
+        Sound harvestSound = config.effects().harvestSound(type.skillId());
+        if (harvestSound != null) {
+            node.world().playSound(dropAt, harvestSound, SoundCategory.BLOCKS, 1.0f, 1.0f);
+        }
 
         if (event.isDeplete()) {
             int respawnSeconds = event.getRespawnSecondsOverride() > 0

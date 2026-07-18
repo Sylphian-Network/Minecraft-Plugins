@@ -5,8 +5,11 @@ import net.sylphian.minecraft.gathering.node.NodePlacement;
 import net.sylphian.minecraft.gathering.node.NodeType;
 import net.sylphian.minecraft.gathering.registry.GatheringNodeRegistry;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -57,7 +60,7 @@ public final class NodeManager implements Listener {
         this.logger = plugin.getLogger();
         this.config = config;
         this.resolveRequester = resolveRequester;
-        this.markers = new NodeMarkers(plugin, config.markers());
+        this.markers = new NodeMarkers(plugin, config.effects());
     }
 
     /**
@@ -67,7 +70,7 @@ public final class NodeManager implements Listener {
      */
     public void reload(GatheringConfig newConfig) {
         this.config = newConfig;
-        this.markers.reload(newConfig.markers());
+        this.markers.reload(newConfig.effects());
     }
 
     /**
@@ -145,6 +148,17 @@ public final class NodeManager implements Listener {
         node.setActiveModifier(node.type().rollModifier(random));
         node.setState(LiveNode.State.AVAILABLE);
         applyBlockState(node);
+        markers.playReplenish(node);
+        playReplenishSound(node);
+    }
+
+    private void playReplenishSound(LiveNode node) {
+        Sound sound = config.effects().replenishSound(node.type().skillId());
+        if (sound == null) return;
+        World world = node.world();
+        if (!world.isChunkLoaded(node.x() >> 4, node.z() >> 4)) return;
+        world.playSound(new Location(world, node.x() + 0.5, node.y() + 0.5, node.z() + 0.5),
+                sound, SoundCategory.BLOCKS, 1.0f, 1.0f);
     }
 
     /**
