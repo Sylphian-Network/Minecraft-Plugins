@@ -103,6 +103,7 @@ public record DimensionsConfig(String hubName, int spawnIntervalTicks, Map<Strin
                 rules.getBoolean("pvp", defaults.pvpEnabled()),
                 rules.getBoolean("building", defaults.buildingEnabled()),
                 rules.getBoolean("natural-spawning", defaults.naturalSpawning()),
+                rules.getBoolean("natural-growth", defaults.naturalGrowth()),
                 rules.getBoolean("claiming", defaults.claimingEnabled()),
                 rules.getBoolean("damage-enabled", defaults.damageEnabled()),
                 rules.getBoolean("keep-inventory", defaults.keepInventory()),
