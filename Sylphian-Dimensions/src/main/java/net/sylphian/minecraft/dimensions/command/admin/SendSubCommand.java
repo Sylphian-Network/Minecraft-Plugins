@@ -36,7 +36,7 @@ public final class SendSubCommand implements SubCommand {
                 .then(new EntitySelectorArgument.OnePlayer("player")
                         .then(new StringArgument("dimension")
                                 .replaceSuggestions(ArgumentSuggestions.strings(_ ->
-                                        manager.dimensionNames().toArray(new String[0])))
+                                        manager.enterableNames().toArray(new String[0])))
                                 .executes((CommandSender sender, CommandArguments args) ->
                                         send(sender, (Player) Objects.requireNonNull(args.get("player")), (String) Objects.requireNonNull(args.get("dimension"))))));
     }

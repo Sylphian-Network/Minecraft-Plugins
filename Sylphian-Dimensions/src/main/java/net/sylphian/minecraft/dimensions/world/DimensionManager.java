@@ -14,7 +14,9 @@ import org.bukkit.entity.Player;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -32,6 +34,28 @@ public class DimensionManager implements DimensionAPI {
 
     /** The namespace all dimension worlds are keyed under. */
     public static final String NAMESPACE = "sylphian";
+
+    /** The vanilla Minecraft dimensions addressable by command alias. */
+    private enum Vanilla {
+        OVERWORLD("overworld", World.Environment.NORMAL),
+        NETHER("nether", World.Environment.NETHER),
+        END("end", World.Environment.THE_END);
+
+        private final String alias;
+        private final World.Environment environment;
+
+        Vanilla(String alias, World.Environment environment) {
+            this.alias = alias;
+            this.environment = environment;
+        }
+
+        static @Nullable Vanilla byAlias(String alias) {
+            for (Vanilla v : values()) {
+                if (v.alias.equalsIgnoreCase(alias)) return v;
+            }
+            return null;
+        }
+    }
 
     private final TemplateManager templates;
     private final Logger logger;
@@ -131,18 +155,27 @@ public class DimensionManager implements DimensionAPI {
     }
 
     /**
-     * Teleports a player into a dimension's spawn point.
+     * Teleports a player into a dimension's spawn point. A configured dimension
+     * takes precedence over a vanilla alias of the same name.
      *
      * @param player the player to move
-     * @param name   the dimension name
+     * @param name   the dimension name, or a vanilla alias (overworld, nether, end)
      * @return true if the dimension exists and its world is loaded
      */
     public boolean enter(Player player, String name) {
         Dimension dimension = config.dimensions().get(name);
-        if (dimension == null) return false;
-        Location spawn = spawnLocation(dimension);
-        if (spawn == null) return false;
-        player.teleport(spawn);
+        if (dimension != null) {
+            Location spawn = spawnLocation(dimension);
+            if (spawn == null) return false;
+            player.teleport(spawn);
+            return true;
+        }
+
+        Vanilla vanilla = Vanilla.byAlias(name);
+        if (vanilla == null) return false;
+        World world = vanillaWorld(vanilla);
+        if (world == null) return false;
+        player.teleport(world.getSpawnLocation());
         return true;
     }
 
@@ -240,6 +273,35 @@ public class DimensionManager implements DimensionAPI {
     @Override
     public Set<String> dimensionNames() {
         return config.dimensions().keySet();
+    }
+
+    /**
+     * Returns every name accepted by {@link #enter}: all configured dimensions
+     * plus the vanilla aliases (overworld, nether, end) whose worlds are loaded.
+     *
+     * @return the enterable dimension names
+     */
+    public List<String> enterableNames() {
+        List<String> names = new ArrayList<>(config.dimensions().keySet());
+        for (Vanilla vanilla : Vanilla.values()) {
+            if (vanillaWorld(vanilla) != null) names.add(vanilla.alias);
+        }
+        return names;
+    }
+
+    /**
+     * Resolves the loaded vanilla world backing a dimension, matching on
+     * environment within the {@code minecraft} namespace so custom dimension
+     * worlds (also NORMAL) are never returned.
+     */
+    private @Nullable World vanillaWorld(Vanilla vanilla) {
+        for (World world : Bukkit.getWorlds()) {
+            if (world.getEnvironment() == vanilla.environment
+                    && world.getKey().getNamespace().equals(NamespacedKey.MINECRAFT)) {
+                return world;
+            }
+        }
+        return null;
     }
 
     /**

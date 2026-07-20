@@ -37,7 +37,7 @@ public final class DimensionCommand {
                 .executesPlayer((Player player, CommandArguments _) -> list(player))
                 .then(new StringArgument("name")
                         .replaceSuggestions(ArgumentSuggestions.strings(_ ->
-                                manager.dimensionNames().toArray(new String[0])))
+                                manager.enterableNames().toArray(new String[0])))
                         .executesPlayer((Player player, CommandArguments args) -> {
                             String name = (String) Objects.requireNonNull(args.get("name"));
                             if (manager.enter(player, name)) {
@@ -50,6 +50,6 @@ public final class DimensionCommand {
     }
 
     private void list(Player player) {
-        player.sendMessage(MINI.deserialize("<yellow>Available dimensions: <white>" + String.join("<gray>, <white>", manager.dimensionNames())));
+        player.sendMessage(MINI.deserialize("<yellow>Available dimensions: <white>" + String.join("<gray>, <white>", manager.enterableNames())));
     }
 }
