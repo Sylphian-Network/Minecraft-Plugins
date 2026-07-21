@@ -71,7 +71,9 @@ public record BaitConfig(
         try {
             Particle particleEnum = Particle.valueOf(particleName.toUpperCase());
             particleData = parseParticleData(particleEnum, sec.getConfigurationSection("particle-data"));
-        } catch (IllegalArgumentException ignored) {}
+        } catch (IllegalArgumentException ignored) {
+            // Unknown particle name: fall back to no particle rather than failing the bait load.
+        }
 
         return new BaitConfig(
                 id,
