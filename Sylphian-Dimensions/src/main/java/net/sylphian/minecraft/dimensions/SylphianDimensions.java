@@ -11,6 +11,7 @@ import net.sylphian.minecraft.dimensions.listener.DimensionProtectionListener;
 import net.sylphian.minecraft.dimensions.listener.NaturalGrowthListener;
 import net.sylphian.minecraft.dimensions.listener.NaturalSpawnListener;
 import net.sylphian.minecraft.dimensions.listener.PlayerConnectionListener;
+import net.sylphian.minecraft.dimensions.placeholder.DimensionPlaceholderExpansion;
 import net.sylphian.minecraft.dimensions.spawn.DimensionSpawner;
 import net.sylphian.minecraft.dimensions.world.DimensionManager;
 import net.sylphian.minecraft.dimensions.world.TemplateManager;
@@ -32,6 +33,7 @@ public final class SylphianDimensions extends JavaPlugin {
 
     private DimensionManager dimensionManager;
     private @Nullable DimensionSpawner dimensionSpawner;
+    private @Nullable DimensionPlaceholderExpansion placeholderExpansion;
 
     @Override
     public void onEnable() {
@@ -71,6 +73,11 @@ public final class SylphianDimensions extends JavaPlugin {
         }
 
         DimensionProvider.register(dimensionManager);
+
+        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            placeholderExpansion = new DimensionPlaceholderExpansion();
+            placeholderExpansion.register();
+        }
 
         getServer().getPluginManager().registerEvents(new DimensionProtectionListener(dimensionManager), this);
         getServer().getPluginManager().registerEvents(new DimensionDeathListener(dimensionManager), this);
@@ -126,6 +133,7 @@ public final class SylphianDimensions extends JavaPlugin {
     @Override
     public void onDisable() {
         if (dimensionSpawner != null) dimensionSpawner.stop();
+        if (placeholderExpansion != null) placeholderExpansion.unregister();
         DimensionProvider.unregister();
         if (dimensionManager != null) dimensionManager.unloadAll();
         getLogger().info("Sylphian Dimensions disabled!");

@@ -2,6 +2,7 @@
 dependencies {
     compileOnly(libs.paper.api)
     compileOnly(libs.command.api)
+    compileOnly(libs.placeholderapi)
     compileOnly(project(":Sylphian-Clans"))
     compileOnly(project(":Sylphian-Entities"))
 }
