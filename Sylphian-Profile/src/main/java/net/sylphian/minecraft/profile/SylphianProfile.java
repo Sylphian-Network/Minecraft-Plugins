@@ -113,6 +113,7 @@ public final class SylphianProfile extends JavaPlugin {
         if (placeholderExpansion != null) {
             placeholderExpansion.unregister();
         }
+        SidebarService.unregisterContributor("sylphian-profile");
         ProfileProvider.unregister();
         getLogger().info("Sylphian-Profile disabled.");
     }

@@ -129,6 +129,7 @@ public class SylphianFishing extends JavaPlugin {
     @Override
     public void onDisable() {
         if (skillsBridge != null) skillsBridge.unregister();
+        SidebarService.unregisterContributor("sylphian-fishing");
         ItemRegistry.unregister("sylphian-fishing");
         baitZoneService.shutdown();
         baitListener.shutdown();
