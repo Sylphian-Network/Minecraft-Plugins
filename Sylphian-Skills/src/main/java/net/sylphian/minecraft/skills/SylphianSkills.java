@@ -33,6 +33,7 @@ public final class SylphianSkills extends JavaPlugin {
 
     private SkillsService skillsService;
     private SkillRegistry skillRegistry;
+    private SkillsPlaceholderExpansion skillsExpansion;
 
     @Override
     public void onEnable() {
@@ -62,7 +63,8 @@ public final class SylphianSkills extends JavaPlugin {
         Bukkit.getOnlinePlayers().forEach(p -> skillsService.load(p.getUniqueId()));
 
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            new SkillsPlaceholderExpansion(skillsService).register();
+            skillsExpansion = new SkillsPlaceholderExpansion(skillsService);
+            skillsExpansion.register();
         }
 
         getLogger().info("Sylphian-Skills initialised.");
@@ -93,6 +95,9 @@ public final class SylphianSkills extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (skillsExpansion != null) {
+            skillsExpansion.unregister();
+        }
         SkillsProvider.unregister();
         getLogger().info("Sylphian-Skills disabled.");
     }

@@ -48,6 +48,7 @@ public final class SylphianClans extends JavaPlugin {
     private ClanWarpService warpService;
     private ClanInviteService inviteService;
     private ClanTeleportWarmupManager warmupManager;
+    private ClanPlaceholderExpansion clanExpansion;
 
     @Override
     public void onEnable() {
@@ -88,7 +89,8 @@ public final class SylphianClans extends JavaPlugin {
         ClanProvider.register(clanService);
 
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            new ClanPlaceholderExpansion().register();
+            clanExpansion = new ClanPlaceholderExpansion();
+            clanExpansion.register();
         }
 
         territoryService.seedCache().exceptionally(ex -> {
@@ -144,6 +146,9 @@ public final class SylphianClans extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (clanExpansion != null) {
+            clanExpansion.unregister();
+        }
         ClanProvider.unregister();
         getLogger().info("Sylphian-Clans disabled.");
     }

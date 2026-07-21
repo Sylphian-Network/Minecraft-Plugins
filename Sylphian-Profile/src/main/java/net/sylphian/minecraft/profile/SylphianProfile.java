@@ -12,6 +12,7 @@ import net.sylphian.minecraft.profile.listener.ProfileListener;
 import net.sylphian.minecraft.profile.api.ProfileProvider;
 import net.sylphian.minecraft.profile.placeholder.PapiPlaceholderBridge;
 import net.sylphian.minecraft.profile.placeholder.PlaceholderResolver;
+import net.sylphian.minecraft.profile.placeholder.ProfilePlaceholderExpansion;
 import net.sylphian.minecraft.profile.service.PlayerService;
 import net.sylphian.minecraft.profile.sidebar.ProfileContributor;
 import net.sylphian.minecraft.profile.utils.ProfileManager;
@@ -35,6 +36,7 @@ public final class SylphianProfile extends JavaPlugin {
     private VisualManager visualManager;
     private PlayerService playerService;
     private PlayerRepository playerRepository;
+    private ProfilePlaceholderExpansion placeholderExpansion;
 
     /**
      * Called when the plugin is enabled.
@@ -90,6 +92,8 @@ public final class SylphianProfile extends JavaPlugin {
         PlaceholderResolver resolver = null;
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             resolver = new PapiPlaceholderBridge();
+            placeholderExpansion = new ProfilePlaceholderExpansion(profileManager);
+            placeholderExpansion.register();
         }
         SidebarService.registerContributor(new ProfileContributor(profileManager, resolver));
 
@@ -106,6 +110,9 @@ public final class SylphianProfile extends JavaPlugin {
                 .map(p -> playerService.handleQuit(p.getUniqueId()))
                 .toList();
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+        if (placeholderExpansion != null) {
+            placeholderExpansion.unregister();
+        }
         ProfileProvider.unregister();
         getLogger().info("Sylphian-Profile disabled.");
     }

@@ -15,6 +15,7 @@ import net.sylphian.minecraft.economy.service.BalanceChangePublisher;
 import net.sylphian.minecraft.economy.service.EconomyService;
 import net.sylphian.minecraft.economy.util.MoneyFormat;
 import org.bukkit.Bukkit;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.math.BigDecimal;
@@ -26,6 +27,7 @@ import java.util.List;
 public final class SylphianEconomy extends JavaPlugin {
 
     private EconomyService economyService;
+    private EconomyPlaceholderExpansion economyExpansion;
 
     @Override
     public void onEnable() {
@@ -48,9 +50,9 @@ public final class SylphianEconomy extends JavaPlugin {
         EconomyProvider.register(economyService);
 
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            EconomyPlaceholderExpansion expansion = new EconomyPlaceholderExpansion(economyService);
-            expansion.register();
-            getServer().getPluginManager().registerEvents(expansion, this);
+            economyExpansion = new EconomyPlaceholderExpansion(economyService);
+            economyExpansion.register();
+            getServer().getPluginManager().registerEvents(economyExpansion, this);
         }
 
         getServer().getPluginManager().registerEvents(new EconomyListener(economyService, this), this);
@@ -76,6 +78,10 @@ public final class SylphianEconomy extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (economyExpansion != null) {
+            economyExpansion.unregister();
+            HandlerList.unregisterAll(economyExpansion);
+        }
         EconomyProvider.unregister();
         getLogger().info("Sylphian-Economy disabled.");
     }
