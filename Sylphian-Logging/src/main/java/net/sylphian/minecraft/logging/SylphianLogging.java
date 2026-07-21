@@ -1,11 +1,12 @@
 package net.sylphian.minecraft.logging;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.sylphian.minecraft.gathering.config.NodeTypeConfigLoader;
+import net.sylphian.minecraft.gathering.node.NodeInteraction;
 import net.sylphian.minecraft.gathering.node.NodeType;
 import net.sylphian.minecraft.gathering.registry.GatheringNodeRegistry;
 import net.sylphian.minecraft.items.item.ItemRegistry;
 import net.sylphian.minecraft.logging.command.SylphianLoggingCommand;
-import net.sylphian.minecraft.logging.config.NodeTypeConfigLoader;
 import net.sylphian.minecraft.logging.item.LoggingItemProvider;
 import net.sylphian.minecraft.logging.skill.SkillsBridge;
 import org.bukkit.command.CommandSender;
@@ -25,7 +26,7 @@ public final class SylphianLogging extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
 
-        List<NodeType> nodeTypes = new NodeTypeConfigLoader(getLogger()).load(getConfig().getConfigurationSection("nodes"));
+        List<NodeType> nodeTypes = new NodeTypeConfigLoader(NAMESPACE, NodeInteraction.BREAK, getLogger()).load(getConfig().getConfigurationSection("nodes"));
         GatheringNodeRegistry.register(nodeTypes);
 
         itemProvider = new LoggingItemProvider(getConfig().getConfigurationSection("items"), getLogger());
@@ -58,7 +59,7 @@ public final class SylphianLogging extends JavaPlugin {
         try {
             reloadConfig();
             GatheringNodeRegistry.unregister(NAMESPACE);
-            List<NodeType> nodeTypes = new NodeTypeConfigLoader(getLogger()).load(getConfig().getConfigurationSection("nodes"));
+            List<NodeType> nodeTypes = new NodeTypeConfigLoader(NAMESPACE, NodeInteraction.BREAK, getLogger()).load(getConfig().getConfigurationSection("nodes"));
             GatheringNodeRegistry.register(nodeTypes);
             itemProvider.reload(getConfig().getConfigurationSection("items"));
             if (skillsBridge != null) skillsBridge.reload();

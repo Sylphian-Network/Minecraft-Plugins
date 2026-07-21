@@ -1,4 +1,4 @@
-package net.sylphian.minecraft.foraging.config;
+package net.sylphian.minecraft.gathering.config;
 
 import net.sylphian.minecraft.gathering.node.LootEntry;
 import net.sylphian.minecraft.gathering.node.LootTable;
@@ -17,17 +17,24 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 /**
- * Parses the {@code nodes} section of Sylphian-Foraging's config into engine
- * {@link NodeType}s. Node ids are prefixed with {@code "sylphian-foraging:"}.
- * Malformed nodes are skipped and logged; a bad node never aborts the load.
+ * Parses a gathering module's {@code nodes} config section into engine {@link NodeType}s.
+ * Node ids are prefixed with the owning module's {@code namespace}. Malformed nodes are
+ * skipped and logged; a bad node never aborts the load.
  */
 public final class NodeTypeConfigLoader {
 
-    private static final String NAMESPACE = "sylphian-foraging";
-
+    private final String namespace;
+    private final NodeInteraction defaultInteraction;
     private final Logger logger;
 
-    public NodeTypeConfigLoader(Logger logger) {
+    /**
+     * @param namespace          the owning module's registry namespace, e.g. {@code "sylphian-mining"}
+     * @param defaultInteraction the interaction used when a node omits {@code interaction}
+     * @param logger             the owning plugin's logger
+     */
+    public NodeTypeConfigLoader(String namespace, NodeInteraction defaultInteraction, Logger logger) {
+        this.namespace = namespace;
+        this.defaultInteraction = defaultInteraction;
         this.logger = logger;
     }
 
@@ -40,7 +47,7 @@ public final class NodeTypeConfigLoader {
     public List<NodeType> load(@Nullable ConfigurationSection nodes) {
         List<NodeType> types = new ArrayList<>();
         if (nodes == null) {
-            logger.warning("No 'nodes' section in config.yml; no foraging nodes will be registered.");
+            logger.warning("No 'nodes' section in config.yml; no " + namespace + " nodes will be registered.");
             return types;
         }
 
@@ -52,14 +59,14 @@ public final class NodeTypeConfigLoader {
             if (type != null) types.add(type);
         }
 
-        logger.info("Foraging node loading complete [" + types.size() + "] node type(s) registered.");
+        logger.info("[" + namespace + "] node loading complete [" + types.size() + "] node type(s) registered.");
         return types;
     }
 
     private @Nullable NodeType parseNode(String key, ConfigurationSection node) {
-        String id = NAMESPACE + ":" + key;
+        String id = namespace + ":" + key;
 
-        NodeInteraction interaction = parseEnum(NodeInteraction.class, node.getString("interaction"), NodeInteraction.INTERACT, key, "interaction");
+        NodeInteraction interaction = parseEnum(NodeInteraction.class, node.getString("interaction"), defaultInteraction, key, "interaction");
 
         Material availableBlock = Material.matchMaterial(node.getString("block", ""));
         Material depletedBlock = Material.matchMaterial(node.getString("depleted-block", ""));

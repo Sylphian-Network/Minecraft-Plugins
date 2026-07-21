@@ -2,9 +2,10 @@ package net.sylphian.minecraft.foraging;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.sylphian.minecraft.foraging.command.SylphianForagingCommand;
-import net.sylphian.minecraft.foraging.config.NodeTypeConfigLoader;
 import net.sylphian.minecraft.foraging.item.ForagingItemProvider;
 import net.sylphian.minecraft.foraging.skill.SkillsBridge;
+import net.sylphian.minecraft.gathering.config.NodeTypeConfigLoader;
+import net.sylphian.minecraft.gathering.node.NodeInteraction;
 import net.sylphian.minecraft.gathering.node.NodeType;
 import net.sylphian.minecraft.gathering.registry.GatheringNodeRegistry;
 import net.sylphian.minecraft.items.item.ItemRegistry;
@@ -25,7 +26,7 @@ public final class SylphianForaging extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
 
-        List<NodeType> nodeTypes = new NodeTypeConfigLoader(getLogger()).load(getConfig().getConfigurationSection("nodes"));
+        List<NodeType> nodeTypes = new NodeTypeConfigLoader(NAMESPACE, NodeInteraction.INTERACT, getLogger()).load(getConfig().getConfigurationSection("nodes"));
         GatheringNodeRegistry.register(nodeTypes);
 
         itemProvider = new ForagingItemProvider(getConfig().getConfigurationSection("items"), getLogger());
@@ -58,7 +59,7 @@ public final class SylphianForaging extends JavaPlugin {
         try {
             reloadConfig();
             GatheringNodeRegistry.unregister(NAMESPACE);
-            List<NodeType> nodeTypes = new NodeTypeConfigLoader(getLogger()).load(getConfig().getConfigurationSection("nodes"));
+            List<NodeType> nodeTypes = new NodeTypeConfigLoader(NAMESPACE, NodeInteraction.INTERACT, getLogger()).load(getConfig().getConfigurationSection("nodes"));
             GatheringNodeRegistry.register(nodeTypes);
             itemProvider.reload(getConfig().getConfigurationSection("items"));
             if (skillsBridge != null) skillsBridge.reload();

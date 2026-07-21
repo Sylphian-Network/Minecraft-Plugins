@@ -1,11 +1,12 @@
 package net.sylphian.minecraft.mining;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.sylphian.minecraft.gathering.config.NodeTypeConfigLoader;
+import net.sylphian.minecraft.gathering.node.NodeInteraction;
 import net.sylphian.minecraft.gathering.node.NodeType;
 import net.sylphian.minecraft.gathering.registry.GatheringNodeRegistry;
 import net.sylphian.minecraft.items.item.ItemRegistry;
 import net.sylphian.minecraft.mining.command.SylphianMiningCommand;
-import net.sylphian.minecraft.mining.config.NodeTypeConfigLoader;
 import net.sylphian.minecraft.mining.item.MiningItemProvider;
 import net.sylphian.minecraft.mining.skill.SkillsBridge;
 import org.bukkit.command.CommandSender;
@@ -25,7 +26,7 @@ public final class SylphianMining extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
 
-        List<NodeType> nodeTypes = new NodeTypeConfigLoader(getLogger()).load(getConfig().getConfigurationSection("nodes"));
+        List<NodeType> nodeTypes = new NodeTypeConfigLoader(NAMESPACE, NodeInteraction.BREAK, getLogger()).load(getConfig().getConfigurationSection("nodes"));
         GatheringNodeRegistry.register(nodeTypes);
 
         itemProvider = new MiningItemProvider(getConfig().getConfigurationSection("items"), getLogger());
@@ -58,7 +59,7 @@ public final class SylphianMining extends JavaPlugin {
         try {
             reloadConfig();
             GatheringNodeRegistry.unregister(NAMESPACE);
-            List<NodeType> nodeTypes = new NodeTypeConfigLoader(getLogger()).load(getConfig().getConfigurationSection("nodes"));
+            List<NodeType> nodeTypes = new NodeTypeConfigLoader(NAMESPACE, NodeInteraction.BREAK, getLogger()).load(getConfig().getConfigurationSection("nodes"));
             GatheringNodeRegistry.register(nodeTypes);
             itemProvider.reload(getConfig().getConfigurationSection("items"));
             if (skillsBridge != null) skillsBridge.reload();
