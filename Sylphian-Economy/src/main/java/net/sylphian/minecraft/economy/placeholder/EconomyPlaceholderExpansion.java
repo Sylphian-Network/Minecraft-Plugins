@@ -44,13 +44,11 @@ public final class EconomyPlaceholderExpansion extends PlaceholderExpansion impl
 
     @Override
     public String onRequest(OfflinePlayer player, String params) {
-        return switch (params) {
-            case "balance" -> {
-                BigDecimal bal = cache.get(player.getUniqueId());
-                yield bal != null ? MoneyFormat.format(bal) : "";
-            }
-            default -> null;
-        };
+        if (params.equals("balance")) {
+            BigDecimal bal = cache.get(player.getUniqueId());
+            return bal != null ? MoneyFormat.format(bal) : "";
+        }
+        return null;
     }
 
     @EventHandler

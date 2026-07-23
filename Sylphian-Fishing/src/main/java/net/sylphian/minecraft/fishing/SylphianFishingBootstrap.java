@@ -33,22 +33,17 @@ public class SylphianFishingBootstrap implements PluginBootstrap {
         LifecycleEventManager<BootstrapContext> lifecycle = context.getLifecycleManager();
 
         lifecycle.registerEventHandler(
-                RegistryEvents.ENCHANTMENT.compose().newHandler(event -> {
-                    event.registry().register(
-                            EnchantmentKeys.create(SUPER_FISH_KEY),
-                            (EnchantmentRegistryEntry.Builder builder) -> {
-                                builder
-                                        .description(Component.text("Super Fish"))
-                                        .supportedItems(event.getOrCreateTag(ItemTypeTagKeys.FISHES))
-                                        .weight(4)
-                                        .maxLevel(1)
-                                        .anvilCost(1)
-                                        .minimumCost(EnchantmentRegistryEntry.EnchantmentCost.of(5, 0))
-                                        .maximumCost(EnchantmentRegistryEntry.EnchantmentCost.of(12, 0))
-                                        .activeSlots(EquipmentSlotGroup.MAINHAND);
-                            }
-                    );
-                })
+                RegistryEvents.ENCHANTMENT.compose().newHandler(event -> event.registry().register(
+                        EnchantmentKeys.create(SUPER_FISH_KEY),
+                        (EnchantmentRegistryEntry.Builder builder) -> builder
+                                .description(Component.text("Super Fish"))
+                                .supportedItems(event.getOrCreateTag(ItemTypeTagKeys.FISHES))
+                                .weight(4)
+                                .maxLevel(1)
+                                .anvilCost(1)
+                                .minimumCost(EnchantmentRegistryEntry.EnchantmentCost.of(5, 0))
+                                .maximumCost(EnchantmentRegistryEntry.EnchantmentCost.of(12, 0))
+                                .activeSlots(EquipmentSlotGroup.MAINHAND)))
         );
     }
 }

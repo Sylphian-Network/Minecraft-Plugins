@@ -32,7 +32,6 @@ import java.util.List;
 public final class SylphianSkills extends JavaPlugin {
 
     private SkillsService skillsService;
-    private SkillRegistry skillRegistry;
     private SkillsPlaceholderExpansion skillsExpansion;
 
     @Override
@@ -46,7 +45,7 @@ public final class SylphianSkills extends JavaPlugin {
 
         SkillRepository repository = new SkillRepository(DatabaseService.getJdbi(), DatabaseService.getExecutor());
 
-        skillRegistry = new SkillRegistry();
+        SkillRegistry skillRegistry = new SkillRegistry();
         skillsService = new SkillsService(repository, skillRegistry, this, config);
 
         SkillsProvider.register(skillsService);

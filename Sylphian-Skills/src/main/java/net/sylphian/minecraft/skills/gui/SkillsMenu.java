@@ -139,7 +139,7 @@ public final class SkillsMenu {
      * @return a colored bar string, e.g. {@code "<green>████░░░░░░<dark_gray>░░░░░░"}
      */
     static String progressBar(double fraction, int length) {
-        int filled = (int) Math.round(Math.max(0.0, Math.min(1.0, fraction)) * length);
+        int filled = (int) Math.round(Math.clamp(fraction, 0.0, 1.0) * length);
         return "<green>" + "█".repeat(filled) + "<dark_gray>" + "░".repeat(length - filled);
     }
 

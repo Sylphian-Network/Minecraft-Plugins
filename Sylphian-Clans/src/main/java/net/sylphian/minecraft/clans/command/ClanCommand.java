@@ -24,7 +24,6 @@ public final class ClanCommand {
 
     private static final String PERMISSION = "sylphian.clans.use";
 
-    private final ClanCommandContext ctx;
     private final List<SubCommand> subCommands;
 
     /**
@@ -41,7 +40,7 @@ public final class ClanCommand {
                        TerritoryService territoryService, ClanCache clanCache,
                        ClanTeleportWarmupManager warmupManager, ClanPermissionMenu permissionMenu,
                        ClanWarpService warpService, ClanWarpMenu warpMenu) {
-        this.ctx = new ClanCommandContext(clanService, inviteService, territoryService, clanCache,
+        ClanCommandContext ctx = new ClanCommandContext(clanService, inviteService, territoryService, clanCache,
                 warmupManager, permissionMenu, warpService, warpMenu);
         this.subCommands = List.of(
                 new CreateSubCommand(ctx),

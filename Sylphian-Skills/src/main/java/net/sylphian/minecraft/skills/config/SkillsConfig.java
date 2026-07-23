@@ -78,7 +78,7 @@ public record SkillsConfig(
      * @return the most recently added expansion, i.e. the active content tier
      */
     public ExpansionConfig currentExpansion() {
-        return expansions.get(expansions.size() - 1);
+        return expansions.getLast();
     }
 
     /**

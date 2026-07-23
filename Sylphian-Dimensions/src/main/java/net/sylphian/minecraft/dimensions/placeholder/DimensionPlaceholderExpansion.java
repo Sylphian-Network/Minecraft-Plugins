@@ -20,12 +20,10 @@ public final class DimensionPlaceholderExpansion extends PlaceholderExpansion {
     @Override
     public String onRequest(OfflinePlayer player, String params) {
         if (player == null || !DimensionProvider.isAvailable()) return "";
-        return switch (params) {
-            case "current" -> {
-                Optional<Dimension> dimension = DimensionProvider.get().getPlayerCurrentDimension(player.getUniqueId());
-                yield dimension.map(Dimension::name).orElse("");
-            }
-            default -> null;
-        };
+        if (params.equals("current")) {
+            Optional<Dimension> dimension = DimensionProvider.get().getPlayerCurrentDimension(player.getUniqueId());
+            return dimension.map(Dimension::name).orElse("");
+        }
+        return null;
     }
 }

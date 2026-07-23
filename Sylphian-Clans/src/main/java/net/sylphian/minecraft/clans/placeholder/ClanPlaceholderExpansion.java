@@ -28,9 +28,7 @@ public final class ClanPlaceholderExpansion extends PlaceholderExpansion {
     public String onRequest(OfflinePlayer player, String params) {
         if (!ClanProvider.isAvailable()) return "";
         Optional<Clan> clan = ClanProvider.get().getClanByPlayerCached(player.getUniqueId());
-        return switch (params) {
-            case "name" -> clan.map(Clan::name).orElse("");
-            default -> null;
-        };
+        if (params.equals("name")) return clan.map(Clan::name).orElse("");
+        return null;
     }
 }

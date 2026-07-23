@@ -95,7 +95,7 @@ public class CookingStationListener implements Listener {
         ItemStack slotItem = topInv.getItem(rawSlot);
         if (CookingStationGui.isPlaceholder(slotItem)) {
             ItemStack cursor = event.getCursor();
-            if (cursor == null || cursor.getType().isAir()) {
+            if (cursor.getType().isAir()) {
                 event.setCancelled(true);
                 return;
             }
@@ -126,7 +126,7 @@ public class CookingStationListener implements Listener {
         // Non-placeholder fuel or ingredient slot: sync after the click resolves.
         if (rawSlot == CookingStationGui.FUEL_SLOT) {
             ItemStack cursor = event.getCursor();
-            if (cursor != null && !cursor.getType().isAir() && !service.isValidFuel(cursor)) {
+            if (!cursor.getType().isAir() && !service.isValidFuel(cursor)) {
                 event.setCancelled(true);
                 return;
             }
@@ -191,7 +191,7 @@ public class CookingStationListener implements Listener {
         }
 
         ItemStack cursor = event.getCursor();
-        if (cursor != null && !cursor.getType().isAir()) return;
+        if (!cursor.getType().isAir()) return;
 
         int total = slotItem.getAmount();
 

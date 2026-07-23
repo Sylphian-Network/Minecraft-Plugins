@@ -150,7 +150,7 @@ public class CratesListener implements Listener {
 
         if (slot == CratesGUI.KEY_SLOT) {
             ItemStack cursor = event.getCursor();
-            if (cursor == null || cursor.getType().isAir()) {
+            if (cursor.getType().isAir()) {
                 if (holder.getStagedKey() != null) {
                     player.setItemOnCursor(CrateKey.create(holder.getStagedKey(), plugin));
                     CratesGUI.restoreKeySlot(event.getInventory());

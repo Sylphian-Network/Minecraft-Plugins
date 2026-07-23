@@ -54,7 +54,7 @@ public class CrateService {
             cursor += entry.chance();
             if (roll <= cursor) return entry;
         }
-        return crate.pool().get(crate.pool().size() - 1);
+        return crate.pool().getLast();
     }
 
     /**

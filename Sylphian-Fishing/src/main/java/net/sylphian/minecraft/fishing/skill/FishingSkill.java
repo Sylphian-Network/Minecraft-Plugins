@@ -210,7 +210,6 @@ public final class FishingSkill extends AbstractSkill {
     public void onTeleport(PlayerTeleportEvent event) {
         Location from = event.getFrom();
         Location to   = event.getTo();
-        if (to == null) return;
 
         boolean worldChanged = !from.getWorld().equals(to.getWorld());
         boolean distantMove  = !worldChanged && from.distanceSquared(to) > 100;
